@@ -5389,10 +5389,6 @@ bool ProcessDSATimer6(RN objSlave,
                             &masterX, &masterY, &masterPos);
   locrMaster.x = masterX;
   locrMaster.y = masterY;
-  if ((masterX==8) && (masterY==24) && (level==16))
-  {
-    int kkk=1;
-  };
   locrMaster.p = objMaster.pos();
   pDBMaster = GetRecordAddressDB3(objMaster);
   levelDSAindex = pDBMaster->DSAselector();

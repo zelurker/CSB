@@ -18,10 +18,10 @@ ifeq ($(target), Ubuntu_SDL12)
 endif
 ifeq ($(target), Ubuntu_SDL20)
 	#	debug options (make sure the ldflags line is uncommented if you use this)
-#	options =   -g -fsanitize=address -D _LINUX -D RGB655 -D SDL20 -c
+	options =   -g -fsanitize=address -D _LINUX -D RGB655 -D SDL20 -c
 # optimized build options
-	options =   -O2 -D _LINUX -D RGB655 -D SDL20 -c
-#   ldflags = -g -fsanitize=address
+#	options =   -O2 -D _LINUX -D RGB655 -D SDL20 -c
+   ldflags = -g -fsanitize=address
 #  gincludes =  `pkg-config --cflags glib-2.0` \
 #               -I/usr/lib/glib-2.0/include \
 #               `pkg-config --cflags sdl2`

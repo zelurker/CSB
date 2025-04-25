@@ -739,7 +739,13 @@ struct DBank {
   i16 MouseQEnd;  //16856; Last entry in queue (0 to MOUSEQLEN-1)
   i16 MouseQStart;//16854; Next entry to remove from queue (0 to MOUSEQLEN-1)
   //              // The queue is empty when Start = End+1
+#ifdef POST_TRANSLATE_CLICK
+  // 20230506
+  OldMouseQueueEnt OldMouseQueue[5]; //Moved to global space to enlarge.//16852
+#else
+  // 20230506
   MouseQueueEnt ExMouseQueue[5]; //Moved to global space to enlarge.//16852
+#endif
   i8  Byte16702;
   FILL(16701,16634)
   RN  objOpenChest;//16634; The one opened and on display

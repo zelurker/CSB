@@ -89,7 +89,11 @@ RESTARTABLE _ReIncarnate(CHARDESC *pChar)
       {
         MouseQueueEnt MQ;
         PlayFile_Play(&MQ);
-        if (MQ.num != 0x4444)
+#ifdef POST_TRANSLATE_CLICK
+        if (MQ.translatedButtonNum != 0x4444) // 20230506
+#else
+        if (MQ.num != 0x4444) // 20230506
+#endif
         {
           RETURN;
         };
@@ -117,7 +121,11 @@ RESTARTABLE _ReIncarnate(CHARDESC *pChar)
         };
         w_14 = pMouseQueue[d.MouseQStart].x; //w_14 = d.NewMouseX;
         w_16 = pMouseQueue[d.MouseQStart].y; //w_16 = d.NewMouseY;
-        unClick = pMouseQueue[d.MouseQStart].num == 0x0add;
+#ifdef POST_TRANSLATE_CLICK
+        unClick = pMouseQueue[d.MouseQStart].translatedButtonNum == 0x0add; //20230506
+#else
+        unClick = pMouseQueue[d.MouseQStart].num == 0x0add; // 20230506
+#endif
         d.MouseQStart = (ui16)((d.MouseQStart + 1) % MOUSEQLEN);
         if (unClick)
         {
@@ -147,7 +155,11 @@ RESTARTABLE _ReIncarnate(CHARDESC *pChar)
           }; // for D7W
           {
             MouseQueueEnt MQ;
-            MQ.num = 0x4444;
+#ifdef POST_TRANSLATE_CLICK
+            MQ.translatedButtonNum = 0x4444; // 20230506
+#else
+            MQ.num = 0x4444; //20230506
+#endif
             MQ.x = 0;
             MQ.y = 0xffff;
             RecordFile_Record(&MQ);
@@ -226,7 +238,11 @@ tag014088:
     ASSERT(D5L != 0xccccc,"D5L");
     {
       MouseQueueEnt MQ;
-      MQ.num = 0x4444;
+#ifdef POST_TRANSLATE_CLICK
+      MQ.translatedButtonNum = 0x4444; // 20230506
+#else
+      MQ.num = 0x4444; // 20230506
+#endif
       MQ.x = D5W;
       MQ.y = 0xffff;
       RecordFile_Record(&MQ);

@@ -1713,12 +1713,72 @@ public:
   ui8 uByte2(void) {return m_uByte2;};
 };
 
+#define POST_TRANSLATE_CLICK // 20230506
+#ifdef POST_TRANSLATE_CLICK
+struct OldMouseQueueEnt
+{
+  ui16 x;
+  ui16 y;
+  ui16 num;  // 20230506
+};
+#endif
 
 struct MouseQueueEnt
 {
   ui16 x;
   ui16 y;
-  ui16 num;
+#ifdef POST_TRANSLATE_CLICK
+  // 20230506
+  ui16 buttons;  // Left versus right
+#endif
+#ifdef POST_TRANSLATE_CLICK
+#define UNTRANSLATED_CLICK 0xfffe
+  /*
+   *   This used to be the 'button number' as translated by the
+   *   mouse click handler.  It was traslated by searching through
+   *   d.PrimaryButtonList and d.SecondaryButtonList.
+   *   This failed however when those two search lists were
+   *   changed between the time the mouse was clicked and the
+   *   time the entry was removed from the queue.  
+   *   We changed this so that the translation takes place
+   *   at the time the entry is removed from the queue for use.
+   *   All the chages have been marked with the date. PRS 
+   *   20230506
+   */
+
+  /*  translatedButtonNum should be UNTRANSLATED_CLICK if the mouse click 
+   *  has not yet been translated.  A few other values are special
+   *  cases:
+   *     0x0094 Restart Clock when game is frozen
+   *     0x0add Mouse unclick  (x == y == 0)
+   *     0x1124 gravity move between floors
+   *     0x1125 gravity move between floors
+   *     0x2221 Cycle Random Number
+   *     0x2222 Advance random number generator
+   *     0x2223 Compensate for removing Save/Restore when splicing
+   *     0x2224 Compensate for removing Save/Restore when splicing
+   *     0x3333 is used as apecial Playfile.log entry for random seed
+   *     0x4444 
+   *     0x5555 sent to record.log when playfile.log ends (or 'm_forceClose')
+   *     0x6665 Version signature
+   *     0x6666 Graphics signature
+   *     0x6667 Dungeon signature
+   *     0x6668  ???
+   *     0x6669  ???
+   *     0x666a CSBGraphics signature
+   *     0x0ade Something to do with Reincarnate mode
+   *     0xdddd Set 'd' variable to value
+   *     0xffff Mouse cursor has moved out of the champion alignment 
+   *            area of the screen. The upper right corner.
+   *
+   *  The Playfile.log contains the translated values.
+   *  20230506
+   */
+  ui16 translatedButtonNum; // 20230506
+#else
+  ui16 num;  // 20230506
+#endif
+
 };
 
 bool mouseQueueIsEmpty(void);

@@ -2134,12 +2134,22 @@ void DumpPalettes(FILE *f)
   };
 }
 
+int asciiDumpActive = 0;
+
 void AsciiDump(void)
 {
+  int savedLoadedLevel;
+  if (asciiDumpActive)
+  {
+    die(0x77de, "ASCII DUMP Active");
+    return;
+  };
+  asciiDumpActive = 1;
   if (   (encipheredDataFile != NULL)
       || simpleEncipher)
   {
     SorryEncrypted();
+    asciiDumpActive = 0;
     return;
   };
   i16 F=CREATE("ASCIIDUMP.TXT", "w", true);
@@ -2147,8 +2157,10 @@ void AsciiDump(void)
   if (f == NULL)
   {
     UI_MessageBox("Cannot open ASCIIDUMP.TXT",NULL,MESSAGE_OK);
+    asciiDumpActive = 0;
     return;
   };
+  savedLoadedLevel = d.LoadedLevel;
   Info(f);
   LevelInfo(f);
   miscTable.Allocate(); 
@@ -2167,6 +2179,8 @@ void AsciiDump(void)
   DumpPalettes(f);
   //DumpDB3(f);
   CLOSE(F);
+  asciiDumpActive = 0;
+  LoadLevel(savedLoadedLevel);
 }
 
 
@@ -2178,6 +2192,7 @@ char ignoreLocations[] =
 {
     9,31,36,ANY,
     7, 9,26,ANY,
+    7,14,30,ANY,
     7,14,34,ANY,
     5,14,25,KEY,
     5,15,25,KEY,
@@ -2527,6 +2542,10 @@ void ItemsRemaining(i32 mode)
         {
           cf = GetCellFlags(x,y);
           rt = (ROOMTYPE)(cf>>5);
+          if (x == 23)
+          {
+            int kkk = 1;
+          }
           object=FindFirstObject(x, y);
           while (object != RNeof)
           {

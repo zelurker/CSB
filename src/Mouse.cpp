@@ -21,6 +21,7 @@ void PlayFile_ReadEOF(void);
 bool PlayFile_Play(MouseQueueEnt *MQ);
 void PlayFile_Backspace(MouseQueueEnt *MQ);
 void RecordFile_Record(MouseQueueEnt *MQ);
+bool IsTextScrollArea(int, int);
 
 // *********************************************************
 //
@@ -1322,6 +1323,32 @@ bool GravityMove(MouseQueueEnt *ent)
     case 1: absdir = (delta==1)?2:0; break;
     default: absdir = (delta==1)?5:4; break;
     };
+#ifdef POST_TRANSLATE_CLICK
+    // 20230506
+    switch (absdir)
+    {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+      reldir = (absdir - d.partyFacing) & 3;
+      switch (reldir)
+      {
+      case 0: ent->translatedButtonNum = 3; break;
+      case 1: ent->translatedButtonNum = 4; break;
+      case 2: ent->translatedButtonNum = 5; break;
+      case 3: ent->translatedButtonNum = 6; break;
+      };
+      break;
+    case 4:
+      ent->translatedButtonNum = 0x1125; break;
+    case 5:
+      ent->translatedButtonNum = 0x1124; break;
+    };
+    return true;
+  };
+#else
+    // 20230506
     switch (absdir)
     {
     case 0:
@@ -1344,10 +1371,84 @@ bool GravityMove(MouseQueueEnt *ent)
     };
     return true;
   };
+#endif
   gravityMove = false;
   return false;
 }
 
+#ifdef POST_TRANSLATE_CLICK
+// 20230506
+int TranslateMouseClick(void)
+{
+  dReg D4, D6, D7;
+  ui32 buttons;
+  MouseQueueEnt* pEnt;
+  pEnt = &pMouseQueue[d.MouseQStart];
+  if (pEnt->translatedButtonNum != UNTRANSLATED_CLICK)
+  {
+    return 1;  // It is either special or has already been translated.
+  };
+  D7W = pEnt->x;
+  D6W = pEnt->y;
+  buttons = pEnt->buttons;
+  if (keyboardMode == 2) // Reincarnate mode
+  {
+    D4W = 0xade;
+  }
+  else
+  {
+    D4W = SearchButtonList(d.PrimaryButtonList,
+      D7W,
+      D6W,
+      buttons);
+    if (D4W == 0)
+    {
+      D4W = SearchButtonList(d.SecondaryButtonList,
+        D7W,
+        D6W,
+        buttons);
+    };
+#ifdef MAEMO_NOKIA_770
+    // The Nokia 770 has only a stylus as a mouse pointer.
+// There is therefore no concept of a "right mouse click".
+// As a result, for the 770, after checking to see if a
+// mouse click was a left mouse click, and finding that
+// it was not, we check to see if it may have really been
+// a right mouse click.
+// Note that if buttons == 0x00 then that's a mouse up,
+// so we don't do these checks
+    if ((D4W == 0) && (buttons == 0x2) && (x < 550) && (y < 60))
+    {
+      D4W = SearchButtonList(d.PrimaryButtonList,
+        D7W,
+        D6W,
+        0x1);
+      if (D4W == 0)
+      {
+        D4W = SearchButtonList(d.SecondaryButtonList,
+          D7W,
+          D6W,
+          0x1);
+      }
+    }
+#endif
+  };
+  if ((D4W == 0) && IsTextScrollArea(D7W, D6W))
+  {
+    D4W = 0xd8; // 216;
+    D7W = 0;
+    D6W = 0;
+  };
+  if (D4W == 0)
+  {
+    return 0;
+  };
+  pEnt->translatedButtonNum = D4W; // 20230506
+  pEnt->x = D7W;
+  pEnt->y = D6W;
+  return 1;
+};
+#endif
 
 //*********************************************************
 //
@@ -1412,15 +1513,9 @@ RESTARTABLE _HandleMouseEvents(const i32 delta)
     };
   };
 
-//  if (d.Time == 0x2b828)
-//  {
-//    i32 jjj321 = 1; //Reminds us to remove this nonsense
-//    RN containedObject;
-//    DB9 *pDB9 = GetRecordAddressDB9(RNVAL(0x2402));
-//    containedObject = pDB9->contents(); //Gem of Ages
-//    DBCOMMON *pDB = GetRecordAddress(containedObject);
-//    pDB->link(RNeof);
-//  };
+#ifdef POST_TRANSLATE_CLICK
+  for (;;)  // Look for a nice mouse click in the mouse queue.
+  {
   D0W = d.MouseQEnd;
   D0W++;
   D7W = D0W; // D7 = End+1
@@ -1431,7 +1526,27 @@ RESTARTABLE _HandleMouseEvents(const i32 delta)
     CauseFakeMouseClick();//If one is waiting
     RETURN_int(result);
   };
+    // There is an entry in the mouse click queue.
+    if (!TranslateMouseClick())
+    {
+      d.MouseQStart = sw((d.MouseQStart + 1) % MOUSEQLEN);
+      continue; // See if there is another entry
+    };
+    break;
+  };
 
+#else
+  D0W = d.MouseQEnd;
+  D0W++;
+  D7W = D0W; // D7 = End+1
+  if (D0W > MOUSEQLEN-1) D7W = 0;
+  if (D7W == d.MouseQStart)
+  { //The queue is empty
+    d.MouseInterlock = 0;
+    CauseFakeMouseClick();//If one is waiting
+    RETURN_int(result);
+  };
+#endif
   // There is something in the mouse queue.
   //
   // If the game is frozen then we discard
@@ -1441,7 +1556,13 @@ RESTARTABLE _HandleMouseEvents(const i32 delta)
   {
     if (gameFrozen)
     {
+#ifdef POST_TRANSLATE_CLICK
+      // 20230506
+      if (pMouseQueue[d.MouseQStart].translatedButtonNum != 148) //Restart clock
+#else
+      // 20230506
       if (pMouseQueue[d.MouseQStart].num != 148) //Restart clock
+#endif
       {
         d.MouseQStart = sw((d.MouseQStart+1)%MOUSEQLEN);
         d.MouseInterlock = 0;
@@ -1467,10 +1588,17 @@ RESTARTABLE _HandleMouseEvents(const i32 delta)
   // It also makes things just slightly more sluggish
   // because you can only have 6 events per second.
   //
+#ifdef POST_TRANSLATE_CLICK
+  // 20230506
+  thawCommand =
+    gameFrozen
+    && (pMouseQueue[d.MouseQStart].translatedButtonNum == 148);
+#else
+  // 20230506
   thawCommand =
            gameFrozen
         && (pMouseQueue[d.MouseQStart].num == 148);
-
+#endif
   //dragFromMarchingOrder = pMouseQueue[d.MouseQStart].num == 0xffff;
 
   if (    !IsPlayFileOpen()
@@ -1482,13 +1610,19 @@ RESTARTABLE _HandleMouseEvents(const i32 delta)
     d.MouseInterlock = 0;
     RETURN_int(result);
   };
-
-
-
-
 //D6 = d.Word16854 * 6;
 //A0 = &d.Word16848 + D6W;
+#ifdef POST_TRANSLATE_CLICK
+  // 20230506
+  D6W = pMouseQueue[d.MouseQStart].translatedButtonNum;
+#else
+  // 20230506
   D6W = pMouseQueue[d.MouseQStart].num;
+#endif
+  if (D6W == 0x51)
+  {
+    int kkk = 1;
+  };
   if (  (D6W >= 3)
       &&(D6W <= 6)
       &&(  (d.partyMoveDisableTimer!=0)
@@ -1504,8 +1638,13 @@ RESTARTABLE _HandleMouseEvents(const i32 delta)
     CauseFakeMouseClick();
     RETURN_int(result);
   };
-
+#ifdef POST_TRANSLATE_CLICK
+  // 20230506
+  if (pMouseQueue[d.MouseQStart].translatedButtonNum != 80)
+#else
+  // 20230506
   if (pMouseQueue[d.MouseQStart].num != 80)
+#endif
   { // HandleClickInViewport will do its own recording.
     // This is because the active areas in the viewport depend on
     // the game's state and we want to use as few xy coordinates as

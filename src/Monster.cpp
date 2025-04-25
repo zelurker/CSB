@@ -696,6 +696,10 @@ bool PossibleMove(const MONSTERDESC *pmtDesc,   //8
   {
     if ((D5W&4) == 0)  // if (closed)
     {
+      if (RFPAW)
+      {
+        int kkk = 1;
+      };
       if (!((D5W&1)?RFPAW:(D5W&1))) // Can monster walk through false wall?
       {
         return false;
@@ -3287,6 +3291,10 @@ void ProcessTimers29to41(
   //D6W = mapY;
   TIMERTRACE(-1);
   TIMERTRACE(d.RandomNumber);
+  if (d.Time == 0x48d)
+  {
+    int kkk = 1;
+  };
   if (AITraceActive)
   {
     fprintf(GETFILE(TraceFile),"MonsterAI [0x%04x] %02d(%02d,%02d)@%d Perform Initial Checks-timeFunc=%s, timeUntilAlternateUpdate=%d\n",
@@ -3608,6 +3616,10 @@ void ProcessTimers29to41(
   if (timeFunc <= TT_MONSTER_A3)
   { // Process Timers of type A
     mmr.Setflg(TT29to41_TTmonsterA3);
+    if ((mapX == 0x1b) && (mapY == 0x10) && (d.Time == 0x2a3))
+    {
+      int kkk = 1;
+    };
     TIMERTRACE(0xcfa6);
     switch(timeFunc)
     {
@@ -3752,6 +3764,10 @@ void ProcessTimers29to41(
   // Process Timers of Type B
   // ********************************************************
   TIMERTRACE(0xd08a);
+  if (d.Time == 0x2a3)
+  {
+    int kkk = 1;
+  };
   processingATimer = false;//w_40 = 0;
   if (AITraceActive)
   {

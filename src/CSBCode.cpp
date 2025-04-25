@@ -2193,7 +2193,11 @@ void TAG002818(void) // called by VBL handler
     MouseQueueEnt ent;
     ent.x = 0xffff;
     ent.y = 0xffff;
-    ent.num = 0xffff;
+#ifdef POST_TRANSLATE_CLICK
+    ent.translatedButtonNum = 0xffff; // 20230506
+#else
+    ent.num = 0xffff;  // 20230506
+#endif
     RecordFile_Record(&ent);
   };
   d.NewCursorShape = 1;
@@ -3220,7 +3224,7 @@ i16 DrawWallDecoration(i32 graphicOrdinal,
   bool farRightSidewall; // Positions 1 or 6
   //i16 LOCAL_6;
   pnt LOCAL_4;
-  DECORATION_DESC *pWDP_4;
+  //DECORATION_DESC *pWDP_4;
   //bool bD0;
   i32 srcByteWidth;
   i32 finalBitmapWidth;
@@ -3618,11 +3622,12 @@ i16 DrawWallDecoration(i32 graphicOrdinal,
       };
     };
   }; //(relativePosition < 10)
+  MemMove(pWDP, &LOCAL_22.b, 4); // Temp copy so we can modify.
   if (drawingText)
   {
     i32 numLine;
     //LOCAL_4 = A3;  //RECTPOS
-    pWDP_4 = pWDP;
+    //pWDP_4 = pWDP;
     A3 = (aReg)ExpandedText; //The text
     numLine = 0;
     do
@@ -3641,10 +3646,10 @@ i16 DrawWallDecoration(i32 graphicOrdinal,
 //
 //    };
     //A3 = LOCAL_4; //RECTPOS
-    pWDP = pWDP_4;
+    //pWDP = pWDP_4;
     if (numLine < 4)
     {
-      MemMove((ui8 *)A3, (ui8 *)&LOCAL_22, 8); //Why 8?
+      //MemMove((ui8 *)A3, (ui8 *)&LOCAL_22, 8); //Why 8?
       //A3 = &LOCAL_22; //Local copy of RECTPOS + 2 bytes
       A0 = d.WallDecorationDerivedGraphicOffset; //0,0,1,1,1,2,2,3,3,3,4,4 // Which of the 5 derived graphics to use
       D0L = 3*((UI8)(*(A0+relativePosition)));//Try adding P2. Seems Reasonable
@@ -3718,7 +3723,10 @@ i16 DrawWallDecoration(i32 graphicOrdinal,
         "Drawing decoration\n");
       fprintf(GETFILE(TraceFile),
         "A3 -> %x,%x,%x,%x srcOffsetX=%x srcByteWidth=%x\n",
-        (UI8)(pWDP->rect.x1),(UI8)(pWDP->rect.x2),(UI8)(pWDP->rect.y1),(UI8)(pWDP->rect.y2),
+        (LOCAL_22.b.x1),
+        (LOCAL_22.b.x2),
+        (LOCAL_22.b.y1),
+        (LOCAL_22.b.y2),
         srcOffsetX, srcByteWidth);
     }
     else
@@ -3732,7 +3740,7 @@ i16 DrawWallDecoration(i32 graphicOrdinal,
     //pWDP->rect.x2--;
     TAG0088b2(pFinalBitmap,  // Pictureframe appears
               (ui8 *)d.pViewportBMP,
-              (RectPos *)pWDP, //0x50,0x8f,0x1d,0x47
+              (RectPos *)&LOCAL_22.b, //(RectPos *)pWDP, //0x50,0x8f,0x1d,0x47
               //D4W,
               srcOffsetX,
               0,
@@ -5261,8 +5269,8 @@ void RemoveObjectFromRoom(RN object,i32 mapX,i32 mapY, MMRECORD *pmmr)
       ASSERT((pdA0[mapY] & 0x10)!=0,"pdA0");
       pdA0[mapY] &= 0xef; // clear 'room has object'
       D5W = sw(d.dungeonDatIndex->ObjectListLength() - 1);
-      D0W = sw(2*(D5W - D6W));
-      MemMove((ui8 *)(prnA2+1), (ui8 *)prnA2, D0W);
+      D0UW = uw(2*(D5W - D6W));
+      MemMove((ui8 *)(prnA2+1), (ui8 *)prnA2, D0UW);
       d.objectList[D5W] = RN(RNnul); // clear last entry
       //Now we need to fix the column indexes.
       puwA2 = &d.pCurrentLevelObjectIndex[mapX+1];
@@ -6978,8 +6986,8 @@ i16 GetCharacterToDamage(i32 attackerX, i32 attackerY , i32 attackerAbsPos)
 // It should be 0 to 7 for the 8 hands shown in
 // in the 4 portrait areas.  It should be 8 to 20
 // for the clothes on the 'paper doll'.  It should be
-// 21 to 37 for the backpack items.  It will be 30 to
-// 37 for items in the chest.
+// 21 to 37 for the backpack items.  It will be 38 to
+// 45 for items in the chest.
 //
 // *********************************************************
 //   TAG015e0c
@@ -7649,7 +7657,11 @@ void OnMouseUnClick(void)
       if (d.MouseQEnd > MOUSEQLEN-1) d.MouseQEnd -= MOUSEQLEN;
       //d.MouseQEnd = D5W;
     //A0 = d.Pointer16848 + D5W * 6;
-      pMouseQueue[d.MouseQEnd].num = 0xadd;  // Added type
+#ifdef POST_TRANSLATE_CLICK
+      pMouseQueue[d.MouseQEnd].translatedButtonNum = 0xadd;  // 20230506 Added type
+#else
+      pMouseQueue[d.MouseQEnd].num = 0xadd;  // 20230506 Added type
+#endif
     //A0 = d.Pointer16852 + D5W * 6;
       pMouseQueue[d.MouseQEnd].x = 0;
     //A0 = d.Pointer16850 + 6 * D5W;
@@ -7665,7 +7677,13 @@ void OnMouseUnClick(void)
 void OnMouseClick(i32 x,i32 y,i32 buttons)
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+#ifdef POST_TRANSLATE_CLICK
+  // 20230506
+  dReg D0, D6, D7;
+#else
+  // 20230506
   dReg D0, D4, D6, D7;
+#endif
   i32 numEnt;
   //SaveRegs(0x0f00);
   D7W = sw(x);
@@ -7685,6 +7703,20 @@ void OnMouseClick(i32 x,i32 y,i32 buttons)
     numEnt = (numEnt + MOUSEQLEN) % MOUSEQLEN;
     if (numEnt < MOUSEQLEN-2)
     {
+#ifdef POST_TRANSLATE_CLICK
+      // 20230506
+      d.MouseQEnd++;
+      if (d.MouseQEnd > MOUSEQLEN - 1) d.MouseQEnd -= MOUSEQLEN;
+      //d.MouseQEnd = D5W;
+    //A0 = d.Pointer16848 + D5W * 6;
+      pMouseQueue[d.MouseQEnd].translatedButtonNum = UNTRANSLATED_CLICK; 
+    //A0 = d.Pointer16852 + D5W * 6;
+      pMouseQueue[d.MouseQEnd].x = D7W;
+      //A0 = d.Pointer16850 + 6 * D5W;
+      pMouseQueue[d.MouseQEnd].y = D6W;
+      pMouseQueue[d.MouseQEnd].buttons = (ui16)buttons;
+#else
+      // 20230506
       //We cannot add a fourth entry because then there would be no
       //room for a matching 'UnClick' (button release).
       if (keyboardMode == 2) // Reincarnate mode
@@ -7731,7 +7763,7 @@ void OnMouseClick(i32 x,i32 y,i32 buttons)
       };
        if ((D4W==0) && IsTextScrollArea(D7W, D6W))
       {
-        D4W = 216;
+        D4W = 0xd8; // 216;
         D7W = 0;
         D6W = 0;
       };
@@ -7741,14 +7773,18 @@ void OnMouseClick(i32 x,i32 y,i32 buttons)
         if (d.MouseQEnd > MOUSEQLEN-1) d.MouseQEnd -= MOUSEQLEN;
         //d.MouseQEnd = D5W;
       //A0 = d.Pointer16848 + D5W * 6;
-        pMouseQueue[d.MouseQEnd].num = D4W;
+        pMouseQueue[d.MouseQEnd].num = D4W; // 20230506
       //A0 = d.Pointer16852 + D5W * 6;
         pMouseQueue[d.MouseQEnd].x = D7W;
       //A0 = d.Pointer16850 + 6 * D5W;
         pMouseQueue[d.MouseQEnd].y =  D6W;
       };
-      d.MouseInterlock = 0;
+      // d.MouseInterlock = 0; PRS 20230507
+#endif
     };
+    // This used to be inside the preceeding conditional block.  That seemed
+    // wrong since it is set to 1 outside that block.  PRS 20230507
+    d.MouseInterlock = 0;
   };
   //RestoreRegs(0x00f0);
 }
@@ -8508,8 +8544,14 @@ void TAG0196da(i32 key)
           D0W = D6W;
           D6W--;
           if (D0W == 0) D6W = MOUSEQLEN-1;
-          d.MouseQEnd = D6W;
+#ifdef POST_TRANSLATE_CLICK
+          // 20230506
+          pMouseQueue[D6W].translatedButtonNum = D5W;
+#else
+          // 20230506
           pMouseQueue[D6W].num = D5W;
+#endif
+          d.MouseQEnd = D6W;
           break;
         };
         pxA3++;
@@ -8526,7 +8568,13 @@ void TAG0196da(i32 key)
             D6W--;
             if (D0W == 0) D6W = MOUSEQLEN-1;
             d.MouseQEnd = D6W;
+#ifdef POST_TRANSLATE_CLICK
+            // 20230506
+            pMouseQueue[D6W].translatedButtonNum = D5W;
+#else
+            // 20230506
             pMouseQueue[D6W].num = D5W;
+#endif
           };
           pxA3++;
         };
@@ -8542,8 +8590,14 @@ void TAG0196da(i32 key)
           D0W = D6W;
           D6W--;
           if (D0W == 0) D6W = MOUSEQLEN-1;
-          d.MouseQEnd = D6W;
+#ifdef POST_TRANSLATE_CLICK
+          // 20230506
+          pMouseQueue[D6W].translatedButtonNum = D5W;
+#else
+          // 20230506
           pMouseQueue[D6W].num = D5W;
+#endif
+          d.MouseQEnd = D6W;
         };
       };
     };

@@ -685,6 +685,9 @@ void RevealViewport(void)
 
 struct STATEENTRY
 {
+  int       returnPoint;  //This is not used.  But it makes
+                          // looking back into the call stack
+                          // with the debugger more pleasant.
   CODESTATE state;
   uintptr_t p1;
   uintptr_t p2;
@@ -735,20 +738,26 @@ void _CALL8(GAMESTATE ,int,int,int,int,int,int,int,int)
 void _CALL9(GAMESTATE ,int,int,int,int,int,int,int,int,int)
 {NotImplemented();}
 */
-void _CALL0(CODESTATE newState)
+void _CALL0(int n,
+            CODESTATE newState)
 {
   ASSERT(numState < MaxState,"maxState");
+  ASSERT(numState > 0, "minState");
+  stateStack[numState-1].returnPoint = n;
   stateStack[numState].state = newState;
   numState++;
   UI_PushMessage(UIM_INITIALFUNCTIONENTRY);
   return ;
 }
 
-void _CALL1(CODESTATE newState,
+void _CALL1(int n,
+            CODESTATE newState,
             uintptr_t p1)
 
 {
   ASSERT(numState < MaxState,"maxState");
+  ASSERT(numState > 0, "minState");
+  stateStack[numState - 1].returnPoint = n;
   stateStack[numState].state = newState;
   stateStack[numState].p1 = p1;
   numState++;
@@ -757,12 +766,15 @@ void _CALL1(CODESTATE newState,
 }
 
 
-void _CALL2(CODESTATE newState,
+void _CALL2(int n,
+            CODESTATE newState,
             i32       p1,
             uintptr_t p2)
 
 {
   ASSERT(numState < MaxState,"maxState");
+  ASSERT(numState > 0, "minState");
+  stateStack[numState - 1].returnPoint = n;
   stateStack[numState].state = newState;
   stateStack[numState].p1 = p1;
   stateStack[numState].p2 = p2;
@@ -771,13 +783,16 @@ void _CALL2(CODESTATE newState,
   return ;
 }
 
-void _CALL3(CODESTATE newState,
+void _CALL3(int n,
+            CODESTATE newState,
             i32 p1,
             uintptr_t p2,
             uintptr_t p3)
 
 {
   ASSERT(numState < MaxState,"maxState");
+  ASSERT(numState > 0, "minState");
+  stateStack[numState - 1].returnPoint = n;
   stateStack[numState].state = newState;
   stateStack[numState].p1 = p1;
   stateStack[numState].p2 = p2;
@@ -787,7 +802,8 @@ void _CALL3(CODESTATE newState,
   return ;
 }
 
-void _CALL4(CODESTATE newState,
+void _CALL4(int n,
+            CODESTATE newState,
             uintptr_t p1,
             i32 p2,
             uintptr_t p3,
@@ -795,6 +811,8 @@ void _CALL4(CODESTATE newState,
 
 {
   ASSERT(numState < MaxState,"maxState");
+  ASSERT(numState > 0, "minState");
+  stateStack[numState - 1].returnPoint = n;
   stateStack[numState].state = newState;
   stateStack[numState].p1 = p1;
   stateStack[numState].p2 = p2;
@@ -805,7 +823,8 @@ void _CALL4(CODESTATE newState,
   return ;
 }
 
-void _CALL5(CODESTATE newState,
+void _CALL5(int n,
+            CODESTATE newState,
             uintptr_t p1,
             uintptr_t p2,
             uintptr_t p3,
@@ -814,6 +833,8 @@ void _CALL5(CODESTATE newState,
 
 {
   ASSERT(numState < MaxState,"maxState");
+  ASSERT(numState > 0, "minState");
+  stateStack[numState - 1].returnPoint = n;
   stateStack[numState].state = newState;
   stateStack[numState].p1 = p1;
   stateStack[numState].p2 = p2;
@@ -825,7 +846,8 @@ void _CALL5(CODESTATE newState,
   return ;
 }
 
-void _CALL6(CODESTATE newState,
+void _CALL6(int n,
+            CODESTATE newState,
             i32 p1,
             i32 p2,
             i32 p3,
@@ -835,6 +857,8 @@ void _CALL6(CODESTATE newState,
 
 {
   ASSERT(numState < MaxState,"maxState");
+  ASSERT(numState > 0, "minState");
+  stateStack[numState - 1].returnPoint = n;
   stateStack[numState].state = newState;
   stateStack[numState].p1 = p1;
   stateStack[numState].p2 = p2;
@@ -847,7 +871,8 @@ void _CALL6(CODESTATE newState,
   return ;
 }
 
-void _CALL8(CODESTATE newState,
+void _CALL8(int n,
+            CODESTATE newState,
             i32 p1,
             i32 p2,
             i32 p3,
@@ -859,6 +884,8 @@ void _CALL8(CODESTATE newState,
 
 {
   ASSERT(numState < MaxState,"maxState");
+  ASSERT(numState > 0, "minState");
+  stateStack[numState - 1].returnPoint = n;
   stateStack[numState].state = newState;
   stateStack[numState].p1 = p1;
   stateStack[numState].p2 = p2;
@@ -873,7 +900,8 @@ void _CALL8(CODESTATE newState,
   return ;
 }
 
-void _CALL9(CODESTATE newState,
+void _CALL9(int n,
+            CODESTATE newState,
             uintptr_t p1,
             uintptr_t p2,
             uintptr_t p3,
@@ -886,6 +914,8 @@ void _CALL9(CODESTATE newState,
 
 {
   ASSERT(numState < MaxState,"maxState");
+  ASSERT(numState > 0, "minState");
+  stateStack[numState - 1].returnPoint = n;
   stateStack[numState].state = newState;
   stateStack[numState].p1 = p1;
   stateStack[numState].p2 = p2;

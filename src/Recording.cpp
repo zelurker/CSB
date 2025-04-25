@@ -162,8 +162,8 @@ void PLAYFILE::Open(void)
   };
   GETS(versionLine,199,m_file);
   {
-    i32 n;
-    for (n = (i32)strlen(versionLine)-1; n>=0; n--)
+    int n;
+    for (n = strlen(versionLine)-1; n>=0; n--)
     {
       if (versionLine[n] > 32) break;
       versionLine[n] = 0;
@@ -187,7 +187,7 @@ void PLAYFILE::Open(void)
         fprintf(GETFILE(TraceFile),"Expected version %s\n", szCSBVersion);
         fprintf(GETFILE(TraceFile),"File version %s\n", versionLine+1);
       };
-      UI_MessageBox(msg,"",MESSAGE_OK);
+      //UI_MessageBox(msg,"",MESSAGE_OK);
     };
   };
   STHideCursor(HC35);
@@ -239,7 +239,13 @@ bool PLAYFILE::Play(MouseQueueEnt *ent)
       m_eofEncountered = true;
       if (!m_forceClose && (d.Time <= m_oldTime)) return false;
       MouseQueueEnt tent;
+#ifdef POST_TRANSLATE_CLICK
+      // 20230506
+      tent.translatedButtonNum = 0x5555;
+#else
+      // 20230506
       tent.num = 0x5555;
+#endif
       tent.x = 0;
       tent.y = 0;
       d.RandomNumber ^= 0xaa00;
@@ -256,7 +262,7 @@ bool PLAYFILE::Play(MouseQueueEnt *ent)
       };
       return false;
     };
-    len = (i32)strlen(line);
+    len = strlen(line);
     while ( (len>0) && ((line[len-1] == '\n')||(line[len-1] == '\r')))
     {
       len--;
@@ -500,8 +506,10 @@ bool PLAYFILE::Play(MouseQueueEnt *ent)
     static i32 annotationFile = -1;
     static bool attempted = false;
     static i32 annotationTime = -1;
+    static i32 annotationPlayerCurrent = 0;
     if (!attempted)
     {
+      // Open file don't try again.
       attempted = true;
       annotationFile = OPEN("annotation.txt", "r");
     };
@@ -509,20 +517,23 @@ bool PLAYFILE::Play(MouseQueueEnt *ent)
     {
       if (annotationTime < 0)
       {
+        // We want to find a time.
         // Read the annotation file to find an entry for this time (or greater)
         char annotationLine[200];
         if (fgets(annotationLine, 199, GETFILE(annotationFile)) == NULL)
         {
+          // EOF
           CLOSE(annotationFile);
           annotationFile = -1;
         }
         else
         {
           i32 len;
-          len = (i32)strlen(annotationLine);
+          len = strlen(annotationLine);
           if ( (len>0) && (annotationLine[0] == '#'))
           {
-            if (sscanf(annotationLine+1,"%d",&annotationTime) != 1)
+            if (sscanf(annotationLine + 1, "%d", &annotationPlayerCurrent) != 1
+              || sscanf(annotationLine + 3, "%d", &annotationTime) != 1)
             {
               CLOSE(annotationFile);
               annotationFile = -1;
@@ -539,41 +550,62 @@ bool PLAYFILE::Play(MouseQueueEnt *ent)
     {
       if (annotationTime <= d.Time)
       {
-        EditDialog annotationDialog;
-        char annotationLine[200];
-        char *annotation;
-        i32 annotationLen = 0;
+        // The current annotation time is less than the dungeon time, so print it.
+        char annotation[200];
         annotationTime = -1;
-        annotation = NULL;
-        annotationLine[0] = 0;
-        while (fgets(annotationLine, 198, GETFILE(annotationFile)) != NULL)
+        annotation[0] = 0;
+        if (fgets(annotation, 198, GETFILE(annotationFile)) != NULL)
         {
           i32 lineLen;
-          lineLen = (i32)strlen(annotationLine);
-          annotationLine[lineLen-1] = 0x0d;
-          annotationLine[lineLen] = 0x0a;
-          annotationLine[lineLen+1] = 0;
-          lineLen++;
-          if (annotationLine[0] != '#')
-          {
-            annotation = (char *)UI_realloc(annotation, annotationLen+lineLen+1,MALLOC114);
-            strcpy(annotation+annotationLen, annotationLine);
-            annotationLen += lineLen;
+          lineLen = strlen(annotation);
+          if (lineLen > 1
+            && (annotation[lineLen - 1] == 0x0d
+              || annotation[lineLen - 1] == 0x0a)) {
+            annotation[lineLen - 1] = 0;
           }
-          else
-          {
-            if (sscanf(annotationLine+1,"%d",&annotationTime) != 1)
-            {
-              CLOSE(annotationFile);
-              annotationFile = -1;
+          if (lineLen > 2
+            && (annotation[lineLen - 2] == 0x0d
+              || annotation[lineLen - 2] == 0x0a)) {
+            annotation[lineLen - 2] = 0;
+          }
+          annotation[lineLen] = 0;
+          annotation[lineLen + 1] = 0;
             };
-            break;
-          };
-        };
 
-        annotationDialog.m_initialText = annotation;
-        annotationDialog.DoModal();
-        UI_free(annotation);
+        static i32 annotationColor = 0;
+        switch (annotationPlayerCurrent)
+        {
+        case 0: // The physical player.
+          annotationColor = 15;
+            break;
+        case 1: // Players 1 - 4.
+          annotationColor = 7;
+          break;
+        case 2:
+          annotationColor = 11;
+          break;
+        case 3:
+          annotationColor = 8;
+          break;
+        case 4:
+          annotationColor = 14;
+          break;
+        case 5: // Monster.
+          annotationColor = 4;
+          break;
+        }
+
+        int i = 0;
+        while (annotation[i])
+        {
+          annotation[i] = (char)toupper(annotation[i]);
+          i++;
+        }
+
+        char result[201];
+        strcpy(result, "\n");
+        strcat(result, annotation);
+        QuePrintLines(annotationColor, result,false);
       };
     };
   };
@@ -588,7 +620,13 @@ bool PLAYFILE::Play(MouseQueueEnt *ent)
   };
   ent->x = sw(m_x);
   ent->y = sw(m_y);
+#ifdef POST_TRANSLATE_CLICK
+  // 20230506
+  ent->translatedButtonNum = sw(m_num);
+#else
+  // 20230506
   ent->num = sw(m_num);
+#endif
   m_oldTime = m_time;
   m_oldCallCount = numRandomCalls;
   m_time = -1;
@@ -624,7 +662,7 @@ bool PLAYFILE::Play(MouseQueueEnt *ent)
         char msg[80];
         hash = versionSignature;
         sprintf(msg, "Recorded with Different\nCSBwin Version\n%08x", hash);
-        UI_MessageBox(msg,"error",MESSAGE_OK);
+        //UI_MessageBox(msg,"error",MESSAGE_OK);
         firstVersionWarning = false;
       };
     };
@@ -796,7 +834,13 @@ void PLAYFILE::Backspace(MouseQueueEnt *
   ASSERT (m_time == -1, "playback");
   ASSERT (m_x == ent->x, "playback");
   ASSERT (m_y == ent->y, "playback");
+#ifdef POST_TRANSLATE_CLICK
+  // 20230506
+  ASSERT(m_num == ent->translatedButtonNum, "playback");
+#else
+  // 20230506
   ASSERT (m_num == ent->num, "playback");
+#endif
   m_time = d.Time;
 }
 
@@ -868,20 +912,46 @@ void RECORDFILE::Open(void)
         fprintf(GETFILE(m_fileNum),"#                  0004 --> Slide Right\n");
         fprintf(GETFILE(m_fileNum),"#                  0005 --> Move Backward\n");
         fprintf(GETFILE(m_fileNum),"#                  0006 --> Slide Left\n");
-        fprintf(GETFILE(m_fileNum),"#                  000b --> Leave Inventory Screen\n");
+        fprintf(GETFILE(m_fileNum),"#                  0007 --> Toggle Inventory Screen\n");
+        fprintf(GETFILE(m_fileNum),"#                  0008 --> Toggle Inventory Screen\n");
+        fprintf(GETFILE(m_fileNum),"#                  0009 --> Toggle Inventory Screen\n");
+        fprintf(GETFILE(m_fileNum),"#                  000a --> Toggle Inventory Screen\n");
+        fprintf(GETFILE(m_fileNum),"#                  000b --> Toggle Inventory Screen\n");
+        fprintf(GETFILE(m_fileNum),"#                  000c --> Click on character 0\n");
+        fprintf(GETFILE(m_fileNum),"#                  000d --> Click on character 1\n");
+        fprintf(GETFILE(m_fileNum),"#                  000e --> Click on character 2\n");
+        fprintf(GETFILE(m_fileNum),"#                  000f --> Click on character 3\n");
+        fprintf(GETFILE(m_fileNum),"#                  001c --> Click on character inventory\n");
+        fprintf(GETFILE(m_fileNum),"#                  ....  clothing or backback\n");
+        fprintf(GETFILE(m_fileNum),"#                  0041 --> Click on character inventory\n");
         fprintf(GETFILE(m_fileNum),"#                  0046 --> Click mouth to feed\n");
         fprintf(GETFILE(m_fileNum),"#                  0047 --> Click eye to show skills\n");
         fprintf(GETFILE(m_fileNum),"#                  0050 --> Click in Viewport\n"),
+        fprintf(GETFILE(m_fileNum),"#                  0051 --> Click in Chest contents\n"),
         fprintf(GETFILE(m_fileNum),"#                  0053 --> Select Inventory Screen\n");
+        fprintf(GETFILE(m_fileNum),"#                  0064 --> Magic Click\n");
         fprintf(GETFILE(m_fileNum),"#                  006f --> Select Attack Character/option\n");
+        fprintf(GETFILE(m_fileNum),"#                  007d --> Change Character 0 Position\n");
+        fprintf(GETFILE(m_fileNum),"#                  007e --> Change Character 1 Position\n");
+        fprintf(GETFILE(m_fileNum),"#                  007f --> Change Character 2 Position\n");
+        fprintf(GETFILE(m_fileNum),"#                  0080 --> Change Character 3 Position\n");
         fprintf(GETFILE(m_fileNum),"#                  008c --> Select Disk option from inventory\n");
+        fprintf(GETFILE(m_fileNum),"#                  0091 --> Set Party Sleeping\n"),
+        fprintf(GETFILE(m_fileNum),"#                  0050 --> Awaken Party\n"),
         fprintf(GETFILE(m_fileNum),"#                  0093 --> Freeze Game\n");
         fprintf(GETFILE(m_fileNum),"#                  0094 --> un-Freeze Game\n");
+        fprintf(GETFILE(m_fileNum),"#                  00c8 --> Enter Prison\n");
         fprintf(GETFILE(m_fileNum),"#                  00c9 --> Resume (at prison door)\n");
         fprintf(GETFILE(m_fileNum),"#                  00d2 --> First Menu option\n");
         fprintf(GETFILE(m_fileNum),"#                  00d3 --> Second Menu Option\n");
         fprintf(GETFILE(m_fileNum),"#                  00d4 --> Third Menu Option\n");
+        fprintf(GETFILE(m_fileNum),"#                  00d5 --> Fourth Menu Option\n");
+        fprintf(GETFILE(m_fileNum),"#                  00d7 --> Restart after party death\n");
         fprintf(GETFILE(m_fileNum),"#                  0add --> Mouse button up\n");
+        fprintf(GETFILE(m_fileNum),"#                  2224 --> Replace side-effects of save/restore\n"),
+        fprintf(GETFILE(m_fileNum),"#                  3333 --> Start of game.\n"),
+        fprintf(GETFILE(m_fileNum),"#                  4444 --> Alphabetic Charcter.\n"),
+        fprintf(GETFILE(m_fileNum),"#                  5555 --> End-of-file; internal use\n"),
         fprintf(GETFILE(m_fileNum),"#                  6665 --> Version Signiture\n");
         fprintf(GETFILE(m_fileNum),"#                  6666 --> Graphics Signiture\n");
         fprintf(GETFILE(m_fileNum),"#                  6667 --> Dungeon Signiture\n");
@@ -989,7 +1059,17 @@ void RECORDFILE::Record(i32 x, i32 y, i32 f)
   MouseQueueEnt ent;
   ent.x = sw(x);
   ent.y = sw(y);
+#ifdef POST_TRANSLATE_CLICK
+  // 20230506
+  if (f == UNTRANSLATED_CLICK)
+  {
+    die(0x9bc3, "Untranslated Button Code");
+  };
+  ent.translatedButtonNum = sw(f);
+#else
+  // 20230506
   ent.num = sw(f);
+#endif
   Record(&ent);
 }
 
@@ -1010,12 +1090,137 @@ void RECORDFILE::Record(const char *l)
 
 void RECORDFILE::Record(MouseQueueEnt *ent)
 {
+#ifdef POST_TRANSLATE_CLICK
+  // 20230506
+  if (ent->translatedButtonNum == UNTRANSLATED_CLICK)
+  {
+    die(0x9bc3, "Untranslated Button Code");
+  };
+  if ((ent->translatedButtonNum == 0x64)
+    && (ent->x == 0x114)
+    && (ent->y == 0x2f)) return; //No operation
+  if (ent->translatedButtonNum < 0x2000)
+  {
+    totalMoveCount++;
+  };
+#else
+  // 20230506
   if (   (ent->num == 0x64)
        &&(ent->x == 0x114)
        &&(ent->y == 0x2f) ) return; //No operation
   if (ent->num < 0x2000)
   {
     totalMoveCount++;
+  };
+#endif
+#ifdef POST_TRANSLATE_CLICK
+  switch(ent->translatedButtonNum)
+#else
+  switch (ent->num)
+#endif
+  {
+  case 1:
+  case 2:
+  case 3:
+  case 4:
+  case 5:
+  case 6:
+  case 7:
+  case 8:
+  case 9:
+  case 0x0a:
+  case 0x0b:
+  case 0x0c:
+  case 0x0d:
+  case 0x0e:
+  case 0x0f:
+  case 0x1c:
+  case 0x1d:
+  case 0x1e:
+  case 0x1f:
+  case 0x20:
+  case 0x21:
+  case 0x22:
+  case 0x23:
+  case 0x24:
+  case 0x25:
+  case 0x26:
+  case 0x27:
+  case 0x28:
+  case 0x29:
+  case 0x2a:
+  case 0x2b:
+  case 0x2c:
+  case 0x2d:
+  case 0x2e:
+  case 0x2f:
+  case 0x30:
+  case 0x31:
+  case 0x32:
+  case 0x33:
+  case 0x34:
+  case 0x35:
+  case 0x36:
+  case 0x37:
+  case 0x38:
+  case 0x39:
+  case 0x3a:
+  case 0x3b:
+  case 0x3c:
+  case 0x3d:
+  case 0x3e:
+  case 0x3f:
+  case 0x40:
+  case 0x41:
+  case 0x46:
+  case 0x47:
+  case 0x50:
+  case 0x51:
+  case 0x53:
+  case 0x64:
+  case 0x6f:
+  case 0x7d:
+  case 0x7e:
+  case 0x7f:
+  case 0x80:
+  case 0x8c:
+  case 0x91:
+  case 0x92:
+  case 0x93:
+  case 0x94:
+  case 0xc8:
+  case 0xc9:
+  case 0xd2:
+  case 0xd3:
+  case 0xd4:
+  case 0xd5:
+  case 0xd7:
+  case 0x0add:
+  case 0x2224:
+  case 0x3333:
+  case 0x4444:
+  case 0x5555:
+  case 0x6665:
+  case 0x6666:
+  case 0x6667:
+  case 0x6668:
+  case 0x6669:
+  case 0x666a:
+  case 0xffff:
+    break;
+  default:
+    {
+      char eline[100];
+      sprintf(eline, " Add 0x%04x to comments at front of recording file",
+#ifdef POST_TRANSLATE_CLICK
+        ent->translatedButtonNum
+#else
+        ent->num
+#endif
+      );
+      UI_MessageBox(eline, "Suggestion", MESSAGE_OK);
+    };
+    break;
   };
   if ((m_fileNum < 0)&& !m_isQueueingLines) return;
   if (m_fileNum >= 0)
@@ -1051,16 +1256,31 @@ void RECORDFILE::Record(MouseQueueEnt *ent)
         m_versionSignature = true;
       };
     };
+#ifdef POST_TRANSLATE_CLICK
+    // 20230506
+    fprintf(GETFILE(m_fileNum), "%08x %04x %04x %04x %08x\n",
+      d.Time, ent->x, ent->y, ent->translatedButtonNum, d.RandomNumber);
+#else
+    // 20230506
     fprintf(GETFILE(m_fileNum), "%08x %04x %04x %04x %08x\n",
                      d.Time, ent->x, ent->y, ent->num, d.RandomNumber);
+#endif
     fflush(GETFILE(m_fileNum));
   }
   else
   {
     char buf[40];
+#ifdef POST_TRANSLATE_CLICK
+    // 20230506
+    sprintf(buf,
+      "%08x %04x %04x %04x %08x\n",
+      d.Time, ent->x, ent->y, ent->translatedButtonNum, d.RandomNumber);
+#else
+    // 20230506
     sprintf(buf,
             "%08x %04x %04x %04x %08x\n",
             d.Time, ent->x, ent->y, ent->num, d.RandomNumber);
+#endif
     m_lineQueue.push_back(buf);
   };
 }

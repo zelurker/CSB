@@ -1835,6 +1835,7 @@ RESTARTABLE _Attack(const i32 initialChIdx, const ATTACKTYPE initialAttackType)
       {
         pParam->experienceGained /= 2;
         pParam->disableTime /= 2;
+        //if (pParam->disableTime == 0) pParam->disableTime = 1;
       };
       break;
   case atk_CONFUSE://PAF
@@ -1937,6 +1938,7 @@ RESTARTABLE _Attack(const i32 initialChIdx, const ATTACKTYPE initialAttackType)
       {
         pParam->experienceGained /= 4;
         pParam->disableTime /= 2;
+        //if (pParam->disableTime == 0) pParam->disableTime = 1;
       }
       else
       {

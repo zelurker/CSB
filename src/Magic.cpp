@@ -43,7 +43,10 @@ i16 LaunchMissile(
   //  We really should check to see of the room contains
   //  a teleporter that affects this missile.
   //  'AddObjectToRoom' does not check.
-  //  'MoveObject' does check be we cannot use it.
+  //  'MoveObject' does check but we cannot use it.
+  //  This bug affects the puzzle at 07(14,34) of Chaos
+  //  Strikes Back because the teleporter at 07(14,33)
+  //  is quite useless.
   AddObjectToRoom(objD6, RN(RNempty), mapX, mapY, NULL);
   D0L = d.Time+1;
   //D1L = d.LoadedLevel << 24;

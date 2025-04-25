@@ -735,9 +735,8 @@ static void mix_channels(void *udata, Uint8 *stream, int len)
           //printf("SDL_MixAudio(channel %d,len=%d@%d)\n", i,len,
           //              (unsigned int)UI_GetSystemTime());
 	  SDL_MixAudio(stream+index,mix_input,mixable,volume);
-	  if (mix_input != mix_channel[i].samples) {
+	  if (mix_input != mix_channel[i].samples)
 	      SDL_free(mix_input);
-	  }
           mix_channel[i].samples += mixable;
 	  mix_channel[i].playing -= mixable;
 	  index += mixable;
@@ -857,13 +856,11 @@ int Mix_OpenAudio(int frequency, Uint16 format, int nchannels, int chunksize)
 
 	/* Accept nearly any audio format */
 	if ( SDL_OpenAudio(&desired, &mixer) < 0 ) {
-	    printf("open audio device failed, bye!\n");
 		return(-1);
 	}
 #if 0
 	PrintFormat("Audio device", &mixer);
 #endif
-	printf("audio got freq %d channels %d\n",mixer.freq,mixer.channels);
 
 //	/* Initialize the music players */
 //	if ( open_music(&mixer) < 0 ) {

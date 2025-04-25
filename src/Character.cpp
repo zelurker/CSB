@@ -1097,7 +1097,11 @@ void PrintLifeForces(CHARDESC *pChar)
 //
 // *********************************************************
 //   TAG014bf4
+#ifdef ATTACT_ACTIVE_FIX
+void DisplayBackpackItem(i32 chIdx, i32 itemNum, bool supressActiveItem)
+#else
 void DisplayBackpackItem(i32 chIdx, i32 itemNum)
+#endif
 {
   dReg D0, D5, D7;
   RN objD6;
@@ -2452,7 +2456,7 @@ i16 TAG01680a(i32 chIdx,i32 possessionIndex)
             D7W, pcA3->word64,pcA3->shieldStrength,d.PartyShield,D6W);
   };
   D7W = sw(  D7W
-           + pcA3->word64
+           + pcA3->word64   // Adjustment due to recent character attacks
            + pcA3->shieldStrength
            + d.PartyShield
            + D6W);
@@ -4900,9 +4904,17 @@ void TAG01b1c0(void)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   // Check somebody selecting attack option
   if (d.AttackingCharacterOrdinal == 0) return;
-  pChar = &d.CH16482[d.AttackingCharacterOrdinal-1];
+  //
+  // The following line is quite necessary!
+  // This ensures that the parameter passed to DrawCharacterState
+  // is not equal to d.AttackingCharacterOrdinal-1
+  // ...Ugly...But I tried it the other way and the cyan border
+  // did not disappear from the attacker's hand when the attack
+  // was 'passed' or had zero delay.
+  d.AttackingCharacterOrdinal--;
+  pChar = &d.CH16482[d.AttackingCharacterOrdinal];
   pChar->charFlags |= CHARFLAG_weaponAttack;
-  DrawCharacterState(d.AttackingCharacterOrdinal-1);
+  DrawCharacterState(d.AttackingCharacterOrdinal);
   d.AttackingCharacterOrdinal = 0;
   d.Word20250 = 1;
 }
@@ -4977,7 +4989,7 @@ RESTARTABLE _ExecuteAttack(const i32 P1)
     attackType = (ATTACKTYPE)(UI8)(d.PossibleAttackTypes[P1]);
     //pChar->word64 = sw(pChar->word64 + sb(d.Byte20090[attackType]));
     // See the definition of word64 for explanation
-    pChar->word64 = d.Byte20090[attackType];
+    pChar->word64 = d.Byte20090[attackType]; // Set attack resistance adjustment
     pChar->charFlags |= CHARFLAG_statsChanged;
     Attack(_1_,d.AttackingCharacterOrdinal-1,attackType);
     successfulAttack = intResult;

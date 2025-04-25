@@ -2649,7 +2649,7 @@ void EnableCharacterAction(i32 chIdx)
     //pChar->word64
     //     = sw(pChar->word64 - d.Byte20090[(UI8)(pChar->attackType)]);
     // See definition of word64 for explanation.
-    pChar->word64 = 0;
+    pChar->word64 = 0;  // Clear attack resistance adjustment
   };
   if (pChar->HP() != 0)
   {

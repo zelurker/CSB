@@ -212,6 +212,7 @@ typedef ui8 CELLFLAG;
     //    bit 0 (0x1) means wall is visible but open to party
     //    bit 2 (0x4) means active (wall is invisible and open to party)
     //    /////////////// Don't think this is true ******bit 3 (0x8) active  (like teleporter)
+    // bit 4 set means the cell contains at least one object.
     // bits 5-7 room type (see enum ROOMTYPE)
 
 

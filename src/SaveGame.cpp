@@ -511,7 +511,7 @@ void swapCharacter(i32 i)
   pc->m_wMaxStamina = LE16(pc->m_wMaxStamina);
   pc->m_wMana = LE16(pc->m_wMana);
   pc->m_wMaxMana = LE16(pc->m_wMaxMana);
-  pc->word64 = LE16(pc->word64);
+  pc->word64 = LE16(pc->word64);  // Attack resistance due to recent attacks
   pc->food = LE16(pc->food);
   pc->water = LE16(pc->water);
   for (j=0; j<20; j++)
@@ -1607,7 +1607,13 @@ tag01eb82:
   {
     MouseQueueEnt MQ;
     PlayFile_Play(&MQ);
+#ifdef POST_TRANSLATE_CLICK
+    // 20230506
+    if (MQ.translatedButtonNum != 0x3333)
+#else
+    // 20230506
     if (MQ.num != 0x3333)
+#endif
     {
       i32 ans;
       ans = UI_MessageBox("Replay Starting Random Error","Error",MESSAGE_YESNO);
@@ -1618,7 +1624,12 @@ tag01eb82:
   else
   {
     MouseQueueEnt MQ;
+#ifdef POST_TRANSLATE_CLICK
+    MQ.translatedButtonNum = 0x3333; // 20230506
+#else
+    // 20230506
     MQ.num = 0x3333;
+#endif
     MQ.x = (ui16)((d.RandomNumber >> 16) & 0xffff);
     MQ.y = (ui16)(d.RandomNumber & 0xffff);
     RecordFile_Record(&MQ);
