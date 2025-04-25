@@ -33,4 +33,6 @@ So far changes for the linux version from the 20190702 sources :
  - Fixed audio pitch too high, it was a bad frequency when opening the audio device
  - Fixed bad handling of scan codes for the keyboard, I'll leave a fixed config.linux file with the
    correct scan codes for the numpad in it outside the src directory.
+ - ability to drink directly from fountains, like what RTC and dsb do !
+
 
