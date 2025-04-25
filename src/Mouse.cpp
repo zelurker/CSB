@@ -1122,6 +1122,13 @@ void HandleClickInViewport(i32 clickX, i32 clickY)
         };
         if (D5W == 5)
         {
+	    if (d.FacingWaterFountain) {
+		CHARDESC *pc;
+		pc = &d.CH16482[d.HandChar]; // selected character
+		pc->water = sw(LIMIT(-1023,pc->water+1600,2048));
+		QueueSound(8, d.partyX, d.partyY, 0); // gulp sound for the fountain
+		return;
+	    }
           if (d.FacingAlcove == 0)
           {
             TouchWallF1();
