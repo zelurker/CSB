@@ -1,5 +1,7 @@
 This is a repository for the linux sources for CBSWin, found there : http://dmweb.free.fr/community/clones/chaos-strikes-back-for-windows-and-linux-raspbian-macos-x-pocket-pc/
 
+PAUL R STEVENS doesn't want to maintain the sources anymore so I'll at least maintain some linux sources for now.
+
 This is based originally on the latest sources available from there : https://www.dianneandpaul.net/CSBwin/CSBwin_SRC_20190702.7z
 You'll need some data files from the site over there :
 Dungeon master http://dianneandpaul.net/CSBwin/Games/DM_linux_x64_SDL20_20180508.tar
