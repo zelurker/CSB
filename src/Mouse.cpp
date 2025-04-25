@@ -1094,7 +1094,6 @@ void HandleClickInViewport(i32 clickX, i32 clickY)
     };
   };
   D0W = d.EmptyHanded;
-  printf("emptyhanded %x\n",D0W);
   if (D0W != 0)
   {
     for (D5W=0; D5W<6; D5W++)
@@ -1181,7 +1180,6 @@ void HandleClickInViewport(i32 clickX, i32 clickY)
     D0W = TestInRectangle((ui8 *)&d.ViewportObjectButtons[5],
                     clickX,
                     clickY-33);
-    printf("D0W %x\n",D0W);
     if (D0W != 0)
     {
       RecordFile_Record((d.ViewportObjectButtons[5].x1+d.ViewportObjectButtons[5].x2)/2,
