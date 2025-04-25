@@ -5848,6 +5848,13 @@ void SetPartyLevel(i32 level)
 {
   dReg D1;
   d.partyLevel = sw(level);
+
+  // Display level number at bottom of screen, too bad we can't set for how much time here...
+  static char levelText[10];
+  snprintf(levelText,10,"LEVEL %d",level);
+  // 15 is white like for a standard ST palette, can't believe they don't have any constant for colors!
+  QuePrintLines(15, levelText, false);
+
   LoadLevel(level);
   d.EndOfCELLFLAGS = d.LevelCellFlags[d.width-1] + d.height;//pdD0 = (CELLFLAG *)pD0;
   d.NumWallDecoration = d.pCurLevelDesc->NumWallDecoration();
