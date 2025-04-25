@@ -1,0 +1,34 @@
+This is a repository for the linux sources for CBSWin, found there : http://dmweb.free.fr/community/clones/chaos-strikes-back-for-windows-and-linux-raspbian-macos-x-pocket-pc/
+
+This is based originally on the latest sources available from there : https://www.dianneandpaul.net/CSBwin/CSBwin_SRC_20190702.7z
+You'll need some data files from the site over there :
+Dungeon master http://dianneandpaul.net/CSBwin/Games/DM_linux_x64_SDL20_20180508.tar
+Chaos strikes back http://dianneandpaul.net/CSBwin/CSBwin_linux_x86-64_SDL20_20180421-1550
+
+I intend to maintain only the linux version here, I don't use MSVC.
+Build instructions : super simple, there is a makefile in the src directory, I'll try to make sure
+the options line is the one for an optimized build, but you can double check in the Ubuntu_SDL20
+section. Oh by the way the old sdl12 section is not tested anymore neither.
+Just build with make that's all. The sources require sdl2, and just the include files for glib2
+which is used apparently only for its types, it's not linked.
+
+So far changes for the linux version from the 20190702 sources :
+ - 1st the savegame names were in uppercase, well in linux normal files are in lower case, so
+   changed all of them to lowercase.
+ - in the makefile there is now a line for debug options, and a line for optimized build, just using
+   -O2 for optimized build, and -fsantize=address in debug mode. Got a crash once when using a -O2
+   build so I had to check things, just found a small buffer overflow when saving the game. Also
+   added a 'clean' target.
+ - The window is now resizable and its default size is 320x4 x 200x4, closer to usual resolutions
+   these days and still quie below most.
+ - Handling of alt+return to toggle fullscreen mode with sdl2.
+ - Handles the window close event, so that if you quit the game by closing the window it doesn't
+   just crash (with a core dump !)
+ - And I had a strange crash as soon as trying to play some audio in the game the 1st time I used
+   the source. I am not totally sure of the cause, but using a pointer instead of a static global
+   for sdlChannels seems to fix it for some reason, just added a comment about that, now everything
+   seems to work.
+ - Fixed audio pitch too high, it was a bad frequency when opening the audio device
+ - Fixed bad handling of scan codes for the keyboard, I'll leave a fixed config.linux file with the
+   correct scan codes for the numpad in it outside the src directory.
+
