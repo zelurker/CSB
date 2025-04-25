@@ -249,7 +249,7 @@ void AdjustSkills(i32 chIdx,i32 skillNumber,i32 experience, i32 why)
   };
   psA3 = &pcA2->skills92[skillNumber];
 
-  
+
 /////////////////////////////////////////////////////
 //Now let the Adjust Skills Filter DSA do its thing
 /////////////////////////////////////////////////////
@@ -293,7 +293,7 @@ void AdjustSkills(i32 chIdx,i32 skillNumber,i32 experience, i32 why)
             //timer.timerTime   = locr.l << 24;
             timer.Time(0);
             timer.Level((ui8)locr.l);
-  
+
             pDSAparameters[1+0] = chIdx;
             pDSAparameters[1+1] = skillNumber;
             pDSAparameters[1+2] = experience;
@@ -309,12 +309,12 @@ void AdjustSkills(i32 chIdx,i32 skillNumber,i32 experience, i32 why)
           };
         };
       };
-    };    
+    };
   };
 
   if (experience == 0) return;
- 
-  
+
+
   psA3->experience += (UI16)(experience);
   psA3->experience = LimitSkillExperience(psA3->experience);
   if (TimerTraceActive)
@@ -339,7 +339,7 @@ void AdjustSkills(i32 chIdx,i32 skillNumber,i32 experience, i32 why)
     };
   };
   newMastery = (i16)DetermineMastery(chIdx, basicSkill | 0xc000);
-  if (newMastery <= oldMastery) 
+  if (newMastery <= oldMastery)
   {
     if (TimerTraceActive)
     {
@@ -402,10 +402,10 @@ void AddToSkill(i32 chIdx,i32 skillNumber,i32 experience)
   oldMastery = (i16)DetermineMastery(chIdx, basicSkill | 0xc000);
   psA3 = &pcA2->skills92[skillNumber];
 
-  
+
   if (experience <= 0) return;
- 
-  
+
+
   psA3->experience += (UI16)(experience);
   psA3->experience = LimitSkillExperience(psA3->experience);
   if (TimerTraceActive)
@@ -488,8 +488,8 @@ i16 CharacterThrowsSpell(i32 chIdx, RN object, i32 range, i32 neededMana)
     range += 3;
     decayRate -= 1;
   };
-  return LaunchObject(pcA3, 
-                      object, 
+  return LaunchObject(pcA3,
+                      object,
                       range,        //range
                       90,           //damage
                       decayRate);   //decayRate
@@ -840,7 +840,7 @@ void SetBrightnessTimer(i32 deltaBrightness, i32 timeDelay)
 }
 
 void FillSpellParameters(
-               int caster, 
+               int caster,
                SPELL_PARAMETERS& spellParameters)
 {
   i32 i, multiplier;
@@ -855,8 +855,8 @@ void FillSpellParameters(
   spellParameters.spellByte5 = -1;
   spellParameters.spellClass = -1;
   spellParameters.incantation = 0;
-  for (multiplier=1000,i=0; 
-       (i<4) && (d.CH16482[caster].incantation[i]!=0); 
+  for (multiplier=1000,i=0;
+       (i<4) && (d.CH16482[caster].incantation[i]!=0);
        i++, multiplier/=10)
   {
     spellParameters.incantation +=
@@ -939,7 +939,7 @@ i16 CastMagic(const i32)
   WaitForButtonFlash(); // If any are active.
   FillSpellParameters(d.MagicCaster, spellParameters);
 
-  
+
   CallSpellFilter(&spellParameters);
 
 
@@ -975,7 +975,7 @@ SPELL *Incantation2Spell(pnt incantation)
   do
   { // Gather incantation bytes into longword D7L
     D7L |= ((UI8)(*(incantation++)))<<D6W;
-    if (*incantation == 0) break;
+    if (D6W==0 || *incantation == 0) break;
   } while  ((D6W -= 8) >= 0);
   for (D6W = 0; D6W < 25; D6W++)
   {
