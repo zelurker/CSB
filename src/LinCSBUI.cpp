@@ -81,7 +81,7 @@ extern bool extendedPortraits;
 
 
 
-#ifdef _LINUX
+#if defined(_LINUX) && !defined(MINGW)
 #define strupr( a ) _strupr( a )
 static void _strupr(char *str) {
     if( str ) {
