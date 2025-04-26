@@ -308,11 +308,11 @@ struct SHOOT //dataType = ADT_Shoot
 struct HITDOOR //dataType = ADT_HitDoor
 {
 //  atk_BASH:
-//  atk_HACK: 
-//  atk_BERZERK: 
-//  atk_KICK: 
-//  atk_SWING: 
-//  atk_CHOP: 
+//  atk_HACK:
+//  atk_BERZERK:
+//  atk_KICK:
+//  atk_SWING:
+//  atk_CHOP:
   i32 strength;
 };
 
@@ -495,17 +495,17 @@ void PhysicalAttackFilter(ATTACKPARAMETERS *pParam, FILTER *pFilter, const char 
   };
   if (pParam->attdep.physicalAttack.skillAdjust != 0)
   {
-    AdjustSkills(pParam->charIdx, 
-                 pParam->skillNumber, 
+    AdjustSkills(pParam->charIdx,
+                 pParam->skillNumber,
                  pParam->attdep.physicalAttack.skillAdjust,
                  ASW_PhysicalAttack);
   };
-  monsterDamageResult = DamageMonster(GetRecordAddressDB4(objMon),//DB4A2, 
-                      pParam->attdep.physicalAttack.attackedMonsterOrdinal-1, //monsterPosIndex, 
-                      pParam->attackX, 
-                      pParam->attackY, 
-                      pParam->attdep.physicalAttack.monsterDamage, //D7W, 
-                      1, 
+  monsterDamageResult = DamageMonster(GetRecordAddressDB4(objMon),//DB4A2,
+                      pParam->attdep.physicalAttack.attackedMonsterOrdinal-1, //monsterPosIndex,
+                      pParam->attackX,
+                      pParam->attackY,
+                      pParam->attdep.physicalAttack.monsterDamage, //D7W,
+                      1,
                       false,
                       NULL);
   if (traceID!=NULL)
@@ -517,12 +517,12 @@ void PhysicalAttackFilter(ATTACKPARAMETERS *pParam, FILTER *pFilter, const char 
   if (monsterDamageResult != NO_MONSTER_DIED) // If one or more of the monster group died.
   {
     pParam->activateMonster = 1;
-    //ProcessTimers29to41(pParam->attackX, 
-    //                    pParam->attackY, 
-    //                    TT_M1, 
+    //ProcessTimers29to41(pParam->attackX,
+    //                    pParam->attackY,
+    //                    TT_M1,
     //                    0);
   };
-  
+
 }
 
 //*********************************************************
@@ -532,7 +532,7 @@ void PhysicalAttackFilter(ATTACKPARAMETERS *pParam, FILTER *pFilter, const char 
 i32 DeterminePhysicalAttackDamage(
               ATTACKPARAMETERS *pParam,
               FILTER *pFilter,
-              //CHARDESC *pChar,       
+              //CHARDESC *pChar,
               //i32      chIdx,
               //DB4      *pMonster,
               i16      monsterPosIndex,
@@ -704,8 +704,8 @@ i32 DeterminePhysicalAttackDamage(
     }
     else
     {///  }}}}}}
-      D6W = 0; //Added 23Jun2004.  Tiggy 'Bashing' with a stone 
-               //club resulted in throwingDistance==0 and D6W 
+      D6W = 0; //Added 23Jun2004.  Tiggy 'Bashing' with a stone
+               //club resulted in throwingDistance==0 and D6W
                //never got set.
     };
     if ((throwingDistance==0)||(D6W <= 1))
@@ -877,12 +877,12 @@ i32 DeterminePhysicalAttackDamage(
     };
     if (D7W < 0) D7W = 0;
     pParam->attdep.physicalAttack.monsterDamage = D7W;
-    //w_2 = DamageMonster(GetRecordAddressDB4(objMon), 
-    //                    monsterPosIndex, 
-    //                    pParam->attackX, 
-    //                    pParam->attackY, 
-    //                    D7W, 
-    //                    1, 
+    //w_2 = DamageMonster(GetRecordAddressDB4(objMon),
+    //                    monsterPosIndex,
+    //                    pParam->attackX,
+    //                    pParam->attackY,
+    //                    D7W,
+    //                    1,
     //                    false);
     D0W = sw((D7W * pmtDesc->word16_8_11() / 16) + 3);
     if (traceID!=NULL)
@@ -1303,8 +1303,8 @@ i32 AttackWithSpell(//i32   chIdx,
                     ATTACKPARAMETERS *pParam,
                     FILTER *pFilter,
                     i32   range,
-                    RN    rnD5, 
-                    i32   neededMana, 
+                    RN    rnD5,
+                    i32   neededMana,
                     i32&  experienceGained)
 {
   i32 success;
@@ -1327,8 +1327,8 @@ i32 AttackWithSpell(//i32   chIdx,
   CallAttackFilter(pFilter, pParam, 1);
   objSpell = (RNVAL)pParam->attdep.spellAttack.spellType;
   success = CharacterThrowsSpell(
-                pParam->charIdx, 
-                objSpell,//rnD5, 
+                pParam->charIdx,
+                objSpell,//rnD5,
                 pParam->attdep.spellAttack.spellRange,
                 pParam->neededMana);
   if (success == 0)
@@ -1406,6 +1406,27 @@ ATTACKPARAMETERS *SetupDSAParam(FILTER *pFilter)
 //  case  atk_CONFUSE
 //*********************************************************
 //  TAG01bac2
+
+static char *warcry,*horn;
+
+char *loadWAV(const char *name) {
+    FILE *f = fopen(name,"rb");
+    if (f) {
+	fseek(f,0L,SEEK_END);
+	long size = ftell(f);
+	fseek(f,0L,SEEK_SET);
+	char *warcry = (char*)malloc(size);
+	if (!warcry) {
+	    printf("couldn't allocate %d bytes!\n",size);
+	    exit(1);
+	}
+	fread(warcry,size,1,f);
+	fclose(f);
+	return warcry;
+    }
+    return NULL;
+}
+
 i32 WarCryEtc(ATTACKPARAMETERS *pParam,
               FILTER *pFilter,
               i32 attackX,
@@ -1435,7 +1456,22 @@ i32 WarCryEtc(ATTACKPARAMETERS *pParam,
             prefix,
             success);
   };
-  if (d.MonsterUnderAttack == RNeof) 
+  switch (pParam->attackType)
+  {
+  case atk_WARCRY:
+      if (!warcry)
+	  warcry = loadWAV("warcry5120.wav");
+      if (warcry)
+	  UI_PlaySound(warcry,0,0);
+      break;
+  case atk_BLOWHORN:
+      if (!horn)
+	  horn = loadWAV("horn5120.wav");
+      if (horn)
+	  UI_PlaySound(horn,0,0);
+      break;
+  }
+  if (d.MonsterUnderAttack == RNeof)
   {
     CallAttackFilter(pFilter, pParam, 1); // We promised to always call
     return 0;
@@ -1445,7 +1481,7 @@ i32 WarCryEtc(ATTACKPARAMETERS *pParam,
   case atk_WARCRY:
     pParam->attdep.warcryetc.mastery = 3;
     pParam->attdep.warcryetc.skillIncrement = 12;
-    
+
     if (AttackTraceActive)
     {
       fprintf(GETFILE(TraceFile),
@@ -1608,7 +1644,7 @@ void FluxCage(i32 mapX,i32 mapY, ATTACKPARAMETERS *pParam)
                     + IsCellFluxcage(LCX+1, LCY)
                     + IsCellFluxcage(LCX, LCY-1)
                     + IsCellFluxcage(LCX-1, LCY);
-        if (cageCount == 3) 
+        if (cageCount == 3)
         {
           pParam->activateMonster = 1;
           pParam->attackX = LCX;
@@ -1981,7 +2017,7 @@ RESTARTABLE _Attack(const i32 initialChIdx, const ATTACKTYPE initialAttackType)
       {
         successfulAttack = 1;
         //D4W = sw(Smaller(10, DetermineMastery(pParam->charIdx, 13)));
-        pParam->attdep.heal.HPIncrement 
+        pParam->attdep.heal.HPIncrement
                 = sw(Smaller(10, DetermineMastery(pParam->charIdx, 13)));
         pParam->experienceGained = 2;
         CallAttackFilter(&filter, pParam, 1);
@@ -2078,7 +2114,7 @@ RESTARTABLE _Attack(const i32 initialChIdx, const ATTACKTYPE initialAttackType)
     CallAttackFilter(&filter, pParam, 1);
     d.Brightness = sw(d.Brightness + pParam->attdep.light.deltaLight);
     SetBrightnessTimer(
-            pParam->attdep.light.decayRate, 
+            pParam->attdep.light.decayRate,
             pParam->attdep.light.time);
     DecrementChargesRemaining(pChar);
     break;
@@ -2124,7 +2160,7 @@ RESTARTABLE _Attack(const i32 initialChIdx, const ATTACKTYPE initialAttackType)
         //ASSERT(pChar->busyTimer != -1);
         //d.pTimer(pChar->busyTimer)->timerUByte6 = 2;
       //};
- 
+
 
 
       if (successfulAttack != 0)
@@ -2162,7 +2198,7 @@ RESTARTABLE _Attack(const i32 initialChIdx, const ATTACKTYPE initialAttackType)
   };
   if (TimerTraceActive)
   {
-    fprintf(GETFILE(TraceFile), " Increase skill %02x by %02x to %02x\n", 
+    fprintf(GETFILE(TraceFile), " Increase skill %02x by %02x to %02x\n",
             pParam->skillNumber,
             pParam->experienceGained,
             pChar->skills92[pParam->skillNumber].experience);
@@ -2173,15 +2209,15 @@ RESTARTABLE _Attack(const i32 initialChIdx, const ATTACKTYPE initialAttackType)
     //This used to be done in the 'DeterminePhysicalAttackDamage' code.  But
     //activating the monster caused the MonsterMoveFilter to be
     //called and that destroyed the DSA parameter area.  We could have
-    //saved the parameters and restored them but even then it 
-    //would cause the filters to be kind of 'nested'.  The 
+    //saved the parameters and restored them but even then it
+    //would cause the filters to be kind of 'nested'.  The
     //Party Attack Filter would still be active when the Monster Movement
     //Filter was called.  I doubt it would be a problem but I'd rather
     //not find out that I was wrong.  So we delay the monster activation
     //until we are all done with the Party Attack Filter.
-    ProcessTimers29to41(pParam->attackX, 
-                        pParam->attackY, 
-                        TT_M1, 
+    ProcessTimers29to41(pParam->attackX,
+                        pParam->attackY,
+                        TT_M1,
                         0);
   };
   RETURN_int(successfulAttack);
