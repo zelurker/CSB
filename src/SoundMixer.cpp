@@ -724,6 +724,7 @@ static void mix_channels(void *udata, Uint8 *stream, int len)
 	while (mix_channel[i].playing > 0 && index < len)
         {
 	  remaining = len - index;
+	  printf("volume = mix_channel.volume %d x mix_channel.chunk.volume %d\n",mix_channel[i].volume,mix_channel[i].chunk->volume);
 	  volume = (mix_channel[i].volume*mix_channel[i].chunk->volume) / MIX_MAX_VOLUME;
 	  mixable = mix_channel[i].playing;
 	  if ( mixable > remaining )

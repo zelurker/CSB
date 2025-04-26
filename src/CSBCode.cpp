@@ -9023,11 +9023,11 @@ void SubstDiskLetter(char *dest,const char *src,i16 flag)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   A0 = (aReg)dest;
   *A0 = 0;
-  LOCAL_4 = StrChr(src, '~');
+  LOCAL_4 = strchr(src, '~');
   if (LOCAL_4 != NULL)
   {
     LOCAL_6 = sw(LOCAL_4 - src); // index of tilde in P2
-    strcpy(dest,src,LOCAL_6); // Copy up to tilde
+    strncpy(dest,src,LOCAL_6); // Copy up to tilde
     A0 = (aReg)dest + LOCAL_6 ;
     *A0 = 0; // mark the end
     if ((d.SingleFloppyDrive) || (flag == 1))

@@ -4921,8 +4921,8 @@ StoreLong	Chaos.cpp	/^void StoreLong(aReg addr, i32 data)$/;"	f	typeref:typename
 StoreLong	Chaos.cpp	/^void StoreLong(ui8 *addr, i32 data)$/;"	f	typeref:typename:void
 StoreLong	Hint.cpp	/^void StoreLong(i32 *addr, i32 data){StoreLong((pnt)addr, data);};$/;"	f	typeref:typename:void
 strcat	CSBCode.cpp	/^pnt strcat(char *msg1, const char *msg2)$/;"	f	typeref:typename:pnt
-StrChr	CSBCode.cpp	/^const char *StrChr(const char *P1,i16 P2)$/;"	f	typeref:typename:const char *
-StrCmp	CSBCode.cpp	/^i16 StrCmp(char *s1, char *s2)$/;"	f	typeref:typename:i16
+strchr	CSBCode.cpp	/^const char *strchr(const char *P1,i16 P2)$/;"	f	typeref:typename:const char *
+strcmp	CSBCode.cpp	/^i16 strcmp(char *s1, char *s2)$/;"	f	typeref:typename:i16
 StrCopyAndFill	Hint.cpp	/^void StrCopyAndFill(pnt src, pnt dst, i32 P3)$/;"	f	typeref:typename:void
 strcpy	CSBCode.cpp	/^pnt strcpy(char *dest, const char *src, i16 maxChar)$/;"	f	typeref:typename:pnt
 strcpy	Character.cpp	/^void strcpy(char *dst,const char *src)$/;"	f	typeref:typename:void

@@ -1463,13 +1463,13 @@ i32 WarCryEtc(ATTACKPARAMETERS *pParam,
       if (!warcry)
 	  warcry = loadWAV("warcry5120.wav");
       if (warcry)
-	  UI_PlaySound(warcry,0,0);
+	  UI_PlaySound(warcry,0,1);
       break;
   case atk_BLOWHORN:
       if (!horn)
 	  horn = loadWAV("horn5120.wav");
       if (horn)
-	  UI_PlaySound(horn,0,0);
+	  UI_PlaySound(horn,0,1);
       break;
   }
   if (d.MonsterUnderAttack == RNeof)

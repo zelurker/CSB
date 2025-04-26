@@ -20,7 +20,7 @@ struct Mix_Chunk {
 
 
 /* The different fading types supported */
-enum Mix_Fading 
+enum Mix_Fading
 {
   MIX_NO_FADING,
   MIX_FADING_OUT,
@@ -61,9 +61,9 @@ extern DECLSPEC int SDLCALL Mix_Playing(int channel);
 Mix_Chunk *Mix_QuickLoad_RAW(Uint8 *mem, Uint32 len);
 
 
-int Mix_OpenAudio(int frequency, 
-                  Uint16 format, 
-                  int nchannels, 
+int Mix_OpenAudio(int frequency,
+                  Uint16 format,
+                  int nchannels,
                   int chunksize);
 void Mix_CloseAudio(void);
 static void mix_channels(void *udata, Uint8 *stream, int len);

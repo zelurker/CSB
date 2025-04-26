@@ -558,7 +558,7 @@ private:
 public:
   Channels(void);
   ~Channels(void);
-  void Play(SNDHEAD *sndHead, int numSamples);
+  void Play(SNDHEAD *sndHead, int numSamples,int keep);
 };
 
 Channels::Channels(void)
@@ -584,8 +584,13 @@ Channels::~Channels(void)
 }
 
 char *warcry,*horn;
+/* There is something *really* strange with Mix_Chunk struct, I tried 1st to add keep there which would make sense
+ * except the struct is not seen the same way from different points in code!!! I didn't find why yet... so for now
+ * the workaround is to use a static old_keep instead of that to preserve Mix_Chunk!
+ * Notice the workaround works only because there is always only 1 sound playing...! */
+static int old_keep;
 
-void Channels::Play(SNDHEAD *sndHead, int numSample)
+void Channels::Play(SNDHEAD *sndHead, int numSample,int keep)
 {
   int i;
   ui8 *samples;
@@ -595,8 +600,10 @@ void Channels::Play(SNDHEAD *sndHead, int numSample)
     if (Mix_Playing(i)) continue;
     if (chunks[i] != NULL)
     {
-	if (warcry != (char*)m_sndHead[i] && horn != (char*)m_sndHead[i])
+	if (!old_keep) {
+	    printf("freeing sound\n");
 	    UI_free(m_sndHead[i]);
+	}
       chunks[i]->abuf = NULL;
       Mix_FreeChunk(chunks[i]);
       chunks[i] = NULL;
@@ -608,6 +615,7 @@ void Channels::Play(SNDHEAD *sndHead, int numSample)
       UI_free(sndHead);
       return;
     };
+    old_keep = keep;
     m_sndHead[i] = sndHead;
     //printf("Mix_PlayChannel @%d\n", d.Time);
     Mix_PlayChannel(i, chunks[i], 0);
@@ -622,7 +630,7 @@ Channels *sdlChannels;
 /*
 * Play a sound. We do currently not bother about volume, it just looks nice...
 */
-static bool LIN_PlaySound(i8* audio, const ui32 /*size*/, int volume)
+static bool LIN_PlaySound(i8* audio, const ui32 /*size*/, int volume,int keep)
 {
   ui8 *samples;
   int numSample;
@@ -632,14 +640,14 @@ static bool LIN_PlaySound(i8* audio, const ui32 /*size*/, int volume)
   //samples = header->sample58;
   numSample = header->numSamples54;
   if (!sdlChannels) sdlChannels = new Channels();
-  sdlChannels->Play(header, numSample);
+  sdlChannels->Play(header, numSample,keep);
   return 1;
 };
 
 
-bool UI_PlaySound(const char *wave, i32 flags, i32 attenuation /*not used*/) {
+bool UI_PlaySound(const char *wave, i32 flags, int keep=0) {
 //SDL_AudioSpec *SDL_LoadWAV(const char *file, SDL_AudioSpec *spec, Uint8 **audio_buf, Uint32 *audio_len);
-  return LIN_PlaySound((pnt)wave/* + 58*/,((SNDHEAD*)wave)->Size - WAV_OFFSET+sizeof(i32), SDL_MIX_MAXVOLUME);
+  return LIN_PlaySound((pnt)wave/* + 58*/,((SNDHEAD*)wave)->Size - WAV_OFFSET+sizeof(i32), SDL_MIX_MAXVOLUME,keep);
 }
 
 enum {
