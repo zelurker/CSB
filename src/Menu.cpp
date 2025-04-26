@@ -195,7 +195,7 @@ void CenteredText(ui8 *dest, const char *text, i16 x, i16 y)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (text == NULL) return;
   text = TranslateLanguage(text);
-  D0W = StrLen(text);
+  D0W = strlen(text);
   x = sw(x - D0W*3);
   TextOut_OneLine(dest, 
                   112, 
@@ -216,14 +216,14 @@ i16 SplitLongLine(const char *text,char *firstLine,char *secondLine)
   i16 LOCAL_2;
   D0L=0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;        
-  LOCAL_2 = StrLen(text);
+  LOCAL_2 = strlen(text);
   if (LOCAL_2 < 30)
   {
     D0W=0;
   }
   else
   {
-    StrCpy(firstLine, text);
+    strcpy(firstLine, text);
     LOCAL_4 = sw(LOCAL_2>>1); 
     while ( (firstLine[LOCAL_4] != ' ') && (LOCAL_4 < LOCAL_2) )
     {
@@ -231,7 +231,7 @@ i16 SplitLongLine(const char *text,char *firstLine,char *secondLine)
     };
 
     firstLine[LOCAL_4] = 0;
-    StrCpy(secondLine, firstLine+LOCAL_4+1);
+    strcpy(secondLine, firstLine+LOCAL_4+1);
     D0W = 1;
   };
   return D0W;
@@ -356,7 +356,7 @@ RESTARTABLE _DoMenu(
     if (D0W != 0)
     {
       D5W = 21;
-      D0W = StrLen(LOCAL_50);
+      D0W = strlen(LOCAL_50);
       D1L = 3*D0W;
       D6W = sw(113 - D1W);
       TextOut_OneLine(d.pViewportBMP,
@@ -369,7 +369,7 @@ RESTARTABLE _DoMenu(
                       999,
                       false);
       D5W += 8;
-      D0W = StrLen(LOCAL_100);
+      D0W = strlen(LOCAL_100);
       D1W = sw(3*D0W);
       D6W = sw(113 - D1W);
       TextOut_OneLine(d.pViewportBMP,
@@ -385,7 +385,7 @@ RESTARTABLE _DoMenu(
     }
     else
     {
-      D0W = StrLen(TranslateLanguage(title1));
+      D0W = strlen(TranslateLanguage(title1));
       D1W = sw(D0W * 3);
       D6W = sw(113 - D1W);
       TextOut_OneLine(d.pViewportBMP,
@@ -405,7 +405,7 @@ RESTARTABLE _DoMenu(
     D0W = SplitLongLine(TranslateLanguage(title2), LOCAL_50, LOCAL_100);
     if (D0W != 0)
     {
-      D0W = StrLen(LOCAL_50);
+      D0W = strlen(LOCAL_50);
       D1W = sw(D0W*3);
       D6W = sw(113 - D1W);
       TextOut_OneLine(d.pViewportBMP,
@@ -418,7 +418,7 @@ RESTARTABLE _DoMenu(
                       999,
                       false);
       D5W += 8;
-      D0W = StrLen(LOCAL_100);
+      D0W = strlen(LOCAL_100);
       D1W = sw(3 * D0W);
       D6W = sw(113 - D1W);
       TextOut_OneLine(d.pViewportBMP,
@@ -433,7 +433,7 @@ RESTARTABLE _DoMenu(
     }
     else
     {
-      D0W = StrLen(title2);
+      D0W = strlen(title2);
       D1W = sw(D0W * 3);
       D6W = sw(113 - D1W);
       TextOut_OneLine(d.pViewportBMP,

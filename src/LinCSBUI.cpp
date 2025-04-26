@@ -583,6 +583,8 @@ Channels::~Channels(void)
   };
 }
 
+char *warcry,*horn;
+
 void Channels::Play(SNDHEAD *sndHead, int numSample)
 {
   int i;
@@ -593,7 +595,8 @@ void Channels::Play(SNDHEAD *sndHead, int numSample)
     if (Mix_Playing(i)) continue;
     if (chunks[i] != NULL)
     {
-      UI_free(m_sndHead[i]);
+	if (warcry != (char*)m_sndHead[i] && horn != (char*)m_sndHead[i])
+	    UI_free(m_sndHead[i]);
       chunks[i]->abuf = NULL;
       Mix_FreeChunk(chunks[i]);
       chunks[i] = NULL;

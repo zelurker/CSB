@@ -4920,15 +4920,15 @@ StoneOrClosedFalseWall	Monster.cpp	/^bool StoneOrClosedFalseWall(i32 mapX, i32 m
 StoreLong	Chaos.cpp	/^void StoreLong(aReg addr, i32 data)$/;"	f	typeref:typename:void
 StoreLong	Chaos.cpp	/^void StoreLong(ui8 *addr, i32 data)$/;"	f	typeref:typename:void
 StoreLong	Hint.cpp	/^void StoreLong(i32 *addr, i32 data){StoreLong((pnt)addr, data);};$/;"	f	typeref:typename:void
-StrCat	CSBCode.cpp	/^pnt StrCat(char *msg1, const char *msg2)$/;"	f	typeref:typename:pnt
+strcat	CSBCode.cpp	/^pnt strcat(char *msg1, const char *msg2)$/;"	f	typeref:typename:pnt
 StrChr	CSBCode.cpp	/^const char *StrChr(const char *P1,i16 P2)$/;"	f	typeref:typename:const char *
 StrCmp	CSBCode.cpp	/^i16 StrCmp(char *s1, char *s2)$/;"	f	typeref:typename:i16
 StrCopyAndFill	Hint.cpp	/^void StrCopyAndFill(pnt src, pnt dst, i32 P3)$/;"	f	typeref:typename:void
-StrCpy	CSBCode.cpp	/^pnt StrCpy(char *dest, const char *src, i16 maxChar)$/;"	f	typeref:typename:pnt
-StrCpy	Character.cpp	/^void StrCpy(char *dst,const char *src)$/;"	f	typeref:typename:void
-StrCpyTo	Hint.cpp	/^pnt StrCpyTo(pnt P1, pnt P2, i16 P3)$/;"	f	typeref:typename:pnt
-StrCpyTo	HintCE.cpp	/^pnt StrCpyTo(pnt P1, pnt P2, i16 P3)$/;"	f	typeref:typename:pnt
-StrLen	CSBCode.cpp	/^i16 StrLen(const char *string)$/;"	f	typeref:typename:i16
+strcpy	CSBCode.cpp	/^pnt strcpy(char *dest, const char *src, i16 maxChar)$/;"	f	typeref:typename:pnt
+strcpy	Character.cpp	/^void strcpy(char *dst,const char *src)$/;"	f	typeref:typename:void
+strcpyTo	Hint.cpp	/^pnt strcpyTo(pnt P1, pnt P2, i16 P3)$/;"	f	typeref:typename:pnt
+strcpyTo	HintCE.cpp	/^pnt strcpyTo(pnt P1, pnt P2, i16 P3)$/;"	f	typeref:typename:pnt
+strlen	CSBCode.cpp	/^i16 strlen(const char *string)$/;"	f	typeref:typename:i16
 StreamInput	CSBCode.cpp	/^i16 StreamInput(ui8 *dest,i32 num) \/\/TAG01cf86$/;"	f	typeref:typename:i16
 Strength	CSB.h	/^#define Strength /;"	d
 SubCode	Data.h	/^  STKOP SubCode(void){return (STKOP)subCode;};\/\/DSA$/;"	f	struct:DSAampersandCmd	typeref:typename:STKOP

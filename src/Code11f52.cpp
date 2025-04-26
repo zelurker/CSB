@@ -35,14 +35,6 @@ void DescribeChampionBones(char *dest, const char *pName, const char *objName)
   search[1] = ' ';
   strcpy(search+2,objName);
   pxlate = TranslateLanguage(search);
-//  if (strcmp(pxlate, "%BONES") == 0)
-//  {
-//    // There is no translation so use the graphics.dat name for bones
-//    StrCpy(dest, pName);
-//    StrCat(dest, " ");
-//    StrCat(dest, TranslateLanguage(objName));
-//    return;
-//  };
   // Copy pxlate to dest, substituting pName for any '%'
   for (colDst = 0, colSrc = 0; pxlate[colSrc] != 0; colSrc++)
   {

@@ -846,8 +846,6 @@ void SetDLogicalBase(ui8 *);
 i32  READ(i32 file, i32 len, ui8 *buf);
 i32  WRITE(i16 file, i32 len, ui8 *buf);
 i16  CLOSE(i32 handle);
-void StrCpy(char *dst, const char *src);//TAG003264
-i16  StrLen(const char *string);//TAG0032ba
 void MemMove(ui8 *src, ui8 *dest, i16 byteCount); //TAG0009dc
 //void TextToScreen(i32, i32, i32, i32, pnt);//TAG001c42
 i16  Unscramble(ui8 *buf, i32 initialChecksum, i32 numwordM1);
@@ -953,9 +951,8 @@ void   TAG006202(i16, i16 *, i16 *, i16 *);
 void   TAG00623a(i16, char *, char **);
 void   TAG00626e(i16, char *, char **);
 pnt    FormatInteger(pnt, ui32, i16);//TAG0064b4
-//void   TAG006520(pnt,pnt);StrCpy
 //i16    TAG00654e(pnt, pnt);strcmp
-//i16    TAG0065bc(pnt);//StrLen
+//i16    TAG0065bc(pnt);//strlen
 i32    atari_sprintf(char *,const char*, const intptr_t, const intptr_t, const intptr_t); //TAG0065e0
 i32    GetPixel(pnt, i16, i16, i16);//TAG006700
 //void   TAG006892(...) //Use TAG0088b2 from Graphics.cpp
@@ -1387,7 +1384,7 @@ void PrintDialogText(const char *P1,i32 P2,i32 P3,i32 P4)
   while (P1 != NULL)
   {
     P1 = GetSubString(P1, b_40, 10);
-    D0W = StrLen(b_40);
+    D0W = strlen(b_40);
     D0W = sw(6 * D0W / 2);
     D1W = sw(P2 - D0W);
     TextToScreen(D1W, P3, P4, 12, b_40);
@@ -2934,8 +2931,7 @@ tag001a4c:
       };
     };
   } while (w_2 != 1);
-  //StrCpy((char *)A4+4,pnt_4650);
-  StrCpy(pLocalGame->filename_0004,pnt_4650);
+  strcpy(pLocalGame->filename_0004,pnt_4650);
   {
     const char *A0;
     if (D7W != 0)
@@ -3333,8 +3329,7 @@ void TAG002724(void)
     pBlock1F2_8 = NULL;
 #endif
   };
-  //StrCpy((char *)LoadPnt((ui8 *)&e.Pnt24812) + 4116, pnt12238);
-  StrCpy(e.pGames_24812[1].filename_0004, CSBGAMEDAT_12238);
+  strcpy(e.pGames_24812[1].filename_0004, CSBGAMEDAT_12238);
   //MemoryMove(LoadPnt((ui8 *)&e.Pnt24812)+772, LoadPnt((ui8 *)&e.Pnt24812)+4884, 0x400, 0x400, 3200);
   MemoryMove(e.pGames_24812[0].portrait_0772,
              e.pGames_24812[1].portrait_0772,
@@ -4374,7 +4369,7 @@ void AddDialogButton(DlgButton *P1, const char* P2, i16 P3)
   MemoryMove((ui8 *)&dlgButtonA4->rectPos2, (ui8 *)&rectPos_8, 0x400, 0x400, 8);
   DrawDialogBoxOutline(&rectPos_8, 2, P3, 0);
   w_18 = sw((rectPos_8.x1 + rectPos_8.x2)/2);
-  D0W = sw(3* StrLen(P2));
+  D0W = sw(3* strlen(P2));
   D1W = sw(w_18 - D0W);
   TextToScreen(D1W+1, rectPos_8.y2-2, 15, 0, P2);
   TAG003264();
@@ -4448,7 +4443,7 @@ void FillCharacterNameEditBox(const char *P1, i16 P2, i16 P3)
   wordRectPos *rectA4;
 //;;;;;;;;;;;;;;;;;;
   rectA4 = &dlgButton5050[P2].rectPos2;
-  D5W = StrLen(P1);
+  D5W = strlen(P1);
   e.Word5168 = 0;
   FillScreenRectangle(rectA4, 1);
   D7W = sw(rectA4->x1 + 2);
@@ -4524,8 +4519,8 @@ RESTARTABLE _DrawCharacterDetails(const i32 P1, const i32 P2)
   FillCharacterNameEditBox(pPortrait_A4->name_000, 13, 7);
   //FillCharacterNameEditBox((char *)A4+8, 14, 19);
   FillCharacterNameEditBox(pPortrait_A4->title_008, 14, 19);
-  //D0W = StrLen((char *)A4);
-  D0W = StrLen(pPortrait_A4->name_000);
+  //D0W = strlen((char *)A4);
+  D0W = strlen(pPortrait_A4->name_000);
   DrawNameTitleCarret(0, D0W);
   for (D5L=121, D6L=0; D6W<4; D6W++)
   {

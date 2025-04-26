@@ -403,8 +403,8 @@ void GetText(char *result, i32 index)
           LOCAL_8 = d.Byte10080 + 2*D4W;
         };
       };
-      StrCat(result, LOCAL_8);
-      D0W = StrLen(LOCAL_8);
+      strcat(result, LOCAL_8);
+      D0W = strlen(LOCAL_8);
       result += D0W;
       LOCAL_4 = 0;
     }

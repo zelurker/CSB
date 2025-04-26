@@ -1739,14 +1739,14 @@ struct MouseQueueEnt
    *   d.PrimaryButtonList and d.SecondaryButtonList.
    *   This failed however when those two search lists were
    *   changed between the time the mouse was clicked and the
-   *   time the entry was removed from the queue.  
+   *   time the entry was removed from the queue.
    *   We changed this so that the translation takes place
    *   at the time the entry is removed from the queue for use.
-   *   All the chages have been marked with the date. PRS 
+   *   All the chages have been marked with the date. PRS
    *   20230506
    */
 
-  /*  translatedButtonNum should be UNTRANSLATED_CLICK if the mouse click 
+  /*  translatedButtonNum should be UNTRANSLATED_CLICK if the mouse click
    *  has not yet been translated.  A few other values are special
    *  cases:
    *     0x0094 Restart Clock when game is frozen
@@ -1758,7 +1758,7 @@ struct MouseQueueEnt
    *     0x2223 Compensate for removing Save/Restore when splicing
    *     0x2224 Compensate for removing Save/Restore when splicing
    *     0x3333 is used as apecial Playfile.log entry for random seed
-   *     0x4444 
+   *     0x4444
    *     0x5555 sent to record.log when playfile.log ends (or 'm_forceClose')
    *     0x6665 Version signature
    *     0x6666 Graphics signature
@@ -1768,7 +1768,7 @@ struct MouseQueueEnt
    *     0x666a CSBGraphics signature
    *     0x0ade Something to do with Reincarnate mode
    *     0xdddd Set 'd' variable to value
-   *     0xffff Mouse cursor has moved out of the champion alignment 
+   *     0xffff Mouse cursor has moved out of the champion alignment
    *            area of the screen. The upper right corner.
    *
    *  The Playfile.log contains the translated values.
@@ -3261,12 +3261,6 @@ void TAG0030e6(i32 divisor, i32 dividend, i32 *quotient, i32 *remainder);
 //void TAG003158(i32,i32); // i32 (left on stack) = P1*P2 (inline it)
 void MoveWords(aReg& A0, aReg A1, i32 numM1); // 0031c4 // Input = A0, A1, and D0
 void SearchWordNE(dReg *D0, i16 **pwA0, i16 *A1);//TAG0031d6
-pnt  StrCat(char *str1, const char *str2);//TAG0031e8
-i16  StrCmp(char *, char *);//TAG003222
-void StrCpy(char *dst, const char *src);//TAG003264
-pnt  StrCpy(char *dest, const char *src, i16 numChar); //TAG00327c
-i16  StrLen(const char *string);//TAG0032ba
-const char *StrChr(const char *, i16);//TAG0032e4 Find character in string
 void ModifyPalettes(i32, i32);//TAG003796
 //#define ReadGraphicsForLevel(n) CALL0(n,ReadGraphicsForLevel)
 void ReadGraphicsForLevel(void);//(void) TAG00390e

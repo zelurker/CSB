@@ -181,7 +181,7 @@ RESTARTABLE _ShowCredits(const i32 P1) //(void)
         BLT2Screen((ui8 *)LOCAL_14, (RectPos *)d.Word132, 32, 10);
         BLT2Screen((ui8 *)LOCAL_6->portrait, (RectPos *)d.Word140, 16, 1);
         DisplayHeroName(87, D6W=sw(D6W+14), 9, LOCAL_6->name);
-        LOCAL_142 = StrLen(LOCAL_6->name);
+        LOCAL_142 = strlen(LOCAL_6->name);
         D5W = sw(6 * LOCAL_142 + 87);
         A0 = (aReg)LOCAL_6->name;
         LOCAL_1 = *(A0+9);
@@ -202,9 +202,9 @@ RESTARTABLE _ShowCredits(const i32 P1) //(void)
           D4W = sw(Smaller(16, D0W));
           if (D4W == 1) continue;
           if (D4W == 0) die (0x8d49,"Mastery = 0");
-          StrCpy((char *)LOCAL_130, TranslateLanguage(d.Pointer16770[D4W]));
-          StrCat((char *)LOCAL_130, " ");
-          StrCat((char *)LOCAL_130, TranslateLanguage(d.Pointer16596[D5W]));
+          strcpy((char *)LOCAL_130, TranslateLanguage(d.Pointer16770[D4W]));
+          strcat((char *)LOCAL_130, " ");
+          strcat((char *)LOCAL_130, TranslateLanguage(d.Pointer16596[D5W]));
           DisplayHeroName(105, D6W=sw(D6W+8), 13, (char *)LOCAL_130);
 //
         };

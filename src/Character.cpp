@@ -139,18 +139,6 @@ void TextToViewport(i32 x, i32 y, i32 color, const char* txt, bool translate)
 // *********************************************************
 //
 // *********************************************************
-//   TAG003264
-void StrCpy(char *dst,const char *src)
-{
-  do
-  {
-    *(dst++) = *src;
-  } while (*(src++) != 0);
-}
-
-// *********************************************************
-//
-// *********************************************************
 //   TAG009058
 void ShadeRectangleInScreen(RectPos *P1,i16 P2)
 {
@@ -1327,7 +1315,7 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
       {
         pcA2 = pcA3;
         TextToViewport(3, 7, D4W, pcA2->name, false); //D4W is text color
-        LOCAL_32 = StrLen(pcA2->name);
+        LOCAL_32 = strlen(pcA2->name);
         LOCAL_6 = sw(6 * LOCAL_32 + 3);
         LOCAL_1 = pcA3->title[0];
         if (LOCAL_1 != 44)
@@ -1445,17 +1433,17 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
       TextToViewport(104, 132, LOCAL_8, "LOAD", true);//LOCAL_8 is text color
       D4W = sw(pcA3->load / 10);
       pcA0 = (char *)TAG014af6(D4W, 1, 3);
-      StrCpy(d.Byte12914, pcA0);
-      StrCat(d.Byte12914, TranslateLanguage("."));
+      strcpy(d.Byte12914, pcA0);
+      strcat(d.Byte12914, TranslateLanguage("."));
       D4W = sw(pcA3->load - 10*D4W);
       pcA0 = (char *)TAG014af6(D4W, 0, 1);
-      StrCat(d.Byte12914, pcA0);
-      StrCat(d.Byte12914, TranslateLanguage("/"));
+      strcat(d.Byte12914, pcA0);
+      strcat(d.Byte12914, TranslateLanguage("/"));
       D0L = MaxLoad(pcA3);
       D4W = sw((D0L+5)/10);
       pcA0 = (char *)TAG014af6(D4W, 1, 3);
-      StrCat(d.Byte12914, pcA0);
-      StrCat(d.Byte12914, " KG");
+      strcat(d.Byte12914, pcA0);
+      strcat(d.Byte12914, " KG");
       TextToViewport(148, 132, LOCAL_8, d.Byte12914, false);// "LOAD  actual/max"
                                                      // LOCAL_8 is text color
       charFlags |= CHARFLAG_viewportChanged;
@@ -3178,11 +3166,11 @@ void PrintItemDesc(const char* text, i32 color)
     d.TextOutY = 59;
   };
   if (*text == 0) return;
-  StrCpy((char *)b_128, text);
+  strcpy((char *)b_128, text);
   A3 = b_128;
   for (D7W = 0; *A3 != 0; )
   {
-    D0W = StrLen((char *)A3);
+    D0W = strlen((char *)A3);
     if (D0W > 18)
     {
       A2 = A3 + 17;
@@ -3245,27 +3233,27 @@ i32 EncodeDescriptivePhrases(
     *A2 = 0;
     return textColor;
   };
-  StrCpy((char *)A2, leadingText);
+  strcpy((char *)A2, leadingText);
   for (D5W=0, D4W=1; D5W<16; D5W++, D4W<<=1)
   {
     D0W = sw(D4W & descriptionMask & bitmask);
     if (D0W != 0)
     {
-      StrCat((char *)A2, TranslateLanguage(descriptiveTexts[D5W]));
+      strcat((char *)A2, TranslateLanguage(descriptiveTexts[D5W]));
       textColor = colors[D5W];
       if (w_2-- > 2)
       {
-        StrCat((char *)A2, ", ");
+        strcat((char *)A2, ", ");
       }
       else
       {
         if (w_2 == 1)
-        StrCat((char *)A2, " AND ");
+        strcat((char *)A2, " AND ");
       };
     };
 //
   };
-  StrCat((char *)A2, trailingText);
+  strcat((char *)A2, trailingText);
   return textColor;
 }
 
@@ -3300,7 +3288,7 @@ void DisplayScrollText_OneLine(i16 pixelY, char *text)
 //
 //
   };
-  length = StrLen((char *)A3);
+  length = strlen((char *)A3);
   if (length > MAX_SCROLL_LINE_LENGTH)
                   length = MAX_SCROLL_LINE_LENGTH;
   TextOut_OneLine(d.pViewportBMP,
@@ -3581,9 +3569,6 @@ void DescribeObject(RN object,i16 P2)
             if (character.CopyCharacter(bonesRecord[0]))
             {
               pcA0 = &character;
-              //StrCpy(descriptiveText, pcA0->name);
-              //StrCat(descriptiveText," ");
-              //StrCat(descriptiveText, TranslateLanguage(d.ObjectNames[objNID6]));
               DescribeChampionBones(descriptiveText, pcA0->name, d.ObjectNames[objNID6]);
               finalTranslate = false;
               A3 = descriptiveText;
@@ -3606,9 +3591,6 @@ void DescribeObject(RN object,i16 P2)
 
 
         //pcA0 = &d.CH16482[dbA2->CastToDB10()->value()];
-        //StrCpy(descriptiveText, pcA0->name);
-        //StrCat(descriptiveText, " ");
-        //StrCat(descriptiveText, d.ObjectNames[objNID6]);
         //A3 = descriptiveText;
       }
       else
@@ -3623,7 +3605,7 @@ void DescribeObject(RN object,i16 P2)
           descriptiveText[0] = sb(95 + dbA2->CastToDB8()->strength()/40);
           descriptiveText[1] = ' ';
           descriptiveText[2] = 0;
-          StrCat(descriptiveText, TranslateLanguage(d.ObjectNames[objNID6]));
+          strcat(descriptiveText, TranslateLanguage(d.ObjectNames[objNID6]));
           A3 = descriptiveText;
         }
         else
@@ -3709,9 +3691,9 @@ void DescribeObject(RN object,i16 P2)
                 && (objNID6 <= objNI_Compass_W) )
             {
               descriptionMask = 0;
-              StrCpy(descriptiveText, TranslateLanguage("PARTY FACING"));
-	      StrCat(descriptiveText, " ");
-              StrCat(descriptiveText, TranslateLanguage(d.DirectionNames[objNID6-objNI_Compass_N]));
+              strcpy(descriptiveText, TranslateLanguage("PARTY FACING"));
+	      strcat(descriptiveText, " ");
+              strcat(descriptiveText, TranslateLanguage(d.DirectionNames[objNID6-objNI_Compass_N]));
               PrintItemDesc(descriptiveText);
             }
             else
@@ -3727,15 +3709,15 @@ void DescribeObject(RN object,i16 P2)
 
       phraseMask = descriptionMask & D4W & 0x0f;
       phraseMask |= 0x40; //Include weight by default
-      StrCpy(descriptiveText, TranslateLanguage("WEIGHS "));
+      strcpy(descriptiveText, TranslateLanguage("WEIGHS "));
       D7W = sw(GetObjectWeight(object));
       A0 = TAG014af6((UI16)(D7W)/10, 0, 3);
-      StrCat(descriptiveText, A0);
-      StrCat(descriptiveText, TranslateLanguage("."));
+      strcat(descriptiveText, A0);
+      strcat(descriptiveText, TranslateLanguage("."));
       D7W = sw((D7W&0xffff)%10);
       A0 = TAG014af6(D7W, 0, 1);
-      StrCat(descriptiveText, A0);
-      StrCat(descriptiveText, " KG.");
+      strcat(descriptiveText, A0);
+      strcat(descriptiveText, " KG.");
       customPhrases[8].Set(descriptiveText);
       descriptivePhrases[8] = customPhrases[8].Get();
 // ****************************************************************************
@@ -4612,9 +4594,9 @@ void TAG019036(void)
     if (D5W == 1) continue;
     if (D5W == 0) die (0x8d49,"Mastery = 0");
     A0 = (aReg)d.Pointer16770[D5W];
-    StrCpy(LOCAL_24, TranslateLanguage((char *)A0));// "Novice", "Master", etc
-    StrCat(LOCAL_24, " ");
-    StrCat(LOCAL_24, TranslateLanguage(d.Pointer16596[D7W]));//"Fighter", etc
+    strcpy(LOCAL_24, TranslateLanguage((char *)A0));// "Novice", "Master", etc
+    strcat(LOCAL_24, " ");
+    strcat(LOCAL_24, TranslateLanguage(d.Pointer16596[D7W]));//"Fighter", etc
     TextToViewport(108, D6W, COLOR_13, LOCAL_24, false);
     D6W += 7;
 //
@@ -4644,8 +4626,8 @@ void TAG019036(void)
       };
     };
     TextToViewport(174, D6W, LOCAL_2, TAG014af6(D5W, 1, 3), false);//LOCAL_2 is text color.
-    StrCpy(LOCAL_24,"/");
-    StrCat(LOCAL_24, TAG014af6(LOCAL_4, 1, 3));
+    strcpy(LOCAL_24,"/");
+    strcat(LOCAL_24, TAG014af6(LOCAL_4, 1, 3));
     TextToViewport(192,D6W, COLOR_13, LOCAL_24, false);
     D6W += 7;
 //

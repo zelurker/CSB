@@ -782,7 +782,7 @@ void DisplayMagicSelection(CHARDESC *pChar) // Magic button pressed
   char b_2[2];
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 //
-  D5W = StrLen((char *)pChar->incantation);
+  D5W = strlen((char *)pChar->incantation);
   D6W = 232;
   b_2[1] = 0;
   for (D7W=0; D7W<4; D7W++)
@@ -812,7 +812,7 @@ void BackspaceMagicSelection(void)
   CHARDESC *pcA3;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   pcA3 = &d.CH16482[d.MagicCaster];
-  D0W = StrLen((char *)pcA3->incantation);
+  D0W = strlen((char *)pcA3->incantation);
   if (D0W == 0) return;
   D0W = (UI8)(pcA3->byte33);
   D7W = (I16)((D0W + 3) & 3);

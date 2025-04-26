@@ -1,15 +1,12 @@
 #target = Raspberry
-#target = Ubuntu_SDL12
 target = Ubuntu_SDL20
+# This target below is for some cross compilation from linux to windows
+# it works, but windows gives 2 channels instead of the requested 1, creating bad sound when run in wine, and no sound at all in native windows 11 !
+# so consider it experimental for now !
+# target = x86_64-w64-mingw32
+CXX = g++
 
 ifeq ($(target), Raspberry)
-  options = -O -D_LINUX -D RGB655 -D SDL12  -c
-  gincludes =  -I/usr/include/SDL `pkg-config --cflags glib-2.0`
-  #glibs = -lSDL
-  glibs = `pkg-config --libs glib-2.0` -lSDL
-  comp = gcc $(options) $(gincludes)
-endif
-ifeq ($(target), Ubuntu_SDL12)
   options = -O -D_LINUX -D RGB655 -D SDL12  -c
   gincludes =  -I/usr/include/SDL `pkg-config --cflags glib-2.0`
   #glibs = -lSDL
@@ -34,6 +31,14 @@ ifeq ($(target), Ubuntu_SDL20)
   glibs =  `sdl2-config --libs`
   comp = g++ $(options) $(gincludes)
 endif
+ifeq ($(target),x86_64-w64-mingw32)
+	options =   -O2 -D _LINUX -D RGB655 -D SDL20 -c -DMINGW
+  gincludes =  `$(target)-pkg-config --cflags glib-2.0` \
+               `$(target)-pkg-config --cflags sdl2`
+  glibs =  `$(target)-pkg-config --libs sdl2`
+  comp = $(target)-g++ $(options) $(gincludes)
+  CXX = $(target)-g++
+endif
 
 ./CSB/CSBwin:  \
         DSA.o       data.o         Code11f52.o  Graphics.o  Magic.o          \
@@ -45,7 +50,7 @@ endif
         WinScreen.o Code13ea4.o    Codea59a.o   RC4.o       Attack.o         \
         Sound.o     Code1f9e6.o    Code390e.o   Code222ea.o Statistics.o     \
         SoundMixer.o
-	g++     \
+	$(CXX)     \
             DSA.o       data.o        Code11f52.o  Graphics.o  Magic.o        \
             Character.o CSBCode.o     system.o     Timer.o     SmartDiscard.o \
             VBL.o       Mouse.o       Recording.o  LinCSBUI.o  CSBlinux.o     \

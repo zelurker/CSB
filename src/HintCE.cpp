@@ -21,7 +21,7 @@ i32 ReadExtendedFeatures(i32 handle);
 
 extern bool ForcedScreenDraw;
 
-#pragma pack(1)  
+#pragma pack(1)
 
 
 
@@ -52,7 +52,7 @@ struct S6
   i16  w4;
 };
 
-struct S12 
+struct S12
 {
   i32   i0;
   i16   w4;
@@ -312,7 +312,7 @@ struct F {
   i16   Word10464;
   i16   Word10462;
   pnt   Pointer9710[100];
-  pnt   Pointer9310[100];  
+  pnt   Pointer9310[100];
   i16   Word8910;
   //i16   Word8908;//use word8908
   //i16   Word8906;//use word8906
@@ -374,7 +374,7 @@ F f;
 #pragma warning (disable:4309)
 #endif
 
-ui8 byte16544[16] = 
+ui8 byte16544[16] =
 {
     0x00,0x0a,0x14,0x1e,0x28,0x32,0x3c,0x46,
     0x50,0x5a,0x64,0x6e,0x78,0x82,0x8c,0x96
@@ -390,7 +390,7 @@ i16 word16494[3] = {0x700, 0x070, 0x007};
 i16 word16488[3] = {0x100, 0x010, 0x001};
 
 
-S20 s20_16208[] = 
+S20 s20_16208[] =
 {
   {0xd,0x01,0,0x7f,0x00c2,0xb3,0xc0,0x0,"LOAD"  ,0x1},
   {0xd,0x03,0,0x21,0x0064,0xb3,0xc0,0x0,"LAST"  ,0x1},
@@ -428,14 +428,14 @@ char str15692_1[] =
         " saved game disk in drive B://Then press LOAD" ;
 char str15692_2[] =
     "Please insert a saved game disk in drive A:" ;
-char str15692_3[] = 
+char str15692_3[] =
     "Please insert a saved game disk in drive B:" ;
-char str15692_4[] = 
+char str15692_4[] =
     "There are no clues for this location." ;
-char str15692_5[] = 
+char str15692_5[] =
     "Chaos Strikes Back/Hint Oracle Version A//"
         "Safe to turn system off." ;
-char str15692_6[] = 
+char str15692_6[] =
     "Please Insert The Chaos Strikes Back Utility"
         " Disk in Drive A: " ;
 char str15692_7[] =
@@ -451,7 +451,7 @@ TEXT text15024[9] =
   {3, str15692_0, 0x1f, 0x122, 0x32, 0x96, 1, 0, 0, 0},
   {3, str15692_1, 0x1f, 0x122, 0x32, 0x96, 1, 0, 0, 0},
   {3, str15692_2, 0x1f, 0x122, 0x46, 0x96, 1, 0, 0, 0},
-  {3, str15692_3, 0x1f, 0x122, 0x46, 0x96, 1, 0, 0, 0}, 
+  {3, str15692_3, 0x1f, 0x122, 0x46, 0x96, 1, 0, 0, 0},
   {3, str15692_4, 0x1f, 0x122, 0x46, 0x96, 1, 0, 0, 0},
   {3, str15692_5, 0x1f, 0x122, 0x46, 0x96, 1, 0, 0, 0},
   {3, str15692_6, 0x1f, 0x122, 0x46, 0x96, 1, 0, 0, 0},
@@ -512,10 +512,10 @@ CLICKMAP clickMap13914 = {0x0a,0x00,t12_14106,f.Pointer13962,NULL};
 i32 long10472 = 9999999;
 i32 long10468 = 9999999;
 
-i16 word8908 = 0x0014; //dd34 
-i16 word8906 = 0x0000; //dd36 
-i16 word8904 = 0x0000; //dd38 
-i16 word8902 = 0x0000; //dd3a 
+i16 word8908 = 0x0014; //dd34
+i16 word8906 = 0x0000; //dd36
+i16 word8904 = 0x0000; //dd38
+i16 word8902 = 0x0000; //dd3a
 i16 word8900 = 0x1000; //dd3c
 
 ui8 byte8873[]= {0x00,0x01,0x03,0x07,0x0f,0x1f,0x3f,0x7f,0xff};
@@ -549,7 +549,7 @@ void MFREE(pnt);
 pnt  GETDTA(void);
 void SETDTA(pnt);
 i16  drvmap(void); //Bios function TRAP #13
-void StrCpy(pnt dst, const char *src);//TAG003264
+void strcpy(pnt dst, const char *src);//TAG003264
 i32  atari_sprintf(pnt,pnt, i32, i32=0, i32=0);//TAG0065e0
 void MemoryMove(pnt src, pnt dst, i16, i16, i32);//like MemMove
 pnt  physbase(void);
@@ -558,19 +558,19 @@ void setscreen(pnt logaddr, pnt physaddr, i16 res);
 #define wvbl(n) CALL0(n,wvbl)
 void setpalette(PALETTE *palette);
 void ForceScreenDraw();
-void ShrinkBLT(pnt src, 
-               pnt dst, 
-               i32 srcWidth, 
-               i32 srcHeight, 
-               i32 dstWidth, 
-               i32 dstHeight, 
+void ShrinkBLT(pnt src,
+               pnt dst,
+               i32 srcWidth,
+               i32 srcHeight,
+               i32 dstWidth,
+               i32 dstHeight,
                pnt P7);
-void TAG0088b2(ui8 *src, 
-               ui8 *dst, 
+void TAG0088b2(ui8 *src,
+               ui8 *dst,
                RectPos *dstPos, // Position in dest image
-               i32 SrcOffsetX,  // Source Starting x Pixel Offset 
+               i32 SrcOffsetX,  // Source Starting x Pixel Offset
                i32 SrcOffsetY,  // Source Starting y Pixel Offset
-               i32 SrcByteWidth,   // #bytes per line in source bitmap 
+               i32 SrcByteWidth,   // #bytes per line in source bitmap
                i32 DestByteWidth,  // #bytes per line in destination bitmap
                i32 P8);
 i16  Unscramble(pnt buf, i32 initialChecksum, i32 numword);
@@ -646,8 +646,6 @@ i32   TAG003210(i16 handle,   // @8
                 pnt tmpBuf1,  // @18
                 pnt tmpBuf2); // @22
 void  TAG00339e(wordRectPos *, i16);
-//void  TAG003444(i16 *, pnt); StrCpy
-i16   StrLen(const char *);//TAG0034a2
 //void  TAG0034c6(pnt, pnt, pnt);//(Use TAG0065e0)
 pnt   TAG0035e6(pnt);
 S18  *TAG00360a(pnt);
@@ -705,7 +703,6 @@ void  TAG00636a(void);
 void  TAG006388(void);
 void  TAG0063a6(i16);
 i16   TAG0064fc(pnt, pnt);
-pnt   StrCpyTo(pnt,pnt,i16);//TAG006538
 i32   TAG006570(pnt, i32);
 //void  TAG0065d0(pnt buf, i32 initialChecksum, i32 numword);(use Unscramble)
 i32   TAG006636(pnt, i32, i16, i16);
@@ -860,11 +857,11 @@ i32 TAG0004b6(i32 P1, pnt P2)
   case 0x01060007:
       if (wordGear(A4+2) == -1)
       {
-        StrCpy(A4+22, "A read error occurred on %s");
+        strcpy(A4+22, "A read error occurred on %s");
       }
       else
       {
-        atari_sprintf(A4+22, 
+        atari_sprintf(A4+22,
                       "A read error occurred on file %s in %%s",
                       LoadLong(A4+82));
       };
@@ -900,7 +897,7 @@ i32 TAG000606(i16 P1, i16 P2, i16 P3)
   dReg D5, D6, D7;
   D7W = P1;
   for (D6W=1, D5W=0, D7W>>=P2;
-       (P2++) <= P3; 
+       (P2++) <= P3;
        D6W <<= 1)
   {
     if (D7W & D6W)
@@ -993,8 +990,8 @@ i32 TAG000784(i16 P1, i32 *P2)
   A4 = LoadPnt(A0);
   pnt_8 = GETDTA();
   SETDTA(A4);
-  StrCpy(f.Byte15068, pointer15024[P1-1]);
-  StrCpy(f.Byte15068, "*.*");
+  strcpy(f.Byte15068, pointer15024[P1-1]);
+  strcpy(f.Byte15068, "*.*");
   SFIRST(f.Byte15068, 8);
   TAG000678(A4+30, f.Byte15068, 12);//Get volume label
   SETDTA(pnt_8);
@@ -1010,7 +1007,7 @@ i32 TAG000784(i16 P1, i32 *P2)
       D0L = D0L | (D1L<<8);
       D1L = (UI8)(A4[10]);
       D0L = 0;
-      *P2 = D0L;      
+      *P2 = D0L;
       return D7L;
     };
     //return 0x01060004;
@@ -1149,15 +1146,15 @@ i16 TAG000956(pnt P1)
 //*********************************************************
 //
 //*********************************************************
-i32 TAG000bd2(pnt P1) 
+i32 TAG000bd2(pnt P1)
 {
   dReg D0, D6, D7;
   TAG0006f8(P1, 992, 2);
   D7L = TAG000956(P1);
   if (D7W == 0)
   {
-    StrCpy(f.Byte15068, P1+10);
-    StrCpy(f.Byte15068, LoadPnt(P1+82));
+    strcpy(f.Byte15068, P1+10);
+    strcpy(f.Byte15068, LoadPnt(P1+82));
     if (wordGear(P1+4) == 2)
     {
       D6W = OPEN(f.Byte15068, "rb");
@@ -1171,7 +1168,7 @@ i32 TAG000bd2(pnt P1)
     //D6W = 6;//What was this for?  Maybe TOS assigns handle 6?
     wordGear(P1+2) = D6W;
   };
-  wordGear(P1+4) = 2;  
+  wordGear(P1+4) = 2;
   return 0;
 }
 
@@ -1368,8 +1365,8 @@ i32 TAG001096_xxx(i16 P1, i16 P2)
           D6L = TAG0008c4(A4);
           if (D6L == 0)
           {
-            D4L = READ(wordGear(A4+2), 
-                        LoadLong(A4+94), 
+            D4L = READ(wordGear(A4+2),
+                        LoadLong(A4+94),
                         LoadPnt(A4+90));
             if (D4L != LoadLong(A4+94))
             {
@@ -1569,7 +1566,7 @@ i32 TAG0015d6_xxx(i32 P1, i32 P2, i32 P3, i32)
       StoreLong(A4+90, P3);
       break;
   case 16:
-      StoreLong(A4+94, P3);     
+      StoreLong(A4+94, P3);
       break;
   case 32:
       NotImpMsg(0x165c);
@@ -1590,7 +1587,7 @@ i32 TAG0015d6_xxx(i32 P1, i32 P2, i32 P3, i32)
       else
       {
         if ( (P3 == 32) || (P3 == 64) )
-        { 
+        {
           wordGear(A4+116) = sw(P3); //lower 16 bits!
         }
         else
@@ -1619,7 +1616,7 @@ i32 TAG0015d6_xxx(i32 P1, i32 P2, i32 P3, i32)
           if (P3 >= 64)
           {
             wordGear(A4+8) = sw(wordGear(A4+14) + 65475);
-            wordGear(A4+116) = 64;  
+            wordGear(A4+116) = 64;
           }
           else
           {
@@ -1639,7 +1636,7 @@ i32 TAG0015d6_xxx(i32 P1, i32 P2, i32 P3, i32)
             D0L = wordGear(A4+8) - 1;
             D0L &= 0xffff;
             // "A:\", "B:\",  etc
-            StrCpy(&A4[10], pointer15024[D0L]);
+            strcpy(&A4[10], pointer15024[D0L]);
           };
         };
       };
@@ -1715,7 +1712,7 @@ i32 TAG00181e(i16 FDnum)
 {
   aReg A4;
   A4 = FindFileDescriptor(FDnum);
-  return LoadLong(A4+14); 
+  return LoadLong(A4+14);
 }
 
 //*********************************************************
@@ -1969,8 +1966,8 @@ void TAG001c0c(i32 P1)
     D0W = (I16)(D7W & 255);
     D1L = (D7L >>8) & 0xff00;
     D4W = sw(D0W | D1W);
-    for (D5L=0; 
-         (D5L < 7) && (D4W >= word14126[D5L]); 
+    for (D5L=0;
+         (D5L < 7) && (D4W >= word14126[D5L]);
          D5L++)
     {
       if (D4W == word14126[D5L])
@@ -1980,7 +1977,7 @@ void TAG001c0c(i32 P1)
       };
 //
 //
-//   
+//
     };
   }
   word14200 = 1;
@@ -2056,7 +2053,7 @@ i16 EnableButtons(CLICKMAP *P1)
     if (*pA4 != NULL) continue;
     *pA4 = (pnt)P1;
     ClearKeyboard();
-    return D7W;  
+    return D7W;
 //
 //
   };
@@ -2329,7 +2326,7 @@ i32 TAG002c5e(pnt P1,pnt P2,pnt P3)
         A3 = LoadPnt(A4+4); //the 4 words we just read
         if (P3 != 0)
         {
- 
+
           StorePnt(P3, AssignMemory(14, 2*(w_2 + 1)));
           MemoryMove(LoadPnt(A4+4),
                      LoadPnt(P3),
@@ -2472,8 +2469,8 @@ i32 LZWRawChar(i16 P1, i32 *P2)
   aReg A0, A4;
   i32 i_4;
   A4 = f.Byte8898;
-  if (   (f.Word8884 > 0) 
-      || (f.Word8864 >= f.Word8862) 
+  if (   (f.Word8884 > 0)
+      || (f.Word8864 >= f.Word8862)
       || (f.Word8886 > word8902)   )
   {
     if (f.Word8886 > word8902)
@@ -2612,7 +2609,7 @@ i32 TAG003210(i16 handle,   // @8
   pnt  pnt_12;
   pnt  pnt_8;
   pnt  pnt_4;
-  A4 = tmpBuf1;  
+  A4 = tmpBuf1;
   A3 = tmpBuf1+10006;
   pnt_8 = tmpBuf2;
   pnt_4 = tmpBuf2;
@@ -2651,7 +2648,7 @@ i32 TAG003210(i16 handle,   // @8
     D4W = D6W;
     if (D6W >= f.Word8886)
     {
-      *(pnt_4++) = D7B;    
+      *(pnt_4++) = D7B;
       D6W = D5W;
     };
     while (D6W >= 256)
@@ -2662,7 +2659,7 @@ i32 TAG003210(i16 handle,   // @8
     };
     D7W = (UI8)(A3[D6W]);
     *(pnt_4++) = D7B;
-    do 
+    do
     {
       pnt_4--;
       TAG003194((UI8)(*pnt_4), &rsltAddr);
@@ -2730,8 +2727,8 @@ S18 *TAG00360a(pnt P1)
   aReg  A4;
   S18  *s18A3;
   A4 = P1;
-  for (D7L = 0, s18A3 = f.s18_124; 
-       D7W < f.Word126; 
+  for (D7L = 0, s18A3 = f.s18_124;
+       D7W < f.Word126;
        D7W++, s18A3++)
   {
     if (A4 >= s18A3->pnt0)
@@ -3049,7 +3046,7 @@ tag003e26:
       D1W = (I16)(s12A4->w4 & 0x7f8);
       if (D1W != D0W) continue;
       D0W = TAG003b3a(s18A3, D5L);
-      if (D0W != 0) break;  
+      if (D0W != 0) break;
 //
     };
     if (D6W == f.Word126)
@@ -3132,7 +3129,7 @@ pnt TAG003f82(S12 *P1)
   if (ps18_4 == NULL) goto tag004038;
   A3 = TAG003efc(D7L, s12A4->w4, ps18_4);
   if (A3 == NULL) goto tag004038;
-  StorePnt(A2, A3 + (UI16)(s12A4->w6) + 14);  
+  StorePnt(A2, A3 + (UI16)(s12A4->w6) + 14);
   A3[4] = 0;
   A3[5] = (I8)(s12A4->w4 & 7);
   wordGear(A3+10) = s12A4->w4;
@@ -3240,7 +3237,7 @@ pnt TAG00419a(i32 P1,i16 P2)
   s12.w6 = 0;
   s12.pnt8 = 0;
   return TAG003f82(&s12);
-//  
+//
 }
 
 //*********************************************************
@@ -3394,7 +3391,7 @@ RESTARTABLE _DisplayText(const i16 P1, const TEXT *nP2)
   static aReg A0, A1;
   static TEXT *pTextP3;
   static i16 w_6;
-  static union 
+  static union
         {
           i32 i;
           TEXT *pText;
@@ -3412,8 +3409,8 @@ RESTARTABLE _DisplayText(const i16 P1, const TEXT *nP2)
   {
     TAG0093a0_18(P1, 1);
   };
-  f.Word15706=0; 
-  f.Word15702 = StrLen(pTextP3->pnt2);
+  f.Word15706=0;
+  f.Word15702 = strlen(pTextP3->pnt2);
   f.Word15700 = sw(pTextP3->rectPos6.x2 - pTextP3->rectPos6.x1);
   f.Word15698 = sw(pTextP3->rectPos6.y1 + 11);
   while (f.Word15706<f.Word15702)
@@ -3433,7 +3430,7 @@ RESTARTABLE _DisplayText(const i16 P1, const TEXT *nP2)
       };
       A0 = f.Byte15788+f.Word15706-f.Word15704;
       *A0 = f.Byte15694;
-      if (f.Byte15694 == ' ') 
+      if (f.Byte15694 == ' ')
       {
         D0W = sw(TAG0049fe(pTextP3,
                             f.Word15704,
@@ -3465,7 +3462,7 @@ RESTARTABLE _DisplayText(const i16 P1, const TEXT *nP2)
           A0 = f.Byte15788+f.Word15706-f.Word15704;
           *A0 = 0;
           break;//do while (1)
-        };   
+        };
         f.Word15706++;
       };
     } ;
@@ -3486,7 +3483,7 @@ RESTARTABLE _DisplayText(const i16 P1, const TEXT *nP2)
           if ((UI8)(f.Byte15788[w_6]) <= 127) continue;
         };
         f.Byte15788[w_6] = 95;
-//   
+//
       };
       TAG004962(f.Word15696, f.Word15698, f.Byte15788);
     };
@@ -3506,7 +3503,7 @@ RESTARTABLE _DisplayText(const i16 P1, const TEXT *nP2)
 //*********************************************************
 pnt TAG004a22_14(i16 P1)
 {//(pnt)
-  union 
+  union
         {
           i32 i;
           TEXT *pText;
@@ -3527,7 +3524,7 @@ pnt TAG004a22_14(i16 P1)
 pnt TAG004a22_16(i16 P1, i32 nP2)
 {//(pnt)
   TEXT *pTextP3;
-  union 
+  union
         {
           i32 i;
           TEXT *pText;
@@ -3560,7 +3557,7 @@ pnt TAG004a22_16(i16 P1, i32 nP2)
 void Free_TEXT(i16 P1, TEXT *nP2)
 {//(void)
   TEXT *pTextP3;
-  union 
+  union
         {
           i32 i;
           TEXT *pText;
@@ -3590,7 +3587,7 @@ void TAG004a22_26(i16 /*P1*/, i32 nP2, i32 nP3)
   dReg D0;
   aReg A0;
   TEXT *pTextP3;
-  union 
+  union
         {
           i32 i;
           TEXT *pText;
@@ -3761,7 +3758,7 @@ pnt AssignMemory(i16 /*P1*/, i32 nP2)
   };
   if (f.Word8910 > 100)
   {
-    //TAG0093a0_18(_2_, P1, 98);  
+    //TAG0093a0_18(_2_, P1, 98);
     die (0,"Excessive Memory Allocations");
   };
   //TAG009a1c(15, P2);
@@ -3803,7 +3800,7 @@ pnt TAG004f3a_16(i16 P1, i32 nP2)
   };
   if (f.Word8910 > 100)
   {
-    TAG0093a0_18(P1, 98);  
+    TAG0093a0_18(P1, 98);
   };
   //TAG009a1c(15, P2);
   return (pnt_4);
@@ -4094,7 +4091,7 @@ RESTARTABLE _TAG0051c2_31(i16 P1)
   TAG0051c2_35(P1);
   f.Long16876 = VBLCount;
   TAG004a22_26(P1, (UI16)(LE16(f.Segment1_16872[2])),0x1baddade);
-  wvbl(_1_); 
+  wvbl(_1_);
   TAG008c40_6(_11_, P1, 0);//Text appears on buttons
   TAG004a22_26(P1, (UI16)(LE16(f.Segment1_16872[0])),0x1baddade);
   w_46 = sw(TAG00978a_13(9));
@@ -4118,7 +4115,7 @@ RESTARTABLE _TAG0051c2_31(i16 P1)
 //
 //
   };
-  f.Palette16608.color[LE16(f.Segment1_16872[0])] 
+  f.Palette16608.color[LE16(f.Segment1_16872[0])]
        = LE16(f.Segment1_16872[3]);
   do
   {
@@ -4799,7 +4796,7 @@ i16 TAG0064fc(pnt P1, pnt P2)
 //
 //*********************************************************
 //  TAG006538
-pnt StrCpyTo(pnt P1, pnt P2, i16 P3)
+pnt strcpyto(pnt P1, pnt P2, i16 P3)
 {
   dReg D6, D7;
   aReg A3, A4;
@@ -4954,21 +4951,21 @@ i32 TAG00686a(i16 P1)
         TAG006718(P1);
         {
           i32 size;
-          i32 file = wordGear(FindFileDescriptor(f.Word664)+2); 
+          i32 file = wordGear(FindFileDescriptor(f.Word664)+2);
           if (file < 0) break;
           size = ReadExtendedFeatures(file);
         };
         D0W = sw(MyReadFirstBlock(s4076A4->FirstBlock2));
-        if (D0W == 0) 
+        if (D0W == 0)
         {
           i_18 = 213;
           break;
         };
         TAG0083cc((pnt)MinA, (pnt)MinB);
               //********** nonsense deleted **********//
-        D0W = sw(TAG006636(s4076A4->SecondBlock514, 
-                          128, 
-                          LE16(wordGear(s4076A4->FirstBlock2+312)), 
+        D0W = sw(TAG006636(s4076A4->SecondBlock514,
+                          128,
+                          LE16(wordGear(s4076A4->FirstBlock2+312)),
                           LE16(wordGear(s4076A4->FirstBlock2+344))));
         if (D0W == 0)
         {
@@ -5159,7 +5156,7 @@ RESTARTABLE _TAG006c7e_xxx(i16 P1, i16 P2, i32 P3, i32, pnt P5)//(i32)
   END_RESTARTMAP
   //TAG009a02(17, P2);
   w_14 = TAG0064fc((pnt)TAG008a42, (pnt)TAG008c20);
-  
+
         //********* Nonsense Deleted **************//
 
   switch (P2)
@@ -5207,7 +5204,7 @@ RESTARTABLE _TAG006c7e_xxx(i16 P1, i16 P2, i32 P3, i32, pnt P5)//(i32)
         {
           TAG0051c2_35(17);
 
-          
+
           //NotImpMsg(0x6d72);
           TAG008c40_3(17,6,0);
           TAG008c40_3(17,7,0);
@@ -5347,8 +5344,8 @@ RESTARTABLE _TAG006c7e_xxx(i16 P1, i16 P2, i32 P3, i32, pnt P5)//(i32)
           D0L = w_28 * w_30;
           pPnt_50 = pHCTi_34->pSeg2Addr;  //Second of three buffers
           *pPnt_50 = AssignMemory(17, D0L);
-          D0L = w_28 * w_30;  
-          D0W = sw(TAG006c1c(w_18, D0L, *pHCTi_34->pSeg2Addr)); 
+          D0L = w_28 * w_30;
+          D0W = sw(TAG006c1c(w_18, D0L, *pHCTi_34->pSeg2Addr));
           if (D0W == 0) {i_26=208; w_16=3; break;};
           D0W = sw(TAG006c1c(w_18, 2, (pnt)&w_30));
           if (D0W == 0) {i_26=209; w_16=3; break;};
@@ -5359,8 +5356,8 @@ RESTARTABLE _TAG006c7e_xxx(i16 P1, i16 P2, i32 P3, i32, pnt P5)//(i32)
           pPnt_50 = pHCTi_34->pSeg3Addr; //Third of three buffers.
           *pPnt_50 = AssignMemory(17, D0L);
           D0L = 0;
-          D0W = w_30;  
-          D0W = sw(TAG006c1c(w_18, D0L, *pHCTi_34->pSeg3Addr)); 
+          D0W = w_30;
+          D0W = sw(TAG006c1c(w_18, D0L, *pHCTi_34->pSeg3Addr));
           if (D0W == 0) {i_26=210; w_16=4; break;};
           SetBufferLength(w_18, 0);
           pHCTi_46 = pHCTiP5;
@@ -5381,7 +5378,7 @@ RESTARTABLE _TAG006c7e_xxx(i16 P1, i16 P2, i32 P3, i32, pnt P5)//(i32)
               pSeg3 = (unsigned char *)*pHCTi_34->pSeg3Addr;
               n = LE16(wordGear(pEnt+22));
               offset = *pHCTi_46->pSeg3Len;;
-              for (j=0; j < n; j++, pSeg3+=2) 
+              for (j=0; j < n; j++, pSeg3+=2)
               {
                 offset+=LE16(wordGear(pSeg3));
               };
@@ -5445,7 +5442,7 @@ RESTARTABLE _TAG006c7e_xxx(i16 P1, i16 P2, i32 P3, i32, pnt P5)//(i32)
     {
       TAG0078fa(pText16272[11]);
       TAG0076a0_12(_4_,
-                   P1, 
+                   P1,
                    pointer8858[wordGear(P3+2)],
                    pText16272[6]);
       D0L = intResult;
@@ -5599,7 +5596,7 @@ void TAG007560(i16 P1)
   TAG0075c8();//Reroute hard-disk handling
   ClearSupervisorMode();
   OPEN(&f.Byte658, "rb"); //set active drive/folder???
-  SetSupervisorMode();  
+  SetSupervisorMode();
   TAG00760a(); //restore hard-drive routines??
   ClearSupervisorMode();
 //
@@ -5661,7 +5658,7 @@ RESTARTABLE _TAG0076a0_12(i16 /*P1*/, pnt nP2, TEXT *nP3)
   {
     D0L = -1;
   };
-  i_8 = D0L;      
+  i_8 = D0L;
   //while (TAG0076a0_8(20, nP2, i_8) != 1)
   for (;;)
   {
@@ -5765,7 +5762,7 @@ i16 TAG00794e(pnt P1, pnt P2)
 //;;;;;;;;;;;;;;;;;;;
   A4 = P1;
   A3 = P2;
-  D7L=0; 
+  D7L=0;
   while (A4 < A3)
   {
     D7B ^= *(A4++);
@@ -5843,22 +5840,22 @@ RESTARTABLE _TAG00799a_6(i16 P1)
   switch (P1)
   {
   case 2:
-    w_16 = sw(TAG00799a_13(P1));   
+    w_16 = sw(TAG00799a_13(P1));
     for (w_14=0; w_14<((f.NumHint10552<MAXHINTINDICES)?f.NumHint10552:MAXHINT
       INDICES); w_14++)
     {
-      TAG008c40_3(P1, w_14+10, 0);  
+      TAG008c40_3(P1, w_14+10, 0);
       D0W = f.HintIndices10530[w_14];
-      D0L = StrLen(f.Seg2Addr10546+26*D0W);
+      D0L = strlen(f.Seg2Addr10546+26*D0W);
       pText_8 = (TEXT *)TAG004a22_16(P1, D0L);
       pText_8->w0 = 3;
       D0W = f.HintIndices10530[w_14];
       //D0W = index of hint title (0xb4 = "DEMON DIRECTOR")
-      StrCpyTo(f.Seg2Addr10546 + 26*D0W,
+      strcpyto(f.Seg2Addr10546 + 26*D0W,
                pText_8->pnt2,
                0);
       pRectPos_42 = (wordRectPos *)TAG008c40_12(P1, w_14+10, 3, NULL);
-      pText_8->rectPos6.x1 = pRectPos_42->x1; 
+      pText_8->rectPos6.x1 = pRectPos_42->x1;
       pText_8->rectPos6.x2 = pRectPos_42->x2;
       pText_8->rectPos6.y1 = pRectPos_42->y1;
       pText_8->rectPos6.y2 = pRectPos_42->y2;
@@ -5870,9 +5867,9 @@ RESTARTABLE _TAG00799a_6(i16 P1)
       TAG00978a_27(19, 6, (pnt)pRectPos_42, 0x1baddade);
       TAG00978a_27(9, 20, (pnt)pText_8, 8);
       TAG008c40_12(
-                   P1, 
-                   w_14+10, 
-                   5, 
+                   P1,
+                   w_14+10,
+                   5,
                    f.Seg2Addr10546 + 26*f.HintIndices10530[w_14]);
 //
 //
@@ -5885,7 +5882,7 @@ RESTARTABLE _TAG00799a_6(i16 P1)
       pPage_8 = (PAGE *)TAG00978a_28(19, 6, -1);
       if (pPage_8 == NULL) break;
       if (pPage_8->w0 != 8) break;
-      TAG0062a2((wordRectPos *)pPage_8->pText8, byte16528); 
+      TAG0062a2((wordRectPos *)pPage_8->pText8, byte16528);
       TAG00978a_29(19, pPage_8->w2);
     } ;
     TAG0051c2_37(3);
@@ -6025,7 +6022,7 @@ RESTARTABLE _TAG00799a_12(i16 P1, i32 selectedLine, i32 pageNum)
   wordGear(pnt_8+2) = 2;
   // Now we set the file offset of hint data start.
   StoreLong(pnt_8+4, f.Seg3Len10534);
-  for (w_14=0; 
+  for (w_14=0;
        w_14 < LE16(wordGear(pseg2_20+22))+pageNum-1;
        w_14++)
   {
@@ -6035,7 +6032,7 @@ RESTARTABLE _TAG00799a_12(i16 P1, i32 selectedLine, i32 pageNum)
     StoreLong(pnt_8+4, LoadLong(pnt_8+4) + D0L);
 //
 //
-  }; 
+  };
   StoreLong(pnt_8+8, LE16(wordGear(f.Seg3Addr10542 + 2*w_14)));
   StorePnt(pnt_8+12, f.Byte12792);
   for (;;)
@@ -6170,9 +6167,9 @@ RESTARTABLE _TAG007fdc_7(i16 P1,i32 nP2,i32 nP3,i32 /*nP4*/)
     TAG00799a_12(_2_, P1, nP2, 0);//Get pressed button text
     pnt_8 = pntResult;
     if (pnt_8 == NULL) RETURN;
-    D0L = StrLen(pnt_8);
+    D0L = strlen(pnt_8);
     f.pText10480 = (TEXT *)TAG004a22_16(P1, D0L + 1);
-    StrCpyTo(pnt_8, f.pText10480->pnt2, 0);
+    strcpyto(pnt_8, f.pText10480->pnt2, 0);
     f.pText10480->rectPos6.x1 = sw(rectPos14516.x1+10);
     f.pText10480->rectPos6.x2 = sw(rectPos14516.x2-10);
     f.pText10480->rectPos6.y1 = sw(rectPos14516.y1+5);
@@ -6187,9 +6184,9 @@ RESTARTABLE _TAG007fdc_7(i16 P1,i32 nP2,i32 nP3,i32 /*nP4*/)
     TAG00799a_12(_3_, P1, nP2, nP3);
     pnt_8 = pntResult;
     if (pnt_8 == NULL) RETURN;
-    D0L = StrLen(pnt_8);
+    D0L = strlen(pnt_8);
     f.pText10476 = (TEXT *)TAG004a22_16(P1, D0L+1);
-    StrCpyTo(pnt_8, f.pText10476->pnt2, 0);
+    strcpyto(pnt_8, f.pText10476->pnt2, 0);
     f.pText10476->rectPos6.x1 = sw(rectPos14516.x1+34);
     f.pText10476->rectPos6.x2 = sw(rectPos14516.x2-34);
     f.pText10476->rectPos6.y1 = 31;
@@ -6419,7 +6416,7 @@ RESTARTABLE _StartHint(const CSB_UI_MESSAGE *)
     case 17:
       //w_6 = TAG0064fc(TAG00684a, TAG006ba0);
 
-          //****** Nonsense Deleted *******//      
+          //****** Nonsense Deleted *******//
       w_4 = 4;
       SetSelectedLine(w_4, w_2-10);
       TAG007fdc_36(_11_, w_4, w_2-10, 0);
@@ -6477,7 +6474,7 @@ RESTARTABLE _StartHint(const CSB_UI_MESSAGE *)
       break;
     }; //switch (w_2)
   } while (w_2 != 2);
-  TAG009a40();  
+  TAG009a40();
   RETURN;
 }
 
@@ -6576,7 +6573,7 @@ i32 TAG008a62(void)
   pnt pnt_4;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;
   pnt_4 = AssignMemory(14, 576);
-  pi_12 = &VBLCount;   
+  pi_12 = &VBLCount;
   D7L = 0;
   SetSupervisorMode();// and set up to clear it later
   /*
@@ -6666,13 +6663,13 @@ void TAG008c40_3(i16 P1, i32 nP2, i32 nP3)
         s20A4->pnt14 = (pnt)nP3;
       };
     };
-  };      
+  };
   if (s20A4->w12 == 0) return;
   A0 = f.Pointer13962[f.Word13898++];
   pnt_20 = A0;
   A0[0] = s20A4->b2;
   A0[1] = s20A4->b3;
-  wordGear(A0+2) = s20A4->w12; 
+  wordGear(A0+2) = s20A4->w12;
   //TAG009a1c(5, P2);
   return;
 }
@@ -6738,7 +6735,7 @@ RESTARTABLE _TAG008c40_5(i16 P1, i32 nP2)
           break;
         };
         //D7W = TAG0083cc((pnt)TAG0083ac, (pnt)TAG008898);
-            
+
         //**** Deleted Nonsense *****//
 
         break;
@@ -6861,7 +6858,7 @@ i32 TAG008c40_12(i16 /*P1*/, i32 nP2, i32 nP3, pnt nP4)
   i_4 = -1;
   switch (nP3)
   {
-  case 0: 
+  case 0:
       for (D7L=0; D7L<20; D7L++)
       {
         s20A0 = &s20_16208[D7L];
@@ -7053,7 +7050,7 @@ i32 AddPage(i16 P1, PAGE *P2)
 {//(i32)
   NODE *pNode_8;
   BOOK *pBook_4;
-//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;       
+//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   pBook_4 = f.pBook14608[P1];
   if (pBook_4 == NULL)
   {
@@ -7109,7 +7106,7 @@ pnt TAG0095b0(i32 P1, i32 P2)
     TAG0093a0_18(P1, 18);
     return NULL;
   };
-  for (pNode_8=pBook_4->pNode2; 
+  for (pNode_8=pBook_4->pNode2;
        (pNode_8!=NULL)&&(--P2 > 0);
        pNode_8 = pNode_8->pNode4 )
   {
@@ -7523,9 +7520,9 @@ void TAG00a05c(i16 * *)
 i8 data00a0d6[] =
 {
     0,1,0,
-    2,1,1,   
-    2,1,1,   
-    0,1,1,   
+    2,1,1,
+    2,1,1,
+    0,1,1,
     2,1,1,
     1,1,1,
     0,0,0,
@@ -7768,7 +7765,7 @@ void TAG00aef0(i16)
 void TAG00af06(void) //(i16 P1,i16 P2)
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  f.Pointer184 = MinA;  
+  f.Pointer184 = MinA;
   f.Pointer180 = MinB;
   //if (testfornotimplemented) NotImpMsg(0xaf16);
   /*

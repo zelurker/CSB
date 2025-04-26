@@ -139,8 +139,8 @@ RESTARTABLE _ReIncarnate(CHARDESC *pChar)
              && (w_16<=155) )  //Name non-blank and pressed 'OK'
         {
           w_22 = D7W;
-          StrCpy((char *)b_30, pChar->name);
-          D7W = StrLen(pChar->name);
+          strcpy((char *)b_30, pChar->name);
+          D7W = strlen(pChar->name);
           while (pChar->name[--D7W]==' ')
           {
             pChar->name[D7W] = 0;
@@ -171,7 +171,7 @@ tag014088:
           {
             A2 = (aReg)pChar->title;
           };
-          StrCpy(pChar->name, (char *)b_30);
+          strcpy(pChar->name, (char *)b_30);
           D7W = w_22;
         }
         else
@@ -327,7 +327,7 @@ tag0142de:
     if (D7W == 0)
     {
       A2 = (aReg)pChar->name;
-      D0W = StrLen((char *)A2);
+      D0W = strlen((char *)A2);
       D7W = sw(D0W - 1);
       D6W = 1;
       w_2 = sw(177 + 6*D7W);

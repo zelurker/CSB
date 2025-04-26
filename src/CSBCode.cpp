@@ -1624,7 +1624,7 @@ void SCROLLING_TEXT::Printf(i32 color, const char* text, i32 printLinesCount)
 //  dReg D0, D7;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 /*
-  D7W = StrLen(text);
+  D7W = strlen(text);
   if (d.TextScanlineScrollCount == -1)
   {
     while (d.PushTextUp != 0) {};
@@ -2794,100 +2794,6 @@ void SearchWordNE(dReg *D0,i16 **A0,i16 *A1)
 */
 
 
-//  TAG0031e8
-pnt StrCat(char *msg1, const char *msg2)
-{
-  aReg A3;
-  pnt LOCAL_4;
-  const char *A2;
-//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  A3 = (aReg)msg1;
-  A2 = msg2;
-  LOCAL_4 = A3;
-  while ( *(A3++) != 0) {};
-  A3--;
-  while ( (*(A3++) = *(A2++)) != 0) {};
-  return LOCAL_4;
-}
-
-//  TAG003222
-i16 StrCmp(char *s1, char *s2)
-{
-//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  while ( (*s1!=0) && (*s1 ==*s2))
-  {
-    s1++;
-    s2++;
-  };
-//
-//
-
-  return sw((UI8)(*s1) - (UI8)(*s2));
-}
-
-
-//  TAG00327c
-pnt StrCpy(char *dest, const char *src, i16 maxChar)
-{
-  dReg D0, D7;
-  aReg A3;
-  const char *A2;
-  pnt LOCAL_4;
-//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  A3 = (aReg)dest;
-  A2 = src;
-  D7W = maxChar;
-  LOCAL_4 = A3;
-  do
-  {
-    D0W = D7W;
-    D7W--;
-    if (D0B == 0) break;
-    D0B = *(A2++);
-    *(A3++) = D0B;
-  } while (D0B != 0);
-  return LOCAL_4;
-
-}
-
-//  TAG0032ba
-i16 StrLen(const char *string)
-{
-  const char *A3, *A2;
-//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  A3 = string;
-  A2 = A3;
-  while (*A3 != 0)
-  {
-    A3++;
-  };
-  return sw(A3-A2);
-}
-
-//  TAG0032e4
-const char *StrChr(const char *P1,i16 P2)
-{ // Find character in string.  Returns address or NULL
-//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  dReg D0, D6, D7;
-  const char *A3;
-  A3 = P1;
-  D7W = P2;
-  goto tag0032fa;
-tag0032f8:
-  A3 += 1;
-tag0032fa:
-  D0B = *A3;
-  D6B = D0B;
-  if (D6B == 0) goto tag00330c;
-  D0W = D6UB;
-  if (D0W != D7W) goto tag0032f8;
-tag00330c:
-  D0B = D6B;
-  if (D0B == 0) goto tag003318;
-  return A3;
-tag003318:
-  return NULL;
-}
 // *********************************************************
 //
 // *********************************************************
@@ -5639,7 +5545,7 @@ i32 DecodeText(char *pDest,DB2 *pText,i16 typeOfText, i32 max)
             LOCAL_8 = d.Byte10080 + 2*D4W;
           };
         };
-        D0W = StrLen(LOCAL_8);
+        D0W = strlen(LOCAL_8);
         len += D0W;
         if (len >= max-4)
         {
@@ -5648,7 +5554,7 @@ i32 DecodeText(char *pDest,DB2 *pText,i16 typeOfText, i32 max)
         }
         else
         {
-          StrCat((char *)result, LOCAL_8);
+          strcat((char *)result, LOCAL_8);
           result += D0W;
         };
         LOCAL_4 = 0;
@@ -7709,7 +7615,7 @@ void OnMouseClick(i32 x,i32 y,i32 buttons)
       if (d.MouseQEnd > MOUSEQLEN - 1) d.MouseQEnd -= MOUSEQLEN;
       //d.MouseQEnd = D5W;
     //A0 = d.Pointer16848 + D5W * 6;
-      pMouseQueue[d.MouseQEnd].translatedButtonNum = UNTRANSLATED_CLICK; 
+      pMouseQueue[d.MouseQEnd].translatedButtonNum = UNTRANSLATED_CLICK;
     //A0 = d.Pointer16852 + D5W * 6;
       pMouseQueue[d.MouseQEnd].x = D7W;
       //A0 = d.Pointer16850 + 6 * D5W;
@@ -9121,18 +9027,18 @@ void SubstDiskLetter(char *dest,const char *src,i16 flag)
   if (LOCAL_4 != NULL)
   {
     LOCAL_6 = sw(LOCAL_4 - src); // index of tilde in P2
-    StrCpy(dest,src,LOCAL_6); // Copy up to tilde
+    strcpy(dest,src,LOCAL_6); // Copy up to tilde
     A0 = (aReg)dest + LOCAL_6 ;
     *A0 = 0; // mark the end
     if ((d.SingleFloppyDrive) || (flag == 1))
     {
-      StrCat(dest, (char *)d.Pointer22984);
+      strcat(dest, (char *)d.Pointer22984);
     }
     else
     {
-      StrCat(dest, (char *)d.Pointer22988);
+      strcat(dest, (char *)d.Pointer22988);
     };
-    StrCat(dest, LOCAL_4+1);
+    strcat(dest, LOCAL_4+1);
   };
 }
 

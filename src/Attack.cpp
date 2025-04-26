@@ -1407,7 +1407,8 @@ ATTACKPARAMETERS *SetupDSAParam(FILTER *pFilter)
 //*********************************************************
 //  TAG01bac2
 
-static char *warcry,*horn;
+// Defined in lincsbui.cpp, obliged because of a stupid free, should remake the whole thing...
+extern char *warcry,*horn;
 
 char *loadWAV(const char *name) {
     FILE *f = fopen(name,"rb");

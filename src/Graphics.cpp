@@ -1599,8 +1599,8 @@ void PrintWithSubstitution(const char *txt, ui32 color, bool translate)
       };
       while (*p_4 != 0) outbuf.addch(*p_4++);
       // *A2 = 0;
-      //StrCat(b_132, p_4);
-      //A2 += StrLen(p_4);
+      //strcat(b_132, p_4);
+      //A2 += strlen(p_4);
       // *(A2++) = ' ';
       outbuf.addch(' ');
     }

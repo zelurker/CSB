@@ -49,10 +49,10 @@ Chaos.cpp          3576    AddDialogButton(&dlgButton5050[7], "REVERT", 2);
 Chaos.cpp          3577    AddDialogButton(&dlgButton5050[8], "UNDO", 2);
 Chaos.cpp          3578    AddDialogButton(&dlgButton5050[16], "QUIT", 2);
 Character.cpp      1423        TextToViewport(104, 132, LOCAL_8, "LOAD");//LOCAL_8 is text color
-Character.cpp      1427        StrCat(d.Byte12914, ".");
-Character.cpp      1436        StrCat(d.Byte12914, " KG");
-Character.cpp      2866          StrCat(A2, " AND ");
-Character.cpp      3157          StrCat(descriptiveText, " ");
+Character.cpp      1427        strcat(d.Byte12914, ".");
+Character.cpp      1436        strcat(d.Byte12914, " KG");
+Character.cpp      2866          strcat(A2, " AND ");
+Character.cpp      3157          strcat(descriptiveText, " ");
 Character.cpp      3183        descriptivePhrases[2] = "CONSUMABLE";
 Character.cpp      3184        descriptivePhrases[3] = "POISONED";
 Character.cpp      3185        descriptivePhrases[4] = "BROKEN";
@@ -61,16 +61,16 @@ Character.cpp      3187        descriptivePhrases[6] = "";
 Character.cpp      3188        descriptivePhrases[7] = "";
 Character.cpp      3189        descriptivePhrases[8] = "";
 Character.cpp      3190        descriptivePhrases[9] = "";
-Character.cpp      3259                StrCpy(descriptiveText, "PARTY FACING");
-Character.cpp      3276        StrCpy(descriptiveText, "WIEGT ");
-Character.cpp      3280        StrCat(descriptiveText, ".");
-Character.cpp      3284        StrCat(descriptiveText, " KG.");
+Character.cpp      3259                strcpy(descriptiveText, "PARTY FACING");
+Character.cpp      3276        strcpy(descriptiveText, "WIEGT ");
+Character.cpp      3280        strcat(descriptiveText, ".");
+Character.cpp      3284        strcat(descriptiveText, " KG.");
 Character.cpp      3766          //    QuePrintLines(d.Byte1386[chIdx]," SHIELD INCREASED TO ");
 Character.cpp      3937        //  QuePrintLines(d.Byte1386[chIdx]," SHIELD INCREASED TO ");
-Character.cpp      4154      StrCat(LOCAL_24, " ");
+Character.cpp      4154      strcat(LOCAL_24, " ");
 Character.cpp      4164      A0 = d.Pointer16822[D7W];//"STRENGTH", "DEXTERITY", etc.
 Code11f52.cpp      3722            // in the case of the "THERE IS ONLY ONE LEVEL....."
-Code1f9e6.cpp       199            StrCat(LOCAL_130, " ");
+Code1f9e6.cpp       199            strcat(LOCAL_130, " ");
 Code1f9e6.cpp       240        TextOutToScreen(110, 0x9a, 4, 0, "NOCHMAL VERSUCHEN");
 CSBCode.cpp          95      if (text == NULL) text = "";
 CSBCode.cpp         335    Pointer16596[0] = "KAEMPFER";
