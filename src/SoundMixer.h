@@ -1,5 +1,10 @@
 //
-#include "SDL.h"
+// #include "stdafx.h"
+/* WARNING: there is a big trap if not including stdafx.h here, the size of stuct Mix_Chunk becomes 32 if it's not included, and 21 otherwise.
+ * No need to say this creates havoc when passing Mix_Chunks from parts of the code where the size is 21.
+ * Not sure which include files makes the struct smaller, it's not one of the system ones, it seems to be either Objects.h or CSBTypes.h but they
+ * also require some more system include files. I'd vote for CSBTypes.h... ! */
+#include "stdafx.h"
 #include "SDL_audio.h"
 #include "SDL_version.h"
 
@@ -16,6 +21,7 @@ struct Mix_Chunk {
 	Uint8 *abuf;
 	Uint32 alen;
 	Uint8 volume;		/* Per-sample volume, 0-128 */
+	int keep;
 };
 
 

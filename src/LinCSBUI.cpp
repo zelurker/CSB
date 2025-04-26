@@ -584,11 +584,6 @@ Channels::~Channels(void)
 }
 
 char *warcry,*horn;
-/* There is something *really* strange with Mix_Chunk struct, I tried 1st to add keep there which would make sense
- * except the struct is not seen the same way from different points in code!!! I didn't find why yet... so for now
- * the workaround is to use a static old_keep instead of that to preserve Mix_Chunk!
- * Notice the workaround works only because there is always only 1 sound playing...! */
-static int old_keep;
 
 void Channels::Play(SNDHEAD *sndHead, int numSample,int keep)
 {
@@ -600,7 +595,7 @@ void Channels::Play(SNDHEAD *sndHead, int numSample,int keep)
     if (Mix_Playing(i)) continue;
     if (chunks[i] != NULL)
     {
-	if (!old_keep) {
+	if (!chunks[i]->keep) {
 	    printf("freeing sound\n");
 	    UI_free(m_sndHead[i]);
 	}
@@ -615,7 +610,7 @@ void Channels::Play(SNDHEAD *sndHead, int numSample,int keep)
       UI_free(sndHead);
       return;
     };
-    old_keep = keep;
+    chunks[i]->keep = keep;
     m_sndHead[i] = sndHead;
     //printf("Mix_PlayChannel @%d\n", d.Time);
     Mix_PlayChannel(i, chunks[i], 0);
@@ -624,8 +619,7 @@ void Channels::Play(SNDHEAD *sndHead, int numSample,int keep)
   UI_free(sndHead);
 }
 
-// For some reason, having a static sdlChannels here instead of a pointer crashes with g++ on return from sdlChannels.Play() on a bad instruction !
-Channels *sdlChannels;
+Channels sdlChannels;
 
 /*
 * Play a sound. We do currently not bother about volume, it just looks nice...
@@ -639,8 +633,7 @@ static bool LIN_PlaySound(i8* audio, const ui32 /*size*/, int volume,int keep)
   header = (SNDHEAD *)audio;
   //samples = header->sample58;
   numSample = header->numSamples54;
-  if (!sdlChannels) sdlChannels = new Channels();
-  sdlChannels->Play(header, numSample,keep);
+  sdlChannels.Play(header, numSample,keep);
   return 1;
 };
 
