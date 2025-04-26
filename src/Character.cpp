@@ -3710,6 +3710,7 @@ void DescribeObject(RN object,i16 P2)
             {
               descriptionMask = 0;
               StrCpy(descriptiveText, TranslateLanguage("PARTY FACING"));
+	      StrCat(descriptiveText, " ");
               StrCat(descriptiveText, TranslateLanguage(d.DirectionNames[objNID6-objNI_Compass_N]));
               PrintItemDesc(descriptiveText);
             }
