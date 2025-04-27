@@ -596,14 +596,12 @@ void Channels::Play(SNDHEAD *sndHead, int numSample,int keep)
     if (chunks[i] != NULL)
     {
 	if (!chunks[i]->keep) {
-	    printf("freeing sound\n");
 	    UI_free(m_sndHead[i]);
 	}
       chunks[i]->abuf = NULL;
       Mix_FreeChunk(chunks[i]);
       chunks[i] = NULL;
     };
-    //printf("Mix_QuickLoad_RAW @%d\n",d.Time);
     chunks[i] = Mix_QuickLoad_RAW(samples, numSample);
     if (chunks[i] == NULL)
     {
@@ -612,7 +610,6 @@ void Channels::Play(SNDHEAD *sndHead, int numSample,int keep)
     };
     chunks[i]->keep = keep;
     m_sndHead[i] = sndHead;
-    //printf("Mix_PlayChannel @%d\n", d.Time);
     Mix_PlayChannel(i, chunks[i], 0);
     return;
   };
