@@ -6,13 +6,12 @@ target = Ubuntu_SDL20
 #target = x86_64-w64-mingw32
 CXX = g++
 # comment out following line to see compiler invocation
-SILENT=1
+#SILENT=1
 
 ifeq ($(target), Raspberry)
   options = -O -D_LINUX -D RGB655 -D SDL12  -c
-  gincludes =  -I/usr/include/SDL `pkg-config --cflags glib-2.0`
-  #glibs = -lSDL
-  glibs = `pkg-config --libs glib-2.0` -lSDL
+  gincludes =  -I/usr/include/SDL
+  libs =  -lSDL
   comp = gcc $(options) $(gincludes)
 endif
 ifeq ($(target), Ubuntu_SDL20)
@@ -20,23 +19,21 @@ ifeq ($(target), Ubuntu_SDL20)
 	options =   -g -fsanitize=address -D _LINUX -D RGB655 -D SDL20 -c
 # optimized build options
 #	options =   -O2 -D _LINUX -D RGB655 -D SDL20 -c
-   ldflags = -g -fsanitize=address
-# glib is mainly used for its types, glib library is not even linked!
-  gincludes =  `pkg-config --cflags glib-2.0` \
-               -I/usr/lib/glib-2.0/include \
-               `pkg-config --cflags sdl2`
-  glibs =  `sdl2-config --libs`
-  comp = g++ $(options) $(gincludes)
-  ifdef SILENT
+ldflags := -g -fsanitize=address
+gincludes := \
+               $(shell pkg-config --cflags sdl2)
+libs :=  $(shell sdl2-config --libs)
+comp := g++ $(options) $(gincludes)
+ifdef SILENT
 	comp:=@${comp}
 	CXX:=@${CXX}
-  endif
+endif
 endif
 ifeq ($(target),x86_64-w64-mingw32)
 	options =   -O2 -D _LINUX -D RGB655 -D SDL20 -c -DMINGW
-  gincludes =  `$(target)-pkg-config --cflags glib-2.0` \
-               `$(target)-pkg-config --cflags sdl2`
-  glibs =  `$(target)-pkg-config --libs sdl2`
+  gincludes =  \
+               $(shell $(target)-pkg-config --cflags sdl2)
+  libs =  $(shell $(target)-pkg-config --libs sdl2)
   comp = $(target)-g++ $(options) $(gincludes)
   CXX = $(target)-g++
 endif
@@ -59,7 +56,7 @@ OBJS=	DSA.o       data.o         Code11f52.o  Graphics.o  Magic.o          \
 CSB: $(OBJS)
 	@echo Linking CSB
 	$(CXX)     \
-        $(OBJS) $(glibs) \
+        $(OBJS) $(libs) \
 	    $(ldflags) \
 	    -o ./CSB/CSB
 

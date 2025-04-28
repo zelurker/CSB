@@ -18,11 +18,12 @@
 #define _littleEndian
 #endif
 
+#include <endian.h>
 #ifdef _LINUX
-# if (G_BYTE_ORDER == G_LITTLE_ENDIAN)
+# if (BYTE_ORDER == LITTLE_ENDIAN)
 #  define _littleEndian
 # endif
-# if (G_BYTE_ORDER == G_BIG_ENDIAN)
+# if (BYTE_ORDER == BIG_ENDIAN)
 #  define _bigEndian
 # endif
 #endif
@@ -39,7 +40,7 @@
 #define INT64_FMT "%lld"
 #endif
 
-#if defined _MSVC_INTEL || defined _MSVC_CE2002ARM 
+#if defined _MSVC_INTEL || defined _MSVC_CE2002ARM
 typedef signed char      i8;     // signed 8-bit integer
 typedef unsigned char    ui8;
 typedef _int16           i16;  // signed 16-bit integer
@@ -59,20 +60,20 @@ typedef unsigned __int32 ui32; // PRS 20190701
 typedef __int32          i32;  // PRS 20190701
 #else
 # ifdef _LINUX
-  typedef guint32 HWND;
+  typedef uint32_t HWND;
   typedef void* HDC; // I might change this later...
   typedef signed char i8;     // signed 8-bit integer
   typedef unsigned char ui8;
-  typedef gint16 i16;  // signed 16-bit integer
-  typedef guint16 ui16;
-  typedef gint32 i32;  // signed 32-bit integer
-  typedef guint32 ui32;
-  typedef gint64 i64; //signed 64-bit integer
+  typedef int16_t i16;  // signed 16-bit integer
+  typedef uint16_t ui16;
+  typedef int32_t i32;  // signed 32-bit integer
+  typedef uint32_t ui32;
+  typedef int64_t i64; //signed 64-bit integer
   typedef i8 *pnt;
   typedef ui8 *upnt;
-  typedef guint64 ui64;
-  typedef guint32 bool32;
-  typedef guint16 HTIMER;
+  typedef uint64_t ui64;
+  typedef uint32_t bool32;
+  typedef uint16_t HTIMER;
   typedef struct
   {
       i32 x;
@@ -144,7 +145,7 @@ ui16 _uw(i32 i, i32 line, char *file);
 
 #ifdef _littleEndian
 //#define LE16(W)(((ui16)((((ui16)(W))*0x10001)>>8)&0xffff))
-// The above definition caused Visoual Studio Community 2013 C++ 
+// The above definition caused Visoual Studio Community 2013 C++
 // compiler to do something very clever but wrong when adding 128
 // words in a loop.  Strange instructions I have never seen.  I think that
 // carrys were being added.  Or something.  SO I did this instead.
@@ -176,7 +177,7 @@ enum STATE_OF_FEAR
   StateOfFear6 = 6,
   StateOfFear7 = 7,
 };
-  
+
 
 #pragma pack(1)
 typedef ui8 CELLFLAG;

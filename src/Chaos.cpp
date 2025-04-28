@@ -1060,7 +1060,7 @@ void StoreLong(ui8 *addr, i32 data)
   //to conform with this requirement.  But here we simply
   //fetch and store them by referencing two 16-bit words.
 #ifdef _bigEndian
-  xxxxx
+#error bigendian, really? Not defined stuff!
 #else
   *((ui16 *)(addr)) = (ui16)((ui32)data);
   *((ui16 *)(addr+2)) = (ui16)(((ui32)data)>>16);

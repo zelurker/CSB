@@ -139,7 +139,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
       case OPT_RECORD:
         if (msg->p2 == 1)
 	{
-		RecordMenuOption = true; 
+		RecordMenuOption = true;
 		NoRecordMenuOption = false;
 	}
 	else {
@@ -159,7 +159,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
         break;
       case OPT_QUICKPLAY:
         if (msg->p2 == 1) NoSpeedLimit = 2000000000;
-        else 
+        else
         {
           NoSpeedLimit = 0;
           VBLMultiplier = 1;
@@ -248,7 +248,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
       };
       break;
     case UIM_TERMINATE:
-        return UI_STATUS_TERMINATE; 
+        return UI_STATUS_TERMINATE;
     case UIM_CHAR:
         {
           if ((latestCharp1 == 3) && (msg->p1 == 3))
@@ -278,8 +278,8 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
           i32 key;
           latestScanp1 = msg->p1;
           latestScanp2 = msg->p2;
-          if ((key = keyxlate.translate(msg->p2&0xff, 
-                                        keyboardMode, 
+          if ((key = keyxlate.translate(msg->p2&0xff,
+                                        keyboardMode,
                                         TYPESCAN))!= 0)
           {
             latestScanType = TYPESCAN;
@@ -398,7 +398,7 @@ if (eventNum < 20) printf("Attempt checkVBL()\n");
       {
         msgStackLen--;
         if (msgStack[msgStackLen].type == UIM_TERMINATE)
-        { 
+        {
           return UI_STATUS_TERMINATE;
         };
 if (eventNum < 20) printf("Attempt DispatchCSB()\n");
@@ -428,20 +428,20 @@ i32 UI_MessageBox(const char *msg, const char *title, i32 flags ) {
     printf("\nMessageBox: [%s] %s", title, msg);
     GtkWidget *dialog;
     GString *text = g_string_new(msg);
-	
+
   i32 i=1;// default answer
     if(title==NULL){
-	title="Error: \n";    
+	title="Error: \n";
     }else{
 	text = g_string_prepend(text,": \n");
     }
-    
+
     text = g_string_prepend(text,title);
-   
+
   bool saveCursorShowing, cursorIsShowing, is_ok=false;
   saveCursorShowing = cursorIsShowing = ( SDL_ENABLE == SDL_ShowCursor(SDL_QUERY) );
   if (!cursorIsShowing) SDL_ShowCursor(SDL_ENABLE);
-  
+
     GtkWidget *label, *yes_button, *no_button, *ok_button;
 	dialog = gtk_dialog_new();
 	label = gtk_label_new (text->str);
@@ -462,7 +462,7 @@ i32 UI_MessageBox(const char *msg, const char *title, i32 flags ) {
 	gtk_signal_connect_object (GTK_OBJECT (no_button), "clicked",GTK_SIGNAL_FUNC (__dialog_unset), GTK_OBJECT(dialog));
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->action_area),yes_button);
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->action_area),no_button);
-   }   
+   }
    GtkWidget *hbox = gtk_hbox_new(FALSE,10);
    gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),hbox);
    gtk_container_add (GTK_CONTAINER (hbox),gtk_label_new(""));
@@ -493,7 +493,7 @@ i32 UI_MessageBox(const char *msg, const char *title, i32 flags ) {
 }
 
 
-/* 
+/*
 * The audio management
 */
 
@@ -535,7 +535,7 @@ void UI_Initialize_sounds(void) {
 	}
 	switch(doInitializeSounds) {
 		case SOUND_IS_OFF: break;
-		case SOUND_IS_PIPE: 
+		case SOUND_IS_PIPE:
 	printf("\nNote: Sound piped to stdout will look like garbage.\n\n");
 			break;
 		default: g_error("Could not initialize sound device."); break;
@@ -785,13 +785,13 @@ bool UI_ProcessOption(char **argv, int &argc)
 				"\tThe directory where any saved game files are\n"
 				"\tThe game also tries to save in this directory\n"
 				"\tIf not set, then default is to save in your current working directory\n"
-			"  --directory\n"	
+			"  --directory\n"
 				"\tUsage: --directory /tmp/\n"
 			    	"\tThe directory which holds any game file\n"
 			"  --module\n"
 				"\tUsage: --module /tmp/\n"
 			    	"\tThe directory which holds any other game file\n"
-			"  --root-path\n"	
+			"  --root-path\n"
 				"\tUsage: --root-path /tmp/\n"
 			   	"\tThe fall-back directory if the above pathways failed\n"
 //			"  --repeat\n"
@@ -890,7 +890,7 @@ bool UI_ProcessOption(char **argv, int &argc)
 //		    root = key;
 		    folderParentName = key; // Nasty hack. :o)
 		    break;
-		
+
 		case enum_module:
 		    folderName = key;
 		    break;
@@ -907,25 +907,25 @@ bool UI_ProcessOption(char **argv, int &argc)
 		case enum_height:
 		    sscanf(key,"%d", &WindowHeight);
 		    break;
-		
+
 		case enum_timer:
 		    sscanf(key,"%d", &TImER);
 		    break;
-		
+
 		case enum_quick:
 		    sscanf(key,"%d", &NoSpeedLimit);
 		    break;
-		
+
 		case enum_vblmultiplier:
 		    sscanf(key,"%d", &VBLMultiplier);
 		    break;
-		
+
 		case enum_dungeon:
 		    dungeonName = key;
 //		    root = ""; // Nasty hack. :o)
 				   // In CSB dungeonName is added to root... and dungeonName is already a working  path
 		    break;
-		
+
 		case enum_width:
 		    sscanf(key,"%d", &WindowWidth);
 		    break;
@@ -938,7 +938,7 @@ bool UI_ProcessOption(char **argv, int &argc)
 		    sscanf(key,"%d", &WindowY);
 		    break;
 		    break;
-*/		
+*/
 		case enum_extralarge:
 		    screenSize = 4;
 		    break;
@@ -951,7 +951,7 @@ bool UI_ProcessOption(char **argv, int &argc)
 		case enum_small:
 		    screenSize = 1;
 		    break;
-		
+
 		case enum_play:
 		    PlayfileName=key;
 //		g_warning("pag %s",PlayfileName);
@@ -961,7 +961,7 @@ bool UI_ProcessOption(char **argv, int &argc)
 	}
 	state=0;
     } // end of while
-    
+
     return true;
   }
 
@@ -970,8 +970,8 @@ i64 UI_GetSystemTime(void)
 {
     struct timeval t;
     gettimeofday( &t, NULL );
-    return ((guint32) t.tv_usec)/1000 + ((guint64) t.tv_sec)*1000;
-}	
+    return ((guint32) t.tv_usec)/1000 + ((uint64_t) t.tv_sec)*1000;
+}
 
 
 i32 EditDialog::DoModal(void)

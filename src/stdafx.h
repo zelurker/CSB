@@ -33,7 +33,8 @@
 #  include <stdlib.h>
 #  include <stdio.h>
 #  include <memory.h>
-#  include <glib.h>
+// #  include <glib.h>
+#include <stdint.h>
 #  include <sys/stat.h>
 #  ifdef USE_OLD_GTK
 #    include <gtk/gtk.h>

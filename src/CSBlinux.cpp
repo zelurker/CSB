@@ -107,10 +107,10 @@ static void DumpEvents(void)
 
 bool videoExposeWaiting = false;
 
-static guint32 __Timer_Callback(guint32 interval, void *param)
+static uint32_t __Timer_Callback(uint32_t interval, void *param)
 {
-  int code;
-  code = GPOINTER_TO_INT(param);
+  size_t code;
+  code = (size_t)(param);
   if (code == IDC_Timer)
   {
     if(timerInQueue)
@@ -141,7 +141,7 @@ static guint32 __Timer_Callback(guint32 interval, void *param)
         if (SDL_PushEvent(&ev) < 0)
         {
           char line[80];
-          sprintf(line," code = %d", GPOINTER_TO_INT(param));
+          sprintf(line," code = %d", (size_t)(param));
           UI_MessageBox(SDL_GetError(), "PushEvent Failed",MESSAGE_OK);
           die(0x66aa);
         };
@@ -163,8 +163,8 @@ static void PushEvent(void *param)
 {
   SDL_Event ev;
   {
-    int code;
-    code = GPOINTER_TO_INT(param);
+    size_t code;
+    code = (size_t)(param);
 #if defined  SDL12
     if ((code == SDL_VIDEOEXPOSE) || (code == IDC_VIDEOEXPOSE))
     {
@@ -186,11 +186,11 @@ static void PushEvent(void *param)
     };
   };
   ev.type = SDL_USEREVENT;
-  ((SDL_UserEvent*) &ev)->code = GPOINTER_TO_INT(param);
+  ((SDL_UserEvent*) &ev)->code = (size_t)(param);
   if (SDL_PushEvent(&ev) < 0)
   {
     char line[80];
-    sprintf(line," code = %d", GPOINTER_TO_INT(param));
+    sprintf(line," code = %d", (size_t)(param));
     UI_MessageBox(SDL_GetError(), "PushEvent Failed",MESSAGE_OK);
     UI_Die(0x66ab);
   };
@@ -206,8 +206,8 @@ static void __resize_screen( ui32 w, i32 h ) {
   //((SDL_ResizeEvent*)&ev) -> h = h;
 #elif defined SDL20
   ev.type = IDC_VIDEORESIZE;
-  ev.user.data1 = GINT_TO_POINTER(w);
-  ev.user.data2 = GINT_TO_POINTER(h);
+  ev.user.data1 = (void*)((size_t)w);
+  ev.user.data2 = (void*)((size_t)h);
 #else
   xxxError
 #endif
@@ -230,7 +230,7 @@ void UI_Invalidate(bool erase/*=false*/) {
 void LIN_Invalidate()
 {// *screen, x, y, w, h
   if( pending_update ) {
-    PushEvent(GINT_TO_POINTER(IDC_VIDEOEXPOSE) );
+    PushEvent((void*)(IDC_VIDEOEXPOSE) );
   }
 }
 
@@ -458,7 +458,7 @@ static void __before_trace_menu_is_showed(GtkMenuItem* bush, gpointer saddam) {
 #include <gdk/gdkx.h>
 #endif
 
-void g_log(const gchar *, GLogLevelFlags, const gchar *, ...)
+void g_log(const char *, int, const char *, ...)
 {
     die(0x3512);
 }
@@ -1415,7 +1415,7 @@ int main (int argc, char* argv[])
   gtk_window_set_title (GTK_WINDOW (appGlobal), APPTITLE);
   //gtk_signal_connect (GTK_OBJECT (appGlobal), "delete_event",GTK_SIGNAL_FUNC (cbAppDestroy), NULL);
   gtk_signal_connect (GTK_OBJECT (appGlobal), "destroy",GTK_SIGNAL_FUNC (cbAppDestroy), NULL);
-  gtk_signal_connect (GTK_OBJECT (appGlobal), "expose_event",GTK_SIGNAL_FUNC (__timer_callback),GINT_TO_POINTER( IDC_VIDEOEXPOSE));
+  gtk_signal_connect (GTK_OBJECT (appGlobal), "expose_event",GTK_SIGNAL_FUNC (__timer_callback),(void*)( IDC_VIDEOEXPOSE));
 
   //gtk_create_menu
   {
@@ -1473,7 +1473,7 @@ int main (int argc, char* argv[])
 //    ***** Initialize defaults, Video and Audio *****
   if ( SDL_Init ( SDL_INIT_VIDEO)<0)//|SDL_INIT_AUDIO|SDL_INIT_TIMER) < 0)
   {
-    g_critical("Unable to init SDL: %s", SDL_GetError() );
+    fprintf(stderr,"Unable to init SDL: %s", SDL_GetError() );
     //g_error("Unable to init SDL: %s", SDL_GetError() );
   };
   printf("SDL initialized.\n");
@@ -1582,7 +1582,7 @@ int main (int argc, char* argv[])
   };
   if ( SDL_InitSubSystem (SDL_INIT_TIMER) < 0)
   {
-    g_error("Unable to init Timer: %s", SDL_GetError() );
+    fprintf(stderr,"Unable to init Timer: %s", SDL_GetError() );
   }
 
 #if defined SDL12
@@ -1692,7 +1692,7 @@ int main (int argc, char* argv[])
   };
 
   /* Setup a 50ms timer. */
-  timer = SDL_AddTimer(TImER?TImER:10, __Timer_Callback, GINT_TO_POINTER(IDC_Timer));
+  timer = SDL_AddTimer(TImER?TImER:10, __Timer_Callback, (void*)(IDC_Timer));
   printf("Timer: %d ms established...\n", TImER?TImER:10);
 
   //SDL_WM_GrabInput(SDL_GRAB_ON);
@@ -1703,7 +1703,7 @@ int main (int argc, char* argv[])
    *
    ********************************************
    */
-  while (TRUE)
+  while (true)
   {
 
 #ifdef USE_OLD_GTK

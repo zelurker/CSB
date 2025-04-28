@@ -944,7 +944,7 @@ i64 UI_GetSystemTime(void)
 {
     struct timeval t;
     gettimeofday( &t, NULL );
-    return ((guint32) t.tv_usec)/1000 + ((guint64) t.tv_sec)*1000;
+    return ((uint32_t) t.tv_usec)/1000 + ((uint64_t) t.tv_sec)*1000;
 }
 
 

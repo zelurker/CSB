@@ -868,6 +868,7 @@ int Mix_OpenAudio(int frequency, Uint16 format, int nchannels, int chunksize)
 //		return(-1);
 //	}
 
+	printf("audio: got %d, %d channels format desired %x got %x\n",mixer.freq,mixer.channels,desired.format,mixer.format);
 	num_channels = MIX_CHANNELS;
 	mix_channel = (struct _Mix_Channel *) SDL_malloc(num_channels * sizeof(struct _Mix_Channel));
 

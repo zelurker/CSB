@@ -17,7 +17,7 @@
 # include <pgapplication.h>
 # include <pgbutton.h>
   const int WIDTH  = 640;
-  const int HEIGHT = 480;  
+  const int HEIGHT = 480;
 #endif//USE_PARAGUI
 
 #define APPTITLE	"CSBwin"
@@ -70,7 +70,7 @@ void PostQuitMessage( int a ) {
 #endif //USE_OLD_GTK
     exit(0);
 }
-static guint32 __timer_callback(guint32 interval, void *param) {
+static uint32_t __timer_callback(uint32_t interval, void *param) {
     SDL_Event ev;
     ev.type = SDL_USEREVENT;
     ((SDL_UserEvent*) &ev)->code = GPOINTER_TO_INT(param);
@@ -276,9 +276,9 @@ appAbout (GtkWidget *w, gpointer data)
 
 				GString *S = g_string_new( "This game is not GPL and not freeware.\n\n" );
 				int i = 0; while(authors[i]) {g_string_append(S, authors[i]); g_string_append(S, "\n"); i++;}
-				g_string_append(S, "\n\n"); 
+				g_string_append(S, "\n\n");
 				g_string_append(S,comment);
-				UI_MessageBox( S->str, APPTITLE " " APPVERSION APPVERMINOR, MESSAGE_OK ); 
+				UI_MessageBox( S->str, APPTITLE " " APPVERSION APPVERMINOR, MESSAGE_OK );
 				g_string_free(S,TRUE);
 
 }
@@ -305,7 +305,7 @@ static GtkItemFactoryEntry menubar[] = {
   { "/_File",		NULL,		NULL,		NULL,		"<Branch>" },
   { "/File/tear",		NULL,		NULL,		NULL,	 	"<Tearoff>" },
   { "/File/Quit",	"<control>Q",	GTK_SIGNAL_FUNC(cbAppDestroy),		NULL,		"<Item>" },
-  
+
   { "/_Misc",		NULL,		NULL,		NULL,	 	"<Branch>" },
   { "/Misc/tear",		NULL,		NULL,		NULL,	 	"<Tearoff>" },
   {"/Misc/Size x _1",	NULL,	GTK_SIGNAL_FUNC(__timer_callback),	( IDC_Normal ),	"<RadioItem>"},
@@ -319,11 +319,11 @@ static GtkItemFactoryEntry menubar[] = {
   {"/Misc/_DM rules",NULL,	GTK_SIGNAL_FUNC(__timer_callback),	( IDM_DMRULES ),	"<CheckItem>"},
   {"/Misc/_Items Remaining",NULL,	GTK_SIGNAL_FUNC(__timer_callback),	( IDC_ItemsRemaining ),"<Item>"},
   {"/Misc/_Non-CSB Items",NULL,	GTK_SIGNAL_FUNC(__timer_callback),	( IDC_NonCSBItemsRemaining ),"<Item>"},
-  
+
   { "/_Speed",				NULL,		NULL,		NULL,					 "<Branch>" },
   { "/Speed/tear",			NULL,		NULL,		NULL,	 				"<Tearoff>" },
   {"/Speed/_Glacial",			NULL,	GTK_SIGNAL_FUNC(__timer_callback),	( IDM_Glacial ),	"<RadioItem>"},
-  {"/Speed/_Molasses",		NULL,	GTK_SIGNAL_FUNC(__timer_callback), ( IDM_Molasses ),	"/Speed/Glacial"},  
+  {"/Speed/_Molasses",		NULL,	GTK_SIGNAL_FUNC(__timer_callback), ( IDM_Molasses ),	"/Speed/Glacial"},
   {"/Speed/_Very Slow",		NULL,	GTK_SIGNAL_FUNC(__timer_callback), ( IDM_VerySlow ),	"/Speed/Glacial"},
   {"/Speed/_Slow",			NULL,	GTK_SIGNAL_FUNC(__timer_callback), ( IDM_Slow ),		"/Speed/Glacial"},
   {"/Speed/_Normal",			NULL,	GTK_SIGNAL_FUNC(__timer_callback), ( IDM_Normal ),	"/Speed/Glacial"},
@@ -351,26 +351,26 @@ static void __before_misc_menu_is_showed(GtkMenuItem* bush, gpointer saddam) {
 	GtkItemFactory *votes = gtk_item_factory_from_widget(GTK_WIDGET(bush));
 	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Misc/Record"),
 	  BeginRecordOK ); //Record
-	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Misc/Playback"), 
+	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Misc/Playback"),
 	  BeginRecordOK ); //Playback
-	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Misc/Items Remaining"), 
+	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Misc/Items Remaining"),
 	  ItemsRemainingOK ); //Items remaining
-	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Misc/Non-CSB Items"), 
+	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Misc/Non-CSB Items"),
 	  ItemsRemainingOK ); //Non-CSB Items
-	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Misc/QuickPlay"), 
+	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Misc/QuickPlay"),
           PlayfileIsOpen() ); //Quickplay
 }
 static void __before_trace_menu_is_showed(GtkMenuItem* bush, gpointer saddam) {
 	GtkItemFactory *votes = gtk_item_factory_from_widget(GTK_WIDGET(bush));
-	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Trace/TimerTrace"), 
-	  (encipheredDataFile == NULL)); //TimerTrace	
-	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Trace/Dispatch Trace"), 
-	  true ); //DispatchTrace	
-	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Trace/AI Trace"), 
-	  true ); //AI Trace	
-	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Trace/AttackTrace"), 
+	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Trace/TimerTrace"),
+	  (encipheredDataFile == NULL)); //TimerTrace
+	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Trace/Dispatch Trace"),
+	  true ); //DispatchTrace
+	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Trace/AI Trace"),
+	  true ); //AI Trace
+	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Trace/AttackTrace"),
 	  true ); //AttackTrace
-	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Trace/DSA Trace"), 
+	gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Trace/DSA Trace"),
 	  TimerTraceActive);//DSA Trace
 //	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_item_factory_get_widget( votes, "/Misc/AI Trace")), (AITraceActive)); //AI Trace
 //	gtk_check_menu_item_set_active  (GTK_CHECK_MENU_ITEM(gtk_item_factory_get_widget( votes, "/Misc/DM rules")), DM_rules);//DM rules
@@ -424,7 +424,7 @@ int main (int argc, char* argv[])
     program = HILDON_PROGRAM ( hildon_program_get_instance () );
     hildonmainwindow = HILDON_WINDOW(hildon_window_new());
     g_set_application_name ( "CSB" );
-//    g_signal_connect(G_OBJECT(hildonmainwindow), "delete_event", gtk_main_quit, NULL);	
+//    g_signal_connect(G_OBJECT(hildonmainwindow), "delete_event", gtk_main_quit, NULL);
     hildon_program_add_window(program, hildonmainwindow);
 
 	appGlobal = GTK_WIDGET(hildonmainwindow); //gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -454,11 +454,11 @@ int main (int argc, char* argv[])
 		gtk_signal_connect(GTK_OBJECT(gtk_item_factory_get_widget(item_factory,"/Misc")),
 			"expose_event",
 			GTK_SIGNAL_FUNC(__before_misc_menu_is_showed),
-			(gpointer) item_factory); 
+			(gpointer) item_factory);
 		gtk_signal_connect(GTK_OBJECT(gtk_item_factory_get_widget(item_factory,"/Trace")),
 			"expose_event",
 			GTK_SIGNAL_FUNC(__before_trace_menu_is_showed),
-			(gpointer) item_factory); 
+			(gpointer) item_factory);
 		menuW = gtk_item_factory_get_widget (item_factory, "<main>");
 		main_vbox = gtk_vbox_new (FALSE, 1);
 		gtk_container_set_border_width (GTK_CONTAINER (main_vbox), 1);
@@ -477,7 +477,7 @@ int main (int argc, char* argv[])
 #ifdef MAEMO_NOKIA_770
 	/* Hack to get SDL to use GTK window */
 	/* Doesn't work with gtk-1.2 */
-	{ 
+	{
 	  char SDL_windowhack[32];
   	  sprintf(SDL_windowhack,"SDL_WINDOWID=%ld",
 
@@ -490,7 +490,7 @@ int main (int argc, char* argv[])
 	}
 #endif //MAEMO_NOKIA_770
 #endif //USE_OLD_GTK
-	
+
 //		***** Initialize defaults, Video and Audio *****
  	if ( SDL_Init ( SDL_INIT_VIDEO)<0)//|SDL_INIT_AUDIO|SDL_INIT_TIMER) < 0)
 	{
@@ -500,7 +500,7 @@ int main (int argc, char* argv[])
 	printf("SDL initialized.\n");
 	SDL_WM_SetCaption(APPTITLE, NULL);
 
-	
+
 // ****************************** the DISPLAY ****************************************************
 #ifdef _DYN_WINSIZE
 	if(!Hermes_Init()) g_error("No hermes...");
@@ -520,8 +520,8 @@ int main (int argc, char* argv[])
           systemXsize = videoInfo->current_w;
           systemYsize = videoInfo->current_h;
           systemBPP   = videoInfo->vfmt->BitsPerPixel;
-	  WND = SDL_SetVideoMode(320, //systemXsize, 
-                                 200, //systemYsize, 
+	  WND = SDL_SetVideoMode(320, //systemXsize,
+                                 200, //systemYsize,
                                  systemBPP,
                                  SDL_SWSURFACE|SDL_RESIZABLE);
         };
@@ -551,7 +551,7 @@ btnOK.Show();
      * Initialize the display in a 640x480 8-bit palettized mode,
      * requesting a software surface, or anything else....
      */
-     
+
     /* Do the window-cha-cha. */
     speedTable[SPEED_GLACIAL].vblPerTick = 1000;
     speedTable[SPEED_MOLASSES].vblPerTick = 55;
@@ -622,7 +622,7 @@ btnOK.Show();
     }
     /* Setup a 50ms timer. */
     timer = SDL_AddTimer(TImER?TImER:10, __timer_callback, GINT_TO_POINTER(IDC_Timer));
-    printf("Timer: %d ms established...\n", TImER?TImER:10); 
+    printf("Timer: %d ms established...\n", TImER?TImER:10);
 
 
 
@@ -630,7 +630,7 @@ btnOK.Show();
     static bool inWindow;
     static bool cursorIsShowing;
     while (TRUE)
-	//SDL_WaitEvent(&evert)) 
+	//SDL_WaitEvent(&evert))
 	{
 
 #ifdef USE_OLD_GTK
@@ -642,7 +642,7 @@ btnOK.Show();
 	    /* Listen for 'quick buttons' here. */
 	    /* Hail to the Great Message Struct! */
 	    MTRACE("msg=");
-	    switch( evert.type ) 
+	    switch( evert.type )
             {
 	      case SDL_QUIT:  //evert.type
 	        MTRACE("SDL_QUIT\n");
@@ -732,7 +732,7 @@ btnOK.Show();
 	      case SDL_USEREVENT: { // evert.type  __timer_loopback
 		MTRACE("sdl_userevent->");
 		SDL_UserEvent *e = (SDL_UserEvent*) &evert;
-		switch( e->code ) 
+		switch( e->code )
                 {// the menu (and timer)
 		  case IDC_Normal: //e->code
 		    MTRACE("IDC_Normal\n");
@@ -747,7 +747,7 @@ btnOK.Show();
                     break;
 		  case IDC_Timer: //e->code
                     MTRACE("IDC_Timer\n");
-		    if(GameMode != 1) 
+		    if(GameMode != 1)
                     {
                       LIN_Invalidate();
                     };
@@ -755,7 +755,7 @@ btnOK.Show();
 		    if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
 		    {
 		      PostQuitMessage(0);
-		    }; 
+		    };
                     break;
 			  /*
 			  * BEGIN the evil VIDEOEXPOSE
@@ -869,7 +869,7 @@ btnOK.Show();
 		      PostQuitMessage(0);
 		      break;
 		    };
-		  }; 
+		  };
                   break;/*
 			* END of VIDEOEXPOSE
 			*/
@@ -1134,7 +1134,7 @@ btnOK.Show();
 		    break;
 		  case IDC_DispatchTrace://e->code
 		    MTRACE("IDC_DispatchTrace\n");
-		    if (trace  >= 0 ) 
+		    if (trace  >= 0 )
 		    {
 		      CLOSE(trace);
 		      trace = -1;
@@ -1157,14 +1157,14 @@ btnOK.Show();
                     MTRACE("IDC_DSATrace\n");
                     csbMessage.type = UIM_SETOPTION;
                     csbMessage.p1 = OPT_DSATRACE;
-                    csbMessage.p2 = 1;   
+                    csbMessage.p2 = 1;
                     if (DSATraceActive) csbMessage.p2 = 0;
                     if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
                     {
                       PostQuitMessage(0);
                       break;
                     };
-                    break;  
+                    break;
  		  default://e->code
                     printf("Unknown SDL_USEREVENT\n");
 		    MTRACE("Unknown SDL_USEREVENT\n");
@@ -1183,8 +1183,8 @@ btnOK.Show();
 		      MTRACE("SDL_BUTTON_LEFT\n");
 		      printf("left ");
 		      csbMessage.type=UIM_LEFT_BUTTON_DOWN;
-		      csbMessage.p1 = mouseX = e->x;  // horizontal position of cursor 
-		      csbMessage.p2 = mouseY = e->y;  // vertical position of cursor 
+		      csbMessage.p1 = mouseX = e->x;  // horizontal position of cursor
+		      csbMessage.p2 = mouseY = e->y;  // vertical position of cursor
 		      if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
 		      {
 			PostQuitMessage(0);
@@ -1195,8 +1195,8 @@ btnOK.Show();
 		      MTRACE("SDL_BUTTON_RIGHT\n");
 		      printf("right ");
 		      csbMessage.type=UIM_RIGHT_BUTTON_DOWN;
-		      csbMessage.p1 = mouseX = e->x;  // horizontal position of cursor 
-		      csbMessage.p2 = mouseY = e->y;    // vertical position of cursor 
+		      csbMessage.p1 = mouseX = e->x;  // horizontal position of cursor
+		      csbMessage.p2 = mouseY = e->y;    // vertical position of cursor
 		      if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
 		      {
 		 	PostQuitMessage(0);
@@ -1216,8 +1216,8 @@ btnOK.Show();
 		    case SDL_BUTTON_RIGHT:
 		      MTRACE("SDL_BUTTON_RIGHT\n");
 		      csbMessage.type=UIM_RIGHT_BUTTON_UP;
-		      csbMessage.p1 = mouseX = e->x;  // horizontal position of cursor 
-		      csbMessage.p2 = mouseY = e->y; // vertical position of cursor 
+		      csbMessage.p1 = mouseX = e->x;  // horizontal position of cursor
+		      csbMessage.p2 = mouseY = e->y; // vertical position of cursor
 		      if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
 		      {
 		        PostQuitMessage(0);
@@ -1227,8 +1227,8 @@ btnOK.Show();
 		    case SDL_BUTTON_LEFT:
 	  	      MTRACE("SDL_BUTTON_LEFT\n");
 		      csbMessage.type=UIM_LEFT_BUTTON_UP;
-		      csbMessage.p1 = mouseX = e->x;   // horizontal position of cursor 
-		      csbMessage.p2 = mouseY = e->y;  // vertical position of cursor 
+		      csbMessage.p1 = mouseX = e->x;   // horizontal position of cursor
+		      csbMessage.p2 = mouseY = e->y;  // vertical position of cursor
 		      if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
 		      {
 		        PostQuitMessage(0);
@@ -1269,7 +1269,7 @@ btnOK.Show();
 		    break;
 		  };
 		  break;
-		case SDL_VIDEORESIZE: 
+		case SDL_VIDEORESIZE:
                   {
                     MTRACE("SDL_VIDEORESIZE\n");
 		    SDL_ResizeEvent *e = (SDL_ResizeEvent*) &evert;
@@ -1281,7 +1281,7 @@ btnOK.Show();
 		    WND = SDL_SetVideoMode(WindowWidth,  WindowHeight, 0, SDL_HWSURFACE|SDL_SWSURFACE|SDL_RESIZABLE|SDL_ANYFORMAT);
 
 #ifndef _DYN_WINSIZE
-		    switch(screenSize) 
+		    switch(screenSize)
                     {
 		      default:
 		      case 1: SDL_FreeSurface(SCRAP);	SCRAP = SDL_CreateRGBSurface(SDL_SWSURFACE,320*1,200*1,8,0,0,0,0); break;
@@ -1299,12 +1299,12 @@ btnOK.Show();
 		    UI_Invalidate();
 	          };
                   break; //case SDL_VIDEORESIZE
-			
-   /*           case SDL_ACTIVEEVENT: 
+
+   /*           case SDL_ACTIVEEVENT:
                 {
-                  if ( evert.active.state & SDL_APPACTIVE ) 
+                  if ( evert.active.state & SDL_APPACTIVE )
                   {
-                    if ( evert.active.gain ) 
+                    if ( evert.active.gain )
                     {
                       printfalll("App activated\n");
                     }
@@ -1316,16 +1316,16 @@ btnOK.Show();
                 };
     */
   //            break; //falltrhrough till VIDEOEXPOSED
-	
+
 
 	    }; /* switch (evert.type)  Eof Great Event Switch */
 	} /* Eof Lord Message Loop */
 
     printf("Quiting SDL.\n");
-    
+
     /* Shutdown all subsystems */
     SDL_Quit();
-    
+
     printf("Quiting....\n");
 
     exit(0);
