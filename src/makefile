@@ -6,7 +6,7 @@ target = Ubuntu_SDL20
 #target = x86_64-w64-mingw32
 CXX = g++
 # comment out following line to see compiler invocation
-#SILENT=1
+SILENT=1
 
 ifeq ($(target), Raspberry)
   options = -O -D_LINUX -D RGB655 -D SDL12  -c
@@ -16,10 +16,10 @@ ifeq ($(target), Raspberry)
 endif
 ifeq ($(target), Ubuntu_SDL20)
 	#	debug options (make sure the ldflags line is uncommented if you use this)
-	options =   -g -fsanitize=address -D _LINUX -D RGB655 -D SDL20 -c
-# optimized build options
-#	options =   -O2 -D _LINUX -D RGB655 -D SDL20 -c
-ldflags := -g -fsanitize=address
+	#options =   -g -fsanitize=address -D _LINUX -D RGB655 -D SDL20 -c
+# optimized build options (comment out ldflags below to remove -fsanitize=address!!!)
+	options =   -O2 -D _LINUX -D RGB655 -D SDL20 -c
+# ldflags := -g -fsanitize=address
 gincludes := \
                $(shell pkg-config --cflags sdl2)
 libs :=  $(shell sdl2-config --libs)
