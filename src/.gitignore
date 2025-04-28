@@ -1,0 +1,7 @@
+*.P
+*.mak
+*.o
+.gitignore
+CSB
+CMake*
+
