@@ -1,8 +1,8 @@
 
-# ROQUEN - First rough draft 
+# ROQUEN - First rough draft
 
+cmake_minimum_required(VERSION 3.10.0)
 project(CSBWin)
-cmake_minimum_required(VERSION 2.4.0)
 
 set(PACKAGE_NAME    csb)
 set(PACKAGE_VERSION 11.1.0)
@@ -41,7 +41,7 @@ if(WIN32)
     set(CSB_ON_UNIX  0)
   endif(CYGWIN)
 else(WIN32)
- 
+
   if(UNIX)
     set(CSB_ON_WIN32 0)
     set(CSB_ON_UNIX  1)
@@ -52,7 +52,7 @@ else(WIN32)
 endif(WIN32)
 
 
-# BLAH -- 
+# BLAH --
 if(MSVC)
   add_definitions(-D_MSVC_INTEL -D_MIDI -D_MOVIE)
   add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS)
@@ -65,10 +65,6 @@ else(MSVC)
     set(PLATFORM_SRC LinScreen.cpp CSBlinux.cpp LinCSBUI.cpp)
   endif(APPLE)
 endif(MSVC)
-
-#if(CSB_USE_SDL)
-#  find_path(SDL_PATH)
-#endif(CSB_USE_SDL)
 
 # NO! NO! NO! --- mucking around
 if (CMAKE_COMPILER_IS_GNUCXX)
@@ -129,36 +125,25 @@ add_executable(CsbWin WIN32
 )
 
 if(UNIX)
-	FIND_PACKAGE(GTK2)
-	if(GTK2_FOUND)
-		message("GTK found")
-		include_directories(${GTK2_INCLUDE_DIRS})
-		target_link_libraries(CsbWin ${GTK2_LIBRARIES})
-		#add_definitions(-DUSE_OLD_GTK)
-	else(GTK2_FOUND)
-		message("no GTK")
-	endif(GTK2_FOUND)
+#	FIND_PACKAGE(GTK2)
+#	if(GTK2_FOUND)
+#		message("GTK found")
+#		include_directories(${GTK2_INCLUDE_DIRS})
+#		add_definitions(-DUSE_OLD_GTK)
+#		target_link_libraries(CsbWin ${GTK2_LIBRARIES})
+#	else(GTK2_FOUND)
+#		message("no GTK")
+#	endif(GTK2_FOUND)
 
-	FIND_PACKAGE(SDL REQUIRED)
-	if(SDL_FOUND)
-		message("SDL found")
-		include_directories(${SDL_INCLUDE_DIRS})
-		target_link_libraries(CsbWin ${SDL_LIBRARIES})
-	else(SDL_FOUND)
-		message(FATAL_ERROR "libSDL is required")
-	endif(SDL_FOUND)
-
-	FIND_PACKAGE(SDL_mixer)
-	if(SDLMIXER_FOUND)
-		message("SDL mixer found")
-		include_directories(${SDLMIXER_INCLUDE_DIR})
-		target_link_libraries(CsbWin ${SDLMIXER_LIBRARY})
-		add_definitions(-DSOUND__SDLMIXER)
-	endif(SDLMIXER_FOUND)
+	find_package(PkgConfig REQUIRED)
+	pkg_check_modules(deps REQUIRED IMPORTED_TARGET GLOBAL sdl2)
+	pkg_get_variable(SDL2_CFLAGS sdl2 CFLAGS)
+	# cmake_pkg_config(EXTRACT sdl2)
+	add_definitions(-DSDL20 ${SDL2_CFLAGS})
+	set(LIBS $(LIBS) $(SDL2_LIBRARIES))
 endif(UNIX)
 
 if (CSB_ON_WIN32)
   target_link_libraries(CsbWin winmm.lib)
 endif(CSB_ON_WIN32)
-
 
