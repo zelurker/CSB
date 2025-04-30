@@ -3,8 +3,9 @@ target = Ubuntu_SDL20
 # This target below is for some cross compilation from linux to windows
 # it works, but windows gives 2 channels instead of the requested 1, creating bad sound when run in wine, and no sound at all in native windows 11 !
 # so consider it experimental for now !
-#target = x86_64-w64-mingw32
+# target = x86_64-w64-mingw32
 CXX = g++
+MD = mkdir
 # comment out following line to see compiler invocation
 SILENT=1
 
@@ -16,29 +17,32 @@ ifeq ($(target), Raspberry)
 endif
 ifeq ($(target), Ubuntu_SDL20)
 	#	debug options (make sure the ldflags line is uncommented if you use this)
-	#options =   -g -fsanitize=address -D _LINUX -D RGB655 -D SDL20 -c
+	options =   -g -fsanitize=address -D _LINUX -D RGB655 -D SDL20 -c
 # optimized build options (comment out ldflags below to remove -fsanitize=address!!!)
-	options =   -O2 -D _LINUX -D RGB655 -D SDL20 -c
-# ldflags := -g -fsanitize=address
+	#options =   -O2 -D _LINUX -D RGB655 -D SDL20 -c
+ldflags := -g -fsanitize=address
+options += -Isdl_sound
 gincludes := \
                $(shell pkg-config --cflags sdl2)
 libs :=  $(shell sdl2-config --libs)
 comp := g++ $(options) $(gincludes)
-ifdef SILENT
-	comp:=@${comp}
-	CXX:=@${CXX}
-endif
+compc := gcc $(options) $(gincludes)
 endif
 ifeq ($(target),x86_64-w64-mingw32)
-	options =   -O2 -D _LINUX -D RGB655 -D SDL20 -c -DMINGW
-  gincludes =  \
+	options =  -O2 -D _LINUX -D RGB655 -D SDL20 -c -DMINGW
+  gincludes = -Isdl_sound \
                $(shell $(target)-pkg-config --cflags sdl2)
   libs =  $(shell $(target)-pkg-config --libs sdl2)
   comp = $(target)-g++ $(options) $(gincludes)
+  compc = $(target)-gcc $(options) $(gincludes)
   CXX = $(target)-g++
 endif
-
-all: CSB
+ifdef SILENT
+	comp:=@${comp}
+	compc:=@$(compc)
+	CXX:=@${CXX}
+	MD:=@$(MD)
+endif
 
 OBJS=	DSA.o       data.o         Code11f52.o  Graphics.o  Magic.o          \
         CSBCode.o   Timer.o        Character.o  system.o    SmartDiscard.o   \
@@ -50,26 +54,49 @@ OBJS=	DSA.o       data.o         Code11f52.o  Graphics.o  Magic.o          \
         Sound.o     Code1f9e6.o    Code390e.o   Code222ea.o Statistics.o     \
         SoundMixer.o
 
+OBJDIR = obj
+OBJDIRS = $(OBJDIR) \
+		  $(OBJDIR)/sdl_sound
+
+OBJS := $(OBJS:%=$(OBJDIR)/%)
+SDL_SOUND = SDL_sound.o SDL_sound_mp3.o SDL_sound_raw.o SDL_sound_wav.o
+SDL_SOUND := $(SDL_SOUND:%=$(OBJDIR)/sdl_sound/%)
+OBJS += $(SDL_SOUND)
+
+all: maketree csb
+
+$(OBJDIRS):
+	$(MD) -p $@
+
 # include optionally the dependancies for the include files...
 -include $(OBJS:%.o=%.P)
 
-CSB: $(OBJS)
-	@echo Linking CSB
+csb: $(OBJS)
+	@echo Linking $@
 	$(CXX)     \
         $(OBJS) $(libs) \
 	    $(ldflags) \
-	    -o ./CSB/CSB
+	    -o csb
+
+maketree: $(OBJDIRS)
 
 clean:
-	rm -f *.o CSB/CSB *.P
+	rm -rf obj csb
 
 # This tricky rule generates dependancies information in .P files while compiling files
 # it avoids to maintain a list of include files in the makefile
-%.o: %.cpp
+$(OBJDIR)/%.o: %.cpp
 	@echo Compiling $<...
 	$(comp) -MD -c $< -o $@
-	@cp $*.d $*.P; \
+	@cp $(OBJDIR)/$*.d $(OBJDIR)/$*.P; \
             sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
-                -e '/^$$/ d' -e 's/$$/ :/' < $*.d >> $*.P; \
-            rm -f $*.d
+                -e '/^$$/ d' -e 's/$$/ :/' < $(OBJDIR)/$*.d >> $(OBJDIR)/$*.P; \
+            rm -f $(OBJDIR)/$*.d
 
+$(OBJDIR)/%.o: %.c
+	@echo Compiling $<...
+	$(compc) -MD -c $< -o $@
+	@cp $(OBJDIR)/$*.d $(OBJDIR)/$*.P; \
+            sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
+                -e '/^$$/ d' -e 's/$$/ :/' < $(OBJDIR)/$*.d >> $(OBJDIR)/$*.P; \
+            rm -f $(OBJDIR)/$*.d

@@ -4,4 +4,6 @@
 .gitignore
 CSB
 CMake*
-
+tags
+csb
+csb.exe

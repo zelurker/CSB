@@ -18,7 +18,11 @@
 #define _littleEndian
 #endif
 
+#ifdef MINGW
+#include <sys/param.h>
+#else
 #include <endian.h>
+#endif
 #ifdef _LINUX
 # if (BYTE_ORDER == LITTLE_ENDIAN)
 #  define _littleEndian

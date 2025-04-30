@@ -18,6 +18,7 @@
 #include "Dispatch.h"
 #include "CSB.h"
 #include "Data.h"
+#include "SDL_sound.h"
 
 extern int eventNum;
 extern void ReadConfigFile(void);
@@ -506,7 +507,7 @@ void UI_Initialize_sounds(void)
 {
     // Sound is at 5120 Hz, and not 7000
     // Found the precize frequency somewhere in this file (look for Hz)
-  Mix_OpenAudio(5120, AUDIO_U8, 1, 128);
+  Mix_OpenAudio();
 //  printf("InitializeSounds not implemented\n");
 }
 
@@ -552,13 +553,14 @@ class Channels /* To keep track of active channels and
                 */
 {
 private:
-  Mix_Chunk *chunks[MIX_CHANNELS];
-  int numSample[MIX_CHANNELS];
+  Sound_Sample *sample[MIX_CHANNELS];
   SNDHEAD *m_sndHead[MIX_CHANNELS];
+  int keep[MIX_CHANNELS];
 public:
   Channels(void);
   ~Channels(void);
-  void Play(SNDHEAD *sndHead, int numSamples,int keep);
+  void Play(SNDHEAD *sndHead, int numSamples,int mykeep);
+  void PlayDirect(Sound_Sample *samp);
 };
 
 Channels::Channels(void)
@@ -566,10 +568,9 @@ Channels::Channels(void)
   int i;
   for (i=0; i<MIX_CHANNELS; i++)
   {
-    chunks[i] = NULL;
-    numSample[i] = 0;
+    sample[i] = NULL;
     m_sndHead[i] = NULL;
-  };
+  }
 }
 
 Channels::~Channels(void)
@@ -577,43 +578,84 @@ Channels::~Channels(void)
   int i;
   for (i=0; i<MIX_CHANNELS; i++)
   {
-    if (chunks[i] != NULL)
-    Mix_FreeChunk(chunks[i]);
-    if (m_sndHead[i] != NULL) UI_free(m_sndHead[i]);
-  };
+    if (sample[i] != NULL)
+	Sound_FreeSample(sample[i]);
+    if (m_sndHead[i] != NULL && !keep[i])
+	UI_free(m_sndHead[i]);
+  }
 }
 
-char *warcry,*horn;
-
-void Channels::Play(SNDHEAD *sndHead, int numSample,int keep)
+void Channels::Play(SNDHEAD *sndHead, int numSample,int mykeep)
 {
   int i;
-  ui8 *samples;
-  samples = (ui8 *)sndHead->sample58;
   for (i=0; i<MIX_CHANNELS; i++)
   {
     if (Mix_Playing(i)) continue;
-    if (chunks[i] != NULL)
+    if (sample[i] != NULL)
     {
-	if (!chunks[i]->keep) {
+	if (!keep[i])
 	    UI_free(m_sndHead[i]);
-	}
-      chunks[i]->abuf = NULL;
-      Mix_FreeChunk(chunks[i]);
-      chunks[i] = NULL;
-    };
-    chunks[i] = Mix_QuickLoad_RAW(samples, numSample);
-    if (chunks[i] == NULL)
+	if (sample[i])
+	    Sound_FreeSample(sample[i]);
+	sample[i] = NULL;
+    }
+    Sound_AudioInfo info;
+    info.rate = mixer.freq;
+    info.channels = mixer.channels;
+    info.format = mixer.format;
+    // I was hoping that sdl_sound would hide the audio conversion when using raw samples, but no
+    // I guess it's better like that, it allows to convert the samples only once if you wish
+    // Well in this case the conversion should be pretty fast...
+    SDL_AudioCVT cvt;
+    // In theory the samples from the st are supposed to be 5120 Hz.
+    // Now if I convert these to 44100 16 bits stereo in linux, the result is that the sample for the opening gate plays slightly too slow and overlaps itself!
+    // Slightly increasing the frequency to 5200 seems to fix everything!
+    // The weird part is that in mingw 5120 Hz plays ok, the samples are not overlapping!
+    // Now there is a very little difference between 5120 Hz and 5200...!
+    SDL_BuildAudioCVT(&cvt, AUDIO_U8, 1, 5200, mixer.format, mixer.channels,mixer.freq);
+    cvt.len = numSample;
+    cvt.buf = (Uint8 *) SDL_malloc(cvt.len * cvt.len_mult);
+    memcpy(cvt.buf,sndHead,numSample);
+    SDL_ConvertAudio(&cvt);
+    if (!mykeep)
+	UI_free(sndHead);
+    keep[i] = mykeep;
+    sample[i] = Sound_NewSampleFromMem(cvt.buf, numSample * cvt.len_ratio,
+	    "RAW",
+	    &info,
+	    mixer.size
+	    );
+    if (sample[i] == NULL)
     {
-      UI_free(sndHead);
+	printf("sdl_sound newsample returned null!!!\n");
       return;
-    };
-    chunks[i]->keep = keep;
-    m_sndHead[i] = sndHead;
-    Mix_PlayChannel(i, chunks[i], 0);
+    }
+    m_sndHead[i] = (SNDHEAD*)cvt.buf;
+    Mix_PlayChannel(i, sample[i], 0);
+    return;
+  }
+  UI_free(sndHead);
+}
+
+void Channels::PlayDirect(Sound_Sample *samp)
+{
+  int i;
+  for (i=0; i<MIX_CHANNELS; i++)
+  {
+    if (Mix_Playing(i)) continue;
+    if (sample[i] != NULL)
+    {
+	if (!keep[i])
+	    UI_free(m_sndHead[i]);
+	if (sample[i])
+	    Sound_FreeSample(sample[i]);
+	sample[i] = NULL;
+    }
+    keep[i] = 1; // There is no sndHead here, so it's better not call UI_free on it!
+    Sound_Rewind(samp);
+    Mix_PlayChannel(i, samp, 0);
     return;
   };
-  UI_free(sndHead);
 }
 
 Channels sdlChannels;
@@ -621,7 +663,7 @@ Channels sdlChannels;
 /*
 * Play a sound. We do currently not bother about volume, it just looks nice...
 */
-static bool LIN_PlaySound(i8* audio, const ui32 /*size*/, int volume,int keep)
+static bool LIN_PlaySound(i8* audio, const ui32 size, int volume,int keep)
 {
   ui8 *samples;
   int numSample;
@@ -629,15 +671,33 @@ static bool LIN_PlaySound(i8* audio, const ui32 /*size*/, int volume,int keep)
   //printf("LIN_PlaySound @%d\n",d.Time);
   header = (SNDHEAD *)audio;
   //samples = header->sample58;
-  numSample = header->numSamples54;
-  sdlChannels.Play(header, numSample,keep);
+  sdlChannels.Play(header, size,keep);
   return 1;
 };
 
+static Sound_Sample *horn,*warcry;
 
-bool UI_PlaySound(const char *wave, i32 flags, int keep=0) {
+void LIN_PlayDirect(const char *name) {
+    Sound_AudioInfo info;
+    info.rate = mixer.freq;
+    info.channels = mixer.channels;
+    info.format = mixer.format;
+    if (!strncmp(name,"horn",4)) {
+	if (!horn)
+	    horn = Sound_NewSampleFromFile(name,&info,mixer.size);
+	if (horn)
+	    sdlChannels.PlayDirect(horn);
+    } else if (!strncmp(name,"warcry",6)) {
+	if (!warcry)
+	    warcry = Sound_NewSampleFromFile(name,&info,mixer.size);
+	if (warcry)
+	    sdlChannels.PlayDirect(warcry);
+    }
+}
+
+bool UI_PlaySound(const char *wave, i32 size, int keep=0) {
 //SDL_AudioSpec *SDL_LoadWAV(const char *file, SDL_AudioSpec *spec, Uint8 **audio_buf, Uint32 *audio_len);
-  return LIN_PlaySound((pnt)wave/* + 58*/,((SNDHEAD*)wave)->Size - WAV_OFFSET+sizeof(i32), SDL_MIX_MAXVOLUME,keep);
+  return LIN_PlaySound((pnt)wave,size, SDL_MIX_MAXVOLUME,keep);
 }
 
 enum {

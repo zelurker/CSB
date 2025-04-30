@@ -176,8 +176,7 @@ char *SoundDecode(pnt pGraphic, i32 numSample, i32 volume)
 { // volume is a divisor
   char *pN;
   FILE *f=NULL;
-  unsigned char *pW;
-  SNDHEAD *WavBuf;
+  unsigned char *pW,*wav;
   i32 i, n, repeat, sample, nibble;
   bool even;
 #ifdef _SNDDEBUG
@@ -191,16 +190,14 @@ char *SoundDecode(pnt pGraphic, i32 numSample, i32 volume)
     {
       // Rebuild volume table
       i32 k;
-      for (k=0; k<128; k++) 
+      for (k=0; k<128; k++)
         volTable[k] = (ui8)((k-128-volume/2)/volume + 128);
       for (k=128; k<256; k++)
         volTable[k] = (ui8)((k-128+volume/2)/volume + 128);
       curVol = volume;
     };
   };
-  WavBuf = (SNDHEAD *)UI_malloc(numSample + 58, MALLOC042);
-  if (WavBuf == NULL) die (0,"No Memory");
-  pW = (unsigned char *)WavBuf->sample58;
+  wav = pW = (unsigned char *)malloc(numSample);
   n = numSample; // Number of samples to store
   pN = (char *)pGraphic;
   if (f) fprintf(f,"Starting pN = %08x   Number of samples=%08x\n"
@@ -214,33 +211,21 @@ char *SoundDecode(pnt pGraphic, i32 numSample, i32 volume)
       sample = *pN & 0xf0;
       if (f) fprintf(f,"Even sample %d\n",sample);
       even = false;
-    }
-    else
-    {
+    } else {
       sample = (*(pN++) << 4) & 0xf0;
       if (f) fprintf(f,"Odd sample %d\n",sample);
       even = true;
-    };
+    }
     if (sample != 0)
     {
-      if (f)
-      {
-        fprintf(f,"Non-zero sample  n=%d\n",n);
-        //fprintf(f,"***DEBUG store sample #%d\n",pW-(ui8*)WavBuf-58);
-        fprintf(f,"***DEBUG store sample #%d\n",(i32)(pW-(ui8*)WavBuf)-58);
-      };
       if (!usingDirectX)
       {
         *(pW++) = volTable[sample];
-      }
-      else
-      {
+      } else {
         *(pW++) = (unsigned char)sample;
-      };
+      }
       n--;
-    }
-    else
-    {
+    } else {
       repeat = 0;
       for (;;)
       {
@@ -255,11 +240,11 @@ char *SoundDecode(pnt pGraphic, i32 numSample, i32 volume)
           nibble = *(pN++);
           if(f) fprintf(f,"Odd nibble = %d\n",nibble);
           even = true;
-        };
+        }
         repeat = (repeat << 3) | (nibble & 7);
         if (f) fprintf(f,"Repeat = %d\n",repeat);
         if ((nibble & 8) == 0) break;
-      };
+      }
       repeat += 3;
       if (repeat > n) repeat = n;
       n -= repeat;
@@ -267,15 +252,10 @@ char *SoundDecode(pnt pGraphic, i32 numSample, i32 volume)
       if(f) fprintf(f,"Sample=%d, repeat=%d,n=%d\n",sample,repeat,n);
       for (i=0; i<repeat; i++)
       {
-        if (f)
-        {
-          //fprintf(f,"***DEBUG store sample #%d\n",pW-(ui8 *)WavBuf-58);
-          fprintf(f,"***DEBUG store sample #%d\n",(i32)(pW-(ui8 *)WavBuf)-58);
-        };
         *(pW++) = (ui8)sample;
-      };
-    };
-  };
+      }
+    }
+  }
   if(f)
   {
     for (char *kk= (char *)pGraphic; kk<pN+1; kk+=8)
@@ -287,30 +267,15 @@ char *SoundDecode(pnt pGraphic, i32 numSample, i32 volume)
         fprintf(f,"%02x ", (*(kk+kkk))&0xff);
       };
       fprintf(f,"\n");
-    };
+    }
     //fprintf(f,"Ending pN = %08x\n", (ui32)pN);
     fprintf(f,"Ending pN = %08x\n", (ui32)(uintptr_t)pN);
     fclose(f);
     f=NULL;
-  };
+  }
+  // We can do without a header here, it's just some 5120 Hz mono 8 bit sample data
   ASSERT(n>=0,"n");
-  memcpy(WavBuf->byte0,"RIFF",4);
-  WavBuf->Size = numSample+sizeof(SNDHEAD)-8-1;
-  memcpy(WavBuf->byte8,"WAVEfmt ",8);
-  WavBuf->int16 = 16; // ????
-  WavBuf->wFormatTag = 1;
-  WavBuf->nChannels = 1;
-  WavBuf->nSamplesPerSecond = 6000;
-  WavBuf->nAvgBytesPerSec = 6000;
-  WavBuf->nBlockAlign = 1;
-  WavBuf->wBitsPerSample = 8;
-  //WavBuf->cbSize = 40;
-  //memcpy(WavBuf->byte38,"fact",4);
-  //WavBuf->int42 = 4;
-  //WavBuf->numBytes46 = numSample;
-  memcpy(WavBuf->byte50,"data",4);
-  WavBuf->numSamples54 = numSample;
-  return (char *)WavBuf;
+  return (char *)wav;
 }
 
 //===============================================
@@ -326,7 +291,7 @@ char *SOUNDDATA::Decode(i32 volume)
     if (curVol != volume)
     {
       // Rebuild volume table
-      for (i=0; i<128; i++) 
+      for (i=0; i<128; i++)
         volTable[i] = (ui8)((i-128-volume/2)/volume + 128);
       for (i=128; i<256; i++)
         volTable[i] = (ui8)((i-128+volume/2)/volume + 128);
@@ -362,7 +327,7 @@ char *SOUNDDATA::Decode(i32 volume)
     memcpy(WavBuf->sample58, m_sound, m_size);
   };
   return (char *)WavBuf;
-}  
+}
 
 // Made this a class so the destructor will
 // clean things up when we stop the program.
@@ -394,9 +359,9 @@ public:
       };
     }
   };
-  void Sound(char *wave, i32 attenuation);
+  void Sound(char *wave, i32 attenuation,int size);
   i32 CheckQueue(void);
-  void AddWave(char *wave, i32 attenuation);
+  void AddWave(char *wave, i32 attenuation,int size);
 #ifdef _MSVC_CE2002ARM
   char *Resample(char *wave);
 #endif
@@ -570,12 +535,12 @@ void SOUNDER::AddWave(char *wave, i32 attenuation)
 #else //if MAXWAVE==1
 // Linux uses SDL and therefore MAXWAVE must be 1 when using Linux.
 #ifdef _LINUX
-void SOUNDER::AddWave(char *wave, i32 attenuation)
+void SOUNDER::AddWave(char *wave, i32 attenuation,int size)
 {
-  UI_PlaySound(wave, SOUND_ASYNC|SOUND_MEMORY,attenuation);
+  UI_PlaySound(wave, size,attenuation);
 }
 #else // if not _LINUX
-void SOUNDER::AddWave(char *wave, i32 attenuation)
+void SOUNDER::AddWave(char *wave, i32 attenuation,int size)
 {
   bool success;
   if (m_wave[0] == NULL)
@@ -606,7 +571,7 @@ void SOUNDER::AddWave(char *wave, i32 attenuation)
     //m_attenuation[0] = attenuation;
   }
   else
-  { 
+  {
     UI_StopSound();
     //UI_free(m_wave[0]);
     //m_wave[0] = NULL;
@@ -620,13 +585,13 @@ void SOUNDER::AddWave(char *wave, i32 attenuation)
 }
 #endif // _LINUX
 #endif //MAXWAVE
-void SOUNDER::Sound(char *wave, i32 attenuation)
+void SOUNDER::Sound(char *wave, i32 attenuation,int size)
 {
   // We free wave.  Therefore you better not use
   // it again after you call us to play it!
   ASSERT(m_wave[0] != wave,"wave");
   ASSERT(wave != NULL,"wave");
-  if (VBLMultiplier != 1) 
+  if (VBLMultiplier != 1)
   {
     UI_free(wave);
     return;
@@ -636,7 +601,7 @@ void SOUNDER::Sound(char *wave, i32 attenuation)
   CheckQueue();
 
 // Now we want to add the new wave to the queue
-  AddWave(wave, attenuation); //And play it if is the only one.
+  AddWave(wave, attenuation,size); //And play it if is the only one.
 
 // And once again, see if we can remove any queued item.
   CheckQueue();
@@ -668,7 +633,7 @@ void StartSound(ui8 *SoundBytes,
   if (highVolume==0) volume = 18;// attenuation
   volume *= volumeTable[gameVolume].divisor;
   Wave = SoundDecode((pnt)SoundBytes+2, size, volume);
-  sounder.Sound(Wave, volumeTable[gameVolume].attenuation);
+  sounder.Sound(Wave, volumeTable[gameVolume].attenuation,size);
 }
 
 
@@ -731,7 +696,7 @@ i32 SoundFilter(i32 soundNumber, i32 highVolume, const LOCATIONREL *soundLocr)
             timer.timerUByte7((ui8)locr.y);
             timer.timerUByte6((ui8)locr.x);
             timer.Time(locr.l << 24);
-    
+
             pDSAparameters[1+0] = soundNumber+1;
             pDSAparameters[1+1] = highVolume;
             pDSAparameters[1+2] = distanceSquared;
@@ -750,8 +715,8 @@ i32 SoundFilter(i32 soundNumber, i32 highVolume, const LOCATIONREL *soundLocr)
           };
         };
       };
-    };    
-    if (filterActive) 
+    };
+    if (filterActive)
     {
       filterActive = false;
       return 0;
@@ -1004,7 +969,7 @@ bool SOUNDDATA::ReadSound(i32 soundNum)
   ui32 i, fileSize;
   fileData.m = ReadCSBgraphic(
        CGT_Sound,
-       soundNum, 
+       soundNum,
        44,
        &fileSize,
        true,
@@ -1064,6 +1029,6 @@ void PlayCustomSound(i32 soundNum, i32 volume, i32 /*flags*/)
     if (gameVolume == VOLUME_OFF) return;
     if (NoSound) return;
     wav = currentSound.Decode(volume?volume:1);
-    sounder.Sound(wav, volume + volumeTable[gameVolume].attenuation);
+    sounder.Sound(wav, volume + volumeTable[gameVolume].attenuation,currentSound.m_size);
   };
 }

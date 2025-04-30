@@ -1471,7 +1471,8 @@ int main (int argc, char* argv[])
 #endif //USE_OLD_GTK
 
 //    ***** Initialize defaults, Video and Audio *****
-  if ( SDL_Init ( SDL_INIT_VIDEO)<0)//|SDL_INIT_AUDIO|SDL_INIT_TIMER) < 0)
+  if ( SDL_Init ( SDL_INIT_VIDEO|SDL_INIT_AUDIO|SDL_INIT_TIMER|SDL_INIT_EVENTS)<0)//|SDL_INIT_AUDIO|SDL_INIT_TIMER) < 0)
+  // if ( SDL_Init ( SDL_INIT_VIDEO)<0)//|SDL_INIT_AUDIO|SDL_INIT_TIMER) < 0)
   {
     fprintf(stderr,"Unable to init SDL: %s", SDL_GetError() );
     //g_error("Unable to init SDL: %s", SDL_GetError() );
@@ -1580,10 +1581,6 @@ int main (int argc, char* argv[])
 #endif
 #endif
   };
-  if ( SDL_InitSubSystem (SDL_INIT_TIMER) < 0)
-  {
-    fprintf(stderr,"Unable to init Timer: %s", SDL_GetError() );
-  }
 
 #if defined SDL12
   SDL_UpdateRect(WND, 0, 0, 0, 0);

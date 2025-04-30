@@ -26,13 +26,13 @@ So far changes for the linux version from the 20190702 sources :
  - Handling of alt+return to toggle fullscreen mode with sdl2.
  - Handles the window close event, so that if you quit the game by closing the window it doesn't
    just crash (with a core dump !)
- - And I had a strange crash as soon as trying to play some audio in the game the 1st time I used
-   the source. I am not totally sure of the cause, but using a pointer instead of a static global
-   for sdlChannels seems to fix it for some reason, just added a comment about that, now everything
-   seems to work.
+ - Fixed a serious audio bug but ir probably affected only linux (linked to structs changing their sizes!).
  - Fixed audio pitch too high, it was a bad frequency when opening the audio device
  - Fixed bad handling of scan codes for the keyboard, I'll leave a fixed config.linux file with the
    correct scan codes for the numpad in it outside the src directory.
  - ability to drink directly from fountains, like what RTC and dsb do !
+ - able to play external sounds, mp3 or wav using SDL_sound for now. It's used to play custom sounds.
+   Place horn.mp3 or warcry.mp3 to hearn the horn of fear and the warcry. You can find the mp3 files at
+   this page : http://dmweb.free.fr/games/dungeon-master/#sounds
 
 

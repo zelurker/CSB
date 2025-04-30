@@ -1,5 +1,4 @@
 #include "stdafx.h"
-
 #include "UI.h"
 
 #include <stdio.h>
@@ -1407,26 +1406,7 @@ ATTACKPARAMETERS *SetupDSAParam(FILTER *pFilter)
 //*********************************************************
 //  TAG01bac2
 
-// Defined in lincsbui.cpp, obliged because of a stupid free, should remake the whole thing...
-extern char *warcry,*horn;
-
-char *loadWAV(const char *name) {
-    FILE *f = fopen(name,"rb");
-    if (f) {
-	fseek(f,0L,SEEK_END);
-	long size = ftell(f);
-	fseek(f,0L,SEEK_SET);
-	char *warcry = (char*)malloc(size);
-	if (!warcry) {
-	    printf("couldn't allocate %d bytes!\n",size);
-	    exit(1);
-	}
-	fread(warcry,size,1,f);
-	fclose(f);
-	return warcry;
-    }
-    return NULL;
-}
+extern void LIN_PlayDirect(const char *name);
 
 i32 WarCryEtc(ATTACKPARAMETERS *pParam,
               FILTER *pFilter,
@@ -1460,16 +1440,10 @@ i32 WarCryEtc(ATTACKPARAMETERS *pParam,
   switch (pParam->attackType)
   {
   case atk_WARCRY:
-      if (!warcry)
-	  warcry = loadWAV("warcry5120.wav");
-      if (warcry)
-	  UI_PlaySound(warcry,0,1);
+      LIN_PlayDirect("warcry.mp3");
       break;
   case atk_BLOWHORN:
-      if (!horn)
-	  horn = loadWAV("horn5120.wav");
-      if (horn)
-	  UI_PlaySound(horn,0,1);
+      LIN_PlayDirect("horn.mp3");
       break;
   }
   if (d.MonsterUnderAttack == RNeof)

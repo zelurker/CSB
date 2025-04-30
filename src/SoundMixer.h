@@ -7,6 +7,7 @@
 #include "stdafx.h"
 #include "SDL_audio.h"
 #include "SDL_version.h"
+#include "SDL_sound.h"
 
 #define MIX_EFFECTSMAXSPEED  "MIX_EFFECTSMAXSPEED"
 #define MIX_CHANNELS 8
@@ -47,30 +48,23 @@ enum Mix_MusicType
 	MUS_MODPLUG
 };
 
-
+extern SDL_AudioSpec mixer;
 
 #define Mix_PlayChannel(channel,chunk,loops) Mix_PlayChannelTimed(channel,chunk,loops,-1)
 /* The same as above, but the sound is played at most 'ticks' milliseconds */
-extern DECLSPEC int SDLCALL Mix_PlayChannelTimed(int channel, Mix_Chunk *chunk, int loops, int ticks);
+extern DECLSPEC int SDLCALL Mix_PlayChannelTimed(int channel, Sound_Sample *chunk, int loops, int ticks);
 typedef void (*Mix_EffectFunc_t)(int chan, void *stream, int len, void *udata);
 typedef void (*Mix_EffectDone_t)(int chan, void *udata);
 extern DECLSPEC int SDLCALL Mix_VolumeMusic(int volume);
 int _Mix_UnregisterAllEffects_locked(int channel);
-extern DECLSPEC void SDLCALL Mix_FreeChunk(Mix_Chunk *chunk);
 extern DECLSPEC int SDLCALL Mix_UnregisterAllEffects(int channel);
 extern DECLSPEC int SDLCALL Mix_HaltChannel(int channel);
 void _Mix_DeinitEffects(void);
 typedef struct _Mix_Music Mix_Music;
 extern DECLSPEC int SDLCALL Mix_Volume(int channel, int volume);
 extern DECLSPEC int SDLCALL Mix_Playing(int channel);
-/* Load raw audio data of the mixer format from a memory buffer */
-Mix_Chunk *Mix_QuickLoad_RAW(Uint8 *mem, Uint32 len);
 
-
-int Mix_OpenAudio(int frequency,
-                  Uint16 format,
-                  int nchannels,
-                  int chunksize);
+int Mix_OpenAudio();
 void Mix_CloseAudio(void);
 static void mix_channels(void *udata, Uint8 *stream, int len);
 
