@@ -1,9 +1,9 @@
 *.P
 *.mak
 *.o
-.gitignore
 CSB
 CMake*
 tags
 csb
 csb.exe
+.vimrc
