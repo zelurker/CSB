@@ -1416,7 +1416,7 @@ void LINEQUEUE::AddText(i32 row, i32 column, i32 color, const char *text, i32 pr
   {
     m_lastText->m_next = pNewPiece;
     m_lastText = pNewPiece;
-  };
+  }
 }
 
 void LINEQUEUE::DiscardFirst(void)
@@ -1729,7 +1729,7 @@ void PrintLines(const i32 color, const char *Text)
         {
           //LOCAL_2 = ' '; // A single blank
           scrollingText.Printf(color, " ", printLinesCount); // A single space.
-        };
+        }
       }
       else
       {
@@ -1747,9 +1747,9 @@ void PrintLines(const i32 color, const char *Text)
           scrollingText.CreateNewTextRow(printLinesCount);
         };
         scrollingText.Printf(color, (char *)LOCAL_56, printLinesCount);
-      };
-    };
-  };
+      }
+    }
+  }
   scrollingText.ClockTick(); //Get things on the screen right away
   //RETURN;
 }
@@ -5765,7 +5765,7 @@ void SetPartyLevel(i32 level)
 
   // Display level number at bottom of screen, too bad we can't set for how much time here...
   static char levelText[10];
-  snprintf(levelText,10,"LEVEL %d",level);
+  snprintf(levelText,10,"LEVEL %d\n",level);
   // 15 is white like for a standard ST palette, can't believe they don't have any constant for colors!
   QuePrintLines(15, levelText, false);
 
