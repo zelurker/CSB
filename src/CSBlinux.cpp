@@ -1146,47 +1146,6 @@ void Process_SDL_KEYDOWN(void)
 {
 //  static int prevp1 = -1;
   MTRACE("SDL_KEYDOWN\n");
-#if defined SDL12
-  {
-    FILE *f;
-    f = fopen("/run/shm/debug", "a");
-    fprintf(f,"mod=%d,sym=0x%02x,scancode=0x%04x\n",
-              evert.key.keysym.mod,
-              evert.key.keysym.sym,
-              evert.key.keysym.scancode);
-    fclose(f);
-  };
-  if ((evert.key.keysym.mod & (KMOD_RALT | KMOD_LALT)) != 0)
-  {
-    if (evert.key.keysym.sym == SDLK_RETURN)
-    {
-      if (fullscreenActive)
-      {
-        if (WindowWidth > screenWidth) return;
-        if (WindowHeight > screenHeight) return;
-        WND = SDL_SetVideoMode(WindowWidth,  WindowHeight, 16, SDL_SWSURFACE);
-        fullscreenActive = false;
-        csbMessage.type=UIM_REDRAW_ENTIRE_SCREEN;
-        if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
-        {
-          PostQuitMessage(0x20);
-        };
-        return;
-      }
-      else
-      {
-        WND = SDL_SetVideoMode(WindowWidth,  WindowHeight, 16, SDL_SWSURFACE|SDL_FULLSCREEN);
-        fullscreenActive = true;
-        csbMessage.type=UIM_REDRAW_ENTIRE_SCREEN;
-        if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
-        {
-          PostQuitMessage(0x20);
-        };
-        return;
-      };
-    };
-  };
-#endif
   {
     /*SDL_KeyboardEvent *e = (SDL_KeyboardEvent*) &evert;
     if(e->keysym->sym==SDLK_LEFT)
