@@ -17,10 +17,10 @@ ifeq ($(target), Raspberry)
 endif
 ifeq ($(target), Ubuntu_SDL20)
 	#	debug options (make sure the ldflags line is uncommented if you use this)
-	options =   -g -fsanitize=address -D _LINUX -D RGB655 -D SDL20 -c
+	#options =   -g -fsanitize=address -D _LINUX -D RGB655 -D SDL20 -c
 # optimized build options (comment out ldflags below to remove -fsanitize=address!!!)
-	#options =   -O2 -D _LINUX -D RGB655 -D SDL20 -c
-ldflags := -g -fsanitize=address
+	options =   -O2 -D _LINUX -D RGB655 -D SDL20 -c
+	#ldflags := -g -fsanitize=address
 options += -Isdl_sound
 gincludes := \
                $(shell pkg-config --cflags sdl2)
@@ -63,7 +63,7 @@ SDL_SOUND = SDL_sound.o SDL_sound_mp3.o SDL_sound_raw.o SDL_sound_wav.o
 SDL_SOUND := $(SDL_SOUND:%=$(OBJDIR)/sdl_sound/%)
 OBJS += $(SDL_SOUND)
 
-all: maketree csb
+all: maketree message csb
 
 $(OBJDIRS):
 	$(MD) -p $@
@@ -79,6 +79,15 @@ csb: $(OBJS)
 	    -o csb
 
 maketree: $(OBJDIRS)
+
+message:
+	@echo -n "Building csb, "
+ifneq "$(findstring -O, $(options))" ""
+	@echo -n optimized
+else
+	@echo -n debug
+endif
+	@echo " version"
 
 clean:
 	rm -rf obj csb
