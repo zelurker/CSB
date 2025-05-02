@@ -713,16 +713,14 @@ static void mix_channels(void *udata, Uint8 *stream, int len)
 				  dest[n] = src[n]>>1;
 			  } else {
 			      for (int n=0; n<cp2; n++) {
-#if debug_mix
 				  int dst = dest[n] + src[n]/2;
 				  if (dst > 0x7fff) {
-				      printf("mix overflow %x from %d & %d\n",dst,dest[n],src[n]);
+				      //printf("mix overflow %x from %d & %d\n",dst,dest[n],src[n]);
 				      dest[n] = 0x7fff;
 				  } else if (dst < -0x7fff) {
-				      printf("mix underflow %x from %d & %d\n",dst,dest[n],src[n]);
+				      //printf("mix underflow %x from %d & %d\n",dst,dest[n],src[n]);
 				      dst = -0x7fff;
 				  } else
-#endif
 				      dest[n] += src[n]>>1;
 			      }
 			  }
