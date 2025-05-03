@@ -18,8 +18,6 @@
 #error Do not include this header from your applications.
 #endif
 
-// required for csb: pack the structs...
-#pragma pack(1)
 #include "SDL_sound.h"
 
 /* SDL_AudioStream, which we use internally, didn't arrive until SDL 2.0.7. */

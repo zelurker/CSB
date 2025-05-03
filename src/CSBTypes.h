@@ -183,7 +183,7 @@ enum STATE_OF_FEAR
 };
 
 
-#pragma pack(1)
+// #pragma pack(1)
 typedef ui8 CELLFLAG;
     // For roomtype = roomSTONE
     //    bit 0 = Put random decoration on west side
