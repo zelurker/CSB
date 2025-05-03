@@ -679,17 +679,19 @@ static Sound_Sample *horn,*warcry;
 
 void LIN_PlayDirect(const char *name) {
     Sound_AudioInfo info;
+    char name2[25];
+    snprintf(name2,25,"sounds/%s",name);
     info.rate = mixer.freq;
     info.channels = mixer.channels;
     info.format = mixer.format;
     if (!strncmp(name,"horn",4)) {
 	if (!horn)
-	    horn = Sound_NewSampleFromFile(name,&info,mixer.size);
+	    horn = Sound_NewSampleFromFile(name2,&info,mixer.size);
 	if (horn)
 	    sdlChannels.PlayDirect(horn);
     } else if (!strncmp(name,"warcry",6)) {
 	if (!warcry)
-	    warcry = Sound_NewSampleFromFile(name,&info,mixer.size);
+	    warcry = Sound_NewSampleFromFile(name2,&info,mixer.size);
 	if (warcry)
 	    sdlChannels.PlayDirect(warcry);
     }
