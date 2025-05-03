@@ -29,20 +29,6 @@ enum Mix_Fading
   MIX_FADING_IN
 };
 
-enum Mix_MusicType
-{
-	MUS_NONE,
-	MUS_CMD,
-	MUS_WAV,
-	MUS_MOD,
-	MUS_MID,
-	MUS_OGG,
-	MUS_MP3,
-	MUS_MP3_MAD,
-	MUS_FLAC,
-	MUS_MODPLUG
-};
-
 extern SDL_AudioSpec mixer;
 
 #define Mix_PlayChannel(channel,chunk,loops) Mix_PlayChannelTimed(channel,chunk,loops,-1)
@@ -50,12 +36,10 @@ extern SDL_AudioSpec mixer;
 extern DECLSPEC int SDLCALL Mix_PlayChannelTimed(int channel, Sound_Sample *chunk, int loops, int ticks);
 typedef void (*Mix_EffectFunc_t)(int chan, void *stream, int len, void *udata);
 typedef void (*Mix_EffectDone_t)(int chan, void *udata);
-extern DECLSPEC int SDLCALL Mix_VolumeMusic(int volume);
 int _Mix_UnregisterAllEffects_locked(int channel);
 extern DECLSPEC int SDLCALL Mix_UnregisterAllEffects(int channel);
 extern DECLSPEC int SDLCALL Mix_HaltChannel(int channel);
 void _Mix_DeinitEffects(void);
-typedef struct _Mix_Music Mix_Music;
 extern DECLSPEC int SDLCALL Mix_Volume(int channel, int volume);
 extern DECLSPEC int SDLCALL Mix_Playing(int channel);
 

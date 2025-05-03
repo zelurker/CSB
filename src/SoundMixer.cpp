@@ -2,20 +2,6 @@
 #include "SDL_sound.h"
 
 
-struct _Mix_Music {
-  Mix_MusicType type;
-  union
-  {
-#ifdef WAV_MUSIC
-    WAVStream *wave;
-#endif
-  } data;
-  Mix_Fading fading;
-  int fade_step;
-  int fade_steps;
-  int error;
-};
-
 struct _Mix_effectinfo
 {
 	Mix_EffectFunc_t callback;
@@ -27,28 +13,15 @@ struct _Mix_effectinfo
 static int reserved_channels = 0;
 /* Used to calculate fading steps */
 static int ms_per_step;
-static const char **music_decoders = NULL;
 typedef _Mix_effectinfo effect_info;
 
 static effect_info *posteffects = NULL;
-extern void music_mixer(void *udata, Uint8 *stream, int len);
-static void (*mix_music)(void *udata, Uint8 *stream, int len) = music_mixer;
-int volatile music_active = 1;
-static int music_loops = 0;
-static void *music_data = NULL;
 static int audio_opened = 0;
 SDL_AudioSpec mixer;
 static int num_channels;
 static const char **chunk_decoders = NULL;
 static int num_decoders = 0;
-static int music_volume = MIX_MAX_VOLUME;
-static void (*music_finished_hook)(void) = NULL;
 
-extern void close_music(void);
-static Mix_Music * volatile music_playing = NULL;
-static int  music_internal_play(Mix_Music *music, double position);
-static void music_internal_halt(void);
-static void music_internal_volume(int volume);
 static void (*channel_done_callback)(int channel) = NULL;
 static void (*mix_postmix)(void *udata, Uint8 *stream, int len) = NULL;
 static void *mix_postmix_data = NULL;
@@ -281,233 +254,6 @@ void _Mix_InitEffects(void)
   _Mix_effects_max_speed = (SDL_getenv(MIX_EFFECTSMAXSPEED) != NULL);
 }
 
-
-/* Set the playing music position */
-int music_internal_position(double position)
-{
-  int retval = 0;
-  switch (music_playing->type)
-  {
-    default:
-    /* TODO: Implement this for other music backends */
-    retval = -1;
-    break;
-  };
-  return(retval);
-}
-
-
-/* Set the music's initial volume */
-static void music_internal_initialize_volume(void)
-{
-  if ( music_playing->fading == MIX_FADING_IN )
-  {
-    music_internal_volume(0);
-  }
-   else
-  {
-    music_internal_volume(music_volume);
-  };
-}
-
-
-/* Play a music chunk.  Returns 0, or -1 if there was an error.
- */
-static int music_internal_play(Mix_Music *music, double position)
-{
-  int retval = 0;
-  /* Note the music we're playing */
-  if ( music_playing )
-  {
-    music_internal_halt();
-  };
-  music_playing = music;
-  /* Set the initial volume */
-  if ( music->type != MUS_MOD )
-  {
-    music_internal_initialize_volume();
-  };
-  /* Set up for playback */
-  switch (music->type)
-  {
-#ifdef WAV_MUSIC
-    case MUS_WAV:
-		WAVStream_Start(music->data.wave);
-		break;
-#endif
-    default:
-      Mix_SetError("Can't play unknown music type");
-      retval = -1;
-      break;
-  };
-skip:
-  /* Set the playback position, note any errors if an offset is used */
-  if ( retval == 0 )
-  {
-    if ( position > 0.0 )
-    {
-      if ( music_internal_position(position) < 0 )
-      {
-        Mix_SetError("Position not implemented for music type");
-	retval = -1;
-      };
-    }
-     else
-    {
-      music_internal_position(0.0);
-    };
-  }
-  /* If the setup failed, we're not playing any music anymore */
-  if ( retval < 0 )
-  {
-    music_playing = NULL;
-  };
-  return(retval);
-}
-
-
-/* Check the status of the music */
-static int music_internal_playing()
-{
-  int playing = 1;
-  if (music_playing == NULL)
-  {
-    return 0;
-  };
-  switch (music_playing->type)
-  {
-#ifdef WAV_MUSIC
-    case MUS_WAV:
-    if ( ! WAVStream_Active() )
-    {
-      playing = 0;
-    };
-    break;
-#endif
-    default:
-      playing = 0;
-      break;
-  };
-skip:
-  return(playing);
-}
-
-
-/* If music isn't playing, halt it if no looping is required, restart it */
-/* otherwhise. NOP if the music is playing */
-static int music_halt_or_loop (void)
-{
-  /* Restart music if it has to loop */
-  if (!music_internal_playing())
-  {
-    /* Restart music if it has to loop at a high level */
-    if (music_loops)
-    {
-      Mix_Fading current_fade;
-      --music_loops;
-      current_fade = music_playing->fading;
-      music_internal_play(music_playing, 0.0);
-      music_playing->fading = current_fade;
-    }
-    else
-    {
-      music_internal_halt();
-      if (music_finished_hook)
-      {
-	music_finished_hook();
-      };
-      return 0;
-    };
-  };
-  return 1;
-}
-
-
-static void music_internal_halt(void)
-{
-  switch (music_playing->type)
-  {
-#ifdef WAV_MUSIC
-    case MUS_WAV:
-      WAVStream_Stop();
-      break;
-#endif
-    default:
-      /* Unknown music type?? */
-      return;
-  };
-skip:
-  music_playing->fading = MIX_NO_FADING;
-  music_playing = NULL;
-}
-
-
-void music_mixer(void *udata, Uint8 *stream, int len)
-{
-  int left = 0;
-  if ( music_playing && music_active )
-  {
-    /* Handle fading */
-    if ( music_playing->fading != MIX_NO_FADING )
-    {
-      if ( music_playing->fade_step++ < music_playing->fade_steps )
-      {
-        int volume;
-	int fade_step = music_playing->fade_step;
-	int fade_steps = music_playing->fade_steps;
-	if ( music_playing->fading == MIX_FADING_OUT )
-        {
-	  volume = (music_volume * (fade_steps-fade_step)) / fade_steps;
-	}
-        else
-        { /* Fading in */
-	  volume = (music_volume * fade_step) / fade_steps;
-	}
-	music_internal_volume(volume);
-      }
-      else
-      {
-        if ( music_playing->fading == MIX_FADING_OUT )
-        {
-	  music_internal_halt();
-	  if ( music_finished_hook )
-          {
-	    music_finished_hook();
-	  };
-	  return;
-	}
-	music_playing->fading = MIX_NO_FADING;
-      }
-    }
-    music_halt_or_loop();
-    if (!music_internal_playing())
-    {
-      return;
-    };
-    switch (music_playing->type)
-    {
-#ifdef WAV_MUSIC
-      case MUS_WAV:
-	left = WAVStream_PlaySome(stream, len);
-	break;
-#endif
-      default:
-      /* Unknown music type?? */
-	break;
-    };
-  }
-skip:
-  /* Handle seamless music looping */
-  if (left > 0 && left < len)
-  {
-    music_halt_or_loop();
-    if (music_internal_playing())
-    {
-      music_mixer(udata, stream+(len-left), left);
-    };
-  };
-}
-
 static int _Mix_remove_all_effects(int channel, effect_info **e)
 {
   effect_info *cur;
@@ -598,11 +344,6 @@ static void mix_channels(void *udata, Uint8 *stream, int len)
   /* Need to initialize the stream in SDL 1.3+ */
   // emset(stream, mixer.silence, len);
 #endif
-  /* Mix the music (must be done before the channels are added) */
-  if ( music_active || (mix_music != music_mixer) )
-  {
-    mix_music(music_data, stream, len);
-  };
   /* Mix any playing channels... */
   sdl_ticks = SDL_GetTicks();
   for ( i=0; i<num_channels; ++i )
@@ -752,47 +493,6 @@ static void mix_channels(void *udata, Uint8 *stream, int len)
       memset(stream, mixer.silence, len);
 }
 
-
-static void music_internal_volume(int volume)
-{
-  switch (music_playing->type)
-  {
-#ifdef WAV_MUSIC
-    case MUS_WAV:
-      WAVStream_SetVolume(volume);
-      break;
-#endif
-    default:
-	/* Unknown music type?? */
-	break;
-  };
-}
-
-int Mix_VolumeMusic(int volume)
-{
-  int prev_volume;
-  prev_volume = music_volume;
-  if ( volume < 0 )
-  {
-    return prev_volume;
-  };
-  if ( volume > SDL_MIX_MAXVOLUME )
-  {
-    volume = SDL_MIX_MAXVOLUME;
-  };
-  music_volume = volume;
-  SDL_LockAudio();
-  if ( music_playing )
-  {
-    music_internal_volume(music_volume);
-  };
-  SDL_UnlockAudio();
-  return prev_volume;
-}
-
-
-
-
 static int devs_audio = -1;
 
 /* Open the mixer with a certain desired audio format */
@@ -844,7 +544,6 @@ int Mix_OpenAudio()
 	mix_channel[i].effects = NULL;
 	mix_channel[i].paused = 0;
     }
-    // Mix_VolumeMusic(SDL_MIX_MAXVOLUME);
 
     _Mix_InitEffects();
     if (!Sound_Init())
@@ -853,29 +552,6 @@ int Mix_OpenAudio()
     audio_opened = 1;
     SDL_PauseAudioDevice(dev,0);
     return(0);
-}
-
-int Mix_HaltMusic(void)
-{
-  SDL_LockAudio();
-  if ( music_playing )
-  {
-    music_internal_halt();
-  };
-  SDL_UnlockAudio();
-  return(0);
-}
-
-
-/* Uninitialize the music players */
-void close_music(void)
-{
-  Mix_HaltMusic();
-  /* rcg06042009 report available decoders at runtime. */
-  SDL_free(music_decoders);
-  music_decoders = NULL;
-  num_decoders = 0;
-  ms_per_step = 0;
 }
 
 /* Halt playing of a particular channel */
@@ -968,7 +644,6 @@ void Mix_CloseAudio(void)
         Mix_UnregisterAllEffects(i);
       };
       Mix_UnregisterAllEffects(MIX_CHANNEL_POST);
-      close_music();
       Mix_HaltChannel(-1);
       _Mix_DeinitEffects();
       SDL_CloseAudio();
