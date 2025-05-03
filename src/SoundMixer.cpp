@@ -493,7 +493,7 @@ static void mix_channels(void *udata, Uint8 *stream, int len)
 				  if (dst > 0x7fff) {
 				      printf("mix overflow %x from %d & %d\n",dst,dest[n*2],src[n]);
 				      dest[n*2] = 0x7fff;
-				  } else if (dst < -0x7fff) {
+				  } else if (dst & 0xffff0000 && !(dst & 0x8000)) {
 				      printf("mix underflow %x from %d & %d\n",dst,dest[n*2],src[n]);
 				      dest[n*2] = -0x7fff;
 				  } else
@@ -502,7 +502,7 @@ static void mix_channels(void *udata, Uint8 *stream, int len)
 				  if (dst > 0x7fff) {
 				      printf("mix overflow %x from %d & %d\n",dst,dest[n*2+1],src[n]);
 				      dest[n*2+1] = 0x7fff;
-				  } else if (dst < -0x7fff) {
+				  } else if (dst & 0xffff0000 && !(dst & 0x8000)) {
 				      printf("mix underflow %x from %d & %d\n",dst,dest[n*2+1],src[n]);
 				      dest[n*2+1] = -0x7fff;
 				  } else
