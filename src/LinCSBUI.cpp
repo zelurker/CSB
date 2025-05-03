@@ -654,6 +654,7 @@ void Channels::PlayDirect(Sound_Sample *samp,int posX, int posY)
 	sample[i] = NULL;
     }
     keep[i] = 1; // There is no sndHead here, so it's better not call UI_free on it!
+    sample[i] = samp;
     Sound_Rewind(samp);
     set_sound_pos(i,posX,posY);
     Mix_PlayChannel(i, samp, 0);
@@ -678,8 +679,6 @@ static bool LIN_PlaySound(i8* audio, const ui32 size, int volume)
   return 1;
 };
 
-static Sound_Sample *horn,*warcry,*armour,*oytu,*dragon,*skeleton,*wasp,*slime,*screamer,*mummy;
-
 void LIN_PlayDirect(const char *name,int posX, int posY) {
     Sound_AudioInfo info;
     char name2[25];
@@ -687,57 +686,14 @@ void LIN_PlayDirect(const char *name,int posX, int posY) {
     info.rate = mixer.freq;
     info.channels = 1;
     info.format = mixer.format;
-    if (!strncmp(name,"horn",4)) {
-	if (!horn)
-	    horn = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
+    if (!strncmp(name,"horn",4) || !strncmp(name,"warcry",6)) {
+	Sound_Sample *horn = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
 	if (horn)
 	    sdlChannels.PlayDirect(horn,-1,-1);
-    } else if (!strncmp(name,"warcry",6)) {
-	if (!warcry)
-	    warcry = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
-	if (warcry)
-	    sdlChannels.PlayDirect(warcry,-1,-1);
-    } else if (!strncmp(name,"armour_mov",10)) {
-	if (!armour)
-	    armour = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
-	if (armour) {
+    } else {
+	Sound_Sample *armour = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
+	if (armour)
 	    sdlChannels.PlayDirect(armour,posX,posY);
-	}
-    } else if (!strncmp(name,"oytu",4)) {
-	if (!oytu)
-	    oytu = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
-	if (oytu)
-	    sdlChannels.PlayDirect(oytu,posX,posY);
-    } else if (!strncmp(name,"dragon",4)) {
-	if (!dragon)
-	    dragon = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
-	if (dragon)
-	    sdlChannels.PlayDirect(dragon,posX,posY);
-    } else if (!strncmp(name,"skeleton",4)) {
-	if (!skeleton)
-	    skeleton = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
-	if (skeleton)
-	    sdlChannels.PlayDirect(skeleton,posX,posY);
-    } else if (!strncmp(name,"wasp",4)) {
-	if (!wasp)
-	    wasp = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
-	if (wasp)
-	    sdlChannels.PlayDirect(wasp,posX,posY);
-    } else if (!strncmp(name,"slime",4)) {
-	if (!slime)
-	    slime = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
-	if (slime)
-	    sdlChannels.PlayDirect(slime,posX,posY);
-    } else if (!strncmp(name,"screamer",4)) {
-	if (!screamer)
-	    screamer = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
-	if (screamer)
-	    sdlChannels.PlayDirect(screamer,posX,posY);
-    } else if (!strncmp(name,"mummy",4)) {
-	if (!mummy)
-	    mummy = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
-	if (mummy)
-	    sdlChannels.PlayDirect(mummy,posX,posY);
     }
 }
 
