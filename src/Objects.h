@@ -168,7 +168,7 @@ enum MONSTERTYPE
   mon_Couatl         = 0x0d,//13
   mon_Vexirk         = 0x0e,//14
   mon_Worm           = 0x0f,//15
-  mon_AntMan         = 0x10,//16
+  mon_Trolin         = 0x10,//16
   mon_Muncher        = 0x11,//17
   mon_AnimatedArmour = 0x12,//18
   mon_Zytaz          = 0x13,//19

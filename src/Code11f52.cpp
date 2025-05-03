@@ -732,7 +732,7 @@ void CreateAndDropObject(i32 P1,
   case mon_StoneGolem:
       pwA3 = &d.MonsterDroppings[35];
       break;
-  case mon_AntMan:
+  case mon_Trolin:
       pwA3 = &d.MonsterDroppings[33];
       break;
   case mon_AnimatedArmour:
@@ -3428,10 +3428,10 @@ i16 MoveObject(const RN        object,
 	    int y = newY - d.partyY;
 	    int attenuation = x*x + y*y;
 	    if (attenuation <= 10) { // No use to keep a sound < 1/10
-		// printf("no levitate, monster move %d,%d type %x\n",newX,newY,mtD6);
+	        // printf("no levitate, monster move %d,%d type %x\n",newX,newY,mtD6);
 		switch(mtD6) {
 		case mon_Mummy:
-		case mon_5: // it's supposed to be Trolin, to be confirmed
+		case mon_Trolin:
 		case mon_StoneGolem:
 		case mon_Giggler:
 		case mon_Vexirk:
