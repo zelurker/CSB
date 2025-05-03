@@ -1,4 +1,5 @@
-
+#ifndef DISPATCH_H
+#define DISPATCH_H
 
 enum CODESTATE
 {
@@ -11,7 +12,7 @@ enum CODESTATE
   st_OpenPrisonDoors,
   st_PrintLines,
   //st_LoadPartyLevel,
-  st_MagicSelection,  
+  st_MagicSelection,
   st_SelectSaveGame,
   st_TAG01f746,
   st_FeedCharacter,
@@ -354,3 +355,4 @@ switch (mystate) { case _0_: goto return_0_;
 
 #define END_RESTARTMAP default: ASSERT(0,"Illegal RESTART"); }; return_0_:
 
+#endif // DISPATCH_H

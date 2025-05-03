@@ -1,7 +1,7 @@
 #ifndef __CSB_WIN_OBJECTS_H__
 #define __CSB_WIN_OBJECTS_H__
 
-enum SCROLLTYPE 
+enum SCROLLTYPE
 {
   scroll_OpenScroll = 0
 };
@@ -170,7 +170,7 @@ enum MONSTERTYPE
   mon_Worm           = 0x0f,//15
   mon_AntMan         = 0x10,//16
   mon_Muncher        = 0x11,//17
-  mon_DethKnight     = 0x12,//18
+  mon_AnimatedArmour = 0x12,//18
   mon_Zytaz          = 0x13,//19
   mon_WaterElemental = 0x14,//20
   mon_Oitu           = 0x15,//21
@@ -580,7 +580,7 @@ enum OBJ_NAME_INDEX
   objNI_Choker,         //8b 139
   objNI_Dexhelm,        //8c 140
   objNI_Flamebain,      //8d 141
-  objNI_Powertowers,    //8e 142 
+  objNI_Powertowers,    //8e 142
   objNI_Speedbow,       //8f
   objNI_Chest,          //90
   objNI_OpenChest,      //91
@@ -618,7 +618,7 @@ enum OBJ_NAME_INDEX
   objNI_DragonSteak,    //af  175
   objNI_IronKey,        //b0  176
     objNI_FirstKey = objNI_IronKey,
-  objNI_KeyOfB,         //b1  177  
+  objNI_KeyOfB,         //b1  177
   objNI_SolidKey,       //b2  178
   objNI_SquareKey,      //b3  179
   objNI_TourquoiseKey,  //b4
@@ -645,7 +645,7 @@ enum OBJ_NAME_INDEX
   objNI_Special_b,      //c8 200
   objNI_Special_c,      //c9 201
   objNI_Special_d,      //ca 202
-  objNI_Special_e,      //cb 203 
+  objNI_Special_e,      //cb 203
   objNI_Special_f,      //cc 204
   objNI_Special_g,      //cd 205
   objNI_Special_h,      //ce 206

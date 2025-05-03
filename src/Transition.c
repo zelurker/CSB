@@ -32,11 +32,11 @@ struct SNDHEAD
   i32 nSamplesPerSecond;  // 11025
   i32 nAvgBytesPerSec;    // 11025 // important
   i16 nBlockAlign;        //     1 // 2 for 16-bit
-  i16 wBitsPerSample;     //     8       
+  i16 wBitsPerSample;     //     8
   i16 cbSize;             //    40
   i8  byte38[4];          // "fact"
   i32 int42;              //     4
-  i32 numBytes46;         // 
+  i32 numBytes46;         //
   i8  byte50[4];          // "data"
   i32 numSamples54;       //
   i8  sample58[1];
@@ -59,16 +59,16 @@ FILE* UI_fopen(char* name, const char* mode)
 {
 	char	f[512];
 	FILE*	handle = NULL;
-	
+
 	#if TARGET_RT_MAC_MACH_O
 		CFBundleRef	ref = CFBundleGetMainBundle();
 		CFURLRef	resources = NULL;
 		CFStringRef	str = NULL;
 		FSRef		fsref;
-		
+
 		if(ref)
 			resources = CFBundleCopyBundleURL(ref);
-		
+
 		if(resources)
 		{
 			if(CFURLGetFSRef(resources, &fsref))
@@ -85,13 +85,13 @@ FILE* UI_fopen(char* name, const char* mode)
 					handle = fopen(f, mode);
 			}
 		}
-		
+
 		if(resources)
 			CFRelease(resources);
 	#else
-	
+
 		handle = fopen(f, mode);
-	
+
 	#endif
 	return handle;
 }
@@ -107,18 +107,18 @@ short MessageBox(long par1, const char* text, const char* par2, long mbtype)
 	Str255 title, explanation;
 
 	MacShowCursor();
-	
+
 	title[0] = 0;
 	explanation[0] = 0;
-	
+
 	if(title) CopyCStringToPascal(text, title);
 	if(explanation) CopyCStringToPascal(par2, explanation);
 
-	
+
 	memset(&a, 0, sizeof(a));
-	
+
 	a.movable = 1;
-	
+
 	if(mbtype == MB_YESNO)
 	{
 		a.defaultText = yes;
@@ -132,16 +132,16 @@ short MessageBox(long par1, const char* text, const char* par2, long mbtype)
 		a.defaultButton = 1;
 		a.cancelButton = 1;
 	}
-		
+
 	(void) StandardAlert(kAlertNoteAlert, title, explanation, &a, &item);
-	
+
 	HideCursor();
 	return item;
 }
 
 short 	UI_MessageBox(char* text, char* par2, long mbtype)
 {
-	return MessageBox(0,text,par2,mbtype);		
+	return MessageBox(0,text,par2,mbtype);
 }
 
 
@@ -185,7 +185,7 @@ void GetSystemTime(SYSTEMTIME *s)
 {
 	unsigned long secs;
 	DateTimeRec x;
-	
+
 	GetDateTime(&secs);
 	SecondsToDate(secs,&x);
 
@@ -201,7 +201,7 @@ void GetSystemTime(SYSTEMTIME *s)
 
 i64 UI_GetSystemTime(void)
 {
-	
+
   // Cumulative milliseconds since 1980 (or whenever..not important)
   /*SYSTEMTIME st;
   i64 result;
@@ -234,7 +234,7 @@ i64 UI_GetSystemTime(void)
 /*	unsigned long secs;
 	unsigned long long result;
 	GetDateTime(&secs);
-	
+
 	result = secs;
 	result *= 1000;
 	return result;
@@ -273,7 +273,7 @@ void sndPlaySound(char *wave, long flags)
 	OSErr		err 		= noErr;
 	SndCommand	cmd;
 	SoundHeader	header;
-	
+
 	if(!soundData)
 	{
 		cmd.cmd 	= quietCmd;
@@ -289,24 +289,24 @@ void sndPlaySound(char *wave, long flags)
 		cmd.cmd 	= bufferCmd;
 		cmd.param1 	= 0;
 		cmd.param2 	= (unsigned long)&header;
-		 
+
 		err = SndDoImmediate(gSoundChannel,&cmd);//,false);
 
 		if(isSync)
 		{
 			SCStatus	status;
 			status.scChannelBusy = 1;
-			
+
 			while(status.scChannelBusy)
 			{
 				//  wait for completion
 				err = SndChannelStatus(gSoundChannel, sizeof(status), &status);
-				
+
 				if(err) break;
-			
+
 				if(!status.scChannelBusy) break;
 			}
-			
+
 		}
 	}
 }
@@ -317,7 +317,7 @@ void InvalidateRect(HWND w, i32, i32)
 	gScreenIsInvalid = 1;
 
 	//  calling WndProc with WM_PAINT message would
-	//  be a fatal error here hence CSBUI is not reentrant 
+	//  be a fatal error here hence CSBUI is not reentrant
 }
 
 #define MAX_MALLOCS	1000
@@ -326,7 +326,7 @@ void InvalidateRect(HWND w, i32, i32)
 typedef struct mallocitem {
 	unsigned char*	fPointer;
 	char			fFile[54];
-	int				fLine;	
+	int				fLine;
 	int				fSize;
 } mallocitem;
 
@@ -337,13 +337,13 @@ int			gNumMallocItems = 0;
 
 void* ax_malloc(Size size, const char* file, int line)
 {
-    
+
 	/*unsigned char* 	block;
 	int		i;
-	
+
 	if(interrupt)
 		Debugger();
-	
+
 	if(gNumMallocItems >= MAX_MALLOCS) DebugStr("\pMALLOC ERROR!");
 	file = file; line=line;
 	block = (unsigned char*) _malloc(size+TAG_SIZE);
@@ -363,16 +363,16 @@ void* ax_malloc(Size size, const char* file, int line)
 		gNumMallocItems ++;
 	}
 	return block;*/
-	
+
 	return NewPtr(size+64);
 }
 
 void ax_free(void* block, const char* file, int line)
 {
 	/*int	i,j;
-	
+
 	file = file; line=line;
-	
+
 	for(i=0; i<gNumMallocItems; i++)
 	{
 		for(j=gMallocItems[i].fSize; j<(gMallocItems[i].fSize+TAG_SIZE); j++)
@@ -383,7 +383,7 @@ void ax_free(void* block, const char* file, int line)
 			}
 		}
 	}
-	
+
 	for(i=0; i<gNumMallocItems; i++)
 	{
 		if(gMallocItems[i].fPointer == block)
@@ -392,10 +392,10 @@ void ax_free(void* block, const char* file, int line)
 			memset(&gMallocItems[MAX_MALLOCS-1],0,sizeof(mallocitem));
 			gNumMallocItems--;
 			return _free(block);
-		}	
-			
+		}
+
 	}
-	
+
 	if(i==gNumMallocItems)
 	{
 		DebugStr("\pHEY! THIS BLOCK WAS NOT ALLOCATED");

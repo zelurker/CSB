@@ -502,7 +502,6 @@ static ui32 AUDIOWRITTEN[AUDIOCOUNT];
 #include <signal.h>
 #include <fcntl.h>
 
-
 void UI_Initialize_sounds(void)
 {
     // Sound is at 5120 Hz, and not 7000
@@ -559,8 +558,8 @@ private:
 public:
   Channels(void);
   ~Channels(void);
-  void Play(SNDHEAD *sndHead, int numSamples,int mykeep);
-  void PlayDirect(Sound_Sample *samp);
+  void Play(SNDHEAD *sndHead, int numSamples);
+  void PlayDirect(Sound_Sample *samp, int posX, int posY);
 };
 
 Channels::Channels(void)
@@ -585,7 +584,9 @@ Channels::~Channels(void)
   }
 }
 
-void Channels::Play(SNDHEAD *sndHead, int numSample,int mykeep)
+extern void set_sound_pos(int i, int posX, int posY);
+
+void Channels::Play(SNDHEAD *sndHead, int numSample)
 {
   int i;
   for (i=0; i<MIX_CHANNELS; i++)
@@ -601,7 +602,7 @@ void Channels::Play(SNDHEAD *sndHead, int numSample,int mykeep)
     }
     Sound_AudioInfo info;
     info.rate = mixer.freq;
-    info.channels = mixer.channels;
+    info.channels = 1;
     info.format = mixer.format;
     // I was hoping that sdl_sound would hide the audio conversion when using raw samples, but no
     // I guess it's better like that, it allows to convert the samples only once if you wish
@@ -612,18 +613,17 @@ void Channels::Play(SNDHEAD *sndHead, int numSample,int mykeep)
     // Slightly increasing the frequency to 5200 seems to fix everything!
     // The weird part is that in mingw 5120 Hz plays ok, the samples are not overlapping!
     // Now there is a very little difference between 5120 Hz and 5200...!
-    SDL_BuildAudioCVT(&cvt, AUDIO_U8, 1, 5200, mixer.format, mixer.channels,mixer.freq);
+    SDL_BuildAudioCVT(&cvt, AUDIO_U8, 1, 5200, mixer.format, 1,mixer.freq);
     cvt.len = numSample;
     cvt.buf = (Uint8 *) SDL_malloc(cvt.len * cvt.len_mult);
     memcpy(cvt.buf,sndHead,numSample);
     SDL_ConvertAudio(&cvt);
-    if (!mykeep)
-	UI_free(sndHead);
-    keep[i] = mykeep;
+    UI_free(sndHead);
+    keep[i] = 0; // internal sound -> must free the header in the end
     sample[i] = Sound_NewSampleFromMem(cvt.buf, numSample * cvt.len_ratio,
 	    "RAW",
 	    &info,
-	    mixer.size
+	    mixer.size/2
 	    );
     if (sample[i] == NULL)
     {
@@ -631,13 +631,15 @@ void Channels::Play(SNDHEAD *sndHead, int numSample,int mykeep)
       return;
     }
     m_sndHead[i] = (SNDHEAD*)cvt.buf;
+    set_sound_pos(i,-1,-1);
     Mix_PlayChannel(i, sample[i], 0);
     return;
   }
+  printf("Play: out of loop ?!!\n");
   UI_free(sndHead);
 }
 
-void Channels::PlayDirect(Sound_Sample *samp)
+void Channels::PlayDirect(Sound_Sample *samp,int posX, int posY)
 {
   int i;
   for (i=0; i<MIX_CHANNELS; i++)
@@ -653,6 +655,7 @@ void Channels::PlayDirect(Sound_Sample *samp)
     }
     keep[i] = 1; // There is no sndHead here, so it's better not call UI_free on it!
     Sound_Rewind(samp);
+    set_sound_pos(i,posX,posY);
     Mix_PlayChannel(i, samp, 0);
     return;
   };
@@ -663,7 +666,7 @@ Channels sdlChannels;
 /*
 * Play a sound. We do currently not bother about volume, it just looks nice...
 */
-static bool LIN_PlaySound(i8* audio, const ui32 size, int volume,int keep)
+static bool LIN_PlaySound(i8* audio, const ui32 size, int volume)
 {
   ui8 *samples;
   int numSample;
@@ -671,35 +674,76 @@ static bool LIN_PlaySound(i8* audio, const ui32 size, int volume,int keep)
   //printf("LIN_PlaySound @%d\n",d.Time);
   header = (SNDHEAD *)audio;
   //samples = header->sample58;
-  sdlChannels.Play(header, size,keep);
+  sdlChannels.Play(header, size);
   return 1;
 };
 
-static Sound_Sample *horn,*warcry;
+static Sound_Sample *horn,*warcry,*armour,*oytu,*dragon,*skeleton,*wasp,*slime,*screamer,*mummy;
 
-void LIN_PlayDirect(const char *name) {
+void LIN_PlayDirect(const char *name,int posX, int posY) {
     Sound_AudioInfo info;
     char name2[25];
     snprintf(name2,25,"sounds/%s",name);
     info.rate = mixer.freq;
-    info.channels = mixer.channels;
+    info.channels = 1;
     info.format = mixer.format;
     if (!strncmp(name,"horn",4)) {
 	if (!horn)
-	    horn = Sound_NewSampleFromFile(name2,&info,mixer.size);
+	    horn = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
 	if (horn)
-	    sdlChannels.PlayDirect(horn);
+	    sdlChannels.PlayDirect(horn,-1,-1);
     } else if (!strncmp(name,"warcry",6)) {
 	if (!warcry)
-	    warcry = Sound_NewSampleFromFile(name2,&info,mixer.size);
+	    warcry = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
 	if (warcry)
-	    sdlChannels.PlayDirect(warcry);
+	    sdlChannels.PlayDirect(warcry,-1,-1);
+    } else if (!strncmp(name,"armour_mov",10)) {
+	if (!armour)
+	    armour = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
+	if (armour) {
+	    sdlChannels.PlayDirect(armour,posX,posY);
+	}
+    } else if (!strncmp(name,"oytu",4)) {
+	if (!oytu)
+	    oytu = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
+	if (oytu)
+	    sdlChannels.PlayDirect(oytu,posX,posY);
+    } else if (!strncmp(name,"dragon",4)) {
+	if (!dragon)
+	    dragon = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
+	if (dragon)
+	    sdlChannels.PlayDirect(dragon,posX,posY);
+    } else if (!strncmp(name,"skeleton",4)) {
+	if (!skeleton)
+	    skeleton = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
+	if (skeleton)
+	    sdlChannels.PlayDirect(skeleton,posX,posY);
+    } else if (!strncmp(name,"wasp",4)) {
+	if (!wasp)
+	    wasp = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
+	if (wasp)
+	    sdlChannels.PlayDirect(wasp,posX,posY);
+    } else if (!strncmp(name,"slime",4)) {
+	if (!slime)
+	    slime = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
+	if (slime)
+	    sdlChannels.PlayDirect(slime,posX,posY);
+    } else if (!strncmp(name,"screamer",4)) {
+	if (!screamer)
+	    screamer = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
+	if (screamer)
+	    sdlChannels.PlayDirect(screamer,posX,posY);
+    } else if (!strncmp(name,"mummy",4)) {
+	if (!mummy)
+	    mummy = Sound_NewSampleFromFile(name2,&info,mixer.size/2);
+	if (mummy)
+	    sdlChannels.PlayDirect(mummy,posX,posY);
     }
 }
 
-bool UI_PlaySound(const char *wave, i32 size, int keep=0) {
+bool UI_PlaySound(const char *wave, i32 size ) {
 //SDL_AudioSpec *SDL_LoadWAV(const char *file, SDL_AudioSpec *spec, Uint8 **audio_buf, Uint32 *audio_len);
-  return LIN_PlaySound((pnt)wave,size, SDL_MIX_MAXVOLUME,keep);
+  return LIN_PlaySound((pnt)wave,size, SDL_MIX_MAXVOLUME);
 }
 
 enum {

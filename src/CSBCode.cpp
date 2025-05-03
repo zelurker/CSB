@@ -5876,7 +5876,7 @@ i32 NextMonsterUpdateTime(ITEM16 *P1,
       //if (D5W & 0x200)
       if (mdw4.AttackingMirrorOK())
       {
-        if ( sms.TestAttacking() && (mt_4 == mon_DethKnight) )
+        if ( sms.TestAttacking() && (mt_4 == mon_AnimatedArmour) )
         {
           if (STRandomBool())
           {

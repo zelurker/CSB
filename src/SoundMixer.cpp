@@ -1,5 +1,8 @@
 #include "SoundMixer.h"
 #include "SDL_sound.h"
+#include "stdafx.h"
+#include "CSB.h"
+#include "Data.h"
 
 
 struct _Mix_effectinfo
@@ -46,7 +49,13 @@ static struct _Mix_Channel {
 	Uint32 fade_length;
 	Uint32 ticks_fade;
 	effect_info *effects;
+	int posX,posY;
 } *mix_channel = NULL;
+
+void set_sound_pos(int i, int posX, int posY) {
+    mix_channel[i].posX = posX;
+    mix_channel[i].posY = posY;
+}
 
 /*
  * rcg06122001 Cleanup effect callbacks.
@@ -331,8 +340,6 @@ int Mix_Volume(int which, int volume)
   return(prev_volume);
 }
 
-unsigned long UI_GetSystemTime(void);
-
 static void mix_channels(void *udata, Uint8 *stream, int len)
 {
   Uint8 *mix_input;
@@ -405,6 +412,33 @@ static void mix_channels(void *udata, Uint8 *stream, int len)
 		  Sound_Sample *sample = data->chunk;
 		  int bw = 0; /* bytes written to stream this time through the callback */
 
+		  double panLeft,panRight;
+		  if (data->posX < 0) {
+		      panLeft = panRight = 0.5; // sound on party
+		  } else {
+		      int x = data->posX - d.partyX;
+		      int y = data->posY - d.partyY;
+		      double dist = sqrt(x*x + y*y);
+		      switch(d.partyFacing) {
+		      case 0: // north
+			  panRight = 0.5 + x/dist/2;
+			  break;
+		      case 1: // east
+			  panRight = 0.5 - y/dist/2;
+			  break;
+		      case 2: // south
+			  panRight = 0.5 - x/dist/2;
+			  break;
+		      case 3:
+			  panRight = 0.5 + y/dist/2;
+			  break;
+		      }
+		      panLeft = 1 - panRight;
+		      double att = 1/(dist*dist);
+		      panRight *= att;
+		      panLeft *= att;
+		  }
+
 		  while (bw < remaining)
 		  {
 		      int cpysize;  /* bytes to copy on this iteration of the loop. */
@@ -446,28 +480,38 @@ static void mix_channels(void *udata, Uint8 *stream, int len)
 			  int16_t *dest = (int16_t*)(stream + bw);
 			  int16_t *src = (int16_t*)data->decoded_ptr;
 			  int cp2 = cpysize/2;
-			  // The samples seem rather loud, but I have not found any place yet with more than 2 samples playing at the same time
-			  // so dividing the samples by 2 should be enough to be able to mix them. More testing would be better though... !
+			  // Samples decoded on 1 channel, but played on 2
 			  if (!mixed) {
 			      // SDL_memcpy(stream + bw, (Uint8 *) data->decoded_ptr, cpysize);
-			      for (int n=0; n<cp2; n++)
-				  dest[n] = src[n]>>1;
+			      for (int n=0; n<cp2; n++) {
+				  dest[n*2] = src[n]*panLeft;
+				  dest[n*2+1] = src[n]*panRight;
+			      }
 			  } else {
 			      for (int n=0; n<cp2; n++) {
-				  int dst = dest[n] + src[n]/2;
+				  int dst = dest[n*2] + src[n]*panLeft;
 				  if (dst > 0x7fff) {
-				      //printf("mix overflow %x from %d & %d\n",dst,dest[n],src[n]);
-				      dest[n] = 0x7fff;
+				      printf("mix overflow %x from %d & %d\n",dst,dest[n*2],src[n]);
+				      dest[n*2] = 0x7fff;
 				  } else if (dst < -0x7fff) {
-				      //printf("mix underflow %x from %d & %d\n",dst,dest[n],src[n]);
-				      dst = -0x7fff;
+				      printf("mix underflow %x from %d & %d\n",dst,dest[n*2],src[n]);
+				      dest[n*2] = -0x7fff;
 				  } else
-				      dest[n] += src[n]>>1;
+				      dest[n*2] = dst;
+				  dst = dest[n*2+1] + src[n]*panRight;
+				  if (dst > 0x7fff) {
+				      printf("mix overflow %x from %d & %d\n",dst,dest[n*2+1],src[n]);
+				      dest[n*2+1] = 0x7fff;
+				  } else if (dst < -0x7fff) {
+				      printf("mix underflow %x from %d & %d\n",dst,dest[n*2+1],src[n]);
+				      dest[n*2+1] = -0x7fff;
+				  } else
+				      dest[n*2+1] = dst;
 			      }
 			  }
 
 			  /* update state for next iteration or callback */
-			  bw += cpysize;
+			  bw += cpysize*2;
 			  data->decoded_ptr += cpysize;
 			  data->decoded_bytes -= cpysize;
 		      } /* if */

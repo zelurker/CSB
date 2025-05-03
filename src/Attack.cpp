@@ -1406,7 +1406,7 @@ ATTACKPARAMETERS *SetupDSAParam(FILTER *pFilter)
 //*********************************************************
 //  TAG01bac2
 
-extern void LIN_PlayDirect(const char *name);
+extern void LIN_PlayDirect(const char *name,int posX, int posY);
 
 i32 WarCryEtc(ATTACKPARAMETERS *pParam,
               FILTER *pFilter,
@@ -1440,10 +1440,10 @@ i32 WarCryEtc(ATTACKPARAMETERS *pParam,
   switch (pParam->attackType)
   {
   case atk_WARCRY:
-      LIN_PlayDirect("warcry.mp3");
+      LIN_PlayDirect("warcry.mp3",-1,-1);
       break;
   case atk_BLOWHORN:
-      LIN_PlayDirect("horn.mp3");
+      LIN_PlayDirect("horn.mp3",-1,-1);
       break;
   }
   if (d.MonsterUnderAttack == RNeof)

@@ -216,7 +216,7 @@ bool HasAreaChanged(ui8 *STScreen,
     pQB = pQuadB;
     for (q=0; q<fullQuadCount; q++)
     {
-      if ((pQA[0] != pQB[0]) || (pQA[1] != pQB[1])) 
+      if ((pQA[0] != pQB[0]) || (pQA[1] != pQB[1]))
       {
         return true;
       };
@@ -237,11 +237,11 @@ bool HasAreaChanged(ui8 *STScreen,
     };
     for (line=0; line<height; line++)
     {
-      if (((pQuadA[0] ^ pQuadB[0]) & postPixelMask) != 0) 
+      if (((pQuadA[0] ^ pQuadB[0]) & postPixelMask) != 0)
       {
         return true;
       };
-      if (((pQuadA[1] ^ pQuadB[1]) & postPixelMask) != 0)  
+      if (((pQuadA[1] ^ pQuadB[1]) & postPixelMask) != 0)
       {
         return true;
       };
@@ -362,9 +362,9 @@ void BLT1(ui8  *src,     // Raw 8-bit pixels
 
 //void BLT2(unsigned char *src, i16 *dst, i32 num)
 /*
-void BLT2(unsigned char *src, 
-          i16 *dst, 
-          i32 num, 
+void BLT2(unsigned char *src,
+          i16 *dst,
+          i32 num,
           i16 *palette,
           ui8 *overlay)
 {
@@ -418,9 +418,9 @@ void BLT2(ui8  *src,     // Raw 8-bit pixels
 
 /*
 //void BLT3(unsigned char *src, i16 *dst, i32 num)
-void BLT3(unsigned char *src, 
-          i16 *dst, 
-          i32 num, 
+void BLT3(unsigned char *src,
+          i16 *dst,
+          i32 num,
           i16 *palette,
           ui8 *overlay)
 {
@@ -483,14 +483,14 @@ void BLT3(ui8  *src,     // Raw 8-bit pixels
 
 //#define mv(x,y) mov [edi+2*x+y*320*2*4],ax
 //#define dv _asm shr ax,1 _asm and ax,0x3def
-//#define dvu _asm mov cx,ax _asm shr ax,1 _asm and ax,0x3def _asm and cx,0x421 _asm add ax,cx 
+//#define dvu _asm mov cx,ax _asm shr ax,1 _asm and ax,0x3def _asm and cx,0x421 _asm add ax,cx
 //#define ad(x,y) add [edi+2*x+y*320*2*4],ax
 
 //void BLT4(unsigned char *src, i16 *dst, i32 num)
 /*
-void BLT4(unsigned char *src, 
-          i16 *dst, 
-          i32 num, 
+void BLT4(unsigned char *src,
+          i16 *dst,
+          i32 num,
           i16 *palette,
           ui8 *overlay)
 {
@@ -692,7 +692,7 @@ hard:
     ad(3,1)
     ad(1,1)
 
-xit:  
+xit:
   };
 }
 */
@@ -700,9 +700,9 @@ xit:
 
 //void BLT4(unsigned char *src, i16 *dst, i32 num)
 /*
-void BLT4(unsigned char *src, 
-          i16 *dst, 
-          i32 num, 
+void BLT4(unsigned char *src,
+          i16 *dst,
+          i32 num,
           i16 *palette,
           ui8 *overlay)
 {
@@ -1034,16 +1034,16 @@ int UpdateScreenArea(
   updateScreenAreaEnterCount++;
   overlayChanged = useOverlay && currentOverlay.m_change;
   currentOverlay.m_change = false;
-  if (!paletteChanged && !overlayChanged && !jitterChanged) 
+  if (!paletteChanged && !overlayChanged && !jitterChanged)
   {
 //    if (!HasScreenChanged(STScreen+160*y0+LineStart,
 //                          (LineEnd-LineStart) / 4,
 //                          height,
 //                          160-(LineEnd-LineStart),
-//                          pOldChecksum)) 
+//                          pOldChecksum))
     if (!HasAreaChanged(STScreen,
                         x0, y0, width, height,
-                        pOldScreen)) 
+                        pOldScreen))
     {
       updateScreenAreaLeaveCount++;
       return 0;
@@ -1126,7 +1126,7 @@ int UpdateScreenArea(
     }
     else if (xoj == 0)
     {
-      segWidth[0] = 0; 
+      segWidth[0] = 0;
       segWidth[1] = 0;
       segWidth[2] = 0;
       firstNibble[3] = -xgj;
@@ -1208,7 +1208,7 @@ int UpdateScreenArea(
     }
     else
     {
-      // Setup parameters for testing newest 
+      // Setup parameters for testing newest
       {
         pPixels = fourBitPixels+320*(y0+currentGraphicLine)+x0;
       }
@@ -1243,7 +1243,7 @@ int UpdateScreenArea(
       unsigned char *pNibbles;
       ui8 *pOverlay;
       if (segWidth[segment] == 0) continue;
-      //pNibbles = (firstNibble[segment] < 0) ? black : nibbles + firstNibble[segment]; 
+      //pNibbles = (firstNibble[segment] < 0) ? black : nibbles + firstNibble[segment];
       pNibbles = (firstNibble[segment] < 0) ? black : pPixels+firstNibble[segment];
       pOverlay =   (useOverlay && overlayActive)
                  ? currentOverlay.m_overlay+224*(135-line) + firstOverlay[segment]
@@ -1252,9 +1252,9 @@ int UpdateScreenArea(
       {
       case 1:
         BLT1(pNibbles,                               // Raw 8-bit pixel data
-            (ui16 *)bitmap + 1*(320*line + currentPixel), 
-            segWidth[segment],          
-            (ui16 *)currentOverlay.m_table, 
+            (ui16 *)bitmap + 1*(320*line + currentPixel),
+            segWidth[segment],
+            (ui16 *)currentOverlay.m_table,
             pOverlay);
         break;
       case 2:
@@ -1268,28 +1268,28 @@ int UpdateScreenArea(
         BLT3(pNibbles,
             (ui16 *)bitmap + 3*(320*3*line + currentPixel),
             segWidth[segment],
-            (ui16 *)currentOverlay.m_table, 
+            (ui16 *)currentOverlay.m_table,
             pOverlay);
         break;
       case 4:
         BLT4(pNibbles,
             (ui16 *)bitmap + 4*(320*4*line + currentPixel),
             segWidth[segment],
-            (ui16 *)currentOverlay.m_table, 
+            (ui16 *)currentOverlay.m_table,
             pOverlay);
         break;
       case 5:
         BLT5(pNibbles,
             (ui16 *)bitmap + 5*(320*5*line + currentPixel),
             segWidth[segment],
-            (ui16 *)currentOverlay.m_table, 
+            (ui16 *)currentOverlay.m_table,
             pOverlay);
         break;
       case 6:
         BLT6(pNibbles,
             (ui16 *)bitmap + 6*(320*6*line + currentPixel),
             segWidth[segment],
-            (ui16 *)currentOverlay.m_table, 
+            (ui16 *)currentOverlay.m_table,
             pOverlay);
         break;
       default: break;
@@ -1369,7 +1369,7 @@ void MakeBMPBitmap(ui16 *src, ui8 *dst)
     src -= 80;
     for (i=0; i<20; i++)
     {
-      //Convert 16 pixels at a time 
+      //Convert 16 pixels at a time
       s[0] = LE16(src[0]);
       s[1] = LE16(src[1]);
       s[2] = LE16(src[2]);
@@ -1441,7 +1441,7 @@ void DumpImages(void)
       int FH;
       char name[100];
       sprintf(name,"ScreenDumps.bin");
-      if (prevTime == 0) 
+      if (prevTime == 0)
       {
         prevTime = curTime;
         FH = _open(name, _O_WRONLY|_O_CREAT|_O_TRUNC|O_SEQUENTIAL|_O_BINARY,_S_IWRITE);

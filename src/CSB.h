@@ -7,6 +7,8 @@
 #define ALIGN4
 #endif
 
+#include "Dispatch.h"
+#include "UI.h"
 //#ifdef _DEBUG
 #define TraceFlash(msg) traceFlash(msg)
 void traceFlash(const char *msg, i32 x=-1, i32 y=-1);
@@ -15,6 +17,7 @@ void MemMove(void *, void *, int);
 //#define TraceFlash(msg) ;
 //#endif
 
+// Required for savegames!
 #pragma pack(1)
 
 #define MAX_LOADSTRING 100

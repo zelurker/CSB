@@ -735,7 +735,7 @@ void CreateAndDropObject(i32 P1,
   case mon_AntMan:
       pwA3 = &d.MonsterDroppings[33];
       break;
-  case mon_DethKnight:
+  case mon_AnimatedArmour:
       w_2 = 1;
       pwA3 = &d.MonsterDroppings[26];
       break;
@@ -2815,6 +2815,8 @@ enum MPO
   MPO_other   = 3
 };
 
+extern void LIN_PlayDirect(const char *name,int posX, int posY);
+
 // *********************************************************
 // As a side-effect we set
 //   d.NewX, d.NewY, d.NewPos, d.NewDir, d.NewLevel
@@ -3416,6 +3418,56 @@ i16 MoveObject(const RN        object,
     else
     {
 //tag012970: // Jump into middle of 'while' ??
+	MONSTERTYPE mtD6;
+	DB4       *DB4A3;
+	DB4A3 = GetRecordAddressDB4(object);
+	if (DB4A3!=NULL)
+	{
+	    mtD6 = DB4A3->monsterType();
+	    int x = newX - d.partyX;
+	    int y = newY - d.partyY;
+	    int attenuation = x*x + y*y;
+	    if (attenuation <= 10) { // No use to keep a sound < 1/10
+		// printf("no levitate, monster move %d,%d type %x\n",newX,newY,mtD6);
+		switch(mtD6) {
+		case mon_Mummy:
+		case mon_5: // it's supposed to be Trolin, to be confirmed
+		case mon_StoneGolem:
+		case mon_Giggler:
+		case mon_Vexirk:
+		case mon_Demon:
+		    LIN_PlayDirect("mummy_move.mp3",newX,newY);
+		    break;
+		case mon_Screamer:
+		case mon_RockPile:
+		case mon_Worm: // magenta worm ? Probably...
+		// this one is not found! case mon_PainRat:
+		// not found case mon_Ruster:
+		case mon_Scorpion:
+		case mon_Oitu:
+		    LIN_PlayDirect("screamer_move.mp3",newX,newY);
+		    break;
+		case mon_SlimeDevil:
+		case mon_WaterElemental:
+		    LIN_PlayDirect("slime_move.mp3",newX,newY);
+		    break;
+		case mon_Couatl:
+		// not found case mon_Wasp:
+		    LIN_PlayDirect("wasp_move.mp3",newX,newY);
+		    break;
+		case mon_Skeleton:
+		    LIN_PlayDirect("skeleton_move.mp3",newX,newY);
+		    break;
+		case mon_AnimatedArmour:
+		    LIN_PlayDirect("armour_move.mp3",newX,newY);
+		    break;
+		case mon_Dragon:
+		    LIN_PlayDirect("dragon_move.mp3",newX,newY);
+		    break;
+		}
+		// QueueSound(soundMONDEATH, newX, newY, 0);
+	    }
+	}
       PlaceOrRemoveObjectInRoom(
                         newX,
                         newY,
@@ -3429,7 +3481,7 @@ i16 MoveObject(const RN        object,
     if ((LOCAL_14 != 0) || (oldX < 0))
     {
       StartMonsterMovementTimers(newX, newY);
-    };
+    }
     ASSERT(AttachedLevel_4 >= 0,"attached level");
     LoadLevel(AttachedLevel_4);
     if (oldX >= 0)

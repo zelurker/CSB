@@ -1,3 +1,6 @@
+#ifndef UI_H
+#define UI_H
+
 #ifdef _LINUX
 extern SDL_Surface *SCR;
 extern SDL_Surface *WND;
@@ -23,7 +26,7 @@ extern HermesFormat* from_format;
 
 
 enum XLATETYPE
-{ 
+{
   TYPEIGNORED,
   TYPEKEY,
   TYPESCAN,
@@ -126,7 +129,7 @@ void UI_Invalidate(bool erase = false); // Send UIM_Paint message when
 const i32 SOUND_SYNC   =1;
 const i32 SOUND_ASYNC  =2;
 const i32 SOUND_MEMORY =4;
-bool UI_PlaySound(const char *wave, i32 flags, i32 attenuation);
+bool UI_PlaySound(const char *wave, i32 size);
 void UI_StopSound(void);
 void UI_PushMessage(MTYPE,i32=0,i32=0,uintptr_t=0,i32=0,i32=0,i32=0);
 void UI_GetCursorPos(i32 *x, i32 *y);
@@ -241,3 +244,5 @@ public:
   void NewLine(void);        // Add newline sequence.
   void AddText(const char *text);  // Add text with no endline sequence.
 };
+
+#endif // UI_H

@@ -11,9 +11,7 @@
 #include "CSB.h"
 
 
-#pragma pack(1)  
-
-
+#pragma pack(1)
 
 typedef pnt aReg;
 
@@ -23,7 +21,7 @@ struct STRUCT148
   void  (*free)(ui8 *address);                  //4  //144
   void  (*seek)(i32 handle, i32 address);      //8  //140
   void  (*read)(i32 handle, i32 size, ui8 *buf);//12 //138
-  i32   handle;                                //16 //132      
+  i32   handle;                                //16 //132
   i32   i_20;                                  //20 //128
   i8   *p_24;                                  //24 //124
   i8   *pJumpTable;                            //28 //120
@@ -194,7 +192,7 @@ static char *TAG0004fe(char *dest, const char *src)
 {
   const ui8 *A2;
   ui8 *A3, *p_4;
-  
+
   A3 = (ui8 *)dest;
   A2 = (ui8 *)src;
   p_4 = A3;
@@ -256,7 +254,7 @@ void TAG00053a(i16, i32)
       {
         p_8 = (i8 *)MallocMemory(s_148.i_20+4);
 //
-        if (   (p_8 != NULL) 
+        if (   (p_8 != NULL)
             || ((w_2=TAG0009ee(0x501))==0)  )
         {
           s_148.p_32 = p_8 + ((s_148.i_20+1) & 0xfffffffe);
@@ -264,7 +262,7 @@ void TAG00053a(i16, i32)
         /*
 */
           NotImplemented(0x724);
-  /*  
+  /*
           A0 = s_148.p_24;
 */
         };
@@ -367,7 +365,7 @@ i16 LoadProgram(STRUCT148 *s148)
     // loop and I wanted to avoid complicated if-statements
     // and/or goto-statements.  A break-statement fit
     // the need.
-    // We also need a way to 'break out' of nested 
+    // We also need a way to 'break out' of nested
     // case-structures and for-loops.  The boolean
     // variable 'exitFlag' provides an escape.
 
@@ -376,13 +374,13 @@ i16 LoadProgram(STRUCT148 *s148)
          || (b_74[1]!=0x60)
          || (b_74[4]!=0)
          || (b_74[5]!=2)
-         || (b_74[6]!=1)    
+         || (b_74[6]!=1)
          || (b_74[7]!=0) )
     {
     D7W = TAG0009ee(1);
       if (D7W != 0) break;
     };
-    if (littleEndian(wordGear(b_74+18)) > 100) 
+    if (littleEndian(wordGear(b_74+18)) > 100)
     {
 //
       D7W = TAG0009ee(26);
@@ -610,7 +608,7 @@ i16 LoadProgram(STRUCT148 *s148)
     break;
   } //for (;;);//See comment at top of loop
   if (pSegDesc != NULL) s148->free((ui8 *)pSegDesc);
- 
+
   if (p_50 != NULL) s148->free((ui8 *)p_50);
   if ( (D7W != 0) && (s148->p_36 != NULL) )
   {
@@ -630,7 +628,7 @@ i16 CheckSum(i8 *P1, i8 *P2)
   dReg D0, D5, D6, D7;
   D6W = 0;
   ubA3 = (ui8 *)P1;
-  for (D7W=4; D7W<20; D7W++)  
+  for (D7W=4; D7W<20; D7W++)
   {
     D6W = sw(D6W + D7W * ubA3[D7W]);
 //
@@ -792,7 +790,7 @@ i16 TAG001928(ITEM20 *P1)
       {
         TAG001a56(i20A3->Word12, 0, 2);
       };
-      NotImplemented(0x1990); // Need longword  
+      NotImplemented(0x1990); // Need longword
       D0W = TAG001cd4(i20A3->Word12, i20A3->Long6, D7W);
       if (D0W == -1)
       {

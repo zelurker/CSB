@@ -537,7 +537,7 @@ void SOUNDER::AddWave(char *wave, i32 attenuation)
 #ifdef _LINUX
 void SOUNDER::AddWave(char *wave, i32 attenuation,int size)
 {
-  UI_PlaySound(wave, size,attenuation);
+  UI_PlaySound(wave, size);
 }
 #else // if not _LINUX
 void SOUNDER::AddWave(char *wave, i32 attenuation,int size)
