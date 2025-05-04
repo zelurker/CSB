@@ -3444,7 +3444,7 @@ i16 MoveObject(const RN        object,
 	    int x = newX - d.partyX;
 	    int y = newY - d.partyY;
 	    int attenuation = x*x + y*y;
-	    if (attenuation <= 10 && abs(d.partyLevel - curLevel) <= 1) { // No use to keep a sound < 1/10
+	    if (attenuation <= 10 && d.partyLevel == curLevel) { // No use to keep a sound < 1/10
 	        // printf("no levitate, monster move %d,%d type %x party %d,%d level %d party %d\n",newX,newY,mtD6,d.partyX,d.partyY,curLevel,d.partyLevel);
 		switch(mtD6) {
 		case mon_Mummy:
