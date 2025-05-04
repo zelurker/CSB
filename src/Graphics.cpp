@@ -543,17 +543,17 @@ ui8 *FindMemoryBuffer(ui8 *addr, ui8* &end)
     end = buffer + buffersize;
     return buffer;
   };
-  if ((addr >= (ui8 *)LScreenBase[0]) && ( addr < (ui8 *)LScreenBase[0] +320*210)) 
+  if ((addr >= (ui8 *)LScreenBase[0]) && ( addr < (ui8 *)LScreenBase[0] +320*210))
   {
     end = (ui8 *)LScreenBase + 320*210;
     return (ui8 *)&LScreenBase[0][0];
   };
-  if (addr == (ui8 *)d.Byte1222) 
+  if (addr == (ui8 *)d.Byte1222)
   {
     end = (ui8 *)d.Byte1222 + 128;
     return (ui8 *)d.Byte1222;
   };
-  if (addr == (ui8 *)d.Byte1350) 
+  if (addr == (ui8 *)d.Byte1350)
   {
     end = (ui8 *)d.Byte1350 + 128;
     return (ui8 *)d.Byte1350;
@@ -827,7 +827,7 @@ tag008a62:
     ui16 *puwA0 = (ui16 *)A0;
     A0 += 8;
     H1Valid = false;
-    if (D5W < D7W) 
+    if (D5W < D7W)
     {
       D0UH2 =  (i16) ((LE16(*(puwA0++))*0x10001)>>D5W);
       H1Valid = true;
@@ -1000,7 +1000,7 @@ tag008ade:
       D5W = 0;
       SWAP(D5);// = ((D5&0xffff)<<16) | ((D5>>16)&0xffff);
 tag008aee:
-      if (D5W == 0) 
+      if (D5W == 0)
       {
         goto tag008aba;
       };
@@ -1800,7 +1800,7 @@ void openGraphicsFile(void) // TAG021d36
       UI_MessageBox(helpMessage,"Help",MESSAGE_OK);
       die(0xbad);
     };
-    d.Word23244++; //Increment one extra time so that the 
+    d.Word23244++; //Increment one extra time so that the
                    //file will never be closed.  We do this
                    //so that the player cannot substitute
                    //another graphics.dat during play.
@@ -1958,7 +1958,7 @@ void ReadGraphicsIndex(void) // TAG021d9a
       bigEndianGraphics = false;
       D0L = READ(d.GraphicHandle,2,(ui8 *)&d.NumGraphic);
     };
-    if (bigEndianGraphics) 
+    if (bigEndianGraphics)
     {
       d.NumGraphic = LE16(d.NumGraphic);
     };
@@ -2030,7 +2030,7 @@ void ReadGraphicsIndex(void) // TAG021d9a
     {
       ReadGraphic(0, d.compressedGraphic0);
     }
-    else 
+    else
     {
       success=false;
     };
@@ -2604,7 +2604,7 @@ ui8 *GetBasicGraphicAddress(i32 graphicNum, i32 minimumWidth, i32 minimumHeight)
       // D5W = width in bytes
       LOCAL_10 = (i16)(D5W * height);
       // LOCAL_10 = width * height
-      D5L = LOCAL_10 + 16; 
+      D5L = LOCAL_10 + 16;
       //Add ITEMQ header length + room for trailing size
       pqA3 = GetExpandedGraphicBuffer(D5L);
       D6W = 0;
@@ -2973,11 +2973,11 @@ OVERLAYDATA::~OVERLAYDATA(void)
 
 void OVERLAYDATA::Allocate(void)
 {
-  if (m_overlay == NULL) 
+  if (m_overlay == NULL)
         m_overlay = (ui8 *)UI_malloc(136*224,MALLOC077);
-  if (m_table == NULL) 
+  if (m_table == NULL)
         m_table = (i16 *)UI_malloc(8192,MALLOC078);
-  if (m_overlayPalette == NULL) 
+  if (m_overlayPalette == NULL)
         m_overlayPalette = (ui32 *)UI_malloc(256*4,MALLOC079);
 }
 
@@ -3017,7 +3017,7 @@ void OVERLAYDATA::CreateOverlayTable(i16 *atariPalette, bool useOverlay)
     {
       for (i=0; i<16; i++)
       { //Unpack the rgb values and multiply by 100-transparency.
-        overlayPaletteEntry = 
+        overlayPaletteEntry =
             ((atariPalette[i] & 0x700) >> 2)
           | ((atariPalette[i] & 0x070) >> 1)
           | ((atariPalette[i] & 0x007) >> 0);  // One of 512 entries
@@ -3074,11 +3074,11 @@ void OVERLAYDATA::CreateOverlayTable(i16 *atariPalette, bool useOverlay)
       };
     }
     else
-    {  // The overlay byte will always be zero  So we need 
+    {  // The overlay byte will always be zero  So we need
        // only 16 entries (one for each of the possible 16 Atari colors).
       for (i=0; i<16; i++)
-      { 
-        overlayPaletteEntry = 
+      {
+        overlayPaletteEntry =
             ((atariPalette[i] & 0x700) >> 2)
           | ((atariPalette[i] & 0x070) >> 1)
           | ((atariPalette[i] & 0x007) >> 0);  // One of 512 entries
@@ -3108,7 +3108,7 @@ void OVERLAYDATA::CreateOverlayTable(i16 *atariPalette, bool useOverlay)
 #else
 #ifdef RGB655
       m_table[i] = (i16)((RED<<13) | (GREEN<<8) | (BLUE<<2));
-      m_table[i] |= (m_table[i] & 0xc318) >> 3;
+      m_table[i] |= (m_table[i] & 0xc718) >> 3;
 #else
 	  You must define some sort of RGB format!!
 #endif
@@ -3284,7 +3284,7 @@ ui8 *ReadCSBgraphic(CSB_GRAPHICTYPE type,
     if (firstTime)
     {
       char message[100];
-      sprintf(message,"Missing section in CSBgraphics.dat.\nSection id=%d, Type=%s", id, 
+      sprintf(message,"Missing section in CSBgraphics.dat.\nSection id=%d, Type=%s", id,
                                 CSBGraphicsSectionNames[type]);
       UI_MessageBox(message,"error",MESSAGE_OK);
       firstTime = false;
@@ -3297,7 +3297,7 @@ ui8 *ReadCSBgraphic(CSB_GRAPHICTYPE type,
   };
   LSEEK(pSectionHeader[i].fileOffset, CSBgraphicsFile.f, SEEK_SET);
   compressedData.m = (ui8 *)UI_malloc(pSectionHeader[i].compressedSize,MALLOC082);
-  READ(CSBgraphicsFile.f, pSectionHeader[i].compressedSize, compressedData.m); 
+  READ(CSBgraphicsFile.f, pSectionHeader[i].compressedSize, compressedData.m);
   nextCode = (ui32 *)compressedData.m;
   result = (ui8 *)UI_malloc(pSectionHeader[i].uncompressedSize,mallocID);
   ovlDecode.GetBytes(result, pSectionHeader[i].uncompressedSize);
