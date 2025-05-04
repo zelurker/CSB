@@ -742,7 +742,7 @@ void CreateAndDropObject(i32 P1,
   case mon_RockPile:
       pwA3 = &d.MonsterDroppings[21];
       break;
-  case mon_Hellhound:
+  case mon_PainRat:
       pwA3 = &d.MonsterDroppings[18];
       break;
   case mon_Screamer:
@@ -3425,6 +3425,8 @@ i16 MoveObject(const RN        object,
 		// printf("levitating monster type %x coords %d,%d party %d,%d curlevel %d party level %d\n",mtD6,newX,newY,d.partyX,d.partyY,curLevel,d.partyLevel );
 		if (mtD6 == mon_Wasp || mtD6 == mon_Couatl)
 		    LIN_PlayDirect("wasp_move.mp3",newX,newY);
+		else if (mtD6 == mon_Vexirk)
+		    LIN_PlayDirect("mummy_move.mp3",newX,newY);
 	    }
 	}
       AddObjectToRoom(objD7, RN(RNempty), newX, newY, pmmr);
@@ -3449,15 +3451,14 @@ i16 MoveObject(const RN        object,
 		case mon_Trolin:
 		case mon_StoneGolem:
 		case mon_Giggler:
-		case mon_Vexirk:
 		case mon_Demon:
 		    LIN_PlayDirect("mummy_move.mp3",newX,newY);
 		    break;
 		case mon_Screamer:
 		case mon_RockPile:
 		case mon_Worm: // magenta worm ? Probably...
-		// this one is not found! case mon_PainRat:
-		// not found case mon_Ruster:
+		case mon_PainRat:
+		case mon_Ruster:
 		case mon_Scorpion:
 		case mon_Oitu:
 		    LIN_PlayDirect("screamer_move.mp3",newX,newY);

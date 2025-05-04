@@ -156,8 +156,8 @@ enum MONSTERTYPE
   mon_SlimeDevil     = 1,   //1
   mon_Giggler        = 2,  //2
   mon_FlyingEye      = 3,//3
-  mon_Hellhound      = 4,//4
-  mon_5              = 5,//5
+  mon_PainRat        = 4,//4
+  mon_Ruster         = 5,//5
   mon_Screamer       = 6,//6
   mon_RockPile       = 7,//7
   mon_Rive           = 8,//8
@@ -169,7 +169,7 @@ enum MONSTERTYPE
   mon_Vexirk         = 0x0e,//14
   mon_Worm           = 0x0f,//15
   mon_Trolin         = 0x10,//16
-  mon_Wasp        = 0x11,//17
+  mon_Wasp           = 0x11,//17
   mon_AnimatedArmour = 0x12,//18
   mon_Zytaz          = 0x13,//19
   mon_WaterElemental = 0x14,//20
