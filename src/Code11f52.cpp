@@ -3418,9 +3418,14 @@ i16 MoveObject(const RN        object,
 	if (DB4A3!=NULL)
 	{
 	    mtD6 = DB4A3->monsterType();
-	    // printf("levitating monster type %x coords %d,%d party %d,%d\n",mtD6,newX,newY,d.partyX,d.partyY);
-	    if (mtD6 == mon_Wasp || mtD6 == mon_Couatl)
-		LIN_PlayDirect("wasp_move.mp3",newX,newY);
+	    int x = newX - d.partyX;
+	    int y = newY - d.partyY;
+	    int attenuation = x*x + y*y;
+	    if (attenuation <= 10 && abs(d.partyLevel - curLevel) <= 1) { // No use to keep a sound < 1/10
+		// printf("levitating monster type %x coords %d,%d party %d,%d curlevel %d party level %d\n",mtD6,newX,newY,d.partyX,d.partyY,curLevel,d.partyLevel );
+		if (mtD6 == mon_Wasp || mtD6 == mon_Couatl)
+		    LIN_PlayDirect("wasp_move.mp3",newX,newY);
+	    }
 	}
       AddObjectToRoom(objD7, RN(RNempty), newX, newY, pmmr);
 //    goto tag012988;
@@ -3437,8 +3442,8 @@ i16 MoveObject(const RN        object,
 	    int x = newX - d.partyX;
 	    int y = newY - d.partyY;
 	    int attenuation = x*x + y*y;
-	    if (attenuation <= 10) { // No use to keep a sound < 1/10
-	        // printf("no levitate, monster move %d,%d type %x\n",newX,newY,mtD6);
+	    if (attenuation <= 10 && abs(d.partyLevel - curLevel) <= 1) { // No use to keep a sound < 1/10
+	        // printf("no levitate, monster move %d,%d type %x party %d,%d level %d party %d\n",newX,newY,mtD6,d.partyX,d.partyY,curLevel,d.partyLevel);
 		switch(mtD6) {
 		case mon_Mummy:
 		case mon_Trolin:
