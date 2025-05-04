@@ -3419,7 +3419,7 @@ i16 MoveObject(const RN        object,
 	{
 	    mtD6 = DB4A3->monsterType();
 	    // printf("levitating monster type %x coords %d,%d party %d,%d\n",mtD6,newX,newY,d.partyX,d.partyY);
-	    if (mtD6 == mon_Wasp)
+	    if (mtD6 == mon_Wasp || mtD6 == mon_Couatl)
 		LIN_PlayDirect("wasp_move.mp3",newX,newY);
 	}
       AddObjectToRoom(objD7, RN(RNempty), newX, newY, pmmr);
@@ -3460,9 +3460,6 @@ i16 MoveObject(const RN        object,
 		case mon_SlimeDevil:
 		case mon_WaterElemental:
 		    LIN_PlayDirect("slime_move.mp3",newX,newY);
-		    break;
-		case mon_Couatl:
-		    LIN_PlayDirect("wasp_move.mp3",newX,newY);
 		    break;
 		case mon_Skeleton:
 		    LIN_PlayDirect("skeleton_move.mp3",newX,newY);
