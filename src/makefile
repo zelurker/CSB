@@ -1,9 +1,10 @@
 #target = Raspberry
-target = Ubuntu_SDL20
+target = SDL20
 # This target below is for some cross compilation from linux to windows
 # it works, but windows gives 2 channels instead of the requested 1, creating bad sound when run in wine, and no sound at all in native windows 11 !
 # so consider it experimental for now !
 # target = x86_64-w64-mingw32
+# target=i686-w64-mingw32
 CXX = g++
 MD = mkdir
 # comment out following line to see compiler invocation
@@ -15,7 +16,7 @@ ifeq ($(target), Raspberry)
   libs =  -lSDL
   comp = gcc $(options) $(gincludes)
 endif
-ifeq ($(target), Ubuntu_SDL20)
+ifeq ($(target), SDL20)
 	#	debug options (make sure the ldflags line is uncommented if you use this)
 	#options =   -g -fsanitize=address -D _LINUX -D RGB655 -D SDL20 -c
 # optimized build options (comment out ldflags below to remove -fsanitize=address!!!)
@@ -29,6 +30,16 @@ comp := g++ $(options) $(gincludes)
 compc := gcc $(options) $(gincludes)
 endif
 ifeq ($(target),x86_64-w64-mingw32)
+	options =  -O2 -D _LINUX -D RGB655 -D SDL20 -c -DMINGW
+  gincludes = -Isdl_sound \
+               $(shell $(target)-pkg-config --cflags sdl2)
+  libs =  $(shell $(target)-pkg-config --libs sdl2)
+  comp = $(target)-g++ $(options) $(gincludes)
+  compc = $(target)-gcc $(options) $(gincludes)
+  CXX = $(target)-g++
+endif
+# there is no way to make a simple or test in make, so I need to copy the whole block, at least it's short...
+ifeq ($(target),i686-w64-mingw32)
 	options =  -O2 -D _LINUX -D RGB655 -D SDL20 -c -DMINGW
   gincludes = -Isdl_sound \
                $(shell $(target)-pkg-config --cflags sdl2)
