@@ -504,8 +504,6 @@ static ui32 AUDIOWRITTEN[AUDIOCOUNT];
 
 void UI_Initialize_sounds(void)
 {
-    // Sound is at 5120 Hz, and not 7000
-    // Found the precize frequency somewhere in this file (look for Hz)
   Mix_OpenAudio();
 //  printf("InitializeSounds not implemented\n");
 }
@@ -613,7 +611,7 @@ void Channels::Play(SNDHEAD *sndHead, int numSample)
     // Slightly increasing the frequency to 5200 seems to fix everything!
     // The weird part is that in mingw 5120 Hz plays ok, the samples are not overlapping!
     // Now there is a very little difference between 5120 Hz and 5200...!
-    SDL_BuildAudioCVT(&cvt, AUDIO_U8, 1, 5200, mixer.format, 1,mixer.freq);
+    SDL_BuildAudioCVT(&cvt, AUDIO_U8, 1, 5486, mixer.format, 1,mixer.freq);
     cvt.len = numSample;
     cvt.buf = (Uint8 *) SDL_malloc(cvt.len * cvt.len_mult);
     memcpy(cvt.buf,sndHead,numSample);
