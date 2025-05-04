@@ -3412,6 +3412,16 @@ i16 MoveObject(const RN        object,
 //    goto tag012988;
     if (levitated)
     {
+	MONSTERTYPE mtD6;
+	DB4       *DB4A3;
+	DB4A3 = GetRecordAddressDB4(object);
+	if (DB4A3!=NULL)
+	{
+	    mtD6 = DB4A3->monsterType();
+	    // printf("levitating monster type %x coords %d,%d party %d,%d\n",mtD6,newX,newY,d.partyX,d.partyY);
+	    if (mtD6 == mon_Wasp)
+		LIN_PlayDirect("wasp_move.mp3",newX,newY);
+	}
       AddObjectToRoom(objD7, RN(RNempty), newX, newY, pmmr);
 //    goto tag012988;
     }
@@ -3452,7 +3462,6 @@ i16 MoveObject(const RN        object,
 		    LIN_PlayDirect("slime_move.mp3",newX,newY);
 		    break;
 		case mon_Couatl:
-		// not found case mon_Wasp:
 		    LIN_PlayDirect("wasp_move.mp3",newX,newY);
 		    break;
 		case mon_Skeleton:
@@ -3465,7 +3474,6 @@ i16 MoveObject(const RN        object,
 		    LIN_PlayDirect("dragon_move.mp3",newX,newY);
 		    break;
 		}
-		// QueueSound(soundMONDEATH, newX, newY, 0);
 	    }
 	}
       PlaceOrRemoveObjectInRoom(

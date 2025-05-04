@@ -169,7 +169,7 @@ enum MONSTERTYPE
   mon_Vexirk         = 0x0e,//14
   mon_Worm           = 0x0f,//15
   mon_Trolin         = 0x10,//16
-  mon_Muncher        = 0x11,//17
+  mon_Wasp        = 0x11,//17
   mon_AnimatedArmour = 0x12,//18
   mon_Zytaz          = 0x13,//19
   mon_WaterElemental = 0x14,//20
