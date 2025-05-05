@@ -321,7 +321,7 @@ void UI_GetCursorPos(i32 *_x, i32 *_y)
 
 
 
-char szCSBVersion[] = "CSB for Windows/Linux Version " APPVERSION;
+char szCSBVersion[] = "CSB for Windows/Linux Version " __DATE__;
 int WindowX = 0;
 int WindowY = 0;
 float st_X = 320.0 / WindowWidth;
@@ -1300,6 +1300,11 @@ void Process_SDL_WINDOWEVENT(void)
       __resize_screen( evert.window.data1, evert.window.data2 );
       break;
     case SDL_WINDOWEVENT_EXPOSED:
+      csbMessage.type=UIM_REDRAW_ENTIRE_SCREEN;
+      if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
+      {
+	  PostQuitMessage(0x24);
+      }
       break;
     case SDL_WINDOWEVENT_ENTER:
       break;
@@ -1454,10 +1459,8 @@ int main (int argc, char* argv[])
     //g_error("Unable to init SDL: %s", SDL_GetError() );
   };
   printf("SDL initialized.\n");
-#if defined SDL12
-  SDL_WM_SetCaption(APPTITLE, NULL);
-#elif defined SDL20
-  // NotImplemented(0x87ea);
+#if defined SDL20
+  SDL_SetWindowTitle(sdlWindow,szCSBVersion);
 #else
   xxxError
 #endif
@@ -1498,7 +1501,7 @@ int main (int argc, char* argv[])
     flags |= SDL_WINDOW_RESIZABLE;
     SDL_GetDisplayBounds(0,&desktop);
     if ((sdlWindow = SDL_CreateWindow(
-                   APPTITLE,
+                   szCSBVersion,
                    SDL_WINDOWPOS_CENTERED,
                    SDL_WINDOWPOS_CENTERED,
                    WindowWidth,WindowHeight,

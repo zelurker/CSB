@@ -1,10 +1,10 @@
 #target = Raspberry
-target = SDL20
+# target = SDL20
 # This target below is for some cross compilation from linux to windows
 # it works, but windows gives 2 channels instead of the requested 1, creating bad sound when run in wine, and no sound at all in native windows 11 !
 # so consider it experimental for now !
 # target = x86_64-w64-mingw32
-# target=i686-w64-mingw32
+target=i686-w64-mingw32
 CXX = g++
 MD = mkdir
 # comment out following line to see compiler invocation
@@ -18,10 +18,10 @@ ifeq ($(target), Raspberry)
 endif
 ifeq ($(target), SDL20)
 	#	debug options (make sure the ldflags line is uncommented if you use this)
-	#options =   -g -fsanitize=address -D _LINUX -D RGB655 -D SDL20 -c
+	options =   -g -fsanitize=address -D _LINUX -D RGB655 -D SDL20 -c
 # optimized build options (comment out ldflags below to remove -fsanitize=address!!!)
-	options =   -O2 -D _LINUX -D RGB655 -D SDL20 -c
-	#ldflags := -g -fsanitize=address
+	#options =   -O2 -D _LINUX -D RGB655 -D SDL20 -c
+	ldflags := -g -fsanitize=address
 options += -Isdl_sound
 gincludes := \
                $(shell pkg-config --cflags sdl2)
@@ -92,6 +92,7 @@ csb: $(OBJS)
 maketree: $(OBJDIRS)
 
 message:
+	@rm -f obj/CSBlinux.o # force recompilation for every build!
 	@echo -n "Building csb, "
 ifneq "$(findstring -O, $(options))" ""
 	@echo -n optimized
