@@ -177,7 +177,7 @@ void LevelUp(i32 chIdx, i32 basicSkill) // Fighter, ninja, etc.
   QuePrintLines(color = (UI8)(d.Byte1386[chIdx]), d.CH16482[chIdx].name, false);
   QuePrintLines(color, " JUST GAINED A ", true);
   QuePrintLines(color, d.Pointer16596[basicSkill], true); //"FIGHTER", "NINJA", etc
-  QuePrintLines(color, " LEVEL", true);
+  QuePrintLines(color, " LEVEL!", true);
 // ***********************************************************
 }
 
