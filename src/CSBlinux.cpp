@@ -199,11 +199,12 @@ static void PushEvent(void *param)
 
 int WindowWidth = 320*4;
 int WindowHeight = 200*4;
+float st_X = 320.0 / WindowWidth;
+float st_Y = 200.0 / WindowHeight;
 static CSB_UI_MESSAGE csbMessage;
 
 static void __resize_screen( ui32 w, i32 h ) {
 #if 1
-    printf("resize %d,%d\n",w,h);
     if (w < 640 || h < 400) {
 	WindowWidth = 640;
 	WindowHeight = 400;
@@ -211,6 +212,8 @@ static void __resize_screen( ui32 w, i32 h ) {
 	WindowWidth = w;
 	WindowHeight = h;
     }
+    st_X = 320.0/WindowWidth;
+    st_Y = 200.0/WindowHeight;
     SDL_SetWindowSize(sdlWindow,WindowWidth,WindowHeight);
     csbMessage.type=UIM_REDRAW_ENTIRE_SCREEN;
     if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
@@ -324,8 +327,6 @@ void UI_GetCursorPos(i32 *_x, i32 *_y)
 char szCSBVersion[] = "CSB for Windows/Linux Version " __DATE__;
 int WindowX = 0;
 int WindowY = 0;
-float st_X = 320.0 / WindowWidth;
-float st_Y = 200.0 / WindowHeight;
 bool fullscreenRequested = false;
 
 
@@ -526,18 +527,15 @@ void Process_SDL_MOUSEMOTION(
   SDL_MouseMotionEvent *e = (SDL_MouseMotionEvent*) &evert;
   int x, y;
   bool warp = false;
-//  {
-//    FILE *f;
-//    f = fopen("debug","a");
-//    fprintf(f, "%d %d\n", e->x, e->y);
-//    fclose(f);
-//  };
   x = e->x;
   y = e->y;
+#if 0
+  // I don't see the reason of this for now
   if (x >= 316*screenSize) {x = 316*screenSize-1; warp=true;};
   if (y >= 196*screenSize) {y = 196*screenSize-1; warp=true;}
   if (x <    1*screenSize) {x =   1*screenSize;   warp=true;}
   if (y <    1*screenSize) {y =   1*screenSize;   warp=true;}
+#endif
   if (warp)
   {
 #ifdef SDL12
@@ -1236,48 +1234,6 @@ void Process_SDL_KEYDOWN(void)
 void Process_SDL_KEYUP(void)
 {
   MTRACE("SDL_KEYUP\n");
-}
-
-void Process_SDL_VIDEORESIZE(void)
-{
-//  {
-//    FILE *f;
-//    f = fopen("/run/shm/debug", "a");
-//    fprintf(f, "Resizing Window\n");
-//    fclose(f);
-//    die(0x661c);
-//  };
-  MTRACE("SDL_VIDEORESIZE\n");
-#if defined  SDL12
-  SDL_ResizeEvent *e = (SDL_ResizeEvent*) &evert;
-  WindowWidth = e->w;
-  WindowHeight = e->h;
-#elif defined SDL20
-  NotImplemented(0x55a0);
-#endif
-  st_X = 320.0 / ((float)WindowWidth);
-  st_Y = 200.0 / ((float)WindowHeight);
-#if defined SDL12
-  SDL_FreeSurface(WND);
-  WND = SDL_SetVideoMode(WindowWidth,  WindowHeight, 16, SDL_SWSURFACE|SDL_FULLSCREEN);
-#elif defined SDL20
-  NotImplemented(0x3aab);
-#endif
-#ifndef _DYN_WINSIZE
-        switch(screenSize) {
-          default:
-          case 1: SDL_FreeSurface(SCRAP); SCRAP = SDL_CreateRGBSurface(SDL_SWSURFACE,320*1,200*1,8,0,0,0,0); break;
-          case 2: SDL_FreeSurface(SCRAP); SCRAP = SDL_CreateRGBSurface(SDL_SWSURFACE,320*2,200*2,8,0,0,0,0); break;
-          case 3: SDL_FreeSurface(SCRAP); SCRAP = SDL_CreateRGBSurface(SDL_SWSURFACE,320*3,200*3,8,0,0,0,0); break;
-          case 4: SDL_FreeSurface(SCRAP); SCRAP = SDL_CreateRGBSurface(SDL_SWSURFACE,320*4,200*4,8,0,0,0,0); break;
-        }
-#endif //! _DYN_WINSIZE
-  csbMessage.type=UIM_REDRAW_ENTIRE_SCREEN;
-  if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
-  {
-    PostQuitMessage(0x24);
-  };
-  UI_Invalidate();
 }
 
 #ifdef SDL20
