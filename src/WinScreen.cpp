@@ -273,7 +273,7 @@ void createPalette16(i16 *palette)
     palette16[i] |= (((palette[i]>>8) & 7)*0x1f/0x7)<<10;//red
     palette16[i] |= (((palette[i]>>4) & 7)*0x1f/0x7)<< 5;//green
     palette16[i] |= (((palette[i]>>0) & 7)*0x1f/0x7)<< 0;//blue
-  };
+  }
 }
 
 
@@ -1508,7 +1508,8 @@ void display (void){
   ForcedScreenDraw = false;
   {
     areaChangedCount = 0;
-    UI_ScreenStartUpdates();    if (!virtualFullscreen)
+    UI_ScreenStartUpdates();
+    if (!virtualFullscreen)
     {
       i32 size = screenSize;
       areaChangedCount +=
