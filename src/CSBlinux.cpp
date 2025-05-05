@@ -197,8 +197,27 @@ static void PushEvent(void *param)
   return;
 }
 
+int WindowWidth = 320*4;
+int WindowHeight = 200*4;
+static CSB_UI_MESSAGE csbMessage;
 
 static void __resize_screen( ui32 w, i32 h ) {
+#if 1
+    printf("resize %d,%d\n",w,h);
+    if (w < 640 || h < 400) {
+	WindowWidth = 640;
+	WindowHeight = 400;
+    } else {
+	WindowWidth = w;
+	WindowHeight = h;
+    }
+    SDL_SetWindowSize(sdlWindow,WindowWidth,WindowHeight);
+    csbMessage.type=UIM_REDRAW_ENTIRE_SCREEN;
+    if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
+    {
+	PostQuitMessage(0x24);
+    }
+#else
   SDL_Event ev;
 #if defined SDL12
   //ev.type = SDL_VIDEORESIZE;
@@ -211,7 +230,8 @@ static void __resize_screen( ui32 w, i32 h ) {
 #else
   xxxError
 #endif
-  //SDL_PushEvent(&ev);
+  SDL_PushEvent(&ev);
+#endif
 }
 /*
 * There IS a videoexpose event in linux, but apparently SDL
@@ -242,7 +262,6 @@ void LIN_Invalidate()
 
 
 i32 trace=-1;
-CSB_UI_MESSAGE csbMessage;
 #ifdef _DYN_WINSIZE
 //i32 screenSize=2;
 #else
@@ -303,8 +322,6 @@ void UI_GetCursorPos(i32 *_x, i32 *_y)
 
 
 char szCSBVersion[] = "CSB for Windows/Linux Version " APPVERSION;
-int WindowWidth = 320*4;
-int WindowHeight = 200*4;
 int WindowX = 0;
 int WindowY = 0;
 float st_X = 320.0 / WindowWidth;
@@ -1430,7 +1447,7 @@ int main (int argc, char* argv[])
 #endif //USE_OLD_GTK
 
 //    ***** Initialize defaults, Video and Audio *****
-  if ( SDL_Init ( SDL_INIT_VIDEO|SDL_INIT_AUDIO|SDL_INIT_TIMER|SDL_INIT_EVENTS)<0)//|SDL_INIT_AUDIO|SDL_INIT_TIMER) < 0)
+  if ( SDL_Init ( SDL_INIT_EVERYTHING) < 0)
   // if ( SDL_Init ( SDL_INIT_VIDEO)<0)//|SDL_INIT_AUDIO|SDL_INIT_TIMER) < 0)
   {
     fprintf(stderr,"Unable to init SDL: %s", SDL_GetError() );
@@ -1601,52 +1618,6 @@ int main (int argc, char* argv[])
     PostQuitMessage(0x25);
   };
 
-  switch(screenSize){
-    case 1:
-      __resize_screen( 320, 200 );
-      csbMessage.type = UIM_SETOPTION;
-      csbMessage.p1 = OPT_NORMAL;
-      csbMessage.p2 = 2;
-      break;
-    case 3:
-      __resize_screen( 320*3, 200 *3);
-      csbMessage.type = UIM_SETOPTION;
-      csbMessage.p1 = OPT_TRIPLE;
-      csbMessage.p2 = 2;
-      break;
-    case 4:
-      __resize_screen( 320*4, 200 *4);
-      csbMessage.type = UIM_SETOPTION;
-      csbMessage.p1 = OPT_QUADRUPLE;
-      csbMessage.p2 = 2;
-      break;
-    case 5:
-      __resize_screen( 320*5, 200 *5);
-      csbMessage.type = UIM_SETOPTION;
-      csbMessage.p1 = OPT_QUINTUPLE;
-      csbMessage.p2 = 2;
-      break;
-    case 6:
-      __resize_screen( 320*6, 200 *6);
-      csbMessage.type = UIM_SETOPTION;
-      csbMessage.p1 = OPT_SEXTUPLE;
-      csbMessage.p2 = 2;
-      break;
-    case 2:
-    //  case 0:
-    default:
-      __resize_screen(WindowWidth,WindowHeight);
-      screenSize=2;
-      csbMessage.type = UIM_SETOPTION;
-      csbMessage.p1 = OPT_DOUBLE;
-      csbMessage.p2 = 2;
-      break;
-  };// End of switch(screenSize)
-  if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
-  {
-    PostQuitMessage(0x26);
-  };
-
   /* Setup a 50ms timer. */
   timer = SDL_AddTimer(TImER?TImER:10, __Timer_Callback, (void*)(IDC_Timer));
   printf("Timer: %d ms established...\n", TImER?TImER:10);
@@ -1702,6 +1673,7 @@ int main (int argc, char* argv[])
     /* Listen for 'quick buttons' here. */
     /* Hail to the Great Message Struct! */
     MTRACE("msg=");
+    // printf("event type %x\n",evert.type);
     switch( evert.type )
     {
       case SDL_QUIT:
@@ -1720,12 +1692,8 @@ int main (int argc, char* argv[])
       case SDL_MOUSEBUTTONUP:   Process_SDL_MOUSEBUTTONUP();   break;
       case SDL_KEYDOWN:         Process_SDL_KEYDOWN();         break;
       case SDL_KEYUP:           Process_SDL_KEYUP();           break;
-#if defined SDL12
-      case SDL_VIDEORESIZE:     Process_SDL_VIDEORESIZE();     break;
-#elif defined SDL20
+#if defined SDL20
       case SDL_WINDOWEVENT:     Process_SDL_WINDOWEVENT();    break;
-#else
-      xxxError
 #endif
       /*
       case SDL_ACTIVEEVENT:
