@@ -9395,6 +9395,7 @@ RESTARTABLE _DisplayChaosStrikesBack(void)
 // *********************************************************
 //
 // *********************************************************
+bool OpeningPrison;
 RESTARTABLE _OpenPrisonDoors(void) //TAG01f47a
 {//(void)
   static dReg D7;
@@ -9413,6 +9414,7 @@ RESTARTABLE _OpenPrisonDoors(void) //TAG01f47a
   LOCAL_4 = d.LogicalScreenBase + 4800;
   //LOCAL_8 = (ui8 *)pntGear((pnt)A3 + 36);
   LOCAL_8 = d.Pointer22916;
+  OpeningPrison = true; // Sound frequency different for this specific thing!
   for (D7W = 1; D7W != 32; D7W++)
   {
     //UI_Sleep(60);
@@ -9420,7 +9422,7 @@ RESTARTABLE _OpenPrisonDoors(void) //TAG01f47a
     {
       while (CheckSoundQueue()) wvbl(_2_);
       StartSound(d.Pointer22964, 145, 1); //Graphic #535 // Start sound
-    };
+    }
     // *d.Point22916 has length 20608
     //MemMove((ui8 *)pntGear((pnt)A3+32), (ui8 *)pntGear((pnt)A3+36), 20608); // Dungeon interior.
     MemMove(d.Pointer22920, d.Pointer22916, 20608); // Dungeon interior.
@@ -9447,7 +9449,7 @@ RESTARTABLE _OpenPrisonDoors(void) //TAG01f47a
                 128,
                 -1);
       ((RectPos *)d.Word68)->w.x2 -= 4;
-    };
+    }
     //TAG0088b2(upntGear(((D7W&3)+4)*4+A3), // Right side door
     TAG0088b2(d.Pointer22952[(D7W & 3) + 4], // Right side door
     //TAG0088b2(d.Pointer22952[(D7W & 3)], // Right side door
@@ -9464,7 +9466,7 @@ RESTARTABLE _OpenPrisonDoors(void) //TAG01f47a
     {
       CheckSoundQueue();
       wvbl(_1_);
-    };
+    }
     A0 = (aReg)LOCAL_4;
     A1 = (aReg)LOCAL_8;
     for (i32 k=0; k<161; k++)
@@ -9477,8 +9479,9 @@ RESTARTABLE _OpenPrisonDoors(void) //TAG01f47a
       *(A0+118) = *(A1+6);
       A0 += 160;
       A1 += 16;
-    };
-  }; // for (D7W)
+    }
+  } // for (D7W)
+  OpeningPrison = false;
   while (CheckSoundQueue()) wvbl(_3_);
   //RestoreRegs(0x0880);
   RETURN;

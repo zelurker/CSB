@@ -3956,6 +3956,7 @@ RESTARTABLE  _ReadEntireGame(void); //(i16) //TAG01eb18
 RESTARTABLE _FadeToPalette(const PALETTE *palette); // TAG01f04e (void)
 #define DisplayChaosStrikesBack(n) CALL0(n,DisplayChaosStrikesBack)
 RESTARTABLE _DisplayChaosStrikesBack(void);//TAG01f140 (void)
+extern bool OpeningPrison;
 #define OpenPrisonDoors(n) CALL0(n,OpenPrisonDoors)
 RESTARTABLE _OpenPrisonDoors(void); //TAG01f47a (void)
 #define TAG01f5ea(n) CALL0(n,TAG01f5ea)

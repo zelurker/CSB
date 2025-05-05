@@ -606,12 +606,13 @@ void Channels::Play(SNDHEAD *sndHead, int numSample)
     // I guess it's better like that, it allows to convert the samples only once if you wish
     // Well in this case the conversion should be pretty fast...
     SDL_AudioCVT cvt;
-    // In theory the samples from the st are supposed to be 5120 Hz.
-    // Now if I convert these to 44100 16 bits stereo in linux, the result is that the sample for the opening gate plays slightly too slow and overlaps itself!
-    // Slightly increasing the frequency to 5200 seems to fix everything!
-    // The weird part is that in mingw 5120 Hz plays ok, the samples are not overlapping!
-    // Now there is a very little difference between 5120 Hz and 5200...!
-    SDL_BuildAudioCVT(&cvt, AUDIO_U8, 1, 5486, mixer.format, 1,mixer.freq);
+    // See all precise audio info here : http://dmweb.free.fr/community/documentation/file-formats/data-files/#data-6
+    if (OpeningPrison)
+	SDL_BuildAudioCVT(&cvt, AUDIO_U8, 1, 4237, mixer.format, 1,mixer.freq);
+    else
+	// Normal samples are supposed to be at 5486, but I get sometimes interruptions while a door is opening
+	// and they don't happen with 5200 Hz
+	SDL_BuildAudioCVT(&cvt, AUDIO_U8, 1, 5200, mixer.format, 1,mixer.freq);
     cvt.len = numSample;
     cvt.buf = (Uint8 *) SDL_malloc(cvt.len * cvt.len_mult);
     memcpy(cvt.buf,sndHead,numSample);
