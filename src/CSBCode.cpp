@@ -6769,11 +6769,11 @@ RESTARTABLE _ResurrectReincarnateCancel(const i32 button)
     QuePrintLines(D6W = (UI8)(d.Byte1386[D7W]), pcA3->name, false);
     if (button == 160)
     {
-      A0 = " RESURRECTED";
+      A0 = " RESURRECTED.";
     }
     else
     {
-      A0 = " REINCARNATED";
+      A0 = " REINCARNATED.";
     };
       QuePrintLines(D6W, A0, true);
       ShowHideInventory(4); //Hide
