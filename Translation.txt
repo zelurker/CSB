@@ -39,8 +39,8 @@
 "d MASTER"                                  "d MAITRE"
 "e MASTER"                                  "e MAITRE"
 "ARCHMASTER"                                "GRD MAITRE"
-" RESURRECTED"                              " RESSUSCITE(E)" // good
-" REINCARNATED"                             " REINCARNE(E)" // good
+" RESURRECTED."                              " RESSUSCITE(E)." // good
+" REINCARNATED."                             " REINCARNE(E)." // good
 "LOAD"                                      "CHARGE" // Good
 "HEALTH"                                    "SANTE" // good
 "STAMINA"                                   "VIGUEUR" // good
@@ -200,4 +200,4 @@
 "/"                                         " /" // no good It is for kg
 " AND "                                     " ET "
 " JUST GAINED A "                           " GAGNE UN NIVEAU DE " // good
-" LEVEL"                                    " !" // good
+" LEVEL!"                                    " !" // good
