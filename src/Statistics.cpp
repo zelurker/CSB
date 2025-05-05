@@ -13,14 +13,14 @@
 
 #define NUM_MONSTER_TYPE 27
 
-const char *monsterNames[27] = 
+const char *monsterNames[27] =
 {
   "Scorpion",
   "SlimeDevil",
   "Giggler",
   "FlyingEye",
-  "Hellhound",
-  "5",
+  "PainRat",
+  "Ruster",
   "Screamer",
   "RockPile",
   "Rive",
@@ -31,8 +31,8 @@ const char *monsterNames[27] =
   "Couatl",
   "Vexirk",
   "Worm",
-  "AntMan",
-  "Muncher",
+  "Trolin",
+  "Wasp",
   "DethKnight",
   "Zytaz",
   "WaterElemental",
@@ -60,12 +60,12 @@ void GetMonsterName(int monsterType, int graphic, char *name)
     for (; col<size; col++)
     {
       // Search for a non-special character
-      if (pText[col] == 0) 
+      if (pText[col] == 0)
       {
         col = size;  // no find
         break;
       };
-      if (pText[col] == '|') 
+      if (pText[col] == '|')
       {
         col++;  // Start of next monster's name
         break;
