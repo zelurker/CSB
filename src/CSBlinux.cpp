@@ -26,6 +26,7 @@
 
 //extern gboolean noDirtyRect;
 //extern SDL_Rect DirtyRect;
+SDL_sem *sem;
 
 extern bool RecordMenuOption;
 extern bool DMRulesDesignOption;
@@ -111,12 +112,15 @@ static uint32_t __Timer_Callback(uint32_t interval, void *param)
 {
   size_t code;
   code = (size_t)(param);
+  uint32_t ticks = SDL_GetTicks();
   if (code == IDC_Timer)
   {
+      SDL_SemWait(sem);
     if(timerInQueue)
     {
       // We will add an IDC_Timer only when there is nothing
       // else to do.
+	SDL_SemPost(sem);
       return interval;
     }
     else
@@ -134,22 +138,22 @@ static uint32_t __Timer_Callback(uint32_t interval, void *param)
           die(0x66a9);
         };
         videoExposeWaiting = false;
-      };
+      }
       {
         ev.type = SDL_USEREVENT;
         ((SDL_UserEvent*) &ev)->code = IDC_Timer;
         if (SDL_PushEvent(&ev) < 0)
         {
           char line[80];
-          sprintf(line," code = %d", (size_t)(param));
           UI_MessageBox(SDL_GetError(), "PushEvent Failed",MESSAGE_OK);
           die(0x66aa);
         };
         timerInQueue = true;
         videoExposeWaiting = false;
-      };
+      }
+      SDL_SemPost(sem);
       return interval;
-    };
+    }
   }
   else
   {
@@ -165,18 +169,10 @@ static void PushEvent(void *param)
   {
     size_t code;
     code = (size_t)(param);
-#if defined  SDL12
-    if ((code == SDL_VIDEOEXPOSE) || (code == IDC_VIDEOEXPOSE))
-    {
-      if (SDL_PollEvent(NULL) > 0)
-#elif defined SDL20
     if (code == IDC_VIDEOEXPOSE)
     {
       if (SDL_PeepEvents(&ev,1,SDL_PEEKEVENT,
                      SDL_FIRSTEVENT,SDL_LASTEVENT) >0)
-#else
-      xxerror
-#endif
       {
         // We will add a IDC_VIDEOEXPOSE only when there is
         // nothing else to do.
@@ -481,45 +477,6 @@ void g_log(const char *, int, const char *, ...)
     die(0x3512);
 }
 
-void DiscardAdditionalTimerEvents(void)
-{
-  SDL_Event evert;
-//  {
-//    FILE *f;
-//    f = fopen("debug", "a");
-//    fprintf(f, "Enter DiscardAdditionalTimerEvents");
-//    fclose(f);
-//  };
-  while (1)
-  {
-#if defined SDL12
-    if(SDL_PeepEvents(&evert,1,SDL_PEEKEVENT,~0) > 0)
-#elif defined SDL20
-    if(SDL_PeepEvents(&evert,1,SDL_PEEKEVENT,
-                 SDL_FIRSTEVENT, SDL_LASTEVENT) > 0)
-#else
-    xxxError
-#endif
-    {
-      if(evert.type == SDL_USEREVENT)
-      {
-        if(evert.user.code == IDC_Timer)
-        {
-          SDL_WaitEvent(&evert);
-          continue;
-        };
-      };
-    };
-    break;
-  };
-//  {
-//    FILE *f;
-//    f = fopen("debug", "a");
-//    fprintf(f, " and return\n");
-//    fclose(f);
-//  };
-}
-
 void Process_SDL_MOUSEMOTION(
            bool& cursorIsShowing)
 {
@@ -599,9 +556,10 @@ void Process_ecode_IDC_Timer(void)
   if(GameMode != 1)
   {
     LIN_Invalidate();
-  };
-  DiscardAdditionalTimerEvents();
+  }
+  SDL_SemWait(sem);
   timerInQueue = false;
+  SDL_SemPost(sem);
        //One-at-a-time, please
        //The problem was that under certain circumstances too
        //many timer events get queued and the SDL queue gets
@@ -1408,7 +1366,7 @@ int main (int argc, char* argv[])
 #endif //USE_OLD_GTK
 
 //    ***** Initialize defaults, Video and Audio *****
-  if ( SDL_Init ( SDL_INIT_EVERYTHING) < 0)
+  if ( SDL_Init ( SDL_INIT_VIDEO|SDL_INIT_AUDIO|SDL_INIT_TIMER|SDL_INIT_EVENTS)<0)//|SDL_INIT_AUDIO|SDL_INIT_TIMER) < 0)
   // if ( SDL_Init ( SDL_INIT_VIDEO)<0)//|SDL_INIT_AUDIO|SDL_INIT_TIMER) < 0)
   {
     fprintf(stderr,"Unable to init SDL: %s", SDL_GetError() );
@@ -1424,29 +1382,7 @@ int main (int argc, char* argv[])
 
 // ****************************** the DISPLAY ****************************************************
   {
-#if defined SDL12
-    const SDL_VideoInfo *info;
-    info = SDL_GetVideoInfo();
-    screenWidth = info->current_w;
-    screenHeight = info->current_h;
-    printf("Window Size = %d (%d x %d)\n", screenSize, WindowWidth, WindowHeight);
-    printf("Screen Size = %d x %d\n", screenWidth, screenHeight);
-    if ((WindowWidth > screenWidth) || (WindowHeight > screenHeight))
-    {
-      UI_MessageBox("Specified window size too large for screen",
-                    "Failed to create window",
-                    MESSAGE_OK);
-      die(0x731b);
-    };
-    WND = SDL_SetVideoMode(WindowWidth,  WindowHeight, 16, SDL_SWSURFACE|SDL_FULLSCREEN);
-    {
-      FILE *f;
-      f = fopen("/run/shm/debug","a");
-      fprintf(f, "Setting window to %d x %d\n", screenWidth, screenHeight);
-      fclose(f);
-    };
-    fullscreenActive = true;
-#elif defined SDL20
+#if defined SDL20
     int flags;
     screenSize = 1;
     flags = 0;
@@ -1578,8 +1514,8 @@ int main (int argc, char* argv[])
   };
 
   /* Setup a 50ms timer. */
+  sem = SDL_CreateSemaphore(1);
   timer = SDL_AddTimer(TImER?TImER:10, __Timer_Callback, (void*)(IDC_Timer));
-  printf("Timer: %d ms established...\n", TImER?TImER:10);
 
   //SDL_WM_GrabInput(SDL_GRAB_ON);
 
@@ -1598,9 +1534,16 @@ int main (int argc, char* argv[])
     // evert = app.WaitEvent();
     if (SDL_PollEvent(&evert) == 0)
     {
-      timerInQueue=false;
-      if(SDL_WaitEvent(&evert) == 0) continue;
+	SDL_SemWait(sem);
+	timerInQueue=false;
+	SDL_SemPost(sem);
+      if(SDL_WaitEvent(&evert) == 0) {
+	  printf("SDL_WaitEvent error %s\n",SDL_GetError());
+	  continue;
+      }
     }
+    // uint32_t tick = SDL_GetTicks();
+    // printf("event type %x ticks %d\n",evert.type,tick);
     if (sdlQuitPending)
     {
 //      FILE *f;
@@ -1632,12 +1575,13 @@ int main (int argc, char* argv[])
     /* Listen for 'quick buttons' here. */
     /* Hail to the Great Message Struct! */
     MTRACE("msg=");
-    // printf("event type %x\n",evert.type);
     switch( evert.type )
     {
       case SDL_QUIT:
         MTRACE("SDL_QUIT\n");
         SDL_RemoveTimer(timer);
+	SDL_DestroySemaphore(sem);
+	sem = NULL;
         cbAppDestroy();
         break;
       default:
@@ -1651,9 +1595,7 @@ int main (int argc, char* argv[])
       case SDL_MOUSEBUTTONUP:   Process_SDL_MOUSEBUTTONUP();   break;
       case SDL_KEYDOWN:         Process_SDL_KEYDOWN();         break;
       case SDL_KEYUP:           Process_SDL_KEYUP();           break;
-#if defined SDL20
       case SDL_WINDOWEVENT:     Process_SDL_WINDOWEVENT();    break;
-#endif
       /*
       case SDL_ACTIVEEVENT:
         {
@@ -1679,6 +1621,5 @@ int main (int argc, char* argv[])
   /* Shutdown all subsystems */
   SDL_Quit();
   printf("Quiting....\n");
-  exit(0);
   return (0);
 }
