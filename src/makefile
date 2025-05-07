@@ -1,5 +1,5 @@
 #target = Raspberry
-# target = SDL20
+#target = SDL20
 # This target below is for some cross compilation from linux to windows
 # it works, but windows gives 2 channels instead of the requested 1, creating bad sound when run in wine, and no sound at all in native windows 11 !
 # so consider it experimental for now !
@@ -30,16 +30,12 @@ comp := g++ $(options) $(gincludes)
 compc := gcc $(options) $(gincludes)
 endif
 ifeq ($(target),x86_64-w64-mingw32)
-	options =  -O2 -D _LINUX -D RGB655 -D SDL20 -c -DMINGW
-  gincludes = -Isdl_sound \
-               $(shell $(target)-pkg-config --cflags sdl2)
-  libs =  $(shell $(target)-pkg-config --libs sdl2)
-  comp = $(target)-g++ $(options) $(gincludes)
-  compc = $(target)-gcc $(options) $(gincludes)
-  CXX = $(target)-g++
+	WIN=1
 endif
-# there is no way to make a simple or test in make, so I need to copy the whole block, at least it's short...
 ifeq ($(target),i686-w64-mingw32)
+	WIN=1
+endif
+ifdef WIN # windows version
 	options =  -O2 -D _LINUX -D RGB655 -D SDL20 -c -DMINGW
   gincludes = -Isdl_sound \
                $(shell $(target)-pkg-config --cflags sdl2)
@@ -47,6 +43,7 @@ ifeq ($(target),i686-w64-mingw32)
   comp = $(target)-g++ $(options) $(gincludes)
   compc = $(target)-gcc $(options) $(gincludes)
   CXX = $(target)-g++
+  WINDRES=$(target)-windres
 endif
 ifdef SILENT
 	comp:=@${comp}
@@ -81,6 +78,18 @@ $(OBJDIRS):
 
 # include optionally the dependancies for the include files...
 -include $(OBJS:%.o=%.P)
+
+ifdef WIN
+OBJS += $(OBJDIR)/csb.res
+
+$(OBJDIR)/csb.res: CSBwin.rc lsb.ico
+	$(WINDRES) -O coff -o $(OBJDIR)/csb.res -i CSBwin.rc
+
+lsb.ico: lsb.png
+	# requires imagemagick!
+	convert lsb.png lsb.ico
+
+endif
 
 csb: $(OBJS)
 	@echo Linking $@
