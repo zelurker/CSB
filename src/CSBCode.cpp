@@ -1481,9 +1481,7 @@ void SCROLLING_TEXT::SetPrintPosition(i32 column, i32 row)
 
 //           TAG0018f6
 void SCROLLING_TEXT::RemoveTimedOutText(void)
-{//(void)
-  //static dReg D0, D5, D6;
-  //static RectPos LOCAL_8;
+{
   dReg D0, D5, D6;
   RectPos LOCAL_8;
   //RESTARTMAP
@@ -1493,12 +1491,13 @@ void SCROLLING_TEXT::RemoveTimedOutText(void)
   d.UseByteCoordinates = 0;
   LOCAL_8.w.x1 = 0;
   LOCAL_8.w.x2 = 319;
-  for (D6W=0; D6W<4; D6W++)
+  int row;
+  for (row=0; row<4; row++)
   {
-    D5L = d.TextTimeout[D6W];
+    D5L = d.TextTimeout[row];
     if (D5L == -1) continue;
     if (D5L > d.Time) continue;
-    D0W = (i16)(172 + D6W*7);
+    D0W = (i16)(172 + row*7);
     LOCAL_8.w.y1 = D0W;
     LOCAL_8.w.y2 = (i16)(D0W +6);
     //  while (   (d.TextScanlineScrollCount >= 0)
@@ -1514,11 +1513,13 @@ void SCROLLING_TEXT::RemoveTimedOutText(void)
     STHideCursor(HC20);//TAG002fd2
     FillRectangle(d.LogicalScreenBase, (RectPos *)&LOCAL_8, 0, 160);
     STShowCursor(HC20); //TAG003026
-    d.TextTimeout[D6W] = -1;
+    d.TextTimeout[row] = -1;
 //
   };
   //RETURN;
 }
+
+static int nextTextTiming,nextTries; // may contain the number of ticks for the next text to display
 
 void SCROLLING_TEXT::ClockTick(void)
 {
@@ -1527,6 +1528,7 @@ void SCROLLING_TEXT::ClockTick(void)
   RemoveTimedOutText();
   for (;;)
   {
+      // printf("timeout0 %d d.Time %d ticks %d\n",d.TextTimeout[0],d.Time,SDL_GetTicks());
     if (d.TextScanlineScrollCount >= 0) return; //wait for scrolling to cease
     if (d.PushTextUp != 0) return; //wait for line to scroll.
     if (m_futureLines.IsEmpty()) return;
@@ -1553,8 +1555,24 @@ void SCROLLING_TEXT::ClockTick(void)
     }
     else
     {
-      d.TextTimeout[row] = d.Time + 70;
-    };
+      // This is the place where the initial timer of a displayed text is initialized
+      // problem is this thing doesn't seem very precise, at its initial value of 70 if was about 16.5s
+      // at 67, it's closer to 15.5s (15.665 measured from SDL_GetTicks()). This thing is called from _MainLoop,
+      // which is normally called by DispatchMessage on a timer event. The thing is that the timer is called every 0.01s normally
+      // except it can vary from the system, and it triggers this message only if there is nothing else waiting!
+      // Anyway we'll keep it this way for now... !
+	if (nextTextTiming) {
+	    d.TextTimeout[row] = d.Time + nextTextTiming;
+	    nextTries++;
+	    if (nextTries == 3) { // ???
+				  // not sure why this thing loops 3 times when adding a new text
+				  // the easiest way to work around it is to add a counter
+		nextTextTiming = 0;
+		nextTries = 0;
+	    }
+	} else
+	    d.TextTimeout[row] = d.Time + 67;
+    }
     if (   (row > 0)
         && (d.TextTimeout[row-1] != -1)
         && (d.TextTimeout[row] <= d.TextTimeout[row-1]))
@@ -5759,6 +5777,7 @@ void SetPartyLevel(i32 level)
 
   // Display level number at bottom of screen, too bad we can't set for how much time here...
   static char levelText[10];
+  nextTextTiming = 8;
   snprintf(levelText,10,"LEVEL %d\n",level);
   // 15 is white like for a standard ST palette, can't believe they don't have any constant for colors!
   QuePrintLines(15, levelText, false);
