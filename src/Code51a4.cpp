@@ -461,7 +461,7 @@ void DrawMonster(
     };
   };
 //  MonsterAbsFacing_182 = (I16)((pi16_62->facings() >> 2*D7W) & 3);//monster facing
-  MonsterAbsFacing_182 
+  MonsterAbsFacing_182
      = (I16)(TwoBitNibble(pi16_62->facings(),
                           rootIndexOfMonsterInGroup));//monster facing
   MonsterRelFacing_74 = (I16)((facing - MonsterAbsFacing_182) & 3);//facing relative to party facing
@@ -581,7 +581,7 @@ void DrawMonster(
       //D7W = mtDescWord4_76;
       graphicNum0 = sw(446 + pI12_A2->ITEM12_word0);
       graphicNumFBSAE = pI12_A2->ITEM12_word2;
-    
+
       //D0W = (I16)(mtDescWord4_76 & 8);
       //if (D0W != 0)
       //{
@@ -630,10 +630,10 @@ void DrawMonster(
         //};
         //SET(D0W, D0W!=0);
         //w_104 = (I16)(D0W & 1);
-        //showAttackView_104 =   !showBackView_100 
+        //showAttackView_104 =   !showBackView_100
         //                    && sms_78.TestAttacking()
         //                    && ((mtDescWord4_76 & 32) != 0);
-        showAttackView_104 =   !showBackView_100 
+        showAttackView_104 =   !showBackView_100
                             && sms_78.TestAttacking()
                             && mtDescWord4_76.HasAttackGraphic();
         if (showAttackView_104)
@@ -777,7 +777,7 @@ void DrawMonster(
         { //Exactly two rows ahead.
           graphicNumFBSAE++;
           distanceFromUs_52 = 1;
-    
+
           //D0W = (I16)(mtDescWord4_76 & 128);
           //if (D0W != 0)
           //if (mtDescWord4_76.HasBit7())
@@ -1079,12 +1079,12 @@ ALTMONGRAPH *GetAlternateGraphicsRecord(DB4 *pMonster)
   altGraphic = pMonster->alternateGraphics();
   id = AltGraphicMapping(mt, altGraphic);
   if (id == -2) return NULL;
-  if (id < 0) 
+  if (id < 0)
   {
     id = 3 * mt + altGraphic - 1;
     if (altGraphic == 0) return NULL;
   };
-  if (   (altMonCache[mt][altGraphic].graphicID >= 0) 
+  if (   (altMonCache[mt][altGraphic].graphicID >= 0)
       && (altMonCache[mt][altGraphic].graphicID != id))
   {
     altMonCache[mt][altGraphic].Clear();
@@ -1217,7 +1217,7 @@ void DrawMonster(
   if (drawAsSize4) MonsterSize_72 = 2;
   // else MonsterSize_72 = pmtDesc->horizontalSize();
   // This line was replaced to use the size of the monster as specified in the
-  // original monster descriptor.  THis means that you must make your 
+  // original monster descriptor.  THis means that you must make your
   // alternate graphics agree in size with the standard graphics.
   else MonsterSize_72 = d.MonsterDescriptor[pDB4_58->monsterType()].horizontalSize();
   mtDescWord4_76 = pmtDesc->word4;
@@ -1255,7 +1255,7 @@ void DrawMonster(
     };
   };
 //  MonsterAbsFacing_182 = (I16)((pi16_62->facings() >> 2*D7W) & 3);//monster facing
-  MonsterAbsFacing_182 
+  MonsterAbsFacing_182
      = (I16)(TwoBitNibble(pi16_62->facings(),
                           rootIndexOfMonsterInGroup));//monster facing
   MonsterRelFacing_74 = (I16)((facing - MonsterAbsFacing_182) & 3);//facing relative to party facing
@@ -1378,7 +1378,7 @@ void DrawMonster(
       graphicNum0 = 0; // Assume non-mirrored front view.
       //graphicNumFBSAE = pI12_A2->ITEM12_word2;
       graphicNumFBSAE = 0; //Relative to this particular aternative monster's derived graphics
-    
+
       //D0W = (I16)(mtDescWord4_76 & 8);
       //if (D0W != 0)
       //{
@@ -1427,10 +1427,10 @@ void DrawMonster(
         //};
         //SET(D0W, D0W!=0);
         //w_104 = (I16)(D0W & 1);
-        //showAttackView_104 =   !showBackView_100 
+        //showAttackView_104 =   !showBackView_100
         //                    && sms_78.TestAttacking()
         //                    && ((mtDescWord4_76 & 32) != 0);
-        showAttackView_104 =   !showBackView_100 
+        showAttackView_104 =   !showBackView_100
                             && sms_78.TestAttacking()
                             && mtDescWord4_76.HasAttackGraphic();
         if (showAttackView_104)
@@ -1574,7 +1574,7 @@ void DrawMonster(
         { //Exactly two rows ahead.
           graphicNumFBSAE++;
           distanceFromUs_52 = 1;
-    
+
           //D0W = (I16)(mtDescWord4_76 & 128);
           //if (D0W != 0)
           //if (mtDescWord4_76.HasBit7())
@@ -1617,7 +1617,7 @@ void DrawMonster(
         D0W = (I16)(pI12_A2->uByte10 & 15);
         D0W = distancePalette_8[D0W];
         transparentColor_84 = sw(D0W / 10);
-        derivedGraphicAlreadyExists = 
+        derivedGraphicAlreadyExists =
               AllocateAlternateDerivedGraphic(pDB4_58, graphicNumFBSAE, 2*dstByteWidth, dstHeight);
         if (derivedGraphicAlreadyExists)
         {
@@ -1813,8 +1813,8 @@ void DrawSingleObject(
   //LOCAL_36 = D0W & 1;
   rightSideOfCell = ((relativeLocationWithinCell + 1) & 2) != 0;
   nearSideOfCell  = (relativeLocationWithinCell >= 2);
-  LOCAL_36 =   ((pGraphicClass->byte4 & 1) != 0) 
-            && (!LOCAL_34) 
+  LOCAL_36 =   ((pGraphicClass->byte4 & 1) != 0)
+            && (!LOCAL_34)
             && (
                     (MiddleLeftRight == 2)
                  || (MiddleLeftRight == 0) && rightSideOfCell
@@ -1977,7 +1977,9 @@ void DrawSingleObject(
       {
         height_32 >>= 1;
         //uA3[2] = ub(uA3[2] + height_LOCAL_24 - 7);
-        pButtonDef->y1 = ub(pButtonDef->y1 + height_LOCAL_24 - 7);
+	// I don't know where this line comes from, but what is sure is that with it selecting an object on the floor works only on the lower part!
+	// Commenting it out seems to fix it for now, so I'll try it for a while...
+        // pButtonDef->y1 = ub(pButtonDef->y1 + height_LOCAL_24 - 7);
         if (height_32 < 4)
         {
 //          uA3[3] = ub(uA3[3] - (height_32 - 3));
@@ -2257,7 +2259,7 @@ void ProcessOnePosition(
     return;
   };
   pAltMonsterGraphic = GetAlternateGraphicsRecord(pMonster);
-  if (pAltMonsterGraphic != NULL) 
+  if (pAltMonsterGraphic != NULL)
   {
     DrawMonster(facing,
                 RelativeCellNumber,
@@ -2511,9 +2513,9 @@ void ProcessOnePosition(
         };
       };
     };
-  
+
     if ( (LOCAL_36!=0) || (w_142!=0) )
-    { 
+    {
       D4W = (I16)((LOCAL_22 + 7) & 0xfff8);//width in bytes?
       if (A3 != (i8 *)tempBitmap)
       {
