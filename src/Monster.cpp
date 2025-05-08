@@ -692,7 +692,7 @@ bool PossibleMove(const MONSTERDESC *pmtDesc,   //8
       };
     };
   };
-  if (D4W == roomFALSEWALL) 
+  if (D4W == roomFALSEWALL)
   {
     if ((D5W&4) == 0)  // if (closed)
     {
@@ -941,6 +941,7 @@ struct ATTACK_PARAMETERES {
   i32          supressPoison;
 } attackParameters;
 
+extern void LIN_PlayDirect(const char *name,int posX, int posY);
 //*********************************************************
 //
 //*********************************************************
@@ -1002,7 +1003,7 @@ bool MonsterAttacks(RN  monster,
 
   attackParameters.monsterID = monster.ConvertToInteger();
 //==================================== directionToParty
-  attackParameters.directionToParty 
+  attackParameters.directionToParty
                 = d.PrimaryDirectionToParty;
 
 //==================================== distance to Party
@@ -1019,14 +1020,14 @@ bool MonsterAttacks(RN  monster,
   else
   {
 //    D5W = sw(((((D5W >> (2*P4)) & 3) + 5 - D6W) & 2) / 2);
-    rightSideMonster = 
+    rightSideMonster =
         ((  attackParameters.monsterPos
-          + 5 
+          + 5
           - attackParameters.directionToParty) & 2) / 2;
     // 1 if monster is on right side of group when facing party.
   };
   attackParameters.missileOriginPosition
-       =   (I16)((rightSideMonster 
+       =   (I16)((rightSideMonster
          + attackParameters.directionToParty) & 3);
   attackParameters.monsterX = mapX;
   attackParameters.monsterY = mapY;
@@ -1036,12 +1037,12 @@ bool MonsterAttacks(RN  monster,
 
 
 //================================== monsterShouldLaunchMissile
-  attackParameters.monsterShouldLaunchMissile =     
+  attackParameters.monsterShouldLaunchMissile =
           (pmtDesc->word14_12_15() > 1) // ie: 3, 4, or 6
        && ((d.OrthogonalDistance2Party > 1) || (STRandomBool() != 0));
 
 
-//================================== missileType  
+//================================== missileType
   missile = RNnul;
   switch (mtD7)
   {
@@ -1080,7 +1081,7 @@ bool MonsterAttacks(RN  monster,
   attackParameters.missileType = missile.ConvertToInteger();
 
 //================================== monsterShouldSteal
-  attackParameters.monsterShouldSteal 
+  attackParameters.monsterShouldSteal
       = (mtD7 == mon_Giggler);
 
 //================================== heroToDamage
@@ -1099,8 +1100,8 @@ bool MonsterAttacks(RN  monster,
   {
     attackParameters.heroToDamage
         = GetCharacterToDamage(
-              attackParameters.monsterX, 
-              attackParameters.monsterY, 
+              attackParameters.monsterX,
+              attackParameters.monsterY,
               attackParameters.missileOriginPosition);
     //if (attackParameters.heroToDamage < 0) return false;
   };
@@ -1174,7 +1175,7 @@ bool MonsterAttacks(RN  monster,
         };
       };
     };
-  };    
+  };
 
 //===================================================
 
@@ -1225,8 +1226,8 @@ bool MonsterAttacks(RN  monster,
     case 6:  // Closest party member
       attackParameters.heroToDamage
           = GetCharacterToDamage(
-                attackParameters.monsterX, 
-                attackParameters.monsterY, 
+                attackParameters.monsterX,
+                attackParameters.monsterY,
                 attackParameters.missileOriginPosition);
       if (attackParameters.heroToDamage < 0) return false;
       break;
@@ -1253,7 +1254,16 @@ bool MonsterAttacks(RN  monster,
                attackParameters.monsterX,
                attackParameters.monsterY,
                1);
-  };
+  } else {
+      // 3 monsters whose sounds are not in the graphics.dat, but we have them from the encyclopedia!
+      if (mtD7 == mon_WaterElemental)
+	  LIN_PlayDirect("waterelemental_attack.mp3",mapX,mapY);
+      else if (mtD7 == mon_RockPile)
+	  LIN_PlayDirect("rockpile_attack.mp3",mapX,mapY);
+      else if(mtD7 == mon_Couatl)
+	  LIN_PlayDirect("couatl_attack.mp3",mapX,mapY);
+  }
+
   return true;
 }
 
@@ -1308,12 +1318,12 @@ void DeleteMonsterMovementTimers(i32 mapX,i32 mapY)
   //D7W = P1;
   //D6W = P2;
   //pTimer = gameTimers.Timers();  xxTIMERxx Change to FindNextTimer
-  if (AITraceActive)                                          
-  {                                                           
-    fprintf(GETFILE(TraceFile),                               
+  if (AITraceActive)
+  {
+    fprintf(GETFILE(TraceFile),
             "      MAI Delete all Monster Timers at (%d,%d)\n",
             mapX, mapY);
-  };                                                          
+  };
 
   //for (D5W=0; D5W<d.MaxTimer(); psA3++,D5W++)
   while (timerSearch.FindNextTimer())
@@ -1346,7 +1356,7 @@ void Set_Monster_Timer(                                                   //SMT
   //If (processingATimer)                                                 //SMT
   //{                                                                     //SMT
   //  i_60=time of next A event.                                          //SMT
-  //  timeUntilAlternateUpdate = delay until next B event.                //SMT 
+  //  timeUntilAlternateUpdate = delay until next B event.                //SMT
   //}                                                                     //SMT
   //else                                                                  //SMT
   //{                                                                     //SMT
@@ -1379,8 +1389,8 @@ void Set_Monster_Timer(                                                   //SMT
 
 
 //***************************************************
-//  They are here to make duplicating pieces of code 
-//  easier.  We are duplicating to get rid of gotos. 
+//  They are here to make duplicating pieces of code
+//  easier.  We are duplicating to get rid of gotos.
 //***************************************************
 void EnsureI60NonZero(i32& i_60, ITEM16 *pI16A2)     //I60NZ
 {                                                    //I60NZ
@@ -1408,7 +1418,7 @@ void Increment_Time_By_W52_Plus_Random(                       //I52R
   timer_70.Time( timer_70.Time() +                            //I52R
       Larger(1, timePerMove + STRandom0_3() - 1));            //I52R
 }                                                             //I52R
-                
+
 //***************************************************         //DTMSF
 //  They are here to make duplicating pieces of code          //DTMSF
 //  easier.  We are duplicating to get rid of gotos.          //DTMSF
@@ -1427,15 +1437,15 @@ void Delete_Timers_Maybe_Set_Fear(                            //DTMSF
     TIMERTRACE(0xd46c);                                       //DTMSF
     /*D3W = 7;*/                                              //DTMSF
     DB4A3->fear(StateOfFear7);                                //DTMSF
-  };                                                          //DTMSF 
+  };                                                          //DTMSF
   ClearAttacking_DeleteMovementTimers(pI16A2, mapX, mapY);    //DTMSF
 }                                                             //DTMSF
 
 
 //****************************************************************
-// This was extracted from ProcessTimers29to41 so that the code   
-// could be 'unwound' a bit.  This code is used in several places 
-// and used to be reached via 'goto' instructions.                
+// This was extracted from ProcessTimers29to41 so that the code
+// could be 'unwound' a bit.  This code is used in several places
+// and used to be reached via 'goto' instructions.
 //****************************************************************
 void MaybeDelTimers_Fear6_TurnIndividuals(                    //MDF6TI
                       ITEM16        *pI16A2,                  //MDF6TI
@@ -1545,7 +1555,7 @@ void MaybeDelTimers_Fear6_TurnIndividuals(                    //MDF6TI
     timer_70.Function(tt);            //monIdx=0->3????       //MDF6TI
     SetMonsterTimerB(&timer_70,                               //MDF6TI
               NextMonsterUpdateTime(pI16A2,                   //MDF6TI
-                                    (i16)monIdx,              //MDF6TI     
+                                    (i16)monIdx,              //MDF6TI
                                      false));                 //MDF6TI
     /*continue here*/                                         //MDF6TI
                                                               //MDF6TI
@@ -1554,9 +1564,9 @@ void MaybeDelTimers_Fear6_TurnIndividuals(                    //MDF6TI
 
 
 //******************************************************************
-// This was extracted from ProcessTimers29to41 so that the code     
-// could be 'unwound' a bit.  This code is used in several places   
-// and used to be reached via 'goto' instructions.                  
+// This was extracted from ProcessTimers29to41 so that the code
+// could be 'unwound' a bit.  This code is used in several places
+// and used to be reached via 'goto' instructions.
 //******************************************************************
 void Turn_Monsters_As_Group(                                       //TMAG
                     dReg&     D5,                                  //TMAG
@@ -1665,7 +1675,7 @@ bool Process_Invincible(                                                  //PIn
           TIMERTRACE(0xd72c);                                             //PIn
           pmmr->Setflg(PIn_turnMonsterGroup);                             //PIn
           TurnMonsterGroup(pI16A2, PreferredDirection,                    //PIn
-                           indexOfLastMonster, horizSize);                //PIn 
+                           indexOfLastMonster, horizSize);                //PIn
           Increment_Time_By_W52_Plus_Random(timer_70, timePerMove);       //PIn
           StartBGroupTimer(                                               //PIn
                  timer_70,                                                //PIn
@@ -1734,7 +1744,7 @@ bool Process_Invincible(                                                  //PIn
   };                                                                      //PIn
   return false;                                                           //PIn
 }                                                                         //PIn
-  
+
 
 //******************************************************************//SF
 // This was extracted from ProcessTimers29to41 so that the code     //SF
@@ -1775,7 +1785,7 @@ void Standard_Finish(                                               //SF
     {                                                               //SF
       TIMERTRACE(0xd414);                                           //SF
                                                                     //SF
-      ASSERT(    (timeFunc==-3)                                     //SF 
+      ASSERT(    (timeFunc==-3)                                     //SF
              ||  (attackDistance != 0x7ddd) ,"timeFunc");           //SF
       //                                                            //SF
       // This happened once when                                    //SF
@@ -2434,7 +2444,7 @@ void Try_Directions_D5_To_D4(                                       //T524
     {                                                               //T524
       //while (from d728)                                           //T524
       //while (from d630)                                           //T524
-      pmmr->Setflg(T524_possibleMove);                              //T524 
+      pmmr->Setflg(T524_possibleMove);                              //T524
       TIMERTRACE(0xd302);                                           //T524
       D4W = sw(timePerMove/2 - w_54);                               //T524
       bool_36 = D4W <= 0;                                           //T524
@@ -2937,7 +2947,7 @@ bool InitialChecks(                                                 //IC
       if (AITraceActive)                                            //IC
       {                                                             //IC
         fprintf(GETFILE(TraceFile),                                 //IC
-          "      MAI  No attempt to move monster. "                 //IC                  
+          "      MAI  No attempt to move monster. "                 //IC
           "Que 37 timer\n");                                        //IC
       };                                                            //IC
     };                                                              //IC
@@ -3080,7 +3090,7 @@ MONSTERMOVEFILTERCACHE::~MONSTERMOVEFILTERCACHE(void)
 
 MONSTERMOVEFILTERLOCATION *MONSTERMOVEFILTERCACHE::GetLocation(i32 level)
 {
-  if (mmfloc[level].partyLevelOnly == 0xfffe)  
+  if (mmfloc[level].partyLevelOnly == 0xfffe)
                             // We have not yet checked
                             // to see if a filter location
                             // is defined.
@@ -3170,7 +3180,7 @@ MONSTERMOVEFILTERLOCATION *MONSTERMOVEFILTERCACHE::GetLocation(i32 level)
 }
 
 
-void ProcessPostMonsterMoveFilter(MONSTERMOVEFILTERLOCATION *pmmfloc, 
+void ProcessPostMonsterMoveFilter(MONSTERMOVEFILTERLOCATION *pmmfloc,
                                   MMRECORD *pmmr)
 {
   if (!pmmr->CalledPreMoveFilter) return;
@@ -3188,7 +3198,7 @@ void ProcessPostMonsterMoveFilter(MONSTERMOVEFILTERLOCATION *pmmfloc,
     //LoadLevel(locr.l);
     pmmr->timer.timerUByte9(1);//timerFunction
     pmmr->timer.timerUByte8(0);//timerPosition
-  
+
     //**********************************
     // Some Debugging
     //**********************************
@@ -3225,10 +3235,10 @@ void ProcessPostMonsterMoveFilter(MONSTERMOVEFILTERLOCATION *pmmfloc,
     //**********************************
     //  Call the DSA
     //**********************************
-  
+
     //memcpy(DSAparameters, &fp, sizeof(fp));
-    ProcessDSAFilter(pmmfloc->filterObj, 
-                    &pmmr->timer, 
+    ProcessDSAFilter(pmmfloc->filterObj,
+                    &pmmr->timer,
                     pmmfloc->locr,
                     &monsterMoveFilterActive,
                     &pmmr->dsaVars);  // Filter location
@@ -3357,13 +3367,13 @@ void ProcessTimers29to41(
     //**********************************
 
     mmr.CalledPreMoveFilter = true;
-    ProcessDSAFilter(pmmfloc->filterObj, 
-                     &mmr.timer, 
+    ProcessDSAFilter(pmmfloc->filterObj,
+                     &mmr.timer,
                      pmmfloc->locr,
                      &monsterMoveFilterActive,
                      &mmr.dsaVars);  // Filter location
   };
-  
+
 
 
   if (InitialChecks(
@@ -3477,7 +3487,7 @@ void ProcessTimers29to41(
       {
         TIMERTRACE(0xcf50);
         D0W = Blocked(DB4A3, -1, mapX, mapY);
-                  //  Checks each member for 'looking our way'      
+                  //  Checks each member for 'looking our way'
         if (AITraceActive)
         {
           fprintf(GETFILE(TraceFile),"      MAI timeFunc 31. FearFactor 2 or 3 or random. Block=%d\n", D0W);
@@ -3638,7 +3648,7 @@ void ProcessTimers29to41(
       fprintf(GETFILE(TraceFile),"      MAI timeFunc<37. Set New timerFunction to %s\n",TimerName(timer_70.Function()));
     };
     D0W = Blocked(DB4A3, -1, mapX, mapY);
-                  //  Checks each member for 'looking our way' 
+                  //  Checks each member for 'looking our way'
     if (AITraceActive)
     {
       fprintf(GETFILE(TraceFile),"      MAI timeFunc<37.  Blocked=%d\n",D0W);
@@ -3653,7 +3663,7 @@ void ProcessTimers29to41(
         TIMERTRACE(0xcfd2);
         D0W = sw(abs(d.partyX - mapX));
         D1W = sw(abs(d.partyY - mapY));
-        if (D0W + D1W <= 1) 
+        if (D0W + D1W <= 1)
         {
           mmr.Setflg(TT29to41_MaybeDeleteTimersFear6TurnIndividuals);
           MaybeDelTimers_Fear6_TurnIndividuals(
@@ -3680,7 +3690,7 @@ void ProcessTimers29to41(
         // if ( ((fearFactor!=0)&&(fearFactor!=3)) || (fearFactor==7) )
         //
         // This is less obviously redundant.
-        if ( ((fearFactor==0)||(fearFactor==3)) && (fearFactor!=7) ) 
+        if ( ((fearFactor==0)||(fearFactor==3)) && (fearFactor!=7) )
         {
           mmr.Setflg(TT29to41_fear0or3);
           TIMERTRACE(0xd21a);
@@ -3717,8 +3727,8 @@ void ProcessTimers29to41(
       D5W = sw(timeFunc-33);
       //D0W = (I16)(pI16A2->ITEM16_uByte12[D5W] & 0x80);
       i_60 = NextMonsterUpdateTime(
-              pI16A2, 
-              D5W, 
+              pI16A2,
+              D5W,
               pI16A2->singleMonsterStatus[D5W].TestAttacking());
       Set_Monster_Timer(
                        timer_70,
@@ -3796,7 +3806,7 @@ void ProcessTimers29to41(
               D5,
               DB4A3,
               pI16A2,
-              timer_70,            
+              timer_70,
               i_60,                     //Not Modified
               w_54,                     //Not Modified
               timePerMove,              //Not Modified
@@ -3848,7 +3858,7 @@ void ProcessTimers29to41(
       };
       PreferredDirection = d.PrimaryDirectionToParty;
       attackDistance = Blocked(DB4A3, D4W, mapX, mapY);
-                  //  Checks member D4W for 'looking our way'   
+                  //  Checks member D4W for 'looking our way'
       if (attackDistance != 0)
       {
         TIMERTRACE(0xd91c);
@@ -3962,7 +3972,7 @@ void ProcessTimers29to41(
                     };
                     D5W &= 3;
                     D0W = OrdinalOfMonsterAtPosition(DB4A3, D5W);
-  
+
   //
   //
   //
@@ -4095,7 +4105,7 @@ void ProcessTimers29to41(
                    yDistance,                //Not Modified
                    xDistance,                //Not Modified
                    mapX,                     //const
-                   mapY,                     //const  
+                   mapY,                     //const
                    timeUntilAlternateUpdate, //const
                    timeFunc,                 //const
                    monster,                  //const
@@ -4138,10 +4148,10 @@ void ProcessTimers29to41(
     {
       fprintf(GETFILE(TraceFile),"      MAI fearFactor not 0, 2, or 3\n");
     };
-    if (fearFactor != StateOfFear7) 
+    if (fearFactor != StateOfFear7)
     {
       TIMERTRACE(0xd746);
-      if (fearFactor != StateOfFear5)  
+      if (fearFactor != StateOfFear5)
       {
         Increment_Time_By_W52_Plus_Random(timer_70, timePerMove);
         StartBGroupTimer(
@@ -4158,9 +4168,9 @@ void ProcessTimers29to41(
               D5,
               DB4A3,
               pI16A2,
-              timer_70,            
+              timer_70,
               i_60,                    //Not Modified
-              w_54,                    //Not Modified 
+              w_54,                    //Not Modified
               timePerMove,             //Not Modified
               attackDistance,          //Not Modified
               yDistance,               //Not Modified
@@ -4180,7 +4190,7 @@ void ProcessTimers29to41(
             );
       ProcessPostMonsterMoveFilter(pmmfloc, &mmr);
       return;
-  
+
     };
     attackDistance = Blocked(DB4A3, -1, mapX, mapY);
                   //  Checks each member for 'looking our way'
@@ -4251,7 +4261,7 @@ void ProcessTimers29to41(
                yDistance,                //Not Modified
                xDistance,                //Not Modified
                mapX,                     //const
-               mapY,                     //const  
+               mapY,                     //const
                timeUntilAlternateUpdate, //const
                timeFunc,                 //const
                monster,                  //const
@@ -4269,7 +4279,7 @@ void ProcessTimers29to41(
 
   };
   attackDistance = Blocked(DB4A3, -1, mapX, mapY);
-                  //  Checks each member for 'looking our way'     
+                  //  Checks each member for 'looking our way'
   if (AITraceActive)
   {
     fprintf(GETFILE(TraceFile),"      MAI fearFactor is 0, 2, or 3.  attackDistance=%d\n",attackDistance);
@@ -4281,7 +4291,7 @@ void ProcessTimers29to41(
     {
       TIMERTRACE(0xd0e2);
       if ( (xDistance == 0) || (yDistance == 0) )
-      {  
+      {
         MaybeDelTimers_Fear6_TurnIndividuals(
                     pI16A2,
                     DB4A3,
@@ -4321,7 +4331,7 @@ void ProcessTimers29to41(
              );
       ProcessPostMonsterMoveFilter(pmmfloc, &mmr);
       return;
-    };  
+    };
     Increment_Time_By_W52_Plus_Random(timer_70, timePerMove);
     StartBGroupTimer(
            timer_70,
@@ -4389,7 +4399,7 @@ void ProcessTimers29to41(
     return;
   };
   bool_36 = false;
-  if (STRandomBool() == 0) 
+  if (STRandomBool() == 0)
   {
     if (AITraceActive)
     {
@@ -4632,12 +4642,12 @@ void DeleteMonsterInGroup(const LOCATIONREL& locr, ui32 indexInGroup)
   pmtDesc = &d.MonsterDescriptor[mt];
   if (pMonster->numMonM1() == 0) return; // Only one monster there!
   if (pMonster->numMonM1() < indexInGroup) return;
-  if (AITraceActive)                                          
-  {                                                           
-    fprintf(GETFILE(TraceFile),                               
+  if (AITraceActive)
+  {
+    fprintf(GETFILE(TraceFile),
             "      Delete Individual monster in group. Index=%d lodation=%d(%d,%d)\n",
                    indexInGroup, locr.l,locr.x,locr.y);
-  };                                                          
+  };
   positionByte = MonsterPositionByte(pMonster, (i16)locr.l, noItem16);
   if (positionByte == 255)
   {
