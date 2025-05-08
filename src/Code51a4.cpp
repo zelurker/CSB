@@ -290,7 +290,7 @@ tag006932:
           LOCAL_22 = (UI16)((LOCAL_22+7)&0xfff8);
           if ( (LOCAL_36!=0) || (w_142) )
           {
-            memmove((ui8 *)A3, (ui8 *)tempBitmap, LOCAL_22*LOCAL_24);
+            MemMove((ui8 *)A3, (ui8 *)tempBitmap, LOCAL_22*LOCAL_24);
             A3 = (i8 *)tempBitmap;
           };
           if (LOCAL_36 != 0)
@@ -868,7 +868,7 @@ tag005e98:
             D4W = (UI16)((dstByteWidth +7) & 0xfff8);
             if (!frontViewMirror_106)
             {
-              memmove((ui8 *)A3, (ui8 *)tempBitmap, (ui16)D4W*(ui16)dstHeight);
+              MemMove((ui8 *)A3, (ui8 *)tempBitmap, (ui16)D4W*(ui16)dstHeight);
               A3 = (i8 *)tempBitmap;
             };
             Mirror((ui8 *)A3, D4W, dstHeight);
@@ -1666,7 +1666,7 @@ tag005e98:
             D4W = (UI16)((dstByteWidth +7) & 0xfff8);
             if (!frontViewMirror_106)
             {
-              memmove((ui8 *)A3, (ui8 *)tempBitmap, (ui16)D4W*(ui16)dstHeight);
+              MemMove((ui8 *)A3, (ui8 *)tempBitmap, (ui16)D4W*(ui16)dstHeight);
               A3 = (i8 *)tempBitmap;
             };
             Mirror((ui8 *)A3, D4W, dstHeight);
@@ -1969,7 +1969,7 @@ void DrawSingleObject(
     if (pButtonDef->x1 == 255)
     {
       int height_32, top, bottom;
-      memmove((ui8 *)&rect_42, (ui8 *)pButtonDef, 4);
+      MemMove((ui8 *)&rect_42, (ui8 *)pButtonDef, 4);
       bottom = pButtonDef->y2; //uA3[3];
       top = pButtonDef->y1;    //uA3[2];
       height_32 = sw(bottom - top);
@@ -2519,7 +2519,7 @@ void ProcessOnePosition(
       D4W = (I16)((LOCAL_22 + 7) & 0xfff8);//width in bytes?
       if (A3 != (i8 *)tempBitmap)
       {
-        memmove((ui8 *)A3, (ui8 *)tempBitmap, D4W * LOCAL_24);
+        MemMove((ui8 *)A3, (ui8 *)tempBitmap, D4W * LOCAL_24);
         A3 = (i8 *)tempBitmap;
       };
       if (w_142 != 0)
@@ -2776,8 +2776,8 @@ void DrawRoomObjects(const RN firstObject,
   if ( (pdb_150!=NULL) && (sideOfDoor!=SOD_FarSideOfDoor) && (d.Word1868==0) )
   {
     RelativeCellNumber -= 3;
-    //memmove(d.Byte4010 + 8*RelativeCellNumber, b_170, 8);
-    memmove((ui8 *)&d.teleporterRectangles[RelativeCellNumber], (ui8 *)&b_170, 8);
+    //MemMove(d.Byte4010 + 8*RelativeCellNumber, b_170, 8);
+    MemMove((ui8 *)&d.teleporterRectangles[RelativeCellNumber], (ui8 *)&b_170, 8);
     b_170.b.x1++;
     //DrawTeleporter(&b_170, (RectPos *)(d.Byte3074 + 8*RelativeCellNumber));
     DrawTeleporter(&b_170, &d.wallRectangles[RelativeCellNumber]);

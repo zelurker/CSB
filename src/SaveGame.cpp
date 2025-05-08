@@ -1081,7 +1081,7 @@ RESTARTABLE _DisplayDiskMenu(void)
 //    wordGear(LOCAL_330+330-302) = 2 * d.MaxTimers;
     //memBlocks[4].size = sw(2 * d.MaxTimers);
     gb1A2->SaveOption = D6W;
-    memmove((ui8 *)d.Byte22808, (ui8 *)gb1A2->Byte22808, 132);
+    MemMove((ui8 *)d.Byte22808, (ui8 *)gb1A2->Byte22808, 132);
     gb1A2->RandomGameID = d.RandomGameID;
     gb1A2->Byte22596 = ub(d.Word22596);
     gb1A2->Byte22598 = (i8)d.Word22598;
@@ -1732,7 +1732,7 @@ tag01ece8:
   goto tag01ebec;
 tag01ed54:
   d.RandomGameID = b.gb1.RandomGameID;
-  memmove((ui8 *)b.gb1.Byte22808, (ui8 *)d.Byte22808, 132);//All zeroes in my CSBGAME2.DAT
+  MemMove((ui8 *)b.gb1.Byte22808, (ui8 *)d.Byte22808, 132);//All zeroes in my CSBGAME2.DAT
   D0W = b.gb1.Byte22596;
   if (D0W == 1) goto tag01ed86;
   // Removed this to be able to read Atari DM saved game.  if (b.gb1.Word22594 != 1) goto tag01efee;

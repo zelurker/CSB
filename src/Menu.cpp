@@ -98,7 +98,7 @@ RESTARTABLE _WaitForMenuSelect(
   } while (d.Word11764 == 99);
  
   d.UseByteCoordinates = 0;  
-  memmove((ui8 *)&d.PrimaryButtonList[d.Word11764-1].xMin, 
+  MemMove((ui8 *)&d.PrimaryButtonList[d.Word11764-1].xMin, 
           (ui8 *)&rect34, 8);
   rect34.w.x1 -= 3;
   rect34.w.x2 += 3;

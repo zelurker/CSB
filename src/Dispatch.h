@@ -268,6 +268,12 @@ void _CALL9(int n,
             uintptr_t h,
             uintptr_t i);
 
+//#define CALL(n,f,p1,p2,p3,p4,p5,p6) \
+//  mystate = n; \
+//  _CALL (st_##f,(i32)(p1),(i32)(p2),(i32)(p3),(i32)(p4),(i32)(p5),(i32)(p6)); \
+//  return 0xfafa3434; \
+//return##n:
+
 #define CALL0(n,f) \
 { mystate = n; \
   _CALL0 (n,st_##f); \

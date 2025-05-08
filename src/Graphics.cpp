@@ -1773,7 +1773,7 @@ void ReadGraphic(i16 graphicNumber, ui8 *buffer, i32 maxSize) // TAG021af2
     clusterOffset = D7L - (curCluster<<10);
     bytesAvailable = 1024-clusterOffset;
     bytesToMove = Smaller(bytesNeeded, bytesAvailable);
-    memmove(d.ClusterCache+clusterOffset,buffer,(i16)bytesToMove);
+    MemMove(d.ClusterCache+clusterOffset,buffer,(i16)bytesToMove);
     bytesNeeded -= bytesToMove;
     D7L          += bytesToMove;
     buffer      += bytesToMove;
@@ -2662,7 +2662,7 @@ void ReadAndExpandGraphic(i32 graphicNum, ui8 *dest, i16 P3, i16 P4, i32 maxSize
     FreeTempMemory(5004);
     if (D6W == 0)
     {
-      memmove(dest, (ui8 *)d.pViewportBMP, d.GraphicDecompressedSizes[D7W]);
+      MemMove(dest, (ui8 *)d.pViewportBMP, d.GraphicDecompressedSizes[D7W]);
     };
   }
   else

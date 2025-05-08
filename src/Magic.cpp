@@ -752,7 +752,7 @@ void SelectMagicCaster(i16 chIdx)
   {
     D5W += 24;
     pD4 += 160;
-    memmove((ui8 *)d.Byte20842+2*D5W, pD4, 48);
+    MemMove((ui8 *)d.Byte20842+2*D5W, pD4, 48);
 
 //
   };
@@ -764,7 +764,7 @@ void SelectMagicCaster(i16 chIdx)
   {
     pD4 += 160;
     D5W += 24;
-    memmove((ui8 *)d.Byte20842+2*D5W, pD4, 48);
+    MemMove((ui8 *)d.Byte20842+2*D5W, pD4, 48);
 //
   };
   STShowCursor(HC38);

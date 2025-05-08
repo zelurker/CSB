@@ -245,7 +245,7 @@ static const char *colNames[12] =
   "S0","C0","T0","S1","C1","T1","S2","C2","T2","S3","C3","T3"
 };
 
-struct EXECUTIONPACKET
+struct EXECUTIONPACKET 
 {
   i32         m_nextState;      //The prefix '5' in "5MS"
   ui16       *m_PC;             //Updated
@@ -431,9 +431,9 @@ void STACK::minusRoll(ui32 i)
 
 static i32 Execute(RN  RNmaster,
                    RN  RNslave,
-                   DSA *pMaster,
-                   DSA *pSlave,
-                   i32 curState,
+                   DSA *pMaster, 
+                   DSA *pSlave, 
+                   i32 curState, 
                    i32 msgType,
                    LOCATIONREL locrMaster,
                    LOCATIONREL locrSlave,
@@ -513,7 +513,7 @@ void QueueDSASwitchAction(
     case 7: tt = TT_FALSEWALL; break;
     default: tt = (TIMERTYPE)numericFunction; break;
     };
-    if (tt == 0)
+    if (tt == 0) 
     {
       WarnIllegalTimer(-1, -1, targetX, targetY);
       return;
@@ -534,9 +534,9 @@ void QueueDSASwitchAction(
 
 static RN FindMaster(DSA *pSlave, RN objSlave, i32 x, i32 y,
                              i32 *masterX, i32 *masterY,
-                             i32 *masterPos)
+                             i32 *masterPos) 
 {
-  if (pSlave->IsMaster())
+  if (pSlave->IsMaster()) 
   {
     *masterX = x;
     *masterY = y;
@@ -672,39 +672,39 @@ static void EX_MESSAGE(EXECUTIONPACKET& exPkt, bool thirtyTwo, char MorD)
   locr = GetTarget(cmd.Target(), exPkt, thirtyTwo);
   switch (messageType)
   {
-  case MSG_NULL:
+  case MSG_NULL: 
     if (pdsaDbank->tracing)
     {
       PrintTrace("No Message");
     };
     return;
-  case MSG_SET:
+  case MSG_SET: 
     if (pdsaDbank->tracing)
     {
       PrintTrace("SET");
     };
-    action = tmrAct_SET;
+    action = tmrAct_SET; 
     break;
-  case MSG_CLEAR:
+  case MSG_CLEAR: 
     if (pdsaDbank->tracing)
     {
       PrintTrace("CLEAR");
     };
-    action = tmrAct_CLEAR;
+    action = tmrAct_CLEAR; 
     break;
-  case MSG_TOGGLE:
+  case MSG_TOGGLE: 
     if (pdsaDbank->tracing)
     {
       PrintTrace("TOGGLE");
     };
-    action = tmrAct_TOGGLE;
+    action = tmrAct_TOGGLE; 
     break;
-  default:
+  default: 
     if (pdsaDbank->tracing)
     {
       PrintTrace("UNKNOWN");
     };
-    message("Unknown DSA messageType");
+    message("Unknown DSA messageType"); 
     return;
   };
   if (pdsaDbank->tracing)
@@ -875,24 +875,24 @@ static void EX_QUESTION(EXECUTIONPACKET& exPkt)
     cCmd = cmd.IfCmd();
     cCol = 0;
     addr = 0;
-    if (cCmd != 0)
+    if (cCmd != 0) 
     {
-      addr = *(exPkt.m_PC++);
+      addr = *(exPkt.m_PC++); 
       exPkt.m_wordsRemaining--;
     };
-    if (cmd.IfColumn() != 0)
+    if (cmd.IfColumn() != 0) 
     {
       cCol = *(exPkt.m_PC++);
       exPkt.m_wordsRemaining--;
     };
-    if (cmd.ElseCmd() != 0)
+    if (cmd.ElseCmd() != 0) 
     {
-      exPkt.m_PC++;
+      exPkt.m_PC++; 
       exPkt.m_wordsRemaining--;
     };
     if (cmd.ElseColumn() != 0)
     {
-      exPkt.m_PC++;
+      exPkt.m_PC++; 
       exPkt.m_wordsRemaining--;
     };
   }
@@ -902,25 +902,25 @@ static void EX_QUESTION(EXECUTIONPACKET& exPkt)
     {
       PrintTrace("(false)");
     };
-    if (cmd.IfCmd() != 0)
+    if (cmd.IfCmd() != 0) 
     {
-      exPkt.m_PC++;
+      exPkt.m_PC++; 
       exPkt.m_wordsRemaining--;
     };
     if (cmd.IfColumn() != 0)
     {
-      exPkt.m_PC++;
+      exPkt.m_PC++; 
       exPkt.m_wordsRemaining--;
     };
     cCmd = cmd.ElseCmd();
     cCol = 0;
     addr = 0;
-    if (cCmd != 0)
+    if (cCmd != 0) 
     {
-      addr = *(exPkt.m_PC++);
+      addr = *(exPkt.m_PC++); 
       exPkt.m_wordsRemaining--;
     };
-    if (cmd.ElseColumn() != 0)
+    if (cmd.ElseColumn() != 0) 
     {
       cCol = *(exPkt.m_PC++);
       exPkt.m_wordsRemaining--;
@@ -936,7 +936,7 @@ static void EX_QUESTION(EXECUTIONPACKET& exPkt)
       fprintf(GETFILE(TraceFile)," Jump %d%s",
                 addr, colNames[cCol]);
     };
-    return;
+    return; 
   case 2:
     // Gosub
     if (pdsaDbank->tracing)
@@ -1070,8 +1070,8 @@ static void EX_OVERRIDE(EXECUTIONPACKET& exPkt)
   };
   exPkt.m_nextState = exPkt.m_curState + relState;
   return;
-}
-
+}  
+  
 static void EX_LOAD(EXECUTIONPACKET& exPkt)
 {
   i32 relState;
@@ -1156,7 +1156,7 @@ static void EX_LOAD(EXECUTIONPACKET& exPkt)
       if (pParameter->actuatorType() != 47) continue;
       where -= 2;
     };
-    if (RNparameter == RNeof)
+    if (RNparameter == RNeof) 
     {
       if (pdsaDbank->tracing)
       {
@@ -1167,7 +1167,7 @@ static void EX_LOAD(EXECUTIONPACKET& exPkt)
     else
     {
       pParameter = GetRecordAddressDB3(RNparameter);
-      if (where == 0)
+      if (where == 0) 
       {
         pdsaDbank->stack.push(pParameter->ParameterA());
         if (pdsaDbank->tracing)
@@ -1175,7 +1175,7 @@ static void EX_LOAD(EXECUTIONPACKET& exPkt)
           fprintf(GETFILE(TraceFile),"%d",pParameter->ParameterA());
         };
       }
-      else
+      else 
       {
         pdsaDbank->stack.push(pParameter->ParameterB());
         if (pdsaDbank->tracing)
@@ -1186,8 +1186,8 @@ static void EX_LOAD(EXECUTIONPACKET& exPkt)
     };
   };
   return;
-}
-
+}  
+  
 
 static void EX_VARIABLESTORE(EXECUTIONPACKET& exPkt)
 {
@@ -1213,8 +1213,8 @@ static void EX_VARIABLESTORE(EXECUTIONPACKET& exPkt)
   };
   pdsaDbank->Var(idx, pdsaDbank->stack.pop());
   return;
-}
-
+}  
+  
 static void EX_VARIABLEFETCH(EXECUTIONPACKET& exPkt)
 {
   i32 relState;
@@ -1239,8 +1239,8 @@ static void EX_VARIABLEFETCH(EXECUTIONPACKET& exPkt)
   };
   pdsaDbank->stack.push(pdsaDbank->Var(idx));
   return;
-}
-
+}  
+  
 
 static void EX_GLOBALSTORE(EXECUTIONPACKET& exPkt)
 {
@@ -1266,7 +1266,7 @@ static void EX_GLOBALSTORE(EXECUTIONPACKET& exPkt)
     fprintf(GETFILE(TraceFile),"%d!", idx);
   };
   value = pdsaDbank->stack.pop();
-  if (numGlobalVariables <= idx)
+  if (numGlobalVariables <= idx) 
   {
     message("Global Store to non-existent variable", true);
   }
@@ -1275,8 +1275,8 @@ static void EX_GLOBALSTORE(EXECUTIONPACKET& exPkt)
     globalVariables[idx] = value;
   };
   return;
-}
-
+}  
+  
 static void EX_GLOBALFETCH(EXECUTIONPACKET& exPkt)
 {
   i32 relState;
@@ -1311,8 +1311,8 @@ static void EX_GLOBALFETCH(EXECUTIONPACKET& exPkt)
   };
   pdsaDbank->stack.push(value);
   return;
-}
-
+}  
+  
 
 
 static void EX_STORE(EXECUTIONPACKET& exPkt)
@@ -1345,7 +1345,7 @@ static void EX_STORE(EXECUTIONPACKET& exPkt)
     if (pParameter->actuatorType() != 47) continue;
     where -= 2;
   };
-  if (RNparameter == RNeof)
+  if (RNparameter == RNeof) 
   {
     if (pdsaDbank->tracing)
     {
@@ -1356,7 +1356,7 @@ static void EX_STORE(EXECUTIONPACKET& exPkt)
   else
   {
     pParameter = GetRecordAddressDB3(RNparameter);
-    if (where == 0)
+    if (where == 0) 
     {
       pParameter->ParameterA(pdsaDbank->stack.pop());
       if (pdsaDbank->tracing)
@@ -1364,7 +1364,7 @@ static void EX_STORE(EXECUTIONPACKET& exPkt)
         fprintf(GETFILE(TraceFile),"%d",pParameter->ParameterA());
       };
     }
-    else
+    else 
     {
       pParameter->ParameterB(pdsaDbank->stack.pop());
       if (pdsaDbank->tracing)
@@ -1384,8 +1384,8 @@ static void EX_STORE(EXECUTIONPACKET& exPkt)
   };
   exPkt.m_nextState = exPkt.m_curState + relState;
   return;
-}
-
+}  
+  
 static void EX_TYPE(void)
 {
   i32 id, objID;
@@ -1397,6 +1397,7 @@ static void EX_TYPE(void)
   DB4 *pDB4;
   DB5 *pDB5;
   DB6 *pDB6;
+  DB7 *pDB7;
   DB8 *pDB8;
   DB9 *pDB9;
   DB10 *pDB10;
@@ -1450,6 +1451,7 @@ static void EX_TYPE(void)
     id = pDB6->clothingType();
     break;
   case dbSCROLL:
+    pDB7 = GetRecordAddressDB7(thisObj);
     id = 0;
     break;
   case dbPOTION:
@@ -1486,7 +1488,7 @@ static void EX_TYPE(void)
   objID += id;
   pdsaDbank->stack.push(objID);
 }
-
+  
 static void EX_EQUAL(EXECUTIONPACKET& exPkt)
 {
   i32 v1, v2;
@@ -1513,8 +1515,8 @@ static void EX_EQUAL(EXECUTIONPACKET& exPkt)
   };
   exPkt.m_nextState = exPkt.m_curState + relState;
   return;
-}
-
+}  
+  
 
 bool IsCarriedCallback(RN thisObj, int srcObj)
 {
@@ -1583,7 +1585,7 @@ bool ForEach(int thisObj, int srcObj, bool callback(RN thisObj, int srcObj))
     {
     case dbSCROLL:
     case dbPOTION:
-    case dbMISC:
+    case dbMISC: 
     case dbCLOTHING:
     case dbWEAPON:
       break;
@@ -1703,7 +1705,7 @@ static void EX_DEL(void)
         break;
       default:
         return;
-      }
+      };
       break;
     };
   };
@@ -1713,23 +1715,24 @@ static void EX_DEL(void)
   switch (dbType)
   {
   case dbSCROLL:
-      {
-	  DB7 *pScroll;
-	  RN RNText;
-	  pScroll = GetRecordAddressDB7(thisObj);
-	  pdsaDbank->DeleteObject(pScroll->text());
-	  //DeleteDBEntry(db.GetCommonAddress(pScroll->text()));
-      };
-      break;
+    {
+      DB7 *pScroll;
+      RN RNText;
+      pScroll = GetRecordAddressDB7(thisObj);
+      pdsaDbank->DeleteObject(pScroll->text());
+      //DeleteDBEntry(db.GetCommonAddress(pScroll->text()));
+    };
+    break;
   case dbMONSTER:
   case dbCHEST:
   case dbMISSILE:
   case dbDOOR:
   case dbTELEPORTER:
   case dbTEXT:
+  //case dbACTUATOR:
   case dbEXPOOL:
-      NotImplemented(0x89de); //Need to remove possessions, etc.
-      break;
+    NotImplemented(0x89de); //Need to remove possessions, etc.
+    break;
   };
   pdsaDbank->DeleteObject(thisObj);
   //DeleteDBEntry(db.GetCommonAddress(thisObj));
@@ -1753,7 +1756,7 @@ static void EX_INSMON(void)
   locr.Integer(pdsaDbank->stack.pop());
   InsertMonsterInGroup(locr, posMask);
 }
-
+  
 static RN CopyItemList (RN origRN);
 static RN CopyItem (RN origRN)
 {
@@ -1878,7 +1881,7 @@ static RN CopyItem (RN origRN)
       // already set; newPDB4->monsterType(value); // Item26 index
       pmtDesc = &d.MonsterDescriptor[newPDB4->monsterType()];
       monsterSize = pmtDesc->horizontalSize();
-      copiedPossessions
+      copiedPossessions 
          = CopyItemList(pDB4->possession());
       newPDB4 = GetRecordAddressDB4(CopyRN);
       newPDB4->possession(copiedPossessions);
@@ -1947,7 +1950,7 @@ static RN CopyItemList (RN origRN)
   RN result;
   RN lastItem;
   RN newItem;
-  for (result=RNeof;
+  for (result=RNeof; 
        origRN != RNeof;
        origRN = GetDBRecordLink(origRN))
   {
@@ -2013,8 +2016,8 @@ static void EX_ADD(void)
     if (locr.x > d.pLevelDescriptors[locr.l].LastColumn()) return;
     if (locr.y > d.pLevelDescriptors[locr.l].LastRow()) return;
   };
-
-  if (!object.checkIndirectIndex(objID))
+  
+  if (!object.checkIndirectIndex(objID)) 
   {
     if (pdsaDbank->tracing)
     {
@@ -2083,7 +2086,7 @@ static void EX_ADD(void)
         else AddObjectToRoom(newObj, *pDest, -1, 0, NULL);
       };
     };
-  };
+  };  
   return;
 }
 
@@ -2094,9 +2097,9 @@ void Indirect(const char *m, i32 type, bool array, i32 numVar, i32 numParam)
   i32 i, r;
   static int indirectLocChecked = -1; // -1=not checked 0=nonexistent 1=OK
   static LOCATIONREL indirectLocr;
-
-
-
+  
+  
+  
   ui32 key, *pRecord;
   i32 len;
   if (pdsaDbank->tracing)
@@ -2117,14 +2120,14 @@ void Indirect(const char *m, i32 type, bool array, i32 numVar, i32 numParam)
   };
   if (indirectLocChecked < 1) return;
 
-
-
-
-
-
-
-
-
+      
+  
+  
+  
+  
+  
+  
+  
   r = 0;
   record[r++] = type;
   record[r++] = numVar;
@@ -2151,17 +2154,17 @@ void Indirect(const char *m, i32 type, bool array, i32 numVar, i32 numParam)
   ui32 timerID;
   i32 actionTime;
 
-
-
-
-
-  if (r > 29) return;
-
+  
+  
+  
+  
+  if (r > 29) return; 
+  
   if (pdsaDbank->tracing)
   {
     PrintTrace("MESSAGE ");
   };
-  if (r > 29)
+  if (r > 29) 
   {
     if (pdsaDbank->tracing)
     {
@@ -2657,7 +2660,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
     {
       i32 V = pdsaDbank->stack.pop();
       i32 W = pdsaDbank->stack.pop();
-      pdsaDbank->stack.push( (V>=0)?(W<<(V&31)):(W>>((-V)&31)));
+      pdsaDbank->stack.push( (V>=0)?(W<<(V&31)):(W>>((-V)&31)));   
     };
     break;
   case STKOP_RShift:
@@ -2774,7 +2777,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         }
         else
         {
-          CreateCloud(spellObj, (i16)size,
+          CreateCloud(spellObj, (i16)size, 
                      (i16)locr.x,(i16)locr.y,
                      (i16)locr.x,(i16)locr.y,(i16)locr.p,
                      NULL);
@@ -2967,7 +2970,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
       else
       {
         //memcpy(pdsaDbank->stack.tempVar+i, pDSAparameters, 4*n);
-        if (n > pDSAparameters[0])
+        if (n > pDSAparameters[0]) 
         {
           message("DSA &PARAM@ non-existent parameter");
           for (j=pDSAparameters[0]; j<n; j++)
@@ -3058,7 +3061,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
       {
         PrintTrace("MESSAGE ");
       };
-      if (numParam > 29)
+      if (numParam > 29) 
       {
         if (pdsaDbank->tracing)
         {
@@ -3372,7 +3375,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         if (monster.dbType() == dbMONSTER)
         {
           pMon = GetRecordAddressDB4(monster);
-          for ( object=pMon->possession();
+          for ( object=pMon->possession(); 
                 (possindex>0)&&(object!=RNeof);
                 object=GetDBRecordLink(object))
           {
@@ -3391,7 +3394,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
       flags = pdsaDbank->stack.pop();
       skillIndex = pdsaDbank->stack.pop();
       chIndex = pdsaDbank->stack.pop();
-      if (chIndex == 4) chIndex = d.HandChar;
+      if (chIndex == 4) chIndex = d.HandChar; 
       if (pdsaDbank->tracing)
       {
         PrintTrace("MASTERY ");
@@ -3420,13 +3423,13 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         object.ConstructFromInteger(objIndex);
         switch(object.dbType())
         {
-        case dbWEAPON:
+        case dbWEAPON: 
             result = GetRecordAddressDB5(object)->cursed();
             break;
-        case dbCLOTHING:
+        case dbCLOTHING: 
             result = GetRecordAddressDB6(object)->cursed();
             break;
-        case dbMISC:
+        case dbMISC: 
             result = GetRecordAddressDB10(object)->cursed();
             break;
         default: break; //result is 0
@@ -3467,10 +3470,10 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         object.ConstructFromInteger(objIndex);
         switch(object.dbType())
         {
-        case dbWEAPON:
+        case dbWEAPON: 
             result = GetRecordAddressDB5(object)->broken();
             break;
-        case dbCLOTHING:
+        case dbCLOTHING: 
             result = GetRecordAddressDB6(object)->broken();
             break;
         default: break; //result is 0
@@ -3495,10 +3498,10 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         object.ConstructFromInteger(objIndex);
         switch(object.dbType())
         {
-        case dbWEAPON:
+        case dbWEAPON: 
             GetRecordAddressDB5(object)->broken(broken);
             break;
-        case dbCLOTHING:
+        case dbCLOTHING: 
             GetRecordAddressDB6(object)->broken(broken);
             break;
         default: break;
@@ -3520,10 +3523,10 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         object.ConstructFromInteger(objIndex);
         switch(object.dbType())
         {
-        case dbWEAPON:
+        case dbWEAPON: 
             result = GetRecordAddressDB5(object)->poisoned();
             break;
-        //case dbCLOTHING:
+        //case dbCLOTHING: 
         //    result = GetRecordAddressDB6(object)->poisoned();
         //    break;
         default: break; //result is 0
@@ -3548,10 +3551,10 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         object.ConstructFromInteger(objIndex);
         switch(object.dbType())
         {
-        case dbWEAPON:
+        case dbWEAPON: 
             GetRecordAddressDB5(object)->poisoned(poisoned);
             break;
-        //case dbCLOTHING:
+        //case dbCLOTHING: 
         //    GetRecordAddressDB6(object)->poisoned(poisoned);
         //    break;
         default: break;
@@ -3573,7 +3576,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         object.ConstructFromInteger(objIndex);
         switch(object.dbType())
         {
-        case dbWEAPON:
+        case dbWEAPON: 
             result = GetRecordAddressDB5(object)->charges();
             break;
         case dbCLOTHING:
@@ -3607,7 +3610,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         object.ConstructFromInteger(objIndex);
         switch(object.dbType())
         {
-        case dbWEAPON:
+        case dbWEAPON: 
             GetRecordAddressDB5(object)->charges(charges);
             break;
         case dbCLOTHING:
@@ -3740,7 +3743,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
             pdbTELEPORTER->rotation() | (pdbTELEPORTER->facingMode() << 2));
           if (arraySize < 4) break;
           //what to teleport.
-          pdsaDbank->Var(arrayIndex+3,
+          pdsaDbank->Var(arrayIndex+3, 
             pdbTELEPORTER->what());
           //destination
           if (arraySize < 5) break;
@@ -3926,7 +3929,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
                 (pdsaDbank->Var(arrayIndex+1) & 8)!=0);
           pdbDOOR->canOpenWithAxe(
                 (pdsaDbank->Var(arrayIndex+1) & 0x10) != 0);
-          if (arraySize < 3) break;
+          if (arraySize < 3) break; 
           oldState = cf & 7;
           newState = pdsaDbank->Var(arrayIndex+2);
           switch (oldState)
@@ -4021,8 +4024,8 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
           if (pMon->Unique()) result[6] |= 4;
           if (pMon->Poisoned()) result[6] |= 8;
           result[7] = pMon->alternateGraphics();
-        }
-        else
+        } 
+        else 
         {
           PrintTrace("Not a monster");
           memset(result,0,sizeof(result));
@@ -4045,7 +4048,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         PrintTrace("{");
         for (i=0; i<n; i++)
         {
-          sprintf(line,"% d", result[i]);
+          sprintf(line,"% d", result[i]); 
           PrintTrace(line);
         };
         PrintTrace("}");
@@ -4085,7 +4088,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         PrintTrace("Monster! {");
         for (i=0; i<num; i++)
         {
-          sprintf(line,"% d", pdsaDbank->Var(index+i));
+          sprintf(line,"% d", pdsaDbank->Var(index+i)); 
           PrintTrace(line);
         };
         PrintTrace("}");
@@ -4154,7 +4157,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         PrintTrace("{");
         for (i=0; i<n; i++)
         {
-          sprintf(line,"% d", result[i]);
+          sprintf(line,"% d", result[i]); 
           PrintTrace(line);
         };
         PrintTrace("}");
@@ -4173,7 +4176,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
       index = pdsaDbank->stack.pop();
       charIdx = pdsaDbank->stack.pop();
       if (charIdx == 4) charIdx = d.HandChar;
-      if (   (index+num > 100)
+      if (   (index+num > 100) 
           || ((charIdx < 0x10000) && (charIdx >= d.NumCharacter))
           || (charIdx < 0)  )
       {
@@ -4230,7 +4233,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         PrintTrace("{");
         for (i=0; i<n; i++)
         {
-          sprintf(line,"% d", result[i]);
+          sprintf(line,"% d", result[i]); 
           PrintTrace(line);
         };
         PrintTrace("}");
@@ -4447,24 +4450,24 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         PrintTrace("{");
         for (i=0; i<n; i++)
         {
-          sprintf(line,"% d", pdsaDbank->Var(index+i));
+          sprintf(line,"% d", pdsaDbank->Var(index+i)); 
           PrintTrace(line);
         };
         PrintTrace("}");
       };
       //pc->facing(result[0]);;
-      if (n>1)
+      if (n>1) 
       {
         //pc->food = result[1];
         pc->food = sw(LIMIT(-1023,pdsaDbank->Var(1+index),2048));
       };
       if (pc->HP() - d.PendingDamage[charIdx] > 0) // Nothing we can do about dead heroes!
       {
-        if (n>2)
+        if (n>2) 
         {
           // should we adjust d.pendingdamage?
           if (pdsaDbank->Var(2+index) < 0) pdsaDbank->Var(2+index, 0);
-          if (pdsaDbank->Var(2+index) > pc->MaxHP())
+          if (pdsaDbank->Var(2+index) > pc->MaxHP()) 
                        pdsaDbank->Var(2+index, pc->MaxHP());
           if (pdsaDbank->Var(2+index) < pc->HP() - d.PendingDamage[charIdx])
           {
@@ -4475,7 +4478,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
                       "Damage character %d incremented by %d = %d\n",
                       charIdx, adj, d.PendingDamage[charIdx]+adj);
             };
-            d.PendingDamage[charIdx] =
+            d.PendingDamage[charIdx] = 
                  (ui16)(pc->HP() - pdsaDbank->Var(2+index));
           }
           else
@@ -4491,7 +4494,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
           //  LoadLevel(oldLevel);
           //}
           //else if (pdsaDbank->stack.tempVar[2+index] > pc->MaxHP()) pc->HP(pc->MaxHP());
-          //else pc->HP(pdsaDbank->stack.tempVar[2+index]);
+          //else pc->HP(pdsaDbank->stack.tempVar[2+index]); 
           //pc->word48 |= 0x100;
           //DrawCharacterState(charIdx);
         };
@@ -4499,7 +4502,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         DrawCharacterState(charIdx);
       };
       //result[3] = pc->load;
-      if (n>4)
+      if (n>4) 
       {
       //  pc->Mana(result[4]);
         pc->Mana(LIMIT(0, pdsaDbank->Var(4+index), pc->MaxMana()));
@@ -4515,7 +4518,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         pc->charFlags |= CHARFLAG_statsChanged;
         DrawCharacterState(charIdx);
       };
-      if (n>9)
+      if (n>9) 
       {
         //pcA2->water = sw(LIMIT(-1023,pcA2->water+fp.waterValue,2048));
         pc->water = sw(LIMIT(-1023,pdsaDbank->Var(9+index),2048));
@@ -4547,7 +4550,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
       experience = pdsaDbank->stack.pop();
       skillnum   = pdsaDbank->stack.pop();
       charnum    = pdsaDbank->stack.pop();
-      if ((charnum<d.NumCharacter) && (d.CH16482[charnum].HP()>0))
+      if ((charnum<d.NumCharacter) && (d.CH16482[charnum].HP()>0)) 
       {
         AddToSkill(charnum, skillnum, experience);
       };
@@ -4577,7 +4580,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
                    damage,
                    delta);
     };
-    break;
+    break;        
   case STKOP_TeleportParty:
     {
       DB1 pretendTeleporter;
@@ -4645,7 +4648,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
       color = pdsaDbank->stack.pop();
       index = pdsaDbank->stack.pop();
       locrInt = pdsaDbank->stack.pop();
-      if (Override_P)
+      if (Override_P) 
       {
         Override_P = false;
         if (locrInt >= 0)
@@ -4740,7 +4743,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
       fprintf(GETFILE(TraceFile),"J* %d%s",
                 exPkt.m_transferState, colNames[exPkt.m_transferCol]);
     };
-    break;
+    break; 
   case STKOP_GosubGear:
     {
       int state, msg;
@@ -4775,13 +4778,13 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
       if (idx > 98) break;
       location = 1024*pDSAparameters[1+0] + 32*pDSAparameters[1+1]+pDSAparameters[1+2];
       pdsaDbank->Var(idx, location);
-	  distance =   abs((int)pDSAparameters[1 + 1] - (int)pDSAparameters[1 + 5])
+	  distance =   abs((int)pDSAparameters[1 + 1] - (int)pDSAparameters[1 + 5]) 
 		         + abs((int)pDSAparameters[1 + 2] - (int)pDSAparameters[1 + 6]);
       pdsaDbank->Var(idx+1, distance-1);
       if (pdsaDbank->tracing)
       {
         char line[40];
-        sprintf(line,"{%d %d}", location, distance-1);
+        sprintf(line,"{%d %d}", location, distance-1); 
         PrintTrace(line);
       };
     };
@@ -4979,7 +4982,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
     return;
   };
   return;
-}
+}  
 
 static void EX_FETCH(EXECUTIONPACKET& exPkt)
 {
@@ -5050,9 +5053,9 @@ public:
 
 static i32 Execute(RN  RNmaster,
                    RN  RNslave,
-                   DSA *pMaster,
-                   DSA *pSlave,
-                   i32 curState,
+                   DSA *pMaster, 
+                   DSA *pSlave, 
+                   i32 curState, 
                    i32 msgType,
                    LOCATIONREL locrMaster,
                    LOCATIONREL locrSlave,
@@ -5070,7 +5073,7 @@ static i32 Execute(RN  RNmaster,
   exPkt.m_subroutineLevel = subroutineLevel;
   exPkt.m_RNmaster       = RNmaster;
   exPkt.m_RNslave        = RNslave;
-  exPkt.m_pMaster        = pMaster;
+  exPkt.m_pMaster        = pMaster; 
   exPkt.m_curState       = curState;
   exPkt.m_column         = msgType;
   exPkt.m_locrMaster     = locrMaster;
@@ -5087,9 +5090,9 @@ static i32 Execute(RN  RNmaster,
       exPkt.m_curState,msgType);
   };
   do
-  {
+  { 
     pState = pSlave->StatePointer(exPkt.m_curState);
-    if (pState == NULL)
+    if (pState == NULL) 
     {
       if (finalState == -1) finalState = exPkt.m_curState;
       if (pdsaDbank->tracing)
@@ -5258,7 +5261,7 @@ static i32 Execute(RN  RNmaster,
         };
         EX_OVERRIDE(exPkt);
         break;
-      default:
+      default: 
         message("Unknown DSA command code");
         return curState;
       };
@@ -5274,7 +5277,7 @@ static i32 Execute(RN  RNmaster,
         finalState = exPkt.m_nextState;
       };
     };
-    if (exPkt.m_nextState >= 0)
+    if (exPkt.m_nextState >= 0) 
     {
       if (finalState == -1) finalState = exPkt.m_nextState;
     };
@@ -5291,7 +5294,7 @@ static i32 Execute(RN  RNmaster,
   return finalState;
 }
 
-bool ProcessDSATimer5(RN objSlave,
+bool ProcessDSATimer5(RN objSlave, 
                       const TIMER *pTimer,
                       LOCATIONREL locrSlave)
 {
@@ -5299,7 +5302,7 @@ bool ProcessDSATimer5(RN objSlave,
   return ProcessDSATimer6(objSlave, pTimer, locrSlave, false, &dsaVars);
 }
 
-bool ProcessDSATimer7(RN objSlave,
+bool ProcessDSATimer7(RN objSlave, 
                       const TIMER *pTimer,
                       LOCATIONREL locrSlave)
 {
@@ -5310,7 +5313,7 @@ bool ProcessDSATimer7(RN objSlave,
 int dsaFilterEnterCount = 0;
 int dsaFilterLeaveCount = 0;
 
-void ProcessDSAFilter(RN objSlave,
+void ProcessDSAFilter(RN objSlave, 
                       const TIMER *pTimer,
                       LOCATIONREL locrSlave,
                       bool *pFilterActive,
@@ -5324,7 +5327,7 @@ void ProcessDSAFilter(RN objSlave,
 }
 
 
-bool ProcessDSATimer6(RN objSlave,
+bool ProcessDSATimer6(RN objSlave, 
                       const TIMER *pTimer,
                       LOCATIONREL locrSlave,
                       bool filter,
@@ -5422,16 +5425,16 @@ bool ProcessDSATimer6(RN objSlave,
   if (pdsaDbank->tracing)
   {
     fprintf(GETFILE(TraceFile),"DSA %s State %d MSG %d\n",
-                      pSlave->Description(),
-                      curState,
+                      pSlave->Description(), 
+                      curState, 
                       inputMsgType);
   };
   startingOperationCount = operationCount;
   curState = Execute(objMaster,
                      objSlave,
-                     pMaster,
-                     pSlave,
-                     curState,
+                     pMaster, 
+                     pSlave, 
+                     curState, 
                      inputMsgType,
                      locrMaster,
                      locrSlave,
@@ -5451,8 +5454,8 @@ bool ProcessDSATimer6(RN objSlave,
     if (TimerTraceActive)
     {
       fprintf(GETFILE(TraceFile),"DSA %s State %d MSG %d [%d]\n",
-                      pSlave->Description(),
-                      curState,
+                      pSlave->Description(), 
+                      curState, 
                       inputMsgType,
                       operationCount-startingOperationCount);
     };
@@ -5463,7 +5466,7 @@ bool ProcessDSATimer6(RN objSlave,
   {
     if (operationCount > 50000)
     {
-      if (    (d.Time < prevTime + 6)
+      if (    (d.Time < prevTime + 6) 
           || ((6*operationCount) > 50000*(d.Time-prevTime)))
       {
         if (!SupressDSAWarningOption && !IsPlayFileOpen())
@@ -5560,13 +5563,13 @@ void DSAINDEX::ReadTracing(void)
       RestoreTracing(pRecord);
     };
   }
-  else
+  else 
   {
-    if (m_traceOverride == 256)
+    if (m_traceOverride == 256) 
     {
-      AllTracing();
-    }
-    else
+      AllTracing(); 
+    } 
+    else 
     {
       NoTracing();
     };

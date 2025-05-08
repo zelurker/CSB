@@ -2581,7 +2581,7 @@ void Interpret(ui16 *code,
     case StdDoorRectsF0:   push(RECT_StdDoorRectsF0);   break;
       //
     case StdDrawSeeThruDoorEdge:
-               memmove(d.pDoorBitmaps[1], (ui8 *)tempBitmap, 1968);
+               MemMove(d.pDoorBitmaps[1], (ui8 *)tempBitmap, 1968);
                TAG0088b2(GetBasicGraphicAddress(41),
                   (ui8 *)tempBitmap,
                   (RectPos *)d.uByte2542,
@@ -2861,7 +2861,7 @@ void Interpret(ui16 *code,
     case StdMirrorShapeToViewport: 
       pRectangle = StdRectanglePointers(pop());
       pBitmap = (pnt)StdBitmapPointers(pop());
-      memmove((ui8 *)pBitmap,(ui8 *)tempBitmap,pRectangle->b.uByte4*pRectangle->b.uByte5);
+      MemMove((ui8 *)pBitmap,(ui8 *)tempBitmap,pRectangle->b.uByte4*pRectangle->b.uByte5);
       MirrorShapeBltToViewport((ui8 *)tempBitmap, pRectangle);
       break;
     case Literal:
@@ -3332,8 +3332,8 @@ void FloorAndCeilingOnly(void)
   if ((VBLMultiplier!=1) && (((count++)%1) != 0) && (VBLMultiplier!=99)) return;
   Instrumentation(icntFloorAndCeiling);
   ClearMemory(d.pViewportBlack,4144);//space between floor and ceiling
-  memmove(d.pCeilingBitmap, d.pViewportBMP, 3248);//ceiling
-  memmove(d.pFloorBitmap, d.pViewportFloor, 7840);//floor
+  MemMove(d.pCeilingBitmap, d.pViewportBMP, 3248);//ceiling
+  MemMove(d.pFloorBitmap, d.pViewportFloor, 7840);//floor
   d.Word11684=0;
 }
 
@@ -4048,7 +4048,7 @@ void DrawCellF3R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
             pRoomData->y,
             pRoomData->relativeCellNumber,
             0x128);
-      memmove(d.pDoorBitmaps[5], d.Pointer1848, 704);
+      MemMove(d.pDoorBitmaps[5], d.Pointer1848, 704);
       MirrorShapeBltToViewport(d.Pointer1848, &d.DoorFrameRect[6]);
       //A0 = (pnt)d.misc1052eight[0] + pRoomData->decorations[1]*4;
       //D0W = (wordGear(A0+2) >> 6) & 1;
@@ -4177,7 +4177,7 @@ void DrawCellF3(i32 /*facing*/,SUMMARIZEROOMDATA *pRoomData)
             pRoomData->relativeCellNumber, 
             0x218);
       BltShapeToViewport(d.pDoorBitmaps[4], &d.DoorFrameRect[5]);//(RectPos *)d.Byte3098);
-      memmove(d.pDoorBitmaps[4], d.Pointer1848, 704);
+      MemMove(d.pDoorBitmaps[4], d.Pointer1848, 704);
       MirrorShapeBltToViewport(d.Pointer1848, &d.DoorFrameRect[4]);//d.Byte3106);
       //A0 = (pnt)d.misc1052eight[0] + pRoomData->decorations[1]*4;
       //D0W = (wordGear(A0+2)>>6)&1;
@@ -4729,7 +4729,7 @@ void DrawCellF2(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
             0x218);
       BltShapeToViewport(d.pDoorBitmaps[7], &d.DoorTrackTopRect[4]);
       BltShapeToViewport(d.pDoorBitmaps[3], &d.DoorFrameRect[3]);//(RectPos *)d.Byte3114); // Door sides appear
-      memmove(d.pDoorBitmaps[3], d.Pointer1848, 1560);
+      MemMove(d.pDoorBitmaps[3], d.Pointer1848, 1560);
       MirrorShapeBltToViewport(d.Pointer1848, &d.DoorFrameRect[2]);//d.Byte3122); // Other side of door.
       pDB0 = GetRecordAddressDB0(pRoomData->decorations[1]);
       if (pDB0->doorSwitch()) DrawDoorSwitch(1, 2);
@@ -5190,7 +5190,7 @@ void DrawCellF0(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData,bool /*skipDrawing*
     /*
       if (d.SeeThruWalls != 0)
       {
-        memmove(d.pDoorBitmaps[1], d.Pointer1848, 1968);
+        MemMove(d.pDoorBitmaps[1], d.Pointer1848, 1968);
         if (!skipDrawing)
         TAG0088b2(GetBasicGraphicAddress(41),
                   d.Pointer1848,

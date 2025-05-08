@@ -136,7 +136,7 @@ void CompactMemory(void)
           D5W = d.GraphicIndex8000[D6W & 0x7fff];
         };
         d.ppExpandedGraphics[D5W] = (ITEMQ *)A3;
-        memmove(A2, A3, D7W);
+        MemMove(A2, A3, D7W);
         if (d.pqFirstGraphic == (ITEMQ *)A2)
         {
           d.pqFirstGraphic = (ITEMQ *)A3;
@@ -191,7 +191,7 @@ void LoadNeededGraphics(i16 *P1, const i32 Count)
     while (  ((D6W=sw(D7W+1)) < count)
            &&(D5W == P1[D6W]) )
     {
-    memmove((ui8 *)&P1[D6W], (ui8 *)&P1[D7W], 2*((count--)-D6W));
+    MemMove((ui8 *)&P1[D6W], (ui8 *)&P1[D7W], 2*((count--)-D6W));
 
 
     };
@@ -284,7 +284,7 @@ void LoadNeededGraphics(i16 *P1, const i32 Count)
       A3 -= D4L;
       if (A2 != A3+2)
       {
-        memmove((ui8 *)A3+2, (ui8 *)A2, D4W);
+        MemMove((ui8 *)A3+2, (ui8 *)A2, D4W);
         ASSERT(((uintptr_t)A2 & 3) == 0,"A2");
         d.ppUnExpandedGraphics[D5W] = A2;
       };

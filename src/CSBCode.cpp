@@ -831,7 +831,7 @@ void LoadPartyLevel(const i32 level)
 }
 
 
-void memmove(void *src, void *dest, i32 byteCount) // TAG0009dc
+void MemMove(void *src, void *dest, i32 byteCount) // TAG0009dc
 {
   memmove(dest, src, byteCount);
 }
@@ -983,7 +983,7 @@ void vblInterrupt(void) // TAG000c3a
       //SaveRegs(0xf0c0);
       D1W = (i16)(27 - d.TextScanlineScrollCount);
       D1L = (ui16)D1W * (ui16)160;
-      memmove(d.LogicalScreenBase+172*160+160, // Up one line
+      MemMove(d.LogicalScreenBase+172*160+160, // Up one line
               d.LogicalScreenBase+172*160,
               D1W);
       // Should not need this.  Unconditional Invalidate follows.  Invalidate();
@@ -1007,7 +1007,7 @@ void vblInterrupt(void) // TAG000c3a
     D2W = (i16)-D2W;
     D2W += 200;
     D2L = (ui16)D2W * (ui16)160;
-    memmove((ui8 *)d.newTextLine,   // Bitmap of new text line.
+    MemMove((ui8 *)d.newTextLine,   // Bitmap of new text line.
             d.LogicalScreenBase + D2L,
             D1W);
     Invalidate();
@@ -2029,7 +2029,7 @@ void CreateObjectCursor(pnt P1)
             8,
             16,
             -1);
-  memmove((ui8 *)A2, (ui8 *)d.Pointer23186, 288);
+  MemMove((ui8 *)A2, (ui8 *)d.Pointer23186, 288);
   ShrinkBLT((ui8 *)A3,
             d.SavedCursorPixels,
             16,
@@ -2106,7 +2106,7 @@ void TAG0025a6(i32 P1)
               16,
               0);
     ShrinkBLT((ui8 *)A2, (ui8 *)A2, 32, 16,32,16,d.Byte1382);
-    memmove((ui8 *)A2, (ui8 *)d.Pointer23178, 256);
+    MemMove((ui8 *)A2, (ui8 *)d.Pointer23178, 256);
     TAG0088b2((ui8 *)d.LogicalScreenBase,
               (ui8 *)d.Pointer23178,
               &d.wRectPos23222,
@@ -2367,12 +2367,12 @@ tag002b30:
   D7W = sw((D7W - D1W) << 4);
   D7L &= 0xffff;
   D0 = D7;
-  memmove((ui8 *)A2, d.CursorBitmap, D0W);
+  MemMove((ui8 *)A2, d.CursorBitmap, D0W);
   {
     i16 num = sw(D6W<<4);
     ui8 *dst = d.CursorBitmap + D7UW;
     ui8 *src = (ui8 *)A3 + D7UW;
-    memmove(src,dst,num);
+    MemMove(src,dst,num);
   };
   goto tag002c22;
 tag002b86:
@@ -2884,7 +2884,7 @@ void MakeMirror(ui8 *src, ui8 *dst, i32 width, i32 height) //TAG00434a
   dReg D0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   D0L = (ui16)width * (ui16)height;
-  memmove((ui8 *)src,(ui8 *)dst,D0W);
+  MemMove((ui8 *)src,(ui8 *)dst,D0W);
   Mirror(dst,width,height);
 }
 
@@ -3262,8 +3262,8 @@ i16 DrawWallDecoration(i32 graphicOrdinal,
       {
         i32 n;
         graphicID++;
-        //memmove(A3, (pnt)d.ViewportObjectButtons[5], 4); // ?????
-        memmove((ui8 *)pWDP, (ui8 *)&d.ViewportObjectButtons[5], 4); // ?????
+        //MemMove(A3, (pnt)d.ViewportObjectButtons[5], 4); // ?????
+        MemMove((ui8 *)pWDP, (ui8 *)&d.ViewportObjectButtons[5], 4); // ?????
         d.FacingAlcove = isAlcove;
         d.FacingViAltar = (d.Word1870!=0) && (graphicIndex==d.OrnateAlcoveGraphicIndex);
         d.FacingWaterFountain = 0;
@@ -3528,7 +3528,7 @@ i16 DrawWallDecoration(i32 graphicOrdinal,
       };
     };
   }; //(relativePosition < 10)
-  memmove(pWDP, &LOCAL_22.b, 4); // Temp copy so we can modify.
+  MemMove(pWDP, &LOCAL_22.b, 4); // Temp copy so we can modify.
   if (drawingText)
   {
     i32 numLine;
@@ -3555,7 +3555,7 @@ i16 DrawWallDecoration(i32 graphicOrdinal,
     //pWDP = pWDP_4;
     if (numLine < 4)
     {
-      //memmove((ui8 *)A3, (ui8 *)&LOCAL_22, 8); //Why 8?
+      //MemMove((ui8 *)A3, (ui8 *)&LOCAL_22, 8); //Why 8?
       //A3 = &LOCAL_22; //Local copy of RECTPOS + 2 bytes
       A0 = d.WallDecorationDerivedGraphicOffset; //0,0,1,1,1,2,2,3,3,3,4,4 // Which of the 5 derived graphics to use
       D0L = 3*((UI8)(*(A0+relativePosition)));//Try adding P2. Seems Reasonable
@@ -4049,7 +4049,7 @@ void DrawDoorSwitch(i32 P1, i32 P2)
   if (D6W == 3)
   {
     A2 = (pnt)GetBasicGraphicAddress(D5W);
-    memmove((ui8 *)A3, (ui8 *)&d.ViewportObjectButtons[5], 4);
+    MemMove((ui8 *)A3, (ui8 *)&d.ViewportObjectButtons[5], 4);
   }
   else
   {
@@ -4120,7 +4120,7 @@ void DrawDoor(i32 DB0index,     //8
   DB0A2 = GetRecordAddressDB0(DB0index);
   doorType = DB0A2->doorType();
 //
-  memmove((ui8 *)GetBasicGraphicAddress(graphicNum[doorType]),
+  MemMove((ui8 *)GetBasicGraphicAddress(graphicNum[doorType]),
           (ui8 *)tempBitmap, //temporary bitmap
           graphicSize);
   TAG004b26(DB0A2->ornateness(), nearness);
@@ -4250,7 +4250,7 @@ void DrawTeleporter(RectPos *P1,RectPos *rectpos)
   {
     D0W = sw(uA3->b.uByte4 * uA3->b.uByte5);
     A2 = (aReg)tempBitmap;
-    memmove((ui8 *)GetBasicGraphicAddress((uA3->b.y2 & 0x7f) + 69),
+    MemMove((ui8 *)GetBasicGraphicAddress((uA3->b.y2 & 0x7f) + 69),
             (ui8 *)A2,
             D0W);
     if (uA3->b.y2 & 0x80)
@@ -4471,10 +4471,10 @@ void TAG00907e(void (*  func)(i32,i32,i32), //8
   // pwA2 will continue to point to the first word of the
   // patch area selected.
   pwA2[30] = 1;
-  memmove(TAG009110,pwA2,42); // 21 words.  Up to the
+  MemMove(TAG009110,pwA2,42); // 21 words.  Up to the
               // trailing jump without the address
   // A3 points to first byte of function to be patched.
-  memmove(func, pwA2+31, 6); // Save first 6 byes of func
+  MemMove(func, pwA2+31, 6); // Save first 6 byes of func
   pntGear(pwA2+21) = func;  // Patch jumps back to function
   pntGear(pwA2+23) = getGraphic; // The function patch calls
 //
@@ -5176,7 +5176,7 @@ void RemoveObjectFromRoom(RN object,i32 mapX,i32 mapY, MMRECORD *pmmr)
       pdA0[mapY] &= 0xef; // clear 'room has object'
       D5W = sw(d.dungeonDatIndex->ObjectListLength() - 1);
       D0UW = uw(2*(D5W - D6W));
-      memmove((ui8 *)(prnA2+1), (ui8 *)prnA2, D0UW);
+      MemMove((ui8 *)(prnA2+1), (ui8 *)prnA2, D0UW);
       d.objectList[D5W] = RN(RNnul); // clear last entry
       //Now we need to fix the column indexes.
       puwA2 = &d.pCurrentLevelObjectIndex[mapX+1];
@@ -8892,7 +8892,7 @@ void TAG01b408(i16 P1)
   pcA3 = &d.CH16482[d.MagicCaster];
   if (P1 ==2)
   {
-    memmove((ui8 *)d.Byte21994, (ui8 *)d.Byte20842, 576);
+    MemMove((ui8 *)d.Byte21994, (ui8 *)d.Byte20842, 576);
     D6W = 1;
     D5W = 6;
     D1W = (UI8)(pcA3->byte33);
@@ -8923,7 +8923,7 @@ void TAG01b408(i16 P1)
   {
     if (P1 == 3)
     {
-      memmove((ui8 *)d.Byte21418, (ui8 *)d.Byte20842, 576);
+      MemMove((ui8 *)d.Byte21418, (ui8 *)d.Byte20842, 576);
       LOCAL_2[1] = 0;
       D6W = 8;
 
@@ -9051,7 +9051,7 @@ i16 StreamInput(ui8 *dest,i32 num) //TAG01cf86
   if (d.inStreamBuffered != 0)
   {
     if (count > d.inStreamLeft) return 0;
-    memmove((ui8 *)d.inStreamNext, dest, count);
+    MemMove((ui8 *)d.inStreamNext, dest, count);
     d.inStreamNext += count;
     d.inStreamLeft -= count;
     return 1;
@@ -9424,8 +9424,8 @@ RESTARTABLE _OpenPrisonDoors(void) //TAG01f47a
       StartSound(d.Pointer22964, 145, 1); //Graphic #535 // Start sound
     }
     // *d.Point22916 has length 20608
-    //memmove((ui8 *)pntGear((pnt)A3+32), (ui8 *)pntGear((pnt)A3+36), 20608); // Dungeon interior.
-    memmove(d.Pointer22920, d.Pointer22916, 20608); // Dungeon interior.
+    //MemMove((ui8 *)pntGear((pnt)A3+32), (ui8 *)pntGear((pnt)A3+36), 20608); // Dungeon interior.
+    MemMove(d.Pointer22920, d.Pointer22916, 20608); // Dungeon interior.
 // I commented this out.. I could see no change.
     TAG0088b2((ui8 *)d.pViewportBMP,  // left part of interior.
               //upntGear((pnt)A3+36),
@@ -10658,15 +10658,15 @@ RESTARTABLE _GameSetup(i32 showPrisonDoor)
   d.pFunc23232 = TAG00306c;
     //D0 = TAG00dd78(&DetachItem16)
   d.pFunc23236 = DetachItem16;
-  //  memmove((pnt)palette,(pnt)&d.Palette11946, 32);
-  //  memmove((pnt)palette,(pnt)&d.Palette11978, 32);
+  //  MemMove((pnt)palette,(pnt)&d.Palette11946, 32);
+  //  MemMove((pnt)palette,(pnt)&d.Palette11978, 32);
   TAG0023b0();
   TAG000ec6(); // In supervisor mode
   jdisint(5);  // TRAP 14 (#26,#5);
   //TAG0020ca();
   wvbl(_2_);
-  memmove((ui8 *)d.Palette552, (ui8 *)&d.Palette11946, 32); // Initialize palette
-  memmove((ui8 *)d.Palette552, (ui8 *)&d.Palette11978, 32); // Initialize palette
+  MemMove((ui8 *)d.Palette552, (ui8 *)&d.Palette11946, 32); // Initialize palette
+  MemMove((ui8 *)d.Palette552, (ui8 *)&d.Palette11978, 32); // Initialize palette
   if (showPrisonDoor == 1)
   {
     TAG01f746(_3_);
@@ -11155,8 +11155,34 @@ tag021570:
   //if (D0W < 0) goto tag021536;
   if (bitNumberInDest < 0) goto tag021536;
   RTS;
+//  case 0: goto tag0215aa;
+//  case 1: goto tag0215a8;
+//  case 2: goto tag0215cc;
+//  case 3: goto tag0215a4;
+//  case 4: goto tag0215dc;
+//  case 5: goto tag0215b6;
+//  case 6: goto tag0215c8;
+//  case 7: goto tag0215a0;
+//  case 8: goto tag0215ee;
+//  case 9: goto tag0215ec;
+//  case 10: goto tag0215fa;
+//  case 11: goto tag0215e8;
+//  case 12: goto tag0215d8;
+//  case 13: goto tag0215b2;
+//  case 14: goto tag0215c4;
+//  case 15:
+//    wordGear(A1+6) |= LE16(D3W);
+//    wordGear(A1+4) |= LE16(D3W);
+//    wordGear(A1+2) |= LE16(D3W);
+//    wordGear(A1) |= LE16(D3W);
+//    D0W--;\
+//    if (D0W < 0) goto tag021536;
+//    RTS;
+//tag0215b2:
 tag02170a:
   POP; // discard return address
+  //D4=saveD4;D5=saveD5;D6=saveD6;D7=saveD7;
+  //A2=saveA2;A3=saveA3;A4=saveA4;A5=saveA5;A6=saveA6;
   ASSERT(retindex==10,"retindex");
   return;
 tagReturn:
@@ -11501,19 +11527,19 @@ RESTARTABLE _AskWhatToDo(void)
   d.pFunc23232 = TAG00306c;
     //D0 = TAG00dd78(&DetachItem16)
   d.pFunc23236 = DetachItem16;
-  //  memmove((pnt)palette,(pnt)&d.Palette11946, 32);
-  //  memmove((pnt)palette,(pnt)&d.Palette11978, 32);
+  //  MemMove((pnt)palette,(pnt)&d.Palette11946, 32);
+  //  MemMove((pnt)palette,(pnt)&d.Palette11978, 32);
   TAG0023b0();
   TAG000ec6(); // In supervisor mode
   jdisint(5);  // TRAP 14 (#26,#5);
   TAG0020ca();
   wvbl(_2_);
-  memmove((pnt)d.Palette552, (pnt)&d.Palette11946, 32); // Initialize palette
-  memmove((pnt)d.Palette552, (pnt)&d.Palette11978, 32); // Initialize palette
+  MemMove((pnt)d.Palette552, (pnt)&d.Palette11946, 32); // Initialize palette
+  MemMove((pnt)d.Palette552, (pnt)&d.Palette11978, 32); // Initialize palette
   TAG01f746(_3_);
   */
   setscreen(d.LogicalScreenBase,d.LogicalScreenBase,0);
-  memmove((ui8 *)d.Palette552, (ui8 *)&d.Palette11978, 32); // Initialize palette
+  MemMove((ui8 *)d.Palette552, (ui8 *)&d.Palette11978, 32); // Initialize palette
 #ifdef TARGET_OS_MAC
   MacShowCursor();
 #endif
