@@ -2040,22 +2040,8 @@ void Cleanup(bool programTermination)
     TimerTraceActive = false;
   };
 
-//  if (recording)
-//  {
-//    RecordFile.Close();
-//  };
   FILETABLECleanup();
   AtariMemCleanup();
-  //if (TimerTraceActive && !programTermination)
-  //{
-  //  TimerTraceActive = false;
-  //  OpenTraceFile();
-  //  TimerTraceActive = true;\
-  //};
-//  if (recording && !programTermination)
-//  {
-//    RecordFile.Open();
-//  };
 }
 
 
@@ -2158,7 +2144,7 @@ void SKIN_CACHE::SetSkin(i32 level, i32 x, i32 y, i8 skinNum)
   recSize = 4 * expool.Read(recId, (ui32 *)m_columns[column], 64); // read and delete old record
   if (recSize < 0) recSize = 0;
   if (recSize > 64) recSize = 64;
-  
+
   // Expand the cache record to size = 64
   // works return;
   if (recSize < 64) memset(m_columns[column]+recSize, 0, 64-recSize);

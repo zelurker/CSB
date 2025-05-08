@@ -724,7 +724,7 @@ void SETDTA(pnt);
 i16  drvmap(void); //Bios function TRAP #13
 //i32  atari_sprintf(char *,const char*, i32, i32=0, i32=0);//TAG0065e0
 i32  atari_sprintf(char *,const char*, const intptr_t, const intptr_t=0, const intptr_t=0);//TAG0065e0
-void MemoryMove(void *src, void *dst, i16, i16, i32);//like MemMove
+void MemoryMove(void *src, void *dst, i16, i16, i32);//like memmove
 ui8 *physbase(void);
 ui8 *logbase(void);
 void setscreen(ui8 *logaddr, ui8 *physaddr, i16 res);

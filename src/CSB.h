@@ -12,7 +12,6 @@
 //#ifdef _DEBUG
 #define TraceFlash(msg) traceFlash(msg)
 void traceFlash(const char *msg, i32 x=-1, i32 y=-1);
-void MemMove(void *, void *, int);
 //#else
 //#define TraceFlash(msg) ;
 //#endif
@@ -1371,13 +1370,13 @@ public:
 
 struct wordRectPos {
   i16 x1; i16 x2; i16 y1; i16 y2;
-  //void operator =(const wordRectPos& src){MemMove((ui8 *)this, (ui8 *)&src, 8);};
+  //void operator =(const wordRectPos& src){memmove((ui8 *)this, (ui8 *)&src, 8);};
 };
 
 struct byteRectPos {
   ui8 x1; ui8 x2; ui8 y1; ui8 y2;
   ui8 uByte4; ui8 uByte5; ui8 uByte6; ui8 uByte7;
-  //void operator =(const byteRectPos& src){MemMove((ui8 *)this, (ui8 *)&src, 8);};
+  //void operator =(const byteRectPos& src){memmove((ui8 *)this, (ui8 *)&src, 8);};
 };
 
 union RectPos  {wordRectPos w; byteRectPos b;};
@@ -2249,8 +2248,8 @@ public:
   void ToggleMirror(void){sms^=0x40;};
   ui8  Nibble0(void){return (ui8)(sms&7);};
   ui8  Nibble3(void){return (ui8)((sms>>3)&7);};
-  void Nibble0(ui32 v){sms=(ui8)(sms&0xf8|v&7);};
-  void Nibble3(ui32 v){sms=(ui8)(sms&0xc7|((v&7)<<3));};
+  void Nibble0(ui32 v){sms=(ui8)((sms&0xf8)|(v&7));}
+  void Nibble3(ui32 v){sms=(ui8)((sms&0xc7)|((v&7)<<3));}
 };
 
 struct ITEM16
@@ -3149,7 +3148,6 @@ RESTARTABLE _MainLoop(const CSB_UI_MESSAGE *);//TAG00068e//(void)
 void LoadPartyLevel(const i32 P1);//TAG000850(void)
 //   TAG00091c
 void vblFlashButn(i16 x1, i16 x2, i16 y1, i16 y2); // called by VBL handler
-void MemMove(void *src, void *dest, i32 byteCount); //TAG0009dc
 void ClearMemory(ui8 *dest, i32 numByte); // TAG000a84
 void fillWithByte(ui8 *addr, i16 num, i8 value, i16 spacing);//TAG000ac0
 void fillMemory(i16 *pwAddr, i32 num, i16 value, i16 spacing); //TAG000af6

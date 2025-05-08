@@ -501,7 +501,7 @@ void AddObjectToRoom(RN newObj,RN prevObj,i32 mapX,i32 mapY,MMRECORD *pmmr)
       prnA3 = &d.objectList[D4W];
       D0W = d.dungeonDatIndex->ObjectListLength();
       D0W = (i16)(D0W - (D4W+1));
-      MemMove((ui8 *)prnA3, (ui8 *)prnA3+2, 2*D0W);
+      memmove((ui8 *)prnA3, (ui8 *)prnA3+2, 2*D0W);
       *prnA3 = newObj;
       ASSERT(FindFirstObject(mapX,mapY)!=RNnul,"firstObject");
       ASSERT(GetCommonAddress(newObj)->link() != RNnul,"link");
@@ -2794,7 +2794,7 @@ i16 CheckMoveFromMissile(i32 oldX,i32 oldY,i32 newX,i32 newY, RN movedObject, MM
       //D0W =  sw(newY);
       missileY = newY;
       //oldY |= (newY << 8);
-      MemMove((ui8 *)&whoLeavesNewCell, (ui8 *)&whoLeavesCell, 4);
+      memmove((ui8 *)&whoLeavesNewCell, (ui8 *)&whoLeavesCell, 4);
       //goto Loop;
     };
   };
@@ -4419,8 +4419,8 @@ void DeleteFootprintEntry(i16 P1)
   D6W = sw(D6W - D7W);
   if (D6W) // Number we need to move
   {
-    MemMove((ui8 *)&d.PartyFootprints[D7W+1],(ui8 *)&d.PartyFootprints[D7W],2*D6W);
-    MemMove((ui8 *)&d.Byte13220[D7W+1],(ui8 *)&d.Byte13220[D7W],D6W);
+    memmove((ui8 *)&d.PartyFootprints[D7W+1],(ui8 *)&d.PartyFootprints[D7W],2*D6W);
+    memmove((ui8 *)&d.Byte13220[D7W+1],(ui8 *)&d.Byte13220[D7W],D6W);
   };
   if (D7W < (UI8)(d.IndexOfFirstMagicFootprint))
   {

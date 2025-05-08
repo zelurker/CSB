@@ -60,7 +60,7 @@ void ReadGraphicsForLevel(void)
   //};
   pGraphicsList = (i16 *)allocateMemory(1126,0);
   numGraphic = 0;
-  MemMove((ui8 *)d.DefaultGraphicList, (ui8 *)pGraphicsList, 140);
+  memmove((ui8 *)d.DefaultGraphicList, (ui8 *)pGraphicsList, 140);
   numGraphic += 70;
   ReadFloorAndCeilingBitmaps(d.pCurLevelDesc->backgroundGraphicSet());
   ReadWallBitmaps(d.pCurLevelDesc->wallGraphicSet());

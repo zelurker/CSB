@@ -147,7 +147,7 @@ RESTARTABLE _ShowCredits(const i32 P1) //(void)
   closeGraphicsFile();
   if (d.DynamicPaletteSwitching)
   {
-    MemMove((ui8 *)&d.Palette11978, (ui8 *)&LOCAL_78, 32);
+    memmove((ui8 *)&d.Palette11978, (ui8 *)&LOCAL_78, 32);
     for (D6W=0; D6W<=7; D6W++)
     {
       wvbl(_2_);
@@ -162,7 +162,7 @@ RESTARTABLE _ShowCredits(const i32 P1) //(void)
 //
     };
     wvbl(_3_);
-    MemMove((ui8 *)&LOCAL_78, &d.Palette11978, 32);
+    memmove((ui8 *)&LOCAL_78, &d.Palette11978, 32);
   }
   else
   {
@@ -228,7 +228,7 @@ tag01fd10:
     ClearMemory(d.LogicalScreenBase, 32000);
     BLT2Screen((ui8 *)A2, (RectPos *)d.Word108, 40, -1);
     fillMemory((i16 *)&LOCAL_110, 16, 2, 2);
-    MemMove((ui8 *)&LOCAL_110, (ui8 *)&LOCAL_46, 32);
+    memmove((ui8 *)&LOCAL_110, (ui8 *)&LOCAL_46, 32);
     ForceScreenDraw();
     LOCAL_46.color[15] = 0x777;
     videoMode = VM_THEEND;
@@ -286,7 +286,7 @@ tag01fd10:
         FadeToPalette(_10_,&LOCAL_110);
         ClearMemory(d.LogicalScreenBase, 32000);
         FadeToPalette(_11_,&d.Palette552[0]);
-        MemMove((ui8 *)&d.Palette552[0], (ui8 *)&d.Palette11946, 32);
+        memmove((ui8 *)&d.Palette552[0], (ui8 *)&d.Palette11946, 32);
         d.gameState = GAMESTATE_ResumeSavedGame;
         if (recording)
         {

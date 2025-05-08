@@ -169,9 +169,9 @@ DSAListDialog::~DSAListDialog(void)
 
 
 LRESULT CALLBACK DSAListCallback(
-                       HWND hDlg, 
-                       UINT message, 
-                       WPARAM wParam, 
+                       HWND hDlg,
+                       UINT message,
+                       WPARAM wParam,
                        LPARAM /*lParam*/)
 {
 //  i32 len;
@@ -253,12 +253,12 @@ LRESULT CALLBACK DSAListCallback(
           override = DSAIndex.TraceOverride();
           if (override == 256)
           {
-            SendMessage(hList, LB_SELITEMRANGE, (WPARAM)1, MAKELPARAM(1,1));                 
+            SendMessage(hList, LB_SELITEMRANGE, (WPARAM)1, MAKELPARAM(1,1));
           }
           else
           {
             DSAIndex.TraceOverride(-1);
-            SendMessage(hList, LB_SELITEMRANGE, (WPARAM)1, MAKELPARAM(0,0));                 
+            SendMessage(hList, LB_SELITEMRANGE, (WPARAM)1, MAKELPARAM(0,0));
           };
         };
         SetFocus(hList);
@@ -407,9 +407,9 @@ char *finalEditText= NULL;
 
 #ifdef _MSVC_INTEL //005
 LRESULT CALLBACK EditTextCallback(
-                       HWND hDlg, 
-                       UINT message, 
-                       WPARAM wParam, 
+                       HWND hDlg,
+                       UINT message,
+                       WPARAM wParam,
                        LPARAM /*lParam*/)
 {
   i32 len;
@@ -420,13 +420,13 @@ LRESULT CALLBACK EditTextCallback(
       if (initialEditText == NULL)
       initialEditText = "No Game Information available";
       SetDlgItemTextA(hDlg, IDC_GameInformationEdit, initialEditText);
- 
+
       if (annotationPlaced)
       {
         SetWindowPlacement(hDlg, &annotationPlacement);
       };
 
-      
+
 //BOOL SetWindowPos(
 //  HWND hWnd,             // handle to window
 //  HWND hWndInsertAfter,  // placement-order handle
@@ -436,14 +436,14 @@ LRESULT CALLBACK EditTextCallback(
 //  int cy,                // height
 //  UINT uFlags            // window-positioning flags
 //);
-       
-      
-      
+
+
+
       };
 		  return TRUE;
 
 		case WM_COMMAND:
-			if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL) 
+			if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
 			{
         HWND hEdit = GetDlgItem(hDlg, IDC_GameInformationEdit);
         len = GetWindowTextLength(hEdit);
@@ -501,7 +501,7 @@ LRESULT CALLBACK EditTextCallback(
           annotationPlaced = true;
         };
       };
- 
+
 
       return FALSE;
     default:
@@ -531,7 +531,7 @@ i32 EditDialog::DoModal(void)
 }
 #endif //005
 
-class KEYXLATE 
+class KEYXLATE
 {
 private:
   i32 m_numkey;
@@ -566,7 +566,7 @@ i32 KEYXLATE::translate(i32 scan, i32 mode, XLATETYPE type)
   for (i32 i=0; i<m_numkey; i++)
   {
     if (   (m_xlate[4*i+0] == scan)
-        && (m_xlate[4*i+2] == mode) 
+        && (m_xlate[4*i+2] == mode)
         && (m_xlate[4*i+3] == type) ) return m_xlate[4*i+1];
   };
   return 0;
@@ -592,7 +592,7 @@ char *getfield(const char *buf, i32& col)
   };
   while (buf[col] != '\n')
   {
-    if (   (buf[col]==term) 
+    if (   (buf[col]==term)
         || ((term==' ') && (buf[col]=='\t'))) break;
     result[len++] = buf[col];
     if (len>198) len--;
@@ -687,8 +687,8 @@ i32 AddSmartDiscard(const char *buf)
 // with the highest discard priority has its priority recomputed.  If it
 // is still at least as great as the next higher item then it is deleted.
 // On the other hand, if its priority has declined (perhaps due to party
-// movement, because we just discarded an item of this type, etc) then it 
-// is put back in the list in its proper place and we wait for the next 
+// movement, because we just discarded an item of this type, etc) then it
+// is put back in the list in its proper place and we wait for the next
 // clock tick.
 //
 // The priority calculation includes a random number between 0.0 and 1.0
@@ -701,13 +701,13 @@ i32 AddSmartDiscard(const char *buf)
 //     name         item name - blanks are allowed  (or "default") (case-insensitive)
 //     minimum      integer - If this many or fewer of the item exist then
 //                            none will be considered for discard.
-//     level        float - additional priority for not being on a level 
+//     level        float - additional priority for not being on a level
 //                          adjacent to the party.
 //     y-intercept  float - discard priority for minimum
 //     slope        float - additional discard priority for each item over minimum
 //
 // The item's deletion priority is  y-intercept + slope*(num-minimum) + level
-//     
+//
 // Let us provide an example:
 //
 // example   -->  Discard   Worm Round  20  10.0  0  1
@@ -722,7 +722,7 @@ i32 AddSmartDiscard(const char *buf)
 //
 const char *SmartDiscards[] = {
 "default       30  50  20.0   1.0",
-"Wooden Shield 10  50  20.0   1.0", // We hardly need more than 10 of these 
+"Wooden Shield 10  50  20.0   1.0", // We hardly need more than 10 of these
 "Rock          10  50  20.0   1.0",
 "Sword         10  50  20.0   1.0",
 "Dagger        10  50  20.0   1.0",
@@ -964,12 +964,12 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
         else screenSize = 6;
         break;
       case OPT_RECORD:
-        if (msg->p2 == 1) 
+        if (msg->p2 == 1)
         {
           RecordMenuOption = true;
           NoRecordMenuOption = false;
         }
-        else 
+        else
         {
           RecordfileOpen(false); //This will override any other
                                  //Record options.
@@ -987,7 +987,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
         break;
       case OPT_QUICKPLAY:
         if (msg->p2 == 1) NoSpeedLimit = 2000000000;
-        else 
+        else
         {
           NoSpeedLimit = 0;
           VBLMultiplier = 1;
@@ -1047,7 +1047,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
           };
         };
 #else
-        {          
+        {
           DSAInstrumentation_Dump();
           DSATraceActive = !DSATraceActive;
         };
@@ -1095,7 +1095,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
       };
       break;
     case UIM_TERMINATE:
-        return UI_STATUS_TERMINATE; 
+        return UI_STATUS_TERMINATE;
     case UIM_CHAR:
         {
           //{
@@ -1144,8 +1144,8 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
           latestScanp1 = msg->p1;
           latestScanp2 = msg->p2;
           //printf("CSBUI(UIM_KEYDOWN)@%d\n",(ui32)UI_GetSystemTime());
-          if ((key = keyxlate.translate(msg->p2&0xff, 
-                                        keyboardMode, 
+          if ((key = keyxlate.translate(msg->p2&0xff,
+                                        keyboardMode,
                                         TYPESCAN))!= 0)
           {
             latestScanType = TYPESCAN;
@@ -1190,7 +1190,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
         //Then dispatch until nothing is left to do.  Then
         //call CheckVBL again.  Repeat entire process 10 times
         CallCheckVBL = VBLperTimer*VBLMultiplier; // do it 10 times
-        if (trace >= 0) 
+        if (trace >= 0)
         {
           fprintf(GETFILE(trace),"UIM_TIMER\n");
           fflush(GETFILE(trace));
@@ -1216,6 +1216,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
         }
         else
         {
+	    // printf("click %d %d from %d %d\n",X_TO_CSB(msg->p1,screenSize), Y_TO_CSB(msg->p2,screenSize),msg->p1,msg->p2);
           EnqueMouseClick(X_TO_CSB(msg->p1,screenSize), Y_TO_CSB(msg->p2,screenSize),1);//Chaos
           TAG001afe(X_TO_CSB(msg->p1,screenSize), Y_TO_CSB(msg->p2,screenSize), 1);//Hint
         };
@@ -1280,8 +1281,8 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
       {
         msgStackLen--;
         if (msgStack[msgStackLen].type == UIM_TERMINATE)
-        { 
-//          { 
+        {
+//          {
 //            FILE *f;
 //            f = fopen("debug","a");
 //            fprintf(f," Exit TERMINATE\n");
@@ -1293,7 +1294,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
         DispatchCSB(&msgStack[msgStackLen]);
       };
     } while (CallCheckVBL > 0);
-//    { 
+//    {
 //      FILE *f;
 //      f = fopen("debug","a");
 //      fprintf(f," Exit NORMAL\n");
@@ -1351,7 +1352,7 @@ void UI_PushMessage(MTYPE type,
   msgStack[msgStackLen].p6 = p6;
   msgStackLen++;
 }
-  
+
 
 #if defined _MSVC_INTEL || defined TARGET_OS_MAC //013
 void UI_Invalidate(bool erase)
@@ -1422,7 +1423,7 @@ void UI_Sleep(i32 milliseconds)
   if (!NoSleep) Sleep(milliseconds); //Windows sleep function
 #endif //015 _MSVC_INTEL
 #ifdef TARGET_OS_MAC //016
-  Sleep(milliseconds); 
+  Sleep(milliseconds);
 #endif //016
 #ifdef xxxx //017
   xxx usleep(milliseconds*1000);
@@ -1500,12 +1501,12 @@ PlayDirectSound playDirectSound;
 #else
 
 
-ui8 CLSID_DS[] = 
+ui8 CLSID_DS[] =
 {
   0x46, 0xD9, 0xD4, 0x47,
   0xE8, 0x62, 0xCF, 0x11,
   0x93, 0xBC, 0x44, 0x45,
-  0x53, 0x54, 0x00, 0x00 
+  0x53, 0x54, 0x00, 0x00
 };
 
 ui8 IID_DS[] =
@@ -1564,10 +1565,10 @@ bool MYDIRECTSOUND::Initialize(void)
   };
   m_comInitialized = true;
   result = CoCreateInstance(
-              *(_GUID *)CLSID_DS, 
-              NULL, 
-              CLSCTX_INPROC_SERVER, 
-              *(_GUID *)IID_DS, 
+              *(_GUID *)CLSID_DS,
+              NULL,
+              CLSCTX_INPROC_SERVER,
+              *(_GUID *)IID_DS,
               (void **)&m_directSound);
   if (result != S_OK)
   {
@@ -1625,7 +1626,7 @@ void MYDIRECTSOUND::Shutdown(void)
     m_directSound->Release();
     m_directSound = NULL;
   };
-  if (m_comInitialized) 
+  if (m_comInitialized)
   {
     CoUninitialize();
     m_comInitialized = false;
@@ -1657,7 +1658,7 @@ bool MYDIRECTSOUND::Play(const char *wave, i32 attenuation)
   ui32 secondaryBufferSize;
   if (attenuation < 0) attenuation = 0;
   if (attenuation > 100) attenuation = 100;
-  if (m_directSound == NULL) 
+  if (m_directSound == NULL)
   {
     if (!Initialize()) return false;
   };
@@ -1674,7 +1675,7 @@ bool MYDIRECTSOUND::Play(const char *wave, i32 attenuation)
   //wavfmt.cbSize          = pSndHead->cbSize;
   dbd.dwSize = sizeof (dbd);
   dbd.dwFlags = DSBCAPS_STATIC | DSBCAPS_CTRLVOLUME;
-  dbd.dwBufferBytes = pSndHead->numSamples54; // To be filled in after parsing 
+  dbd.dwBufferBytes = pSndHead->numSamples54; // To be filled in after parsing
   dbd.lpwfxFormat = &wavfmt;
   dbd.dwReserved = 0;
   result = m_directSound->CreateSoundBuffer(
@@ -1692,7 +1693,7 @@ bool MYDIRECTSOUND::Play(const char *wave, i32 attenuation)
   result = m_soundBuffers[m_numBuffersActive-1]->Lock(
                 0,
                 0,
-                (void **)&pSecondaryBuffer, 
+                (void **)&pSecondaryBuffer,
                 (DWORD *)&secondaryBufferSize,
                 NULL,
                 NULL,
@@ -1701,13 +1702,13 @@ bool MYDIRECTSOUND::Play(const char *wave, i32 attenuation)
   {
     Shutdown();
     m_failed = true;
-    return false; 
+    return false;
   };
   memcpy(pSecondaryBuffer, pSndHead->sample58, pSndHead->numSamples54);
   result = m_soundBuffers[m_numBuffersActive-1]->Unlock(
-                  pSecondaryBuffer, 
-                  pSndHead->numSamples54, 
-                  NULL, 
+                  pSecondaryBuffer,
+                  pSndHead->numSamples54,
+                  NULL,
                   0);
   if (result != DS_OK)
   {
@@ -1882,7 +1883,7 @@ void UI_PlaySound(char *wave, i32 flags)
 }
 #endif //023 TARGET_OS_MAC
 
-#ifdef TARGET_OS_MAC //024 
+#ifdef TARGET_OS_MAC //024
 void UI_ClearScreen(void)
 {
 }
@@ -1927,7 +1928,7 @@ void UI_SetDIBitsToDevice(i32 dstX,
     static int count = 0;
     static int FH;
     static ui16 buffer[200*320];
-    struct 
+    struct
     {
       ui64 curTime;
       i32 dstX, dstY;
@@ -2059,7 +2060,7 @@ bool UI_ProcessOption(char *key, char *value)
     if (folderName != NULL) UI_free(folderName);
     //folderName = (char *)UI_malloc(strlen(value)+2, MALLOC013);
     folderName = (char *)UI_malloc((i32)strlen(value)+2, MALLOC013);
-    if (folderName != NULL) 
+    if (folderName != NULL)
     {
       strcpy(folderName,value);
       if (folderName[strlen(folderName)-1] != '\\')
@@ -2312,7 +2313,7 @@ FILE *UI_fopen(const char *name, const char *flags)
 {
   return fopen(name, flags);
 }
-#endif //034 _MSVC_INTEL||_LINUX 
+#endif //034 _MSVC_INTEL||_LINUX
 
 MEM_BLOCKHEADER *allocatedMemoryList = NULL;
 ui32 listLength = 0;
