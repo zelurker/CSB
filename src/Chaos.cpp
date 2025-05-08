@@ -846,7 +846,6 @@ void SetDLogicalBase(ui8 *);
 i32  READ(i32 file, i32 len, ui8 *buf);
 i32  WRITE(i16 file, i32 len, ui8 *buf);
 i16  CLOSE(i32 handle);
-void MemMove(ui8 *src, ui8 *dest, i16 byteCount); //TAG0009dc
 //void TextToScreen(i32, i32, i32, i32, pnt);//TAG001c42
 i16  Unscramble(ui8 *buf, i32 initialChecksum, i32 numwordM1);
 i16  GenChecksum(ui8 *buf, i16 initSum, i32 numword);//TAG01d076
@@ -6452,7 +6451,7 @@ void MemoryMove(void *src,
                 i16 , //garbage
                 i32 len)
 {
-  MemMove(src, dst, len);
+  memmove( dst,src, len);
 }
 
 // *********************************************************

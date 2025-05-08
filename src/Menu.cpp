@@ -31,10 +31,10 @@ void BLT2Viewport(ui8 *P1,RectPos *rectPos,i16 P3,i16 P4)
 //
 //*********************************************************
 RESTARTABLE _WaitForMenuSelect(
-                       const i32 numButton, 
-                       const i32 P2, 
-                       const i32 /*P3*/, 
-                       const i32 /*P4*/) 
+                       const i32 numButton,
+                       const i32 P2,
+                       const i32 /*P3*/,
+                       const i32 /*P4*/)
 { //returns i16
   static dReg D0;
   static RectPos rect34;
@@ -62,7 +62,7 @@ RESTARTABLE _WaitForMenuSelect(
   d.pKeyXlate2 = NULL;
   d.SecondaryButtonList = NULL;
   pButnA0 = d.pButn18970[P2][numButton-1];
-  
+
   d.PrimaryButtonList = pButnA0; // Pointer to button list
   d.Word11764 = 99;
   do
@@ -72,7 +72,7 @@ RESTARTABLE _WaitForMenuSelect(
       HandleMouseEvents(_5_,0);
     } while (intResult & 1);
 
-    if (DiskMenuNeeded) 
+    if (DiskMenuNeeded)
     {
       DisplayDiskMenu(_6_);
     };
@@ -96,10 +96,11 @@ RESTARTABLE _WaitForMenuSelect(
     //{
     //};
   } while (d.Word11764 == 99);
- 
-  d.UseByteCoordinates = 0;  
-  MemMove((ui8 *)&d.PrimaryButtonList[d.Word11764-1].xMin, 
-          (ui8 *)&rect34, 8);
+
+  d.UseByteCoordinates = 0;
+  memmove((ui8 *)&rect34,
+	  (ui8 *)&d.PrimaryButtonList[d.Word11764-1].xMin,
+	  8);
   rect34.w.x1 -= 3;
   rect34.w.x2 += 3;
   rect34.w.y1 -= 3;
@@ -110,8 +111,8 @@ RESTARTABLE _WaitForMenuSelect(
   rect26.w.y1 = 0;
   rect26.w.y2 = sw(rect34.w.y2 - rect34.w.y1 + 3);
   rect26.w.x2 = sw(rect34.w.x2 - rect34.w.x1 + 3);
-  TAG0088b2((ui8 *)d.LogicalScreenBase, 
-            (ui8 *)d.pViewportBMP, 
+  TAG0088b2((ui8 *)d.LogicalScreenBase,
+            (ui8 *)d.pViewportBMP,
             &rect26,
             rect34.w.x1,
             rect34.w.y1,
@@ -119,7 +120,7 @@ RESTARTABLE _WaitForMenuSelect(
             160,
             -1);
   wvbl(_2_);
-  
+
   rect26 = rect34;
   rect26.w.y2 = rect26.w.y1;
   FillRectangle(d.LogicalScreenBase, &rect26, 5, 160);
@@ -197,12 +198,12 @@ void CenteredText(ui8 *dest, const char *text, i16 x, i16 y)
   text = TranslateLanguage(text);
   D0W = strlen(text);
   x = sw(x - D0W*3);
-  TextOut_OneLine(dest, 
-                  112, 
-                  x, 
-                  y, 
-                  9, 
-                  5, 
+  TextOut_OneLine(dest,
+                  112,
+                  x,
+                  y,
+                  9,
+                  5,
                   text,
                   999,
                   false);
@@ -215,7 +216,7 @@ i16 SplitLongLine(const char *text,char *firstLine,char *secondLine)
   i16 LOCAL_4;
   i16 LOCAL_2;
   D0L=0;
-//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;        
+//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   LOCAL_2 = strlen(text);
   if (LOCAL_2 < 30)
   {
@@ -224,7 +225,7 @@ i16 SplitLongLine(const char *text,char *firstLine,char *secondLine)
   else
   {
     strcpy(firstLine, text);
-    LOCAL_4 = sw(LOCAL_2>>1); 
+    LOCAL_4 = sw(LOCAL_2>>1);
     while ( (firstLine[LOCAL_4] != ' ') && (LOCAL_4 < LOCAL_2) )
     {
       LOCAL_4++;
@@ -412,7 +413,7 @@ RESTARTABLE _DoMenu(
                       112,
                       D6W,
                       D5W,
-                      9,  
+                      9,
                       5,
                       LOCAL_50,
                       999,
