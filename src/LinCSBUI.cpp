@@ -680,8 +680,8 @@ static bool LIN_PlaySound(i8* audio, const ui32 size, int volume)
 
 void LIN_PlayDirect(const char *name,int posX, int posY) {
     Sound_AudioInfo info;
-    char name2[25];
-    snprintf(name2,25,"sounds/%s",name);
+    char name2[35];
+    snprintf(name2,35,"sounds/%s",name);
     info.rate = mixer.freq;
     info.channels = 1;
     info.format = mixer.format;
