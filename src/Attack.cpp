@@ -2230,6 +2230,14 @@ RESTARTABLE _ProcessTimersViewportAndSound(void)
 //
 //*********************************************************
 //           TAG01fefc
+void my_Delay(int ms) {
+    SDL_Event ev;
+    for (int t=0; t<ms; t+=100) {
+	SDL_Delay(100);
+	while (SDL_PollEvent(&ev));
+    }
+}
+
 RESTARTABLE _FusionSequence(void)
 { //(void)    Called by Fusion attack only.
   static dReg D0, D1, D5, D6;
@@ -2434,13 +2442,13 @@ RESTARTABLE _FusionSequence(void)
 		    vblInterrupt();
 		scrollingText.ClockTick(); //Get things on the screen right away
 		display();
-		SDL_Delay(1000);
+		my_Delay(1000);
 	    }
 	else
 	    display();
         // ProcessTimersViewportAndSound(_17_);//TAG01fed6(_17_);
         // VBLDelay(_18_,180);
-	SDL_Delay(6000);
+	my_Delay(6000);
         b_9++;
         break;
       };
@@ -2457,10 +2465,10 @@ RESTARTABLE _FusionSequence(void)
 	  vblInterrupt();
       scrollingText.ClockTick(); //Get things on the screen right away
       display();
-      SDL_Delay(1000);
+      my_Delay(1000);
   }
   // VBLDelay(_19_,600);
-  SDL_Delay(6000);
+  my_Delay(6000);
   d.CanRestartFromSavegame = 0;
   ShowCredits(_20_,1);
   RETURN;
