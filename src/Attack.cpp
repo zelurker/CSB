@@ -2262,11 +2262,11 @@ RESTARTABLE _FusionSequence(void)
     RESTART(14)
     RESTART(15)
     RESTART(16)
-    RESTART(17)
-    RESTART(18)
-    RESTART(19)
+    // RESTART(17)
+    // RESTART(18)
+    // RESTART(19)
     RESTART(20)
-    //RESTART(21)
+    // RESTART(21)
     //RESTART(22)
     //RESTART(23)
     RESTART(24)
@@ -2274,7 +2274,7 @@ RESTARTABLE _FusionSequence(void)
     RESTART(26)
     RESTART(27)
     RESTART(28)
-    //RESTART(29)
+    // RESTART(29)
     RESTART(30)
   END_RESTARTMAP
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2424,8 +2424,23 @@ RESTARTABLE _FusionSequence(void)
         TAG00187e();
         b_226[1] = 10;
         PrintLines(15, (char *)b_226+1);
-        ProcessTimersViewportAndSound(_17_);//TAG01fed6(_17_);
-        VBLDelay(_18_,780);
+	// PrintLines calls ClockTick which sends everything on screen
+	// the only exception to this is when there is some scrolling to do...
+	// in this case it scrolls 1 screen line (not 1 text line) / vbl, which means that it needs 8 vbls to scroll 1 text line!
+	// This code with SDL_Delay replaces the nightmarish and broken thing which was trying to preserve the events to do the same (and failed for some obscure reason!)
+	if (d.TextScanlineScrollCount > -1)
+	    while (d.TextScanlineScrollCount > -1) {
+		for (int n=0; n<8; n++)
+		    vblInterrupt();
+		scrollingText.ClockTick(); //Get things on the screen right away
+		display();
+		SDL_Delay(1000);
+	    }
+	else
+	    display();
+        // ProcessTimersViewportAndSound(_17_);//TAG01fed6(_17_);
+        // VBLDelay(_18_,180);
+	SDL_Delay(6000);
         b_9++;
         break;
       };
@@ -2437,7 +2452,15 @@ RESTARTABLE _FusionSequence(void)
   PrintLines(0, (char *)d.Byte1830); // Linefeed
   PrintLines(15, "THE END.");
   PrintLines(0, (char *)d.Byte1830); // Linefeed
-  VBLDelay(_19_,600);
+  while (d.TextScanlineScrollCount > -1) {
+      for (int n=0; n<8; n++)
+	  vblInterrupt();
+      scrollingText.ClockTick(); //Get things on the screen right away
+      display();
+      SDL_Delay(1000);
+  }
+  // VBLDelay(_19_,600);
+  SDL_Delay(6000);
   d.CanRestartFromSavegame = 0;
   ShowCredits(_20_,1);
   RETURN;
