@@ -13,8 +13,8 @@ typedef pCH *ppCH;
 class XTABL
 {
   int m_numXlate[32];  // indexed on first character & 0x1f
-  ppCH m_english[32]; 
-  ppCH m_language[32]; 
+  ppCH m_english[32];
+  ppCH m_language[32];
 public:
   void Clear(void);
   XTABL(void);
@@ -99,7 +99,7 @@ void XTABL::AddTranslation(const char *s1, int len1, const char *s2, int len2)
 
   void *newmem;
   newmem = realloc(m_english[idx], (m_numXlate[idx]+1)*sizeof(m_english[idx][0]));
-  if (newmem == NULL) 
+  if (newmem == NULL)
   {
     free(S1); free(S2); return;
   };
@@ -168,7 +168,7 @@ void ReadTranslationFile(void)
     buf.buf[dquote[1]] = 0;
     buf.buf[dquote[3]] = 0;
     len1 = dquote[1]-dquote[0]; // includes trailing nil;
-    len2 = dquote[3]-dquote[2]; 
+    len2 = dquote[3]-dquote[2];
     xlate.AddTranslation(buf.buf+dquote[0]+1, len1, buf.buf+dquote[2]+1, len2);
   };
   CLOSE(handle);

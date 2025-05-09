@@ -374,10 +374,13 @@ appAbout (GtkWidget *w, gpointer data)
 #endif //USE_OLD_GTK
 
 /* Free the global allocated data and finish the main loop */
-static void cbAppDestroy(void)
+void cbAppDestroy(void)
 {
   /* Close SDL (prevents the ticks to continue running) */
   //printf("\nQuitting...\n");
+    SDL_RemoveTimer(timer);
+    SDL_DestroySemaphore(sem);
+    sem = NULL;
   SDL_Quit ();
 #ifdef USE_OLD_GTK
   /* End with the GTK*/
@@ -1579,9 +1582,6 @@ int main (int argc, char* argv[])
     {
       case SDL_QUIT:
         MTRACE("SDL_QUIT\n");
-        SDL_RemoveTimer(timer);
-	SDL_DestroySemaphore(sem);
-	sem = NULL;
         cbAppDestroy();
         break;
       default:

@@ -2230,11 +2230,21 @@ RESTARTABLE _ProcessTimersViewportAndSound(void)
 //
 //*********************************************************
 //           TAG01fefc
+extern void Process_SDL_WINDOWEVENT(void); // CSBlinux
+extern void cbAppDestroy(void); // also
 void my_Delay(int ms) {
     SDL_Event ev;
     for (int t=0; t<ms; t+=100) {
 	SDL_Delay(100);
-	while (SDL_PollEvent(&ev));
+	while (SDL_PollEvent(&ev)) {
+	    // Minimum events handling while end sequence is playing, quit and window operations
+	    switch(ev.type) {
+	    case SDL_WINDOWEVENT:     Process_SDL_WINDOWEVENT();    break;
+	    case SDL_QUIT:
+				      cbAppDestroy();
+				      break;
+	    }
+	}
     }
 }
 
@@ -2431,7 +2441,14 @@ RESTARTABLE _FusionSequence(void)
       {
         TAG00187e();
         b_226[1] = 10;
-        PrintLines(15, (char *)b_226+1);
+	char *s = (char*)b_226+1;
+	if (*s < 32) s++; // may start by 10
+	const char *tr = TranslateLanguage(s);
+	char *s2 = new char[strlen(tr)+2];
+	s2[0] = 10;
+	strcpy(&s2[1],tr);
+        PrintLines(15, s2);
+	delete [] s2;
 	// PrintLines calls ClockTick which sends everything on screen
 	// the only exception to this is when there is some scrolling to do...
 	// in this case it scrolls 1 screen line (not 1 text line) / vbl, which means that it needs 8 vbls to scroll 1 text line!
@@ -2448,7 +2465,7 @@ RESTARTABLE _FusionSequence(void)
 	    display();
         // ProcessTimersViewportAndSound(_17_);//TAG01fed6(_17_);
         // VBLDelay(_18_,180);
-	my_Delay(6000);
+	my_Delay(9000);
         b_9++;
         break;
       };
@@ -2458,7 +2475,7 @@ RESTARTABLE _FusionSequence(void)
 //
   };
   PrintLines(0, (char *)d.Byte1830); // Linefeed
-  PrintLines(15, "THE END.");
+  PrintLines(15, TranslateLanguage("THE END."));
   PrintLines(0, (char *)d.Byte1830); // Linefeed
   while (d.TextScanlineScrollCount > -1) {
       for (int n=0; n<8; n++)
