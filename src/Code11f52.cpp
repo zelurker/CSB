@@ -1624,7 +1624,9 @@ i16 DetermineMagicDamage(DB14 *rec, RN object)
         if (object == RNPoisonBolt)
         {
           d.Word12962 = D5W;
-          return 1;
+	  // There was just a return 1 for the original code from dm1 here...
+	  int di = rec->damageRemaining() >> 1; // adapted from code from DM2 see https://www.dungeon-master.com/forum/viewtopic.php?p=163780#p163780
+          return (di >> 4) + 1;
         };
         return 0;
       };
