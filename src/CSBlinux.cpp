@@ -1407,6 +1407,11 @@ int main (int argc, char* argv[])
                     MESSAGE_OK);
       die(0xe9a3);
     };
+    SDL_Surface *sf = SDL_LoadBMP("lsb.bmp");
+    if (sf) {
+	SDL_SetWindowIcon(sdlWindow,sf);
+	SDL_FreeSurface(sf);
+    }
     SDL_VIDEOEXPOSE = SDL_RegisterEvents(1);
     if ((sdlRenderer = SDL_CreateRenderer(
                    sdlWindow,
