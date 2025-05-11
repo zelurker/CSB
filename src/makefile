@@ -22,11 +22,12 @@ ifeq ($(target), SDL20)
 # optimized build options (comment out ldflags below to remove -fsanitize=address!!!)
 	#options =   -O2 -D _LINUX -D RGB655 -D SDL20 -c
 	ldflags := -g -fsanitize=address
-options += -Isdl_sound
+options += -Isdl_sound -Iimgui
 gincludes := \
                $(shell pkg-config --cflags sdl2)
 libs :=  $(shell sdl2-config --libs)
-comp := g++ $(options) $(gincludes)
+# -std=c++11 is required for imgui
+comp := g++ -std=c++11 $(options) $(gincludes)
 compc := gcc $(options) $(gincludes)
 endif
 ifeq ($(target),x86_64-w64-mingw32)
@@ -37,10 +38,10 @@ ifeq ($(target),i686-w64-mingw32)
 endif
 ifdef WIN # windows version
 	options =  -O2 -D _LINUX -D RGB655 -D SDL20 -c -DMINGW
-  gincludes = -Isdl_sound \
+  gincludes = -Isdl_sound -Iimgui \
                $(shell $(target)-pkg-config --cflags sdl2)
   libs =  $(shell $(target)-pkg-config --libs sdl2)
-  comp = $(target)-g++ $(options) $(gincludes)
+  comp = $(target)-g++ -std=c++11 $(options) $(gincludes)
   compc = $(target)-gcc $(options) $(gincludes)
   CXX = $(target)-g++
   WINDRES=$(target)-windres
@@ -64,12 +65,18 @@ OBJS=	DSA.o       data.o         Code11f52.o  Graphics.o  Magic.o          \
 
 OBJDIR = obj
 OBJDIRS = $(OBJDIR) \
-		  $(OBJDIR)/sdl_sound
+		  $(OBJDIR)/sdl_sound \
+		  $(OBJDIR)/imgui
 
 OBJS := $(OBJS:%=$(OBJDIR)/%)
+
 SDL_SOUND = SDL_sound.o SDL_sound_mp3.o SDL_sound_raw.o SDL_sound_wav.o
 SDL_SOUND := $(SDL_SOUND:%=$(OBJDIR)/sdl_sound/%)
 OBJS += $(SDL_SOUND)
+
+IMGUI = imgui.o imgui_draw.o imgui_impl_sdl2.o imgui_tables.o imgui_widgets.o imgui_impl_sdlrenderer2.o
+IMGUI := $(IMGUI:%=$(OBJDIR)/imgui/%)
+OBJS += $(IMGUI)
 
 all: maketree message csb
 

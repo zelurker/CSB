@@ -12,6 +12,10 @@
 #include "Objects.h"
 #include "CSB.h"
 #include "Data.h"
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer2.h"
+bool imgui_active = false;
 
 #ifdef USE_PARAGUI
 # include <pgapplication.h>
@@ -28,6 +32,7 @@
 //extern SDL_Rect DirtyRect;
 SDL_sem *sem;
 
+static bool cursorIsShowing;
 extern bool RecordMenuOption;
 extern bool DMRulesDesignOption;
 extern bool RecordDesignOption;
@@ -487,8 +492,9 @@ void Process_SDL_MOUSEMOTION(
   SDL_MouseMotionEvent *e = (SDL_MouseMotionEvent*) &evert;
   int x, y;
   bool warp = false;
-  x = e->x;
-  y = e->y;
+  x = e->x * st_X;
+  y = (e->y - 20) * st_Y;
+  if (y < 0) y = 0;
 #if 0
   // I don't see the reason of this for now
   if (x >= 316*screenSize) {x = 316*screenSize-1; warp=true;};
@@ -1256,11 +1262,13 @@ void Process_SDL_WINDOWEVENT(void)
 }
 
 #endif
+ImGuiIO io;
+static int drawn = 0;
+void post_render();
 
 /********************** MAIN **********************/
 int main (int argc, char* argv[])
 {
-  static bool cursorIsShowing;
 #ifdef MAEMO_NOKIA_770
   HildonProgram* program;
 #endif//MAEMO_NOKIA_770
@@ -1423,7 +1431,8 @@ int main (int argc, char* argv[])
                     MESSAGE_OK);
       die(0x519b);
     };
-    SDL_RenderSetLogicalSize(sdlRenderer,320,200);
+    // I disable this because of imgui, the game picture doesn't take the whole window anymore, so it's better to convert the coordinates ourselves
+    // SDL_RenderSetLogicalSize(sdlRenderer,320,200);
     if ((sdlTexture = SDL_CreateTexture(
                    sdlRenderer,
                    SDL_PIXELFORMAT_RGB565,
@@ -1461,14 +1470,24 @@ int main (int argc, char* argv[])
 #endif
   };
 
-#if defined SDL12
-  SDL_UpdateRect(WND, 0, 0, 0, 0);
-#elif defined SDL20
-  // Nothing needed here???
-  // NotImplemented(0x85ea);
-#else
-  xxxError
-#endif
+  // Setup Dear ImGui context
+  IMGUI_CHECKVERSION();
+  ImGui::CreateContext();
+  io = ImGui::GetIO(); (void)io;
+  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+  io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+  // Setup Dear ImGui style
+  ImGui::StyleColorsDark();
+  //ImGui::StyleColorsLight();
+
+  // Setup Platform/Renderer backends
+  ImGui_ImplSDL2_InitForSDLRenderer(sdlWindow, sdlRenderer);
+  ImGui_ImplSDLRenderer2_Init(sdlRenderer);
+
+  // Load Fonts
+  io.Fonts->AddFontFromFileTTF("fonts/Vera.ttf", 14.0f);
+
   SDL_ShowCursor(SDL_ENABLE);
   cursorIsShowing = true;
   if(fullscreenRequested)
@@ -1550,6 +1569,9 @@ int main (int argc, char* argv[])
 	  continue;
       }
     }
+
+    if (1) // imgui_active)
+	ImGui_ImplSDL2_ProcessEvent(&evert);
     // uint32_t tick = SDL_GetTicks();
     // printf("event type %x ticks %d\n",evert.type,tick);
     if (sdlQuitPending)
@@ -1566,19 +1588,6 @@ int main (int argc, char* argv[])
       {
         sdlQuitPending = false;
       };
-    };
-    {
-//      FILE *f;
-//      f = fopen("debug","a");
-//      if (evert.type == SDL_USEREVENT)
-//      {
-//        fprintf(f,"SDL_USEREVENT  type = %d\n", evert.user.code);
-//      }
-//      else
-//      {
-//        fprintf(f, "MessageLoop  = %d\n", evert.type);
-//      };
-//      fclose(f);
     };
     /* Listen for 'quick buttons' here. */
     /* Hail to the Great Message Struct! */
@@ -1619,6 +1628,15 @@ int main (int argc, char* argv[])
       */
 
     }; /* Eof Great Event Switch */
+    if (imgui_active) {
+	if (drawn) {
+	    drawn = 0;
+	} else {
+	    post_render();
+	    drawn = 0;
+	}
+    }
+
   } /* Eof Lord Message Loop */
 
   printf("Quiting SDL.\n");
@@ -1627,4 +1645,74 @@ int main (int argc, char* argv[])
   SDL_Quit();
   printf("Quiting....\n");
   return (0);
+}
+
+void post_render() {
+    static bool was_active;
+    drawn = 1;
+    SDL_Rect r;
+    static bool show_coords;
+
+    if (1) { // imgui_active) {
+	// Start the Dear ImGui frame
+	ImGui_ImplSDLRenderer2_NewFrame();
+	ImGui_ImplSDL2_NewFrame();
+	ImGui::NewFrame();
+	if (!was_active && !cursorIsShowing)
+	    SDL_ShowCursor(SDL_DISABLE);
+
+	if (ImGui::BeginMainMenuBar())
+	{
+	    r.y = 20;
+	    r.x = 0;
+	    r.w = WindowWidth;
+	    r.h = WindowHeight - 20;
+	    if (ImGui::BeginMenu("File"))
+	    {
+		imgui_active = true;
+		was_active = true;
+		if (ImGui::MenuItem("Playback..", NULL)) { Process_ecode_IDC_Playback();/* Do stuff */ }
+		if (ImGui::MenuItem("Quit", NULL))   { cbAppDestroy(); }
+		ImGui::EndMenu();
+	    } else
+		imgui_active = false;
+
+	    if (ImGui::BeginMenu("Misc"))
+	    {
+		imgui_active = true;
+		was_active = true;
+		ImGui::MenuItem("Party coordinates", NULL,&show_coords);
+		ImGui::EndMenu();
+	    } else if (!imgui_active) {
+		imgui_active = false;
+		if (was_active && !cursorIsShowing) {
+		    SDL_ShowCursor(SDL_DISABLE);
+		    // Tried RemoveCursor / ShowCursor, problem is last call to ShowCursor leaves a permanent cursor on game screen
+		    // so it's better to fight a little with mouse cursors when opening the mneu for now
+		    // until I find something better
+		    was_active = false;
+		}
+	    }
+	    if (show_coords) {
+		ImGui::SameLine(ImGui::GetWindowWidth() - 100);
+		ImGui::Text("Party %d,%d,%d",d.partyLevel,d.partyX,d.partyY);
+	    }
+	    ImGui::EndMainMenuBar();
+	}
+
+	// Rendering
+	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+	ImGui::Render();
+	SDL_RenderSetScale(sdlRenderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
+	SDL_SetRenderDrawColor(sdlRenderer, (Uint8)(clear_color.x * 255), (Uint8)(clear_color.y * 255), (Uint8)(clear_color.z * 255), (Uint8)(clear_color.w * 255));
+	SDL_RenderClear(sdlRenderer);
+    }
+    if (SDL_RenderCopy(sdlRenderer,
+		sdlTexture,
+		NULL,
+		&r) < 0) {
+	printf("rendercopy error %s\n",SDL_GetError());
+    }
+    ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(),sdlRenderer);
+    SDL_RenderPresent(sdlRenderer);
 }
