@@ -1,38 +1,12 @@
 This is a repository for the linux sources for CBSWin, found there : http://dmweb.free.fr/community/clones/chaos-strikes-back-for-windows-and-linux-raspbian-macos-x-pocket-pc/
 
-PAUL R STEVENS doesn't want to maintain the sources anymore so I'll at least maintain some linux sources for now.
+PAUL R STEVENS doesn't want to maintain them for now.
+The latest sources from Paul are here https://www.dianneandpaul.net/CSBwin/CSBwin_SRC_20230608.7z
+but they have been merged into this git quite some time ago already.
 
-This is based originally on the latest sources available from there : https://www.dianneandpaul.net/CSBwin/CSBwin_SRC_20190702.7z
-You'll need some data files from the site over there :
-Dungeon master http://dianneandpaul.net/CSBwin/Games/DM_linux_x64_SDL20_20180508.tar
-Chaos strikes back http://dianneandpaul.net/CSBwin/CSBwin_linux_x86-64_SDL20_20180421-1550
+You can compile a windows version either 32 or 64 bits from this source, or a linux version. Just
+select the right target at the top of the makefile. For now the only thing required is sdl2.
 
-I intend to maintain only the linux version here, I don't use MSVC.
-Build instructions : super simple, there is a makefile in the src directory, I'll try to make sure
-the options line is the one for an optimized build, but you can double check in the Ubuntu_SDL20
-section. Oh by the way the old sdl12 section is not tested anymore neither.
-Just build with make that's all. The sources require sdl2, and just the include files for glib2
-which is used apparently only for its types, it's not linked.
-
-So far changes for the linux version from the 20190702 sources :
- - 1st the savegame names were in uppercase, well in linux normal files are in lower case, so
-   changed all of them to lowercase.
- - in the makefile there is now a line for debug options, and a line for optimized build, just using
-   -O2 for optimized build, and -fsantize=address in debug mode. Got a crash once when using a -O2
-   build so I had to check things, just found a small buffer overflow when saving the game. Also
-   added a 'clean' target.
- - The window is now resizable and its default size is 320x4 x 200x4, closer to usual resolutions
-   these days and still quie below most.
- - Handling of alt+return to toggle fullscreen mode with sdl2.
- - Handles the window close event, so that if you quit the game by closing the window it doesn't
-   just crash (with a core dump !)
- - Fixed a serious audio bug but ir probably affected only linux (linked to structs changing their sizes!).
- - Fixed audio pitch too high, it was a bad frequency when opening the audio device
- - Fixed bad handling of scan codes for the keyboard, I'll leave a fixed config.linux file with the
-   correct scan codes for the numpad in it outside the src directory.
- - ability to drink directly from fountains, like what RTC and dsb do !
- - able to play external sounds, mp3 or wav using SDL_sound for now. It's used to play custom sounds.
-   Place horn.mp3 or warcry.mp3 to hearn the horn of fear and the warcry. You can find the mp3 files at
-   this page : http://dmweb.free.fr/games/dungeon-master/#sounds
-
+You'll find a summary of the changes in this forum thread :
+https://www.dungeon-master.com/forum/viewforum.php?f=46&sid=8a3fff47bdddd3b2888d5b4919bd22d5
 
