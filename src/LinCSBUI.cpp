@@ -418,71 +418,9 @@ void __dialog_unset( gpointer A ) { dialog_answer = 1; dialog_not_clicked = FALS
 void __dialog_reset( gpointer A ) { dialog_answer = 0; dialog_not_clicked = FALSE; gtk_widget_destroy(GTK_WIDGET(A)); }
 #endif //USE_OLD_GTK
 
+extern SDL_Window *sdlWindow;
 i32 UI_MessageBox(const char *msg, const char *title, i32 flags ) {
-#ifdef USE_OLD_GTK
-    printf("\nMessageBox: [%s] %s", title, msg);
-    GtkWidget *dialog;
-    GString *text = g_string_new(msg);
-
-  i32 i=1;// default answer
-    if(title==NULL){
-	title="Error: \n";
-    }
-    else
-    {
-	text = g_string_prepend(text,": \n");
-    }
-    text = g_string_prepend(text,title);
-  bool saveCursorShowing, cursorIsShowing, is_ok=false;
-  saveCursorShowing = cursorIsShowing = ( SDL_ENABLE == SDL_ShowCursor(SDL_QUERY) );
-  if (!cursorIsShowing) SDL_ShowCursor(SDL_ENABLE);
-
-    GtkWidget *label, *yes_button, *no_button, *ok_button;
-	dialog = gtk_dialog_new();
-	label = gtk_label_new (text->str);
-	dialog_not_clicked = TRUE;
-	dialog_answer = 1;
-
-
-      if (flags & MESSAGE_OK){
-	ok_button = gtk_button_new_with_label("Okay");
-	gtk_signal_connect_object (GTK_OBJECT (ok_button), "clicked",GTK_SIGNAL_FUNC (__dialog_reset),GTK_OBJECT( dialog ));
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->action_area),ok_button);
-	is_ok=true;
-  }
-    else if (flags & MESSAGE_YESNO){
-	yes_button = gtk_button_new_with_label("Yes");
-	no_button = gtk_button_new_with_label("No");
-	gtk_signal_connect_object (GTK_OBJECT (yes_button), "clicked",GTK_SIGNAL_FUNC (__dialog_reset), GTK_OBJECT(dialog));
-	gtk_signal_connect_object (GTK_OBJECT (no_button), "clicked",GTK_SIGNAL_FUNC (__dialog_unset), GTK_OBJECT(dialog));
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->action_area),yes_button);
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->action_area),no_button);
-   }
-   GtkWidget *hbox = gtk_hbox_new(FALSE,10);
-   gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),hbox);
-   gtk_container_add (GTK_CONTAINER (hbox),gtk_label_new(""));
-   gtk_container_add (GTK_CONTAINER (hbox),label);
-   gtk_container_add (GTK_CONTAINER (hbox),gtk_label_new(""));
-   gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
-   gtk_signal_connect_object (GTK_OBJECT (dialog), "destroy",GTK_SIGNAL_FUNC (__dialog_release),GTK_OBJECT( dialog ));
-   gtk_widget_show_all (dialog);
-
-	while(dialog_not_clicked) gtk_main_iteration_do(FALSE);
-	i = dialog_answer;
-	i32 mask = UI_DisableAllMessages();
-
-  UI_EnableMessages(mask);
-  if (!saveCursorShowing) SDL_ShowCursor(SDL_DISABLE);
-  if (i == 0 && is_ok == false) return MESSAGE_IDYES; // 0 == first button pressed
-  if (i == 1 || i == -1)  return MESSAGE_IDNO; // 1 == second button pressed, (-1) == if MsgBox is 'destroyed'
-  g_string_free(text,TRUE);
-
-#else
-  printf("Message:\n");
-  printf("  Flags = %08x\n", flags);
-  printf("  Title = %s\n", title);
-  printf("  Message = %s\n", msg);
-#endif //USE_OLD_GTK
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING,title,msg,sdlWindow);
 
   return MESSAGE_IDOK;
 }
@@ -1137,23 +1075,10 @@ void UI_ScreenEndUpdates(void)
   SDL_UnlockTexture(sdlTexture);
 }
 
+extern void post_render();
 void UI_ScreenPresent(void)
 {
-  SDL_Rect textureRect;
-  SDL_Rect rendererRect;
-  textureRect.x = 0;
-  textureRect.y = 0;
-  textureRect.w = 320;
-  textureRect.h = 200;
-  rendererRect.x = 0;
-  rendererRect.y = 0;
-  rendererRect.w = 320;
-  rendererRect.h = 200;
-  SDL_RenderCopy(sdlRenderer,
-                 sdlTexture,
-                 &textureRect,
-                 &rendererRect);
-  SDL_RenderPresent(sdlRenderer);
+  post_render();
 }
 
 void UI_SetDIBitsToDevice(
