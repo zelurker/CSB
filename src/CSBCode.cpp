@@ -2673,6 +2673,7 @@ tag002e88:
 tag002eb2:
   A1 += 8;
 tag002eb4:
+  if (!A1) return;
   D0W = LE16(wordGear(A1));
   D1W = LE16(wordGear(A1+2));
   D2W = LE16(wordGear(A1+4));
