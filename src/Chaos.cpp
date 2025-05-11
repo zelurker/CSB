@@ -4483,7 +4483,7 @@ RESTARTABLE _DrawCharacterDetails(const i32 P1, const i32 P2)
 //  static aReg A1;
   static CHARACTER_IMAGE *pCharacterImage_A0;
   static PORTRAIT *pPortrait_A4;
-  static char b_28[20];
+  static char b_28[21];
   static wordRectPos rect_8;
   RESTARTMAP
     RESTART(1)
