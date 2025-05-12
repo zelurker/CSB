@@ -74,7 +74,7 @@ SDL_SOUND = SDL_sound.o SDL_sound_mp3.o SDL_sound_raw.o SDL_sound_wav.o
 SDL_SOUND := $(SDL_SOUND:%=$(OBJDIR)/sdl_sound/%)
 OBJS += $(SDL_SOUND)
 
-IMGUI = imgui.o imgui_draw.o imgui_impl_sdl2.o imgui_tables.o imgui_widgets.o imgui_impl_sdlrenderer2.o
+IMGUI = imgui.o imgui_draw.o imgui_impl_sdl2.o imgui_tables.o imgui_widgets.o imgui_impl_sdlrenderer2.o ImGuiFileBrowser.o
 IMGUI := $(IMGUI:%=$(OBJDIR)/imgui/%)
 OBJS += $(IMGUI)
 

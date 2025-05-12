@@ -1536,6 +1536,7 @@ static str1eb18 b;  // Our local variables
 //#define MYRESTARTMAP \
 //  static i32 mystate=_0_; printf("mystatei for readentiregame %d\n",mystate);\
 //switch (mystate) { case _0_: goto return_0_;
+extern char *opened_file;
 RESTARTABLE _ReadEntireGame(void)
 {//i16
   static dReg D0, D1, D5, D6, D7;
@@ -1688,7 +1689,12 @@ tag01ec56:
 tag01ec6a:
   D0L = 1;
   STShowCursor(HC33);
-  SelectSaveGame(_9_, 1, 1, 1); //TAG0204bc
+  if (!opened_file) {
+      SelectSaveGame(_9_, 1, 1, 1); //TAG0204bc
+  } else {
+      d.SaveGameFilename = opened_file;
+      opened_file = NULL; // So that it doesn't loop!
+  }
   STHideCursor(HC33);
   d.Word22972 = 1;
   D6W = 0;

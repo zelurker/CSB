@@ -14,8 +14,11 @@
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
+#include "ImGuiFileBrowser.h"
 
+imgui_addons::ImGuiFileBrowser file_dialog; // As a class member or globally
 bool imgui_active = false;
+char *opened_file;
 
 #define FONT_SIZE 14
 #define DY (FONT_SIZE+6)
@@ -534,7 +537,7 @@ void Process_SDL_MOUSEMOTION(
   if (resetgamesetup) return;
   if (GameMode == 1)
   {
-    if (cursorIsShowing)
+    if (cursorIsShowing && !imgui_active)
     {
       cursorIsShowing = false;
       SDL_ShowCursor(SDL_DISABLE);
@@ -1678,18 +1681,21 @@ static void reset_game() {
     }
 }
 
+static bool fb_shown;
+
 void post_render() {
     static bool was_active;
     drawn = 1;
     SDL_Rect r;
     static bool show_coords;
+    bool open = false;
 
     if (1) { // imgui_active) {
 	// Start the Dear ImGui frame
 	ImGui_ImplSDLRenderer2_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
-	if (!was_active && !cursorIsShowing)
+	if (!was_active && !cursorIsShowing && !fb_shown)
 	    SDL_ShowCursor(SDL_DISABLE);
 
 	if (ImGui::BeginMainMenuBar())
@@ -1706,10 +1712,12 @@ void post_render() {
 		    reset_game();
 		    // _CALL0 (_4_,st_ReadEntireGame);
 		}
+		if (ImGui::MenuItem("Load saved game"))
+		    open = true;
 		if (ImGui::MenuItem("Playback..", NULL)) { Process_ecode_IDC_Playback();/* Do stuff */ }
 		if (ImGui::MenuItem("Quit", NULL))   { cbAppDestroy(); }
 		ImGui::EndMenu();
-	    } else
+	    } else if (!fb_shown)
 		imgui_active = false;
 
 	    if (ImGui::BeginMenu("Misc"))
@@ -1740,6 +1748,23 @@ void post_render() {
 	    ImGui::EndMainMenuBar();
 	}
 
+	//Remember the name to ImGui::OpenPopup() and showFileDialog() must be same...
+	if(open) {
+	    fb_shown = true;
+	    ImGui::OpenPopup("Load saved game");
+	}
+
+	/* Optional third parameter. Support opening only compressed rar/zip files.
+	 * Opening any other file will show error, return false and won't close the dialog.
+	 */
+	if(file_dialog.showFileDialog("Load saved game", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ".dat,.BAK"))
+	{
+	    printf("file %s\n",file_dialog.selected_fn.c_str());    // The name of the selected file or directory in case of Select Directory dialog mode
+	    printf("path %s\n",file_dialog.selected_path.c_str());  // The absolute path to the selected file
+	    opened_file = (char*)file_dialog.selected_path.c_str();
+	    reset_game();
+	    fb_shown = false;
+	}
 	if (listing && listing_title && show_listing) {
 	    if (ImGui::Begin(listing_title, &show_listing)) {
 		if (ImGui::IsWindowHovered()) {
