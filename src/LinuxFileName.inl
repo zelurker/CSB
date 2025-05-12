@@ -65,7 +65,7 @@ const char * FILENAME::createName (const char *folder, const char *file)
       strcpy (result, folder);
     };
     /* If file is used, then folder better be a real folder and not another filename. */
-    if(file) 
+    if(file)
     {
       strcat (result,"/"); strcat (result, file);
     }
@@ -96,8 +96,14 @@ void FILENAME::createThreeNames (const char *filename)
     UI_free (m_name[3]);
     m_name[3] = NULL;
   };
+#ifdef MINGW
+  // with mingw this function does more harm than good, it destroys any absolute path begining with a drive letter
+  // so it's better to just return the same filename
+  m_name[0] = strdup(filename);
+  return;
+#endif
   // Linux-specific check for absolute pathways.
-  if (filename && '/'==*(strspn(filename," \t")+filename) ) 
+  if (filename && '/'==*(strspn(filename," \t")+filename) )
   {
     m_name[0] = (char*)createName ("", filename);
     return;
@@ -132,7 +138,7 @@ FILE *FILENAME::Open(const char *name, const char *flags)
     result = UI_fopen (m_name[i], flags);
     //		g_warning ("Ick, ick, ick: %s\n", m_name[i]);
     //printf("open(%s)\n",m_name[i]);
-    if (result != NULL) 
+    if (result != NULL)
     {
       if (TimerTraceActive)
       {
@@ -203,7 +209,7 @@ ui64 MODIFIEDTIME(i32 file)
   const  char* fn = GETFILENAME(file);
   struct stat  info;
 
-  if ((fn != NULL) && (stat(fn, &info)==0)) 
+  if ((fn != NULL) && (stat(fn, &info)==0))
   {
     return info.st_mtime;
   }
