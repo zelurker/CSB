@@ -234,8 +234,8 @@ public:
 
 class LISTING
 {
-  char *m_listing;
 public:
+  char *m_listing;
   LISTING(void);
   ~LISTING(void);
   void Clear(void);  // Remove all text

@@ -984,65 +984,17 @@ void LISTING::AddLine(const char *line)
   strcpy(m_listing+len, line);
 }
 
+const char *listing_title;
+extern bool show_listing;
+
 void LISTING::DisplayList(const char * title)
 {
-	printf("[%s] %s",title, m_listing);
+    listing_title = title;
+    show_listing = true;
 }
 
 
-#if defined SDL12
-void UI_SetDIBitsToDevice(
-                           int dstX,
-                           int dstY,
-                           int width,
-                           int height,
-                           int,
-                           int,
-                           int,
-                           int,
-                           char *bitmap,
-                           void *,
-                           int
-                         )
-{
-  static int firstTime = 0;
-  int line;
-  SDL_Surface *surf;
-  SDL_Rect wholeScreen[1];
-  ui8 *pixels;
-  surf = SDL_GetVideoSurface();
-/*
-  if (firstTime < 1)
-  {
-    firstTime++;
-    FILE *f;
-    f = fopen("debug", "a");
-    fprintf(f,"w=%d, h=%d, pitch=%d, bitsPerPixel=%d  Rmask=%08x\n",
-              surf->w, surf->h,surf->pitch,
-              surf->format->BitsPerPixel,surf->format->Rmask);
-    fprintf(f,"dstX, dstY, width, height = %d,%d, %d, %d\n",
-            dstX, dstY, width, height);
-    fprintf(f,"size=%d, WindowWidth=%d\n", screenSize,WindowWidth);
-    fclose(f);
-  };
-*/
-  pixels = (ui8 *)surf->pixels;
-  SDL_LockSurface(surf);
-  for (line=0; line<height; line++)
-  {
-    int pitch;
-    pitch = surf->pitch;
-    memcpy(pixels+pitch*(line+dstY)+2*dstX, bitmap+2*WindowWidth*(line), width*2);
-    //pixels[0] = 0;
-    //pixels[1] = 255;
-    //pixels[pitch*100+200] = 0;
-    //pixels[pitch*100+201] = 255;
-  };
-  SDL_UnlockSurface(surf);
-  SDL_UpdateRect(surf, dstX, dstY, width, height);
-  return;
-}
-#elif defined SDL20
+#if defined SDL20
 
 extern SDL_Renderer *sdlRenderer;
 extern SDL_Texture *sdlTexture;

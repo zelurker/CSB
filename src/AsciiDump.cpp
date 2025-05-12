@@ -1,4 +1,4 @@
- 
+
 #include "stdafx.h"
 
 #include "UI.h"
@@ -19,7 +19,7 @@ extern bool simpleEncipher;
 
 struct MISCENTRY
 {
-  unsigned char level; //101-104 in character's possession. 
+  unsigned char level; //101-104 in character's possession.
                        //0xff if unknown.
                        //0xfe if unused and available
   unsigned char x;
@@ -38,7 +38,7 @@ public:
   ~MISCTABLE(void) {DeAllocate();};
   void DeAllocate(void)
   {
-    if (miscEntry!=NULL) UI_free(miscEntry); 
+    if (miscEntry!=NULL) UI_free(miscEntry);
     miscEntry=NULL;
   };
   void Allocate(void);
@@ -198,7 +198,7 @@ void MarkQueuedMonsterPossessionLocations(void)
            poss = GetDBRecordLink(poss))
       {
         miscTable.MarkLocation(
-                     poss, 
+                     poss,
                      //(pTimer->timerTime >> 24) & 0xff,
                      pTimer->Level(),
                      pTimer->timerUByte6(),
@@ -251,7 +251,7 @@ void TARGETS::Add(i32 t, i32 sl, i32 sx, i32 sy, i32 tl, i32 tx, i32 ty)
     m_targets = (i32 *)UI_realloc(m_targets,m_allocated*sizeof(i32),
                                   MALLOC059);
   };
-  m_targets[m_numTarget++] = 
+  m_targets[m_numTarget++] =
        (((((((((((t<<4)|sl)<<5)|sx)<<5)|sy)<<4)|tl)<<5)|tx)<<5)|ty;
 }
 
@@ -455,8 +455,8 @@ void GetText(char *result, i32 index)
   *(result++) = 0;
 }
 
-void PrintTimer5Results(FILE *f, 
-                        i32 level, i32 x, i32 y, i32 /*pos*/, 
+void PrintTimer5Results(FILE *f,
+                        i32 level, i32 x, i32 y, i32 /*pos*/,
                         i32 action)
 {
   RN curObj;
@@ -507,8 +507,8 @@ void PrintTimer5Results(FILE *f,
 }
 
 
-void PrintTimer6Results(FILE *f, 
-                        i32 level, i32 x, i32 y, i32 pos, 
+void PrintTimer6Results(FILE *f,
+                        i32 level, i32 x, i32 y, i32 pos,
                         i32 action)
 {
   RN curObj;
@@ -592,8 +592,8 @@ void PrintTimer6Results(FILE *f,
   };
 }
 
-void PrintTimer7Results(FILE *f, 
-                        i32 level, i32 x, i32 y, i32 /*pos*/, 
+void PrintTimer7Results(FILE *f,
+                        i32 level, i32 x, i32 y, i32 /*pos*/,
                         i32 action)
 {
   const char *act;
@@ -613,8 +613,8 @@ void PrintTimer7Results(FILE *f,
 
 
 
-void PrintTimer8Results(FILE *f, 
-                        i32 level, i32 x, i32 y, i32 /*pos*/, 
+void PrintTimer8Results(FILE *f,
+                        i32 level, i32 x, i32 y, i32 /*pos*/,
                         i32 action)
 {
   const char *act;
@@ -631,8 +631,8 @@ void PrintTimer8Results(FILE *f,
   fprintf(f,"\n");
 }
 
-void PrintTimer9Results(FILE *f, 
-                        i32 level, i32 x, i32 y, i32 /*pos*/, 
+void PrintTimer9Results(FILE *f,
+                        i32 level, i32 x, i32 y, i32 /*pos*/,
                         i32 action)
 {
   const char *act;
@@ -649,8 +649,8 @@ void PrintTimer9Results(FILE *f,
   fprintf(f,"\n");
 }
 
-void PrintTimer10Results(FILE *f, 
-                        i32 level, i32 x, i32 y, i32 /*pos*/, 
+void PrintTimer10Results(FILE *f,
+                        i32 level, i32 x, i32 y, i32 /*pos*/,
                         i32 action)
 {
   const char *act;
@@ -668,8 +668,8 @@ void PrintTimer10Results(FILE *f,
 }
 
 
-void PrintActuatorResult(FILE *f, 
-                         i32 level, i32 x, i32 y, i32 pos, 
+void PrintActuatorResult(FILE *f,
+                         i32 level, i32 x, i32 y, i32 pos,
                          i32 action)
 {
   CELLFLAG cf;
@@ -821,7 +821,7 @@ void printWallGraphic(FILE *f,DB3 *pDB3, RN object,
     return;
   };
   wallGraphicOrdinal = pDB3->wallGraphicOrdinal();
-  if (wallGraphicOrdinal==0) 
+  if (wallGraphicOrdinal==0)
   {
     fprintf(f,"No Wall Graphic.");
     return;
@@ -972,7 +972,7 @@ void DumpDB2(FILE *f, DB2 *pDB2, CELLFLAG /*cf*/)
   char rslt[1000];
   GetText(rslt, index);
   fprintf(f, "    %s\n",rslt);
-  
+
   //if (pDB5->link() == RNnul)
   //{
   //  fprintf(f, "    object NULL record\n");
@@ -990,7 +990,7 @@ void DumpDB2(FILE *f, DB2 *pDB2, CELLFLAG /*cf*/)
 
 
 
-void DumpDB3(FILE *f, RN object, 
+void DumpDB3(FILE *f, RN object,
              i32 level, i32 x, i32 y, CELLFLAG cf)
 {
   DB3 *pDB3;
@@ -1147,7 +1147,7 @@ void DumpDB3(FILE *f, RN object,
           break;
         };
         fprintf(f,"-Press with anything.  ");
-        printWallGraphic(f,pDB3,object,level,x,y);  
+        printWallGraphic(f,pDB3,object,level,x,y);
         fprintf(f,"\n");
         break;
       case 2:
@@ -1412,7 +1412,7 @@ void DumpDB7(FILE *f, RN object)
   pDB7 = GetRecordAddressDB7(object);
   fprintf(f,"    Scroll - Text object = %04x\n",pDB7->text().ConvertToInteger());
   //GetText(rslt, pDB7->textIndex());
-  //fprintf(f,"    %s\n",rslt);    
+  //fprintf(f,"    %s\n",rslt);
   DumpDB2(f, GetRecordAddressDB2(pDB7->text()),0);
   //if (pDB5->link() == RNnul)
   //{
@@ -1491,7 +1491,7 @@ void DumpDB9(FILE *f, RN object, i32 level, i32 x, i32 y)
     obName = d.ObjectNames[objNI];
     fprintf(f,"      0x%04x <%s>\n", containedObject.ConvertToInteger(), obName);
     if (containedObject.dbType() == dbSCROLL)
-    {      
+    {
       DumpDB7(f, containedObject);
     };
     containedObject = GetDBRecordLink(containedObject);
@@ -1751,7 +1751,7 @@ void DumpLevelCells(FILE *f, i32 level)
         if (indx==-1) break;
         switch(type)
         {
-        case 1: 
+        case 1:
           fprintf(f,"  Destination of teleporter at ");
           printAbsLocation(f, sl, sx, sy);
           fprintf(f,"\n");
@@ -1790,7 +1790,7 @@ void DumpCells(FILE *f)
 {
   i32 level, numLevel;
   numLevel = d.dungeonDatIndex->NumLevel();
-  fprintf(f, "Dungeon NumLevel=%d\n",numLevel);  
+  fprintf(f, "Dungeon NumLevel=%d\n",numLevel);
   Targets.Clear();
   for (level=0; level<numLevel; level++)
   {
@@ -1845,7 +1845,7 @@ void DumpMonster(FILE *f, i32 i, MONSTERDESC& mtDesc)
   fprintf(f, "  word 18 = 0x%04x\n",(UI16)(mtDesc.word18));
   fprintf(f, "  word 20 = 0x%04x\n",(UI16)(mtDesc.word20));
   for (j=0; j<4; j++)
-      fprintf(f, "   byte22[%d] = 0x%02x\n", j, mtDesc.uByte22[j]);   
+      fprintf(f, "   byte22[%d] = 0x%02x\n", j, mtDesc.uByte22[j]);
 }
 
 void DumpMonsters(FILE *f)
@@ -1922,7 +1922,7 @@ void DumpClothing(FILE *f)
   for (i=0; i<58; i++)
   {
     fprintf(f,     "%3d      %3d      0x%02x   0x%02x\n",
-               i, 
+               i,
                d.ClothingDesc[i].Weight(),
                d.ClothingDesc[i].uByte1(),
                d.ClothingDesc[i].uByte2());
@@ -2002,7 +2002,7 @@ void LevelInfo(FILE *f)
 
 void ListHeroes(FILE *f)
 {
-  fprintf(f," name    hp  sta  man str dex wis vit am af\n");  
+  fprintf(f," name    hp  sta  man str dex wis vit am af\n");
   fprintf(f,"TOADROT  125  94  46  48  58  32  31  54 54\n");
   fprintf(f,"ALGOR    150 125  40  64  41  34  46  52 58\n");
   fprintf(f,"DEMA     160 137  32  68  34  30  56  38 64\n");
@@ -2114,7 +2114,7 @@ void DumpPalettes(FILE *f)
     DumpPalette(f,&d.Palette552[i], palettename);
   };
   fprintf(f,"Special Colors (for monsters on different levels)\n");
-  fprintf(f," Color   R  G  B     R  G  B     R  G  B     R  G  B     R  G  B     R  G  B\n");                 
+  fprintf(f," Color   R  G  B     R  G  B     R  G  B     R  G  B     R  G  B     R  G  B\n");
   for (special=0; special<13; special++)
   {
     fprintf(f," %2d ", special);
@@ -2163,7 +2163,7 @@ void AsciiDump(void)
   savedLoadedLevel = d.LoadedLevel;
   Info(f);
   LevelInfo(f);
-  miscTable.Allocate(); 
+  miscTable.Allocate();
   DumpCells(f); // Also fills miscTable;
   MarkBackpackLocations();
   MarkQueuedMonsterPossessionLocations();
@@ -2250,7 +2250,7 @@ i32 ListRemainingDB(i32 pass,
                     RN object,
                     CELLFLAG /*cf*/,
                     i32 level,
-                    i32 x, 
+                    i32 x,
                     i32 y,
                     i32 mode)
 {
@@ -2355,7 +2355,7 @@ i32 ListRemainingDB(i32 pass,
   sprintf(line," %04x",object.ConvertToInteger());
   return 1;
 }
-    
+
 bool listRemainingDBObject(char *line, RN object)
 {
   i32 objType;
@@ -2443,6 +2443,8 @@ bool listRemainingDBObject(char *line, RN object)
   return true;
 }
 
+LISTING *listing;
+
 void ItemsRemaining(i32 mode)
 {//Mode 0 = CSB Challenge mode
  //Mode 1 = Print all remaining items
@@ -2456,9 +2458,12 @@ void ItemsRemaining(i32 mode)
   DB10 *pDB10;
   DB9 *pDB9;
   MISCTYPE miscType;
-  LISTING listing;
   char line[80];
   char itemName[40];
+  if (listing)
+      delete listing;
+  listing = new LISTING();
+
   if (   (encipheredDataFile != NULL)
       || simpleEncipher)
   {
@@ -2483,7 +2488,7 @@ void ItemsRemaining(i32 mode)
         || (d.partyX != 20-d.pLevelDescriptors[0].offsetX)
         || (d.partyY != 38-d.pLevelDescriptors[0].offsetY) )
     {
-      listing.AddLine("You are not in front of FulYa Pit!");
+      listing->AddLine("You are not in front of FulYa Pit!");
       totalLine++;
     };
   };
@@ -2527,13 +2532,13 @@ void ItemsRemaining(i32 mode)
   {
     if (numCorbum != 4)
     {
-      listing.AddLine("You do not have the four Corbum!");
+      listing->AddLine("You do not have the four Corbum!");
       totalLine++;
     };
   };
-  for (pass=1; pass<=2; pass++)
+  for (level=numLevel-1; level>=0; level--)
   {
-    for (level=numLevel-1; level>=0; level--)
+    for (pass=1; pass<=2; pass++)
     {
       LoadLevel(level);
       for (x=0; x<d.width; x++)
@@ -2550,8 +2555,8 @@ void ItemsRemaining(i32 mode)
           while (object != RNeof)
           {
             n = ListRemainingDB(pass,
-                                itemName, 
-                                object, cf, level, 
+                                itemName,
+                                object, cf, level,
                                 x + d.pLevelDescriptors[level].offsetX,
                                 y + d.pLevelDescriptors[level].offsetY,
                                 mode);
@@ -2562,7 +2567,7 @@ void ItemsRemaining(i32 mode)
                             y + d.pLevelDescriptors[level].offsetY);
               sprintf(line+strlen(line),"%d",object.pos());
               sprintf(line+strlen(line)," %s",itemName);
-              listing.AddLine(line);
+              listing->AddLine(line);
               totalLine++;
               if (n==2)
               { //A monster!
@@ -2578,7 +2583,7 @@ void ItemsRemaining(i32 mode)
                   if (listRemainingDBObject(itemName, poss))
                   {
                     sprintf(line,"  %s",itemName);
-                    listing.AddLine(line);
+                    listing->AddLine(line);
                     totalLine++;
                   };
                 };
@@ -2595,7 +2600,7 @@ void ItemsRemaining(i32 mode)
                   if (listRemainingDBObject(itemName, containedObject))
                   {
                     sprintf(line,"  %s",itemName);
-                    listing.AddLine(line);
+                    listing->AddLine(line);
                     totalLine++;
                   };
                   containedObject = GetDBRecordLink(containedObject);
@@ -2607,8 +2612,8 @@ void ItemsRemaining(i32 mode)
             {
               sprintf(listing+strlen(listing),
                       "Would you like to see more?");
-              answer = UI_MessageBox(listing, 
-                                     "Remaining tasks", 
+              answer = UI_MessageBox(listing,
+                                     "Remaining tasks",
                                      MESSAGE_YESNO);
               listing[0] = 0;
               totalLine += numLine;
@@ -2628,7 +2633,10 @@ void ItemsRemaining(i32 mode)
   };
   if (totalLine > 0)
   {
-    listing.DisplayList("Remaining tasks");
+      if (mode == 1)
+	  listing->DisplayList("Remaining tasks");
+      else
+	  listing->DisplayList("Remaining items");
   };
   if (mode == 0)
   {

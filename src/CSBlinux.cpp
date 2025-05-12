@@ -1647,6 +1647,11 @@ int main (int argc, char* argv[])
   return (0);
 }
 
+extern void ItemsRemaining(i32 mode); // CSBUI.cpp
+extern const char *listing_title; // LinCSBUI.cpp
+extern LISTING *listing; // AsciiDump.cpp
+bool show_listing;
+
 void post_render() {
     static bool was_active;
     drawn = 1;
@@ -1682,6 +1687,10 @@ void post_render() {
 		imgui_active = true;
 		was_active = true;
 		ImGui::MenuItem("Party coordinates", NULL,&show_coords);
+		bool enabled = (ItemsRemainingOK
+			&& (encipheredDataFile==NULL)
+			&& !simpleEncipher);
+		if (ImGui::MenuItem("Non-CSB Items", NULL,false,enabled)) ItemsRemaining(1);
 		ImGui::EndMenu();
 	    } else if (!imgui_active) {
 		imgui_active = false;
@@ -1700,6 +1709,19 @@ void post_render() {
 	    ImGui::EndMainMenuBar();
 	}
 
+	if (listing && listing_title && show_listing) {
+	    if (ImGui::Begin(listing_title, &show_listing)) {
+		if (ImGui::IsWindowHovered()) {
+		    SDL_ShowCursor(SDL_ENABLE);
+		    imgui_active = true;
+		}
+		ImGui::Text("%s",listing->m_listing);
+		ImGui::End();
+	    } else {
+		printf("window collapsed or closed\n");
+		ImGui::End();
+	    }
+	}
 	// Rendering
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 	ImGui::Render();
