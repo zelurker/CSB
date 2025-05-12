@@ -1,6 +1,5 @@
 // CSBlinux.cpp : Linux-specific file instead of windows-specific CSBwin.cpp.
 // Note: CSBTypes.h needs to be included after stdafx.h
-// Check LinScreen.cpp for comments.
 #include "stdafx.h"
 #include "UI.h"
 #include "resource.h"
@@ -378,11 +377,21 @@ appAbout (GtkWidget *w, gpointer data)
 }
 #endif //USE_OLD_GTK
 
+void done_imgui() {
+    // Cleanup
+    ImGui_ImplSDLRenderer2_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
+}
+
 /* Free the global allocated data and finish the main loop */
 void cbAppDestroy(void)
 {
   /* Close SDL (prevents the ticks to continue running) */
   //printf("\nQuitting...\n");
+    Cleanup(true);
+    done_imgui();
+    doneCaches();
     SDL_RemoveTimer(timer);
     SDL_DestroySemaphore(sem);
     sem = NULL;
@@ -1639,6 +1648,9 @@ int main (int argc, char* argv[])
 
   } /* Eof Lord Message Loop */
 
+  Cleanup(true);
+  done_imgui();
+  doneCaches();
   printf("Quiting SDL.\n");
 
   /* Shutdown all subsystems */

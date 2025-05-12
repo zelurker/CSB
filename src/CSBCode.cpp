@@ -11348,6 +11348,11 @@ void InitializeCaches(ui8 *memStart, i32 memSize, ui8 *P3, i32 /*P4*/)
   //A3 = saveA3;
 }
 
+void doneCaches() {
+    UI_free(d.pGraphicCachePointers);
+    UI_free(d.indirectTextIndex);
+}
+
 void TAG021cd8(void)
 {
 //  dReg D0;

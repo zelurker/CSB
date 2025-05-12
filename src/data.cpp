@@ -2061,6 +2061,9 @@ void Cleanup(bool programTermination)
 
 SKIN_CACHE skinCache;
 
+SKIN_CACHE::~SKIN_CACHE() {
+    if (defaultSkins) UI_free(defaultSkins);
+}
 
 i32 SKIN_CACHE::Load(i32 level, i32 x)
 {
@@ -2137,8 +2140,6 @@ ui8 SKIN_CACHE::GetDefaultSkin(i32 level)
   return defaultSkins[level];
 }
 
-
-
 void SKIN_CACHE::SetSkin(i32 level, i32 x, i32 y, i8 skinNum)
 {
   i32 i, column, index, recId, recSize;
@@ -2158,7 +2159,7 @@ void SKIN_CACHE::SetSkin(i32 level, i32 x, i32 y, i8 skinNum)
   recSize = 4 * expool.Read(recId, (ui32 *)m_columns[column], 64); // read and delete old record
   if (recSize < 0) recSize = 0;
   if (recSize > 64) recSize = 64;
-  
+
   // Expand the cache record to size = 64
   // works return;
   if (recSize < 64) memset(m_columns[column]+recSize, 0, 64-recSize);

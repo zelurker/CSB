@@ -189,7 +189,7 @@ class SKIN_CACHE
   i32  Load(i32 level, i32 x);
 public:
   SKIN_CACHE(void){m_level=-1;defaultSkins=NULL;};
-  ~SKIN_CACHE(void){};
+  ~SKIN_CACHE(void);
   ui8  GetSkin(i32 level, i32 x, i32 y);
   void SetSkin(i32 level, i32 x, i32 y, i8 skinNum);
   ui8  GetDefaultSkin(i32 level);
@@ -4005,6 +4005,7 @@ void TAG021960(i16 *P1, i16 P2);
 void ReadGraphic(i16 graphicNumber, ui8 *buffer, i32 maxSize=999999); // TAG021af2
 //   TAG021c08
 void InitializeCaches(ui8 *P1, i32 P2, ui8 *P3, i32 P4);
+void doneCaches();
 void TAG021cd8(void);
 void openGraphicsFile(void); //TAG021d36
 void OpenCSBgraphicsFile(void);
