@@ -1952,37 +1952,6 @@ static void RCS(ui32 *i, i32 n)
   RCS((ui8 *)i, 4*n);
 }
 */
-/*
-void chaosWCS(i32 *i, i32 n)
-{
-  chaosWCS((ui8 *)i, 4*n);
-}
-/*
-static void RCS(i32 *i, i32 n)
-{
-  RCS((ui8 *)i, 4*n);
-}
-
-static void WCS(ui16 *i, i32 n)
-{
-  WCS((ui8 *)i, 2*n);
-}
-
-static void RCS(ui16 *i, i32 n)
-{
-  RCS((ui8 *)i, 2*n);
-}
-
-static void WCS(char *c, i32 n)
-{
-  WCS((ui8 *)c, n);
-}
-
-static void RCS(char *c, i32 n)
-{
-  RCS((ui8 *)c, n);
-}
-*/
 
 struct B100STRUCT
 {

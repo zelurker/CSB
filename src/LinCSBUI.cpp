@@ -606,12 +606,9 @@ Channels sdlChannels;
 */
 static bool LIN_PlaySound(i8* audio, const ui32 size, int volume)
 {
-  ui8 *samples;
-  int numSample;
   SNDHEAD *header;
   //printf("LIN_PlaySound @%d\n",d.Time);
   header = (SNDHEAD *)audio;
-  //samples = header->sample58;
   sdlChannels.Play(header, size);
   return 1;
 };

@@ -1533,6 +1533,9 @@ static str1eb18 b;  // Our local variables
 //
 // *********************************************************
 //          TAG01eb18
+//#define MYRESTARTMAP \
+//  static i32 mystate=_0_; printf("mystatei for readentiregame %d\n",mystate);\
+//switch (mystate) { case _0_: goto return_0_;
 RESTARTABLE _ReadEntireGame(void)
 {//i16
   static dReg D0, D1, D5, D6, D7;

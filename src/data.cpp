@@ -2040,22 +2040,8 @@ void Cleanup(bool programTermination)
     TimerTraceActive = false;
   };
 
-//  if (recording)
-//  {
-//    RecordFile.Close();
-//  };
   FILETABLECleanup();
   AtariMemCleanup();
-  //if (TimerTraceActive && !programTermination)
-  //{
-  //  TimerTraceActive = false;
-  //  OpenTraceFile();
-  //  TimerTraceActive = true;\
-  //};
-//  if (recording && !programTermination)
-//  {
-//    RecordFile.Open();
-//  };
 }
 
 

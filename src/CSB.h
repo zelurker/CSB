@@ -2246,8 +2246,8 @@ public:
   void ToggleMirror(void){sms^=0x40;};
   ui8  Nibble0(void){return (ui8)(sms&7);};
   ui8  Nibble3(void){return (ui8)((sms>>3)&7);};
-  void Nibble0(ui32 v){sms=(ui8)(sms&0xf8|v&7);};
-  void Nibble3(ui32 v){sms=(ui8)(sms&0xc7|((v&7)<<3));};
+  void Nibble0(ui32 v){sms=(ui8)((sms&0xf8)|(v&7));};
+  void Nibble3(ui32 v){sms=(ui8)((sms&0xc7)|((v&7)<<3));};
 };
 
 struct ITEM16

@@ -14,14 +14,11 @@
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
+
 bool imgui_active = false;
 
-#ifdef USE_PARAGUI
-# include <pgapplication.h>
-# include <pgbutton.h>
-  const int WIDTH  = 640;
-  const int HEIGHT = 480;
-#endif//USE_PARAGUI
+#define FONT_SIZE 14
+#define DY (FONT_SIZE+6)
 
 #define APPTITLE  "CSBwin"
 #define APPVERSION  "15.7"
@@ -200,11 +197,17 @@ static void PushEvent(void *param)
 int WindowWidth = 320*4;
 int WindowHeight = 200*4;
 float st_X = 320.0 / WindowWidth;
-float st_Y = 200.0 / WindowHeight;
+float st_Y = 200.0 / (WindowHeight - 20);
 static CSB_UI_MESSAGE csbMessage;
 
 static void __resize_screen( ui32 w, i32 h ) {
 #if 1
+    double ratio = 32/20.0;
+    if (abs(w*1.0/h - ratio) > 1e-5) {
+	printf("old ratio %g\n",w*1.0/h);
+	w = h*ratio;
+	printf("new ratio %g\n",w*1.0/h);
+    }
     if (w < 640 || h < 400) {
 	WindowWidth = 640;
 	WindowHeight = 400;
@@ -494,6 +497,8 @@ void g_log(const char *, int, const char *, ...)
     die(0x3512);
 }
 
+extern bool resetWhatToDo,resetgamesetup;
+
 void Process_SDL_MOUSEMOTION(
            bool& cursorIsShowing)
 {
@@ -502,7 +507,7 @@ void Process_SDL_MOUSEMOTION(
   int x, y;
   bool warp = false;
   x = e->x * st_X;
-  y = (e->y - 20) * st_Y;
+  y = (e->y - DY) * st_Y;
   if (y < 0) y = 0;
 #if 0
   // I don't see the reason of this for now
@@ -526,6 +531,7 @@ void Process_SDL_MOUSEMOTION(
   absMouseY = y;
   i32 st_mouseX = X_TO_CSB(absMouseX,screenSize);
   i32 st_mouseY = Y_TO_CSB(absMouseY,screenSize);
+  if (resetgamesetup) return;
   if (GameMode == 1)
   {
     if (cursorIsShowing)
@@ -1495,7 +1501,7 @@ int main (int argc, char* argv[])
   ImGui_ImplSDLRenderer2_Init(sdlRenderer);
 
   // Load Fonts
-  io.Fonts->AddFontFromFileTTF("fonts/Vera.ttf", 14.0f);
+  io.Fonts->AddFontFromFileTTF("fonts/Vera.ttf", FONT_SIZE);
 
   SDL_ShowCursor(SDL_ENABLE);
   cursorIsShowing = true;
@@ -1513,14 +1519,6 @@ int main (int argc, char* argv[])
   UI_Initialize_sounds();
 
 
-#ifdef USE_PARAGUI
-  PG_Application app;
-  app.SetScreen(WND);
-  app.LoadTheme("default");
-  PG_Button btnOK(NULL,0, PG_Rect((WIDTH-100)/2,(HEIGHT-20)/2,100,20),"Push me !");
-  btnOK.Show();
-  //app.Run();
-#endif//USE_PARAGUI
   /*
    * Initialize the display in a 640x480 8-bit palettized mode,
    * requesting a software surface, or anything else....
@@ -1662,7 +1660,23 @@ int main (int argc, char* argv[])
 extern void ItemsRemaining(i32 mode); // CSBUI.cpp
 extern const char *listing_title; // LinCSBUI.cpp
 extern LISTING *listing; // AsciiDump.cpp
+extern bool resetstartcsb;
 bool show_listing;
+extern i32 lastTime;
+
+static void reset_game() {
+    verticalIntEnabled = false;
+    lastTime = 0; // reset _MouseHandleEvents
+    SDL_ShowCursor(SDL_ENABLE);
+    cursorIsShowing = true;
+    Cleanup(false);
+    resetWhatToDo=resetgamesetup=resetstartcsb=true;
+    csbMessage.type=UIM_INITIALIZE;
+    if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
+    {
+	PostQuitMessage(0);
+    }
+}
 
 void post_render() {
     static bool was_active;
@@ -1680,14 +1694,18 @@ void post_render() {
 
 	if (ImGui::BeginMainMenuBar())
 	{
-	    r.y = 20;
+	    r.y = DY;
 	    r.x = 0;
 	    r.w = WindowWidth;
-	    r.h = WindowHeight - 20;
+	    r.h = WindowHeight - DY;
 	    if (ImGui::BeginMenu("File"))
 	    {
 		imgui_active = true;
 		was_active = true;
+		if (ImGui::MenuItem("Reset", NULL)) {
+		    reset_game();
+		    // _CALL0 (_4_,st_ReadEntireGame);
+		}
 		if (ImGui::MenuItem("Playback..", NULL)) { Process_ecode_IDC_Playback();/* Do stuff */ }
 		if (ImGui::MenuItem("Quit", NULL))   { cbAppDestroy(); }
 		ImGui::EndMenu();
@@ -1714,6 +1732,7 @@ void post_render() {
 		    was_active = false;
 		}
 	    }
+
 	    if (show_coords) {
 		ImGui::SameLine(ImGui::GetWindowWidth() - 100);
 		ImGui::Text("Party %d,%d,%d",d.partyLevel,d.partyX,d.partyY);

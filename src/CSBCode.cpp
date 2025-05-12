@@ -10639,10 +10639,17 @@ void DisableTraceIfEnciphered(void)
   };
 }
 
+bool resetgamesetup = false;
+
+#define RESTARTMAP2 \
+  static i32 mystate=_0_; \
+if (resetgamesetup) { mystate=0; resetgamesetup = false; } \
+switch (mystate) { case _0_: goto return_0_;
+
 RESTARTABLE _GameSetup(i32 showPrisonDoor)
 {
   static dReg D7;
-  RESTARTMAP
+  RESTARTMAP2
     RESTART(1)
     RESTART(2)
     RESTART(3)
@@ -11162,30 +11169,6 @@ tag021570:
   //if (D0W < 0) goto tag021536;
   if (bitNumberInDest < 0) goto tag021536;
   RTS;
-//  case 0: goto tag0215aa;
-//  case 1: goto tag0215a8;
-//  case 2: goto tag0215cc;
-//  case 3: goto tag0215a4;
-//  case 4: goto tag0215dc;
-//  case 5: goto tag0215b6;
-//  case 6: goto tag0215c8;
-//  case 7: goto tag0215a0;
-//  case 8: goto tag0215ee;
-//  case 9: goto tag0215ec;
-//  case 10: goto tag0215fa;
-//  case 11: goto tag0215e8;
-//  case 12: goto tag0215d8;
-//  case 13: goto tag0215b2;
-//  case 14: goto tag0215c4;
-//  case 15:
-//    wordGear(A1+6) |= LE16(D3W);
-//    wordGear(A1+4) |= LE16(D3W);
-//    wordGear(A1+2) |= LE16(D3W);
-//    wordGear(A1) |= LE16(D3W);
-//    D0W--;\
-//    if (D0W < 0) goto tag021536;
-//    RTS;
-//tag0215b2:
 tag02170a:
   POP; // discard return address
   //D4=saveD4;D5=saveD5;D6=saveD6;D7=saveD7;
@@ -11456,10 +11439,16 @@ ui16 GetGraphicDecompressedSize(i32 P1) //(022d7a)
 void playmidi(void);
 #endif
 // *********************************************************
+bool resetstartcsb;
+#define RESTARTMAP3 \
+  static i32 mystate=_0_; \
+if (resetstartcsb) { mystate=0; resetstartcsb=false; } \
+switch (mystate) { case _0_: goto return_0_;
+
 RESTARTABLE _StartCSB(const CSB_UI_MESSAGE * /*msg*/) //
 {//(void)
   static aReg A4, A5;
-  RESTARTMAP
+  RESTARTMAP3
     RESTART(1)
     RESTART(2)
     RESTART(3)
@@ -11504,9 +11493,21 @@ RESTARTABLE _StartCSB(const CSB_UI_MESSAGE * /*msg*/) //
 void playmidi(void);
 #endif
 
+bool resetWhatToDo = false;
+
+#define MYRESTARTMAP \
+   \
+switch (mystate) { case _0_: goto return_0_;
+static i32 mystate;
+
 RESTARTABLE _AskWhatToDo(void)
 {//(i32)
-  RESTARTMAP
+ if (resetWhatToDo) {
+     mystate = _0_;
+     resetWhatToDo = false;
+ }
+
+  MYRESTARTMAP
     RESTART(1)
     RESTART(2)
     RESTART(3)

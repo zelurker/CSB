@@ -28,9 +28,9 @@ void info(char *, unsigned int);
 bool IsPlayFileOpen(void);
 
 extern unsigned char *encipheredDataFile;
-void RC4_prepare_key(unsigned char *key_data_ptr, 
+void RC4_prepare_key(unsigned char *key_data_ptr,
                      i32 key_data_len);
-void RC4_encipher(unsigned char *buffer_ptr, 
+void RC4_encipher(unsigned char *buffer_ptr,
                   i32 buffer_len,
                   i32 position);
 
@@ -275,8 +275,8 @@ void SETENCIPHERED(i16 file, unsigned char *key, i32 keylen)
 {
   unsigned char key5[5] = {112,32,34,1,6};
   RC4_prepare_key(key, keylen);
-  RC4_encipher(key5,5,0); 
-  RC4_prepare_key(key5,5);  
+  RC4_encipher(key5,5,0);
+  RC4_prepare_key(key5,5);
   {
     //char line[80];
     //sprintf(line,"%d %d %d %d %d",key5[0],key5[1],key5[2],key5[3],key5[4]);
@@ -476,11 +476,11 @@ void OnMouseSwitchAction(i32 buttons, i32 x, i32 y)
     else
     {
       //The following actions were originally performed at the instant
-      // the mouse button was released.  But the button pressing was 
+      // the mouse button was released.  But the button pressing was
       // queued (see above).  So the release could be processed before the
       // press!!!  And it did not work well in Record/Playback.
       // So I have modified things so that the releases are put into the
-      // queue right along with the presses.  The code (deleted below) 
+      // queue right along with the presses.  The code (deleted below)
       // will be executed when the release is removed from the queue.
       //
       //One thing I did was make sure that whenever we put a press into
@@ -1082,8 +1082,8 @@ void DispatchCSB(CSB_UI_MESSAGE *pMsg)
     result = &_VBLDelay((ui32)stateStack[numState-1].p1);
     break;
   case st_SelectSaveGame:
-    result = &_SelectSaveGame((ui32)stateStack[numState-1].p1, 
-                              (ui32)stateStack[numState-1].p2, 
+    result = &_SelectSaveGame((ui32)stateStack[numState-1].p1,
+                              (ui32)stateStack[numState-1].p2,
                               (ui32)stateStack[numState-1].p3);
     break;
   case st_WaitForMenuSelect:

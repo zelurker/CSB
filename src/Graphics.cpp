@@ -26,7 +26,7 @@ extern ui8 overlayPaletteGreen[512];
 extern ui8 overlayPaletteBlue[512];
 
 
-const char *(CSBGraphicsSectionNames[]) =  {
+const char *CSBGraphicsSectionNames[] =  {
       "Viewport Overlay",
       "Portrait",
       "Sound",
@@ -81,13 +81,14 @@ ui8 *SCREEN::physbase(void)
 {
   if (m_physScreenBase == NULL)
   {
-    if (m_physAllocated == NULL)
+    if (m_physAllocated == NULL) {
       m_physAllocated = (ui8 *)UI_malloc(32000, MALLOC026);
       if (m_physAllocated == NULL)
       {
         UI_MessageBox("Cannot allocate memory",NULL,MESSAGE_OK);
         die(0x5fd1);
       };
+    }
     m_physScreenBase = m_physAllocated;
   };
   return m_physScreenBase;

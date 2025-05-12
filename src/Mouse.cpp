@@ -1454,9 +1454,9 @@ int TranslateMouseClick(void)
 //
 //*********************************************************
 //   TAG01a7b2
+i32 lastTime;
 RESTARTABLE _HandleMouseEvents(const i32 delta)
 {//(int)
-  static i32 lastTime=0;
   static bool thawCommand;
   static i32 result;
   RESTARTMAP
@@ -1938,6 +1938,7 @@ RESTARTABLE _HandleMouseEvents(const i32 delta)
   if ((D6W >= 210) && (D6W <= 213))
   {
     d.Word11764 = sw(D6W - 209);
+      printf("button identified: %d\n",d.Word11764);
       lastTime=d.Time;
       RETURN_int(result);
   };
