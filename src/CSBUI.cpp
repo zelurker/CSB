@@ -2487,7 +2487,7 @@ void UI_CheckMemoryLeaks(void)
 
 LISTING::LISTING(void)
 {
-  m_listing = (char *)malloc(1);
+  m_listing = NULL;
   *m_listing = 0;
 }
 
