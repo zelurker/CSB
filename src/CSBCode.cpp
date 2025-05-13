@@ -11500,6 +11500,7 @@ bool resetWhatToDo = false;
 switch (mystate) { case _0_: goto return_0_;
 static i32 mystate;
 
+bool chaosDisplayed;
 RESTARTABLE _AskWhatToDo(void)
 {//(i32)
  if (resetWhatToDo) {
@@ -11528,7 +11529,9 @@ RESTARTABLE _AskWhatToDo(void)
   InitializeHeap();//TAG020286
   ReadGraphicsIndex(); // TAG021d9a
   ReadTablesFromGraphicsFile();
+  chaosDisplayed = true;
   DisplayChaosStrikesBack(_2_);
+  chaosDisplayed = false;
   ReadFloorAndCeilingBitmaps(0);
   ReadWallBitmaps(0);
       HopefullyNotNeeded(0x7486);

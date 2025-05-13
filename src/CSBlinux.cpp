@@ -1676,6 +1676,7 @@ static void reset_game() {
 }
 
 static bool fb_shown;
+extern bool chaosDisplayed; // CSBCode.cpp
 
 void post_render() {
     static bool was_active;
@@ -1689,6 +1690,7 @@ void post_render() {
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
+    if (chaosDisplayed) ImGui::BeginDisabled();
     if (ImGui::BeginMainMenuBar())
     {
 	// I don't know why you should use IsWindowHovered and not IsItemHovered for a mainmenubar, but that's the way it is...
@@ -1744,6 +1746,7 @@ void post_render() {
 	}
 	ImGui::EndMainMenuBar();
     }
+    if (chaosDisplayed) ImGui::EndDisabled();
 
     //Remember the name to ImGui::OpenPopup() and showFileDialog() must be same...
     if(open) {
