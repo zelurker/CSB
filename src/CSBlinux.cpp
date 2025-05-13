@@ -1713,7 +1713,8 @@ void post_render() {
 	    }
 	    if (ImGui::MenuItem("Load saved game",NULL,false,d.partyLevel != 255))
 		open = true;
-	    if (ImGui::MenuItem("Playback..", NULL)) { Process_ecode_IDC_Playback();/* Do stuff */ }
+	    // Limited playback in front the dungeon door
+	    if (ImGui::MenuItem("Playback..", NULL,false,d.partyLevel == 255)) { Process_ecode_IDC_Playback();/* Do stuff */ }
 	    if (ImGui::MenuItem("Quit", NULL))   { cbAppDestroy(); }
 	    ImGui::EndMenu();
 	} else if (!fb_shown && !on_menubar)
