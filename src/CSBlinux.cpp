@@ -1660,6 +1660,7 @@ extern LISTING *listing; // AsciiDump.cpp
 extern bool resetstartcsb;
 bool show_listing;
 extern i32 lastTime;
+extern bool skipLogo;
 
 static void reset_game() {
     verticalIntEnabled = false;
@@ -1668,6 +1669,7 @@ static void reset_game() {
     cursorIsShowing = true;
     Cleanup(false);
     resetWhatToDo=resetgamesetup=resetstartcsb=true;
+    skipLogo = true;
     csbMessage.type=UIM_INITIALIZE;
     if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
     {
@@ -1676,7 +1678,7 @@ static void reset_game() {
 }
 
 static bool fb_shown;
-extern bool chaosDisplayed; // CSBCode.cpp
+extern bool chaosDisplayed,skipToDungeon,skipToResumeGame; // CSBCode.cpp
 
 void post_render() {
     static bool was_active;
@@ -1762,6 +1764,8 @@ void post_render() {
 	printf("file %s\n",file_dialog.selected_fn.c_str());    // The name of the selected file or directory in case of Select Directory dialog mode
 	printf("path %s\n",file_dialog.selected_path.c_str());  // The absolute path to the selected file
 	opened_file = (char*)file_dialog.selected_path.c_str();
+	skipToDungeon = true;
+	skipToResumeGame = true;
 	reset_game();
 	fb_shown = false;
     }

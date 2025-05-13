@@ -9497,6 +9497,7 @@ RESTARTABLE _OpenPrisonDoors(void) //TAG01f47a
 // *********************************************************
 //
 // *********************************************************
+bool skipToResumeGame;
 RESTARTABLE _TAG01f746(void)
 {//(void)
   static aReg A0;
@@ -9567,15 +9568,21 @@ RESTARTABLE _TAG01f746(void)
     UI_BeginRecordOK(true);
     DiscardAllInput();
     d.gameState = GAMESTATE_AtPrisonDoor;
-    do
-    {
-      wvbl(_2_);
-      do
-      {
-        HandleMouseEvents(_4_,0); //TAG01a7b2();
-      } while (intResult & 1);
-      if (DiskMenuNeeded) DisplayDiskMenu(_6_);
-    } while (d.gameState == GAMESTATE_AtPrisonDoor);
+    if (skipToResumeGame) {
+	skipToResumeGame = false;
+	d.gameState = GAMESTATE_ResumeSavedGame;
+    } else {
+	do
+	{
+	    wvbl(_2_);
+	    do
+	    {
+		HandleMouseEvents(_4_,0); //TAG01a7b2();
+	    } while (intResult & 1);
+	    if (DiskMenuNeeded)
+		DisplayDiskMenu(_6_);
+	} while (d.gameState == GAMESTATE_AtPrisonDoor);
+    }
   } while (d.gameState == GAMESTATE_202);
   UI_BeginRecordOK(false);
   StartSound(d.Pointer22968, 112, 1); // Start sound
@@ -11500,7 +11507,7 @@ bool resetWhatToDo = false;
 switch (mystate) { case _0_: goto return_0_;
 static i32 mystate;
 
-bool chaosDisplayed;
+bool chaosDisplayed,skipLogo,skipToDungeon;
 RESTARTABLE _AskWhatToDo(void)
 {//(i32)
  if (resetWhatToDo) {
@@ -11529,9 +11536,13 @@ RESTARTABLE _AskWhatToDo(void)
   InitializeHeap();//TAG020286
   ReadGraphicsIndex(); // TAG021d9a
   ReadTablesFromGraphicsFile();
-  chaosDisplayed = true;
-  DisplayChaosStrikesBack(_2_);
-  chaosDisplayed = false;
+  if (skipLogo) {
+      skipLogo = false;
+  } else {
+      chaosDisplayed = true;
+      DisplayChaosStrikesBack(_2_);
+      chaosDisplayed = false;
+  }
   ReadFloorAndCeilingBitmaps(0);
   ReadWallBitmaps(0);
       HopefullyNotNeeded(0x7486);
@@ -11559,27 +11570,31 @@ RESTARTABLE _AskWhatToDo(void)
 #ifdef TARGET_OS_MAC
   MacShowCursor();
 #endif
-  DoMenu(_1_,  //build the menu
-         "I AM READY, MASTER",
-         "WHAT IS YOUR WISH?",
-         "QUIT",
-         "DUNGEON",
-         "UTILITY",
-         "HINT",
-         1,
-         1,
-         1);
-  if (PlaybackCommandOption)
-  {
-    GameMode = 1;
-  }
-  else
-  {
-    STShowCursor(HC50);
-    WaitForMenuSelect(_3_, 4,1,0,0);
-    STHideCursor(HC53);
-    GameMode = i16Result-1;
-  };
+  if (!skipToDungeon) {
+      skipToDungeon = false;
+      DoMenu(_1_,  //build the menu
+	      "I AM READY, MASTER",
+	      "WHAT IS YOUR WISH?",
+	      "QUIT",
+	      "DUNGEON",
+	      "UTILITY",
+	      "HINT",
+	      1,
+	      1,
+	      1);
+      if (PlaybackCommandOption)
+      {
+	  GameMode = 1;
+      }
+      else
+      {
+	  STShowCursor(HC50);
+	  WaitForMenuSelect(_3_, 4,1,0,0);
+	  STHideCursor(HC53);
+	  GameMode = i16Result-1;
+      };
+  } else
+      GameMode = 1;
   switch (GameMode)
   {
     case 0: //"Quit"
