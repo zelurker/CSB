@@ -1574,8 +1574,16 @@ int main (int argc, char* argv[])
       }
     }
 
-    if (1) // imgui_active)
-	ImGui_ImplSDL2_ProcessEvent(&evert);
+    ImGui_ImplSDL2_ProcessEvent(&evert);
+    if (imgui_active) {
+	switch(evert.type) {
+	case SDL_MOUSEBUTTONDOWN:
+	case SDL_MOUSEBUTTONUP:
+	case SDL_KEYDOWN:
+	case SDL_KEYUP:
+	case SDL_MOUSEMOTION: continue;
+	}
+    }
     // uint32_t tick = SDL_GetTicks();
     // printf("event type %x ticks %d\n",evert.type,tick);
     if (sdlQuitPending)
