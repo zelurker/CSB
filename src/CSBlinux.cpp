@@ -198,19 +198,13 @@ static void PushEvent(void *param)
 }
 
 int WindowWidth = 320*4;
-int WindowHeight = 200*4;
+int WindowHeight = 200*4 + DY;
 float st_X = 320.0 / WindowWidth;
 float st_Y = 200.0 / (WindowHeight - 20);
 static CSB_UI_MESSAGE csbMessage;
 
 static void __resize_screen( ui32 w, i32 h ) {
 #if 1
-    double ratio = 32/20.0;
-    if (abs(w*1.0/h - ratio) > 1e-5) {
-	printf("old ratio %g\n",w*1.0/h);
-	w = h*ratio;
-	printf("new ratio %g\n",w*1.0/h);
-    }
     if (w < 640 || h < 400) {
 	WindowWidth = 640;
 	WindowHeight = 400;
@@ -1690,100 +1684,114 @@ void post_render() {
     static bool show_coords;
     bool open = false;
 
-    if (1) { // imgui_active) {
-	// Start the Dear ImGui frame
-	ImGui_ImplSDLRenderer2_NewFrame();
-	ImGui_ImplSDL2_NewFrame();
-	ImGui::NewFrame();
-	if (!was_active && !cursorIsShowing && !fb_shown)
-	    SDL_ShowCursor(SDL_DISABLE);
+    // Start the Dear ImGui frame
+    ImGui_ImplSDLRenderer2_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
+    if (!was_active && !cursorIsShowing && !fb_shown)
+	SDL_ShowCursor(SDL_DISABLE);
 
-	if (ImGui::BeginMainMenuBar())
+    if (ImGui::BeginMainMenuBar())
+    {
+	// I don't know why you should use IsWindowHovered and not IsItemHovered for a mainmenubar, but that's the way it is...
+	bool on_menubar = ImGui::IsWindowHovered();
+	if (on_menubar) {
+	    imgui_active = true;
+	    was_active = true;
+	}
+	r.y = DY;
+	r.x = 0;
+	r.w = WindowWidth;
+	r.h = WindowHeight - DY;
+	if (ImGui::BeginMenu("File"))
 	{
-	    r.y = DY;
-	    r.x = 0;
-	    r.w = WindowWidth;
-	    r.h = WindowHeight - DY;
-	    if (ImGui::BeginMenu("File"))
-	    {
-		imgui_active = true;
-		was_active = true;
-		if (ImGui::MenuItem("Reset", NULL)) {
-		    reset_game();
-		    // _CALL0 (_4_,st_ReadEntireGame);
-		}
-		if (ImGui::MenuItem("Load saved game",NULL,false,d.partyLevel != 255))
-		    open = true;
-		if (ImGui::MenuItem("Playback..", NULL)) { Process_ecode_IDC_Playback();/* Do stuff */ }
-		if (ImGui::MenuItem("Quit", NULL))   { cbAppDestroy(); }
-		ImGui::EndMenu();
-	    } else if (!fb_shown)
-		imgui_active = false;
-
-	    if (ImGui::BeginMenu("Misc"))
-	    {
-		imgui_active = true;
-		was_active = true;
-		ImGui::MenuItem("Party coordinates", NULL,&show_coords);
-		bool enabled = (ItemsRemainingOK
-			&& (encipheredDataFile==NULL)
-			&& !simpleEncipher);
-		if (ImGui::MenuItem("Non-CSB Items", NULL,false,enabled)) ItemsRemaining(1);
-		ImGui::EndMenu();
-	    } else if (!imgui_active) {
-		imgui_active = false;
-		if (was_active && !cursorIsShowing) {
-		    SDL_ShowCursor(SDL_DISABLE);
-		    // Tried RemoveCursor / ShowCursor, problem is last call to ShowCursor leaves a permanent cursor on game screen
-		    // so it's better to fight a little with mouse cursors when opening the mneu for now
-		    // until I find something better
-		    was_active = false;
-		}
+	    imgui_active = true;
+	    was_active = true;
+	    if (ImGui::MenuItem("Reset", NULL)) {
+		reset_game();
+		// _CALL0 (_4_,st_ReadEntireGame);
 	    }
+	    if (ImGui::MenuItem("Load saved game",NULL,false,d.partyLevel != 255))
+		open = true;
+	    if (ImGui::MenuItem("Playback..", NULL)) { Process_ecode_IDC_Playback();/* Do stuff */ }
+	    if (ImGui::MenuItem("Quit", NULL))   { cbAppDestroy(); }
+	    ImGui::EndMenu();
+	} else if (!fb_shown && !on_menubar)
+	    imgui_active = false;
 
-	    if (show_coords) {
-		ImGui::SameLine(ImGui::GetWindowWidth() - 100);
-		ImGui::Text("Party %d,%d,%d",d.partyLevel,d.partyX,d.partyY);
-	    }
-	    ImGui::EndMainMenuBar();
-	}
-
-	//Remember the name to ImGui::OpenPopup() and showFileDialog() must be same...
-	if(open) {
-	    fb_shown = true;
-	    ImGui::OpenPopup("Load saved game");
-	}
-
-	/* Optional third parameter. Support opening only compressed rar/zip files.
-	 * Opening any other file will show error, return false and won't close the dialog.
-	 */
-	if(file_dialog.showFileDialog("Load saved game", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), "csb*"))
+	if (ImGui::BeginMenu("Misc"))
 	{
-	    printf("file %s\n",file_dialog.selected_fn.c_str());    // The name of the selected file or directory in case of Select Directory dialog mode
-	    printf("path %s\n",file_dialog.selected_path.c_str());  // The absolute path to the selected file
-	    opened_file = (char*)file_dialog.selected_path.c_str();
-	    reset_game();
-	    fb_shown = false;
-	}
-	if (listing && listing_title && show_listing) {
-	    if (ImGui::Begin(listing_title, &show_listing)) {
-		if (ImGui::IsWindowHovered()) {
-		    SDL_ShowCursor(SDL_ENABLE);
-		    imgui_active = true;
-		}
-		ImGui::Text("%s",listing->m_listing);
-		ImGui::End();
-	    } else {
-		printf("window collapsed or closed\n");
-		ImGui::End();
+	    imgui_active = true;
+	    was_active = true;
+	    ImGui::MenuItem("Party coordinates", NULL,&show_coords);
+	    bool enabled = (ItemsRemainingOK
+		    && (encipheredDataFile==NULL)
+		    && !simpleEncipher);
+	    if (ImGui::MenuItem("Non-CSB Items", NULL,false,enabled)) ItemsRemaining(1);
+	    ImGui::EndMenu();
+	} else if (!imgui_active) {
+	    if (was_active && !cursorIsShowing) {
+		SDL_ShowCursor(SDL_DISABLE);
+		// Tried RemoveCursor / ShowCursor, problem is last call to ShowCursor leaves a permanent cursor on game screen
+		// so it's better to fight a little with mouse cursors when opening the mneu for now
+		// until I find something better
+		was_active = false;
 	    }
 	}
-	// Rendering
-	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-	ImGui::Render();
-	SDL_RenderSetScale(sdlRenderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
-	SDL_SetRenderDrawColor(sdlRenderer, (Uint8)(clear_color.x * 255), (Uint8)(clear_color.y * 255), (Uint8)(clear_color.z * 255), (Uint8)(clear_color.w * 255));
-	SDL_RenderClear(sdlRenderer);
+
+	if (show_coords) {
+	    ImGui::SameLine(ImGui::GetWindowWidth() - 100);
+	    ImGui::Text("Party %d,%d,%d",d.partyLevel,d.partyX,d.partyY);
+	}
+	ImGui::EndMainMenuBar();
+    }
+
+    //Remember the name to ImGui::OpenPopup() and showFileDialog() must be same...
+    if(open) {
+	fb_shown = true;
+	ImGui::OpenPopup("Load saved game");
+    }
+
+    /* Optional third parameter. Support opening only compressed rar/zip files.
+     * Opening any other file will show error, return false and won't close the dialog.
+     */
+    if(file_dialog.showFileDialog("Load saved game", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), "csb*"))
+    {
+	printf("file %s\n",file_dialog.selected_fn.c_str());    // The name of the selected file or directory in case of Select Directory dialog mode
+	printf("path %s\n",file_dialog.selected_path.c_str());  // The absolute path to the selected file
+	opened_file = (char*)file_dialog.selected_path.c_str();
+	reset_game();
+	fb_shown = false;
+    }
+    if (listing && listing_title && show_listing) {
+	if (ImGui::Begin(listing_title, &show_listing)) {
+	    if (ImGui::IsWindowHovered()) {
+		SDL_ShowCursor(SDL_ENABLE);
+		imgui_active = true;
+	    }
+	    ImGui::Text("%s",listing->m_listing);
+	    ImGui::End();
+	} else {
+	    printf("window collapsed or closed\n");
+	    ImGui::End();
+	}
+    }
+    // Rendering
+    ImGui::Render();
+
+    SDL_RenderSetScale(sdlRenderer, io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
+    SDL_SetRenderDrawColor(sdlRenderer, 0, 0, 0, 255);
+    SDL_RenderClear(sdlRenderer);
+
+    double ratio = r.w*1.0/r.h;
+    if (abs(ratio - 32/20.0) > 1e-5) {
+	if (ratio > 32/20.0) {
+	    r.w = r.h*32/20.0;
+	    r.x = (WindowWidth-r.w)/2;
+	} else {
+	    r.h = r.w*20/32.0;
+	    r.y = (WindowHeight - r.h)/2;
+	}
     }
     if (SDL_RenderCopy(sdlRenderer,
 		sdlTexture,
