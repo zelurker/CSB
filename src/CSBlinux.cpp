@@ -14,7 +14,7 @@
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer2.h"
-#include "ImGuiFileBrowser.h"
+#include "imguifilebrowser.h"
 
 imgui_addons::ImGuiFileBrowser file_dialog; // As a class member or globally
 bool imgui_active = false;
@@ -1712,7 +1712,7 @@ void post_render() {
 		    reset_game();
 		    // _CALL0 (_4_,st_ReadEntireGame);
 		}
-		if (ImGui::MenuItem("Load saved game"))
+		if (ImGui::MenuItem("Load saved game",NULL,false,d.partyLevel != 255))
 		    open = true;
 		if (ImGui::MenuItem("Playback..", NULL)) { Process_ecode_IDC_Playback();/* Do stuff */ }
 		if (ImGui::MenuItem("Quit", NULL))   { cbAppDestroy(); }
@@ -1757,7 +1757,7 @@ void post_render() {
 	/* Optional third parameter. Support opening only compressed rar/zip files.
 	 * Opening any other file will show error, return false and won't close the dialog.
 	 */
-	if(file_dialog.showFileDialog("Load saved game", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ".dat,.BAK"))
+	if(file_dialog.showFileDialog("Load saved game", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), "csb*"))
 	{
 	    printf("file %s\n",file_dialog.selected_fn.c_str());    // The name of the selected file or directory in case of Select Directory dialog mode
 	    printf("path %s\n",file_dialog.selected_path.c_str());  // The absolute path to the selected file

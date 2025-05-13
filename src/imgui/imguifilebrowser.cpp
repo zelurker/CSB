@@ -2,9 +2,10 @@
 #define IMGUI_DEFINE_MATH_OPERATORS
 #endif
 
-#include "ImGuiFileBrowser.h"
+#include "imguifilebrowser.h"
 #include "imgui_internal.h"
 #include <SDL.h>
+#include <fnmatch.h>
 
 #include <iostream>
 #include <functional>
@@ -59,11 +60,11 @@ namespace imgui_addons
         selected_path = "";
         input_fn[0] = '\0';
 
-        #ifdef OSWIN
+#ifdef OSWIN
         current_path = "./";
-        #else
+#else
         initCurrentPath();
-        #endif
+#endif
     }
 
     ImGuiFileBrowser::~ImGuiFileBrowser()
@@ -156,13 +157,13 @@ namespace imgui_addons
                  */
                 if(current_path.empty())
                 {
-                    #ifdef OSWIN
+#ifdef OSWIN
                     show_error |= !(loadWindowsDrives());
-                    #else
+#else
                     initCurrentPath();
                     show_error |= !(readDIR(current_path));
-                    #endif // OSWIN
-                }
+#endif // OSWIN
+		}
                 else
                     show_error |= !(readDIR(current_path));
                 is_appearing = false;
@@ -176,7 +177,7 @@ namespace imgui_addons
             if(validate_file)
             {
                 validate_file = false;
-                bool check = validateFile();
+                bool check = true; // validateFile();
 
                 if(!check && dialog_mode == DialogMode::OPEN)
                 {
@@ -295,7 +296,9 @@ namespace imgui_addons
                 {
                     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.01f));
                     ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f,1.0f));
-                    ImGui::ArrowButtonEx("##Right", ImGuiDir_Right, ImVec2(frame_height, frame_height), ImGuiItemFlags_Disabled);
+		    char id[5];
+		    snprintf(id,5,"##%d",i);
+                    ImGui::ArrowButtonEx(id, ImGuiDir_Right, ImVec2(frame_height, frame_height), ImGuiItemFlags_Disabled);
                     ImGui::SameLine(0,0);
                     ImGui::PopStyleColor(2);
                 }
@@ -803,19 +806,19 @@ namespace imgui_addons
         if(dir == nullptr && is_appearing)
         {
             current_dirlist.clear();
-            #ifdef OSWIN
+#ifdef OSWIN
             current_path = pathdir = "./";
-            #else
+#else
             initCurrentPath();
             pathdir = current_path;
-            #endif // OSWIN
+#endif // OSWIN
 
             dir = opendir(pathdir.c_str());
         }
 
         if (dir != nullptr)
         {
-            #ifdef OSWIN
+#ifdef OSWIN
             // If we are on Windows and current path is relative then get absolute path from dirent structure
             if(current_dirlist.empty() && pathdir == "./")
             {
@@ -830,7 +833,7 @@ namespace imgui_addons
                 //Create a vector of each directory in the file path for the filepath bar. Not Necessary for linux as starting directory is "/"
                 parsePathTabs(current_path);
             }
-            #endif // OSWIN
+#endif // OSWIN
 
             // store all the files and directories within directory and clear previous entries
             clearFileList();
@@ -844,24 +847,24 @@ namespace imgui_addons
                     continue;
 
                 //Somehow there is a '..' present in root directory in linux.
-                #ifndef OSWIN
+#ifndef OSWIN
                 if(name == ".." && pathdir == "/")
                     continue;
-                #endif // OSWIN
+#endif // OSWIN
 
                 if(name != "..")
                 {
-                    #ifdef OSWIN
+#ifdef OSWIN
                     std::string dir = pathdir + std::string(ent->d_name);
                     // IF system file skip it...
                     if (FILE_ATTRIBUTE_SYSTEM & GetFileAttributesA(dir.c_str()))
                         continue;
                     if (FILE_ATTRIBUTE_HIDDEN & GetFileAttributesA(dir.c_str()))
                         is_hidden = true;
-                    #else
+#else
                     if(name[0] == '.')
                         is_hidden = true;
-                    #endif // OSWIN
+#endif // OSWIN
                 }
                 //Store directories and files in separate vectors
                 if(ent->d_type == DT_DIR)
@@ -888,7 +891,7 @@ namespace imgui_addons
     void ImGuiFileBrowser::filterFiles(int filter_mode)
     {
         filter_dirty = false;
-        if(filter_mode | FilterMode_Dirs)
+        if(filter_mode & FilterMode_Dirs)
         {
             filtered_dirs.clear();
             for (std::vector<Info>::size_type i = 0; i < subdirs.size(); ++i)
@@ -897,7 +900,7 @@ namespace imgui_addons
                     filtered_dirs.push_back(&subdirs[i]);
             }
         }
-        if(filter_mode | FilterMode_Files)
+        if(filter_mode & FilterMode_Files)
         {
             filtered_files.clear();
             for (std::vector<Info>::size_type i = 0; i < subfiles.size(); ++i)
@@ -905,14 +908,17 @@ namespace imgui_addons
                 // If the option to show all supported formats is selected, filter all files supported
                 if (show_all_valid_files)
                 {
-                    if(filter.PassFilter(subfiles[i].name.c_str()))
-                    {
-                        std::string ext = subfiles[i].name.find_last_of('.') == std::string::npos ? "" : subfiles[i].name.substr(subfiles[i].name.find_last_of('.'));
-                        std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c){ return std::tolower(c); });
-                        if (ext.length() > 0 && find(valid_exts.begin(), valid_exts.end(), ext) != valid_exts.end())
-                        {
-                            filtered_files.push_back(&subfiles[i]);
-                        }
+		    if(filter.PassFilter(subfiles[i].name.c_str()))
+		    {
+			std::string ext = subfiles[i].name.find_last_of('.') == std::string::npos ? "" : subfiles[i].name.substr(subfiles[i].name.find_last_of('.'));
+			std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char c){ return std::tolower(c); });
+			// if (ext.length() > 0 && find(valid_exts.begin(), valid_exts.end(), ext) != valid_exts.end())
+			for (std::string s : valid_exts) {
+			    if (!fnmatch(s.c_str(),subfiles[i].name.c_str(),FNM_CASEFOLD))
+			    {
+				filtered_files.push_back(&subfiles[i]);
+			    }
+			}
                     }
                 }
                 // If the option to show all files is selected, filter all files
@@ -924,7 +930,8 @@ namespace imgui_addons
                 //If any other extension is selected, filter files having only that extension
                 else
                 {
-                    if(filter.PassFilter(subfiles[i].name.c_str()) && (ImStristr(subfiles[i].name.c_str(), nullptr, valid_exts[selected_ext_idx].c_str(), nullptr)) != nullptr)
+		    printf("fnmatch %s %s\n",valid_exts[selected_ext_idx].c_str(), subfiles[i].name.c_str());
+                    if(filter.PassFilter(subfiles[i].name.c_str()) && !fnmatch(valid_exts[selected_ext_idx].c_str(), subfiles[i].name.c_str(),FNM_CASEFOLD))
                         filtered_files.push_back(&subfiles[i]);
                 }
             }
@@ -1231,14 +1238,14 @@ namespace imgui_addons
     #endif
 
     //Unix only
-    #ifndef OSWIN
+#ifndef OSWIN
     void ImGuiFileBrowser::initCurrentPath()
     {
         bool path_max_def = false;
 
-        #ifdef PATH_MAX
+#ifdef PATH_MAX
         path_max_def = true;
-        #endif // PATH_MAX
+#endif // PATH_MAX
 
         char* buffer = nullptr;
 
@@ -1264,5 +1271,5 @@ namespace imgui_addons
         else
             free(real_path);
     }
-    #endif // OSWIN
+#endif // OSWIN
 }

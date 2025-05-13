@@ -1,10 +1,10 @@
 #target = Raspberry
-target = SDL20
+# target = SDL20
 # This target below is for some cross compilation from linux to windows
 # it works, but windows gives 2 channels instead of the requested 1, creating bad sound when run in wine, and no sound at all in native windows 11 !
 # so consider it experimental for now !
 # target = x86_64-w64-mingw32
-# target=i686-w64-mingw32
+target=i686-w64-mingw32
 CXX = g++
 MD = mkdir
 # comment out following line to see compiler invocation
@@ -38,7 +38,7 @@ ifeq ($(target),i686-w64-mingw32)
 endif
 ifdef WIN # windows version
 	options =  -O2 -D _LINUX -D RGB655 -D SDL20 -c -DMINGW
-  gincludes = -Isdl_sound -Iimgui \
+  gincludes = -Isdl_sound -Iimgui -Ifnmatch \
                $(shell $(target)-pkg-config --cflags sdl2)
   libs =  $(shell $(target)-pkg-config --libs sdl2)
   comp = $(target)-g++ -std=c++11 $(options) $(gincludes)
@@ -66,7 +66,8 @@ OBJS=	DSA.o       data.o         Code11f52.o  Graphics.o  Magic.o          \
 OBJDIR = obj
 OBJDIRS = $(OBJDIR) \
 		  $(OBJDIR)/sdl_sound \
-		  $(OBJDIR)/imgui
+		  $(OBJDIR)/imgui \
+		  $(OBJDIR)/fnmatch
 
 OBJS := $(OBJS:%=$(OBJDIR)/%)
 
@@ -74,9 +75,13 @@ SDL_SOUND = SDL_sound.o SDL_sound_mp3.o SDL_sound_raw.o SDL_sound_wav.o
 SDL_SOUND := $(SDL_SOUND:%=$(OBJDIR)/sdl_sound/%)
 OBJS += $(SDL_SOUND)
 
-IMGUI = imgui.o imgui_draw.o imgui_impl_sdl2.o imgui_tables.o imgui_widgets.o imgui_impl_sdlrenderer2.o ImGuiFileBrowser.o
+IMGUI = imgui.o imgui_draw.o imgui_impl_sdl2.o imgui_tables.o imgui_widgets.o imgui_impl_sdlrenderer2.o imguifilebrowser.o
 IMGUI := $(IMGUI:%=$(OBJDIR)/imgui/%)
 OBJS += $(IMGUI)
+
+ifdef WIN
+	OBJS += obj/fnmatch/fnmatch.o
+endif
 
 all: maketree message csb
 
