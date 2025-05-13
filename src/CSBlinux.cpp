@@ -1688,8 +1688,6 @@ void post_render() {
     ImGui_ImplSDLRenderer2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
-    if (!was_active && !cursorIsShowing && !fb_shown)
-	SDL_ShowCursor(SDL_DISABLE);
 
     if (ImGui::BeginMainMenuBar())
     {
@@ -1766,6 +1764,14 @@ void post_render() {
     }
     if (listing && listing_title && show_listing) {
 	if (ImGui::Begin(listing_title, &show_listing)) {
+	    if (ImGui::Button("Save to report.txt")) {
+		FILE *f = fopen("report.txt","w");
+		if (f) {
+		    fprintf(f,"%s\n",listing->m_listing);
+		    fclose(f);
+		}
+	    }
+
 	    if (ImGui::IsWindowHovered()) {
 		SDL_ShowCursor(SDL_ENABLE);
 		imgui_active = true;
@@ -1777,6 +1783,10 @@ void post_render() {
 	    ImGui::End();
 	}
     }
+    if (!was_active && !cursorIsShowing && !fb_shown && !imgui_active) {
+	SDL_ShowCursor(SDL_DISABLE);
+    }
+
     // Rendering
     ImGui::Render();
 
