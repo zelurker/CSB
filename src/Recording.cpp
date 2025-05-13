@@ -980,7 +980,7 @@ void RECORDFILE::Open(void)
 #else
         {
           LQENTRY *pos;
-          pos = m_lineQueue.GetHeadPosition(); 
+          pos = m_lineQueue.GetHeadPosition();
           while (pos != NULL)
           {
             fputs(m_lineQueue.GetNext(pos), GETFILE(m_fileNum));
@@ -1209,7 +1209,9 @@ void RECORDFILE::Record(MouseQueueEnt *ent)
   case 0xffff:
     break;
   default:
+#if 0
     {
+	// This message appears even with the official dungeon master dungeon.dat 1.3 from atari st, so it's silenced
       char eline[100];
       sprintf(eline, " Add 0x%04x to comments at front of recording file",
 #ifdef POST_TRANSLATE_CLICK
@@ -1219,7 +1221,8 @@ void RECORDFILE::Record(MouseQueueEnt *ent)
 #endif
       );
       UI_MessageBox(eline, "Suggestion", MESSAGE_OK);
-    };
+    }
+#endif
     break;
   };
   if ((m_fileNum < 0)&& !m_isQueueingLines) return;
