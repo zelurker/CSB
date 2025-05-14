@@ -47,21 +47,22 @@ RESTARTABLE _ReIncarnate(CHARDESC *pChar)
                &d.wRectPos926,
                72,
                4);
-  TextToViewport(177, 58, COLOR_13, "_______", false);//Seven of them
-  TextToViewport(105, 76, COLOR_13, "___________________", false);// Nineteen
+  TextToViewport(177, 58, COLOR_13, pChar->name, false);//Seven of -
+  TextToViewport(105, 76, COLOR_13, pChar->title, false);// Nineteen
   STHideCursor(HC12);
   MarkViewportUpdated(0);
   SetCursorShape(0); // Arrow
   STShowCursor(HC12);
-  D7W = 0;
-  pChar->name[0] = 0;
-  pChar->title[0] = 0;
+  D7W = strlen(pChar->name);
+  // I want to preserve the original name & title
+  // pChar->name[0] = 0;
+  // pChar->title[0] = 0;
   D6W = 1;
   A2 = (aReg)pChar->name;
-  w_2 = 177;
+  w_2 = 177 + 6*strlen(pChar->name);
   w_4 = 91;
   //w_20 = (I16)(d.MouseSwitches & 2);
-  for (;;) 
+  for (;;)
   {
     SET(D0B, D6W==2);
     if (D0B != 0)
@@ -107,9 +108,9 @@ RESTARTABLE _ReIncarnate(CHARDESC *pChar)
         RETURN;
       };
       WAITFORMESSAGE(_2_);
-      if (!mouseQueueIsEmpty()) 
+      if (!mouseQueueIsEmpty())
       //w_18 = (I16)(d.MouseSwitches & 2);
-      //if ((w_18!=0) && (w_20==0)) 
+      //if ((w_18!=0) && (w_20==0))
       {
         bool unClick;
         {
@@ -131,7 +132,7 @@ RESTARTABLE _ReIncarnate(CHARDESC *pChar)
         {
           continue;
         };
-//    
+//
         if (    ((D6W==2)||(D7W>0))
              && (w_14>=197)
              && (w_14<=215)
@@ -176,25 +177,25 @@ tag014088:
         }
         else
         {
-          if (   (w_14>=107) 
-              && (w_14<=175) 
-              && (w_16>=147) 
+          if (   (w_14>=107)
+              && (w_14<=175)
+              && (w_16>=147)
               && (w_16<=155) )   // Backspace button
           {
             D5W = 8;
             break;
           };
-          if (   (w_14>=107) 
-              && (w_14<=215) 
-              && (w_16>=116) 
+          if (   (w_14>=107)
+              && (w_14<=215)
+              && (w_16>=116)
               && (w_16<=144 ) ) // Letters, punctuation, carriage-return
           {
             D0W = (I16)((w_14+4) % 10); //pixel within column
-//          
 //
-//         
+//
+//
             if (   (D0W!=0) //not on vertical line and not on horizontal line
-                && (   (((w_16+5)%10)!=0) 
+                && (   (((w_16+5)%10)!=0)
                     || ((w_14>=207)&&(w_16==135)) ) )
             {
               w_40 = sw(11 * ((w_16-116)/10));  // starting index in row
@@ -213,7 +214,7 @@ tag014088:
               };
               if (D5W > 90)
               {
-                D0W = sw(D5W - 90); 
+                D0W = sw(D5W - 90);
                 D5W = d.SpecialChars[D0W-1]; // comma, period, semi-colon, colon, space
               };
               break;
@@ -252,10 +253,10 @@ tag014088:
       D5W -= 32; // Convert to uppercase
     };
 //
-    if (   ((D5W>='A')&&(D5W<='Z')) 
-        || (D5W=='.') 
-        || (D5W==44) 
-        || (D5W==59) 
+    if (   ((D5W>='A')&&(D5W<='Z'))
+        || (D5W=='.')
+        || (D5W==44)
+        || (D5W==59)
         || (D5W==58)
         || (D5W==' ') )
     {
@@ -291,7 +292,7 @@ tag014088:
       STHideCursor(HC15);
       TextOut_OneLine(d.LogicalScreenBase,
                       160,
-                      w_2,
+                      w_2+6*strlen(pChar->title),
                       w_4,
                       13,
                       12,
@@ -302,9 +303,9 @@ tag014088:
 tag0142c2:
       D6W = 2;
       A2 = (aReg)pChar->title;
-      w_2 = 105;
+      w_2 = 105+6*strlen(pChar->title);
       w_4 = 109;
-      D7W = 0;
+      D7W = strlen(pChar->title);
       continue;
     };
 tag0142de:
