@@ -1666,6 +1666,7 @@ RESTARTABLE _HandleMouseEvents(const i32 delta)
   d.MouseInterlock = 0;
   CauseFakeMouseClick();
 
+  // printf("button %x\n",D6W);
   if (D6W == 0x0add)
   {
     //This is the mouse 'button-up' event (unClick).
@@ -1938,7 +1939,6 @@ RESTARTABLE _HandleMouseEvents(const i32 delta)
   if ((D6W >= 210) && (D6W <= 213))
   {
     d.Word11764 = sw(D6W - 209);
-      printf("button identified: %d\n",d.Word11764);
       lastTime=d.Time;
       RETURN_int(result);
   };

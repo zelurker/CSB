@@ -930,7 +930,6 @@ namespace imgui_addons
                 //If any other extension is selected, filter files having only that extension
                 else
                 {
-		    printf("fnmatch %s %s\n",valid_exts[selected_ext_idx].c_str(), subfiles[i].name.c_str());
                     if(filter.PassFilter(subfiles[i].name.c_str()) && !fnmatch(valid_exts[selected_ext_idx].c_str(), subfiles[i].name.c_str(),FNM_CASEFOLD))
                         filtered_files.push_back(&subfiles[i]);
                 }
