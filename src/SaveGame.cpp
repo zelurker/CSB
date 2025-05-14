@@ -822,6 +822,7 @@ struct BlockDesc
 //
 // *********************************************************
 // TAG001de4c
+extern char *opened_file;
 RESTARTABLE _DisplayDiskMenu(void)
 {//void
   static dReg D0, D1, D5, D6, D7;
@@ -917,7 +918,12 @@ RESTARTABLE _DisplayDiskMenu(void)
       D6W = (I16)((D5W==1) ? 1 : 0);
       D0L = 0;
       STShowCursor(HC57);
-      SelectSaveGame(_5_,0, 0, 1); //TAG0204bc
+      if (!opened_file) {
+	  SelectSaveGame(_5_,0, 0, 1); //TAG0204bc
+      } else {
+	  d.SaveGameFilename = opened_file;
+	  opened_file = NULL; // So that it doesn't loop!
+      }
       STHideCursor(HC57);
       D7W = 1;
 //    };
@@ -1536,7 +1542,6 @@ static str1eb18 b;  // Our local variables
 //#define MYRESTARTMAP \
 //  static i32 mystate=_0_; printf("mystatei for readentiregame %d\n",mystate);\
 //switch (mystate) { case _0_: goto return_0_;
-extern char *opened_file;
 RESTARTABLE _ReadEntireGame(void)
 {//i16
   static dReg D0, D1, D5, D6, D7;

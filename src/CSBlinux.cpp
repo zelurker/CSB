@@ -1685,7 +1685,7 @@ static void reset_game() {
     }
 }
 
-static bool fb_shown;
+static bool fb_shown,fb2_shown;
 extern bool chaosDisplayed,skipToDungeon,skipToResumeGame; // CSBCode.cpp
 
 void post_render() {
@@ -1693,7 +1693,7 @@ void post_render() {
     drawn = 1;
     SDL_Rect r;
     static bool show_coords;
-    bool open = false;
+    bool open = false,save = false;
 
     // Start the Dear ImGui frame
     ImGui_ImplSDLRenderer2_NewFrame();
@@ -1717,17 +1717,19 @@ void post_render() {
 	{
 	    imgui_active = true;
 	    was_active = true;
-	    if (ImGui::MenuItem("Reset", NULL)) {
+	    if (ImGui::MenuItem("Reset", NULL,false,d.partyLevel != 255)) {
 		reset_game();
 		// _CALL0 (_4_,st_ReadEntireGame);
 	    }
 	    if (ImGui::MenuItem("Load saved game",NULL,false,d.partyLevel != 255))
 		open = true;
+	    if (ImGui::MenuItem("Save game",NULL,false,d.partyLevel != 255))
+		save = true;
 	    // Limited playback in front the dungeon door
 	    if (ImGui::MenuItem("Playback..", NULL,false,d.partyLevel == 255)) { Process_ecode_IDC_Playback();/* Do stuff */ }
 	    if (ImGui::MenuItem("Quit", NULL))   { cbAppDestroy(); }
 	    ImGui::EndMenu();
-	} else if (!fb_shown && !on_menubar)
+	} else if (!fb_shown && !on_menubar && !fb2_shown)
 	    imgui_active = false;
 
 	if (ImGui::BeginMenu("Misc"))
@@ -1762,6 +1764,9 @@ void post_render() {
     if(open) {
 	fb_shown = true;
 	ImGui::OpenPopup("Load saved game");
+    } else if (save) {
+	fb2_shown = true;
+        ImGui::OpenPopup("Save game");
     }
 
     /* Optional third parameter. Support opening only compressed rar/zip files.
@@ -1776,6 +1781,12 @@ void post_render() {
 	skipToResumeGame = true;
 	reset_game();
 	fb_shown = false;
+    }
+    if(file_dialog.showFileDialog("Save game", imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(700, 310), "csb*"))
+    {
+	opened_file = (char*)file_dialog.selected_path.c_str();
+	fb2_shown = false;
+	DispatchCSB(st_DisplayDiskMenu);
     }
     if (listing && listing_title && show_listing) {
 	if (ImGui::Begin(listing_title, &show_listing)) {
@@ -1798,7 +1809,7 @@ void post_render() {
 	    ImGui::End();
 	}
     }
-    if (!was_active && !cursorIsShowing && !fb_shown && !imgui_active) {
+    if (!was_active && !cursorIsShowing && !fb_shown && !imgui_active && !fb2_shown) {
 	SDL_ShowCursor(SDL_DISABLE);
     }
 
