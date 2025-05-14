@@ -1781,12 +1781,19 @@ void post_render() {
 	skipToResumeGame = true;
 	reset_game();
 	fb_shown = false;
+    } else if (fb_shown && !ImGui::IsPopupOpen("Load saved game")) {
+	// cancel was pressed!
+	fb_shown = false;
     }
+
     if(file_dialog.showFileDialog("Save game", imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(700, 310), "csb*"))
     {
 	opened_file = (char*)file_dialog.selected_path.c_str();
 	fb2_shown = false;
 	DispatchCSB(st_DisplayDiskMenu);
+    } else if (fb2_shown && !ImGui::IsPopupOpen("Save game")) {
+	// cancel was pressed!
+	fb2_shown = false;
     }
     if (listing && listing_title && show_listing) {
 	if (ImGui::Begin(listing_title, &show_listing)) {
