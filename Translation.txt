@@ -60,7 +60,7 @@
 "ANTI-MAGIC"                                "ANTI-MAGIE" // Good
 " MUMBLES A MEANINGLESS SPELL."             " MARMONNE UN SORT INCOHERENT." // good
 " NEEDS MORE PRACTICE WITH THIS "           " DOIT S'ENTRAINER AVEC CE SORT DE " // good
-" NEEDS AN EMPTY FLASK IN HAND FOR POTION." " DOIT AVOIR UN FLACON VIDE EN MAIN." // good
+" NEEDS AN EMPTY FLASK IN HAND FOR POTION." " DOIT AVOIR UNE FIOLE VIDE EN MAIN." // good
 " SPELL."                                   "." // good yeah !
 "THAT IS A DIFFICULT SPELL.  STUDY IT."     "C'EST UN SORT DIFFICILE. EXCERCE-TOI." // not see
 "THE SPELL FIZZLES AND DIES."               "LE SORT FAIBLIT ET CESSE." // not see
@@ -215,4 +215,35 @@
 "SWING"										"BALANCER"
 "PARRY"										"PARER"
 "SHOOT"										"TIRER"
-
+"BUCKLER"									"BOUCLIER"
+"SLING"										"FRONDE"
+"WAND"										"BAGUETTE"
+"HELMET"									"CASQUE"
+"WOODEN SHIELD"								"BOUCLIER BOIS"
+"BREAD"										"PAIN"
+"WATER"										"EAU"
+"SLASH"										"SABRER"
+"CORN"										"MAIS"
+"CHEESE"									"FROMAGE"
+"APPLE"										"POMME"
+"DRUMSTICK"									"PILON"
+"YA POTION"									"POTION YA"
+"EMPTY FLASK"								"FIOLE VIDE"
+"RABBIT'S FOOT"								"PIED DE LAPIN"
+"COMPASS"									"BOUSSOLE"
+"ARROW"										"FLECHE"
+"MIRROR OF DAWN"							"MIRROIR"
+"SILVER COIN"								"PIECE D'ARGENT"
+"THROWING STAR"								"SHURIKEN"
+"CLUB"										"MASSUE"
+"GOLD KEY"									"CLE EN OR"
+"RA KEY"									"CLE RA"
+"MAGICAL BOX"								"BOITE MAGIQUE"
+"KIRTLE"									"COTTE"
+"LEATHER BOOTS"								"BOTTES DE CUIR"
+"TUNIC"										"TUNIQUE"
+"LEATHER PANTS"								"PANTALON DE CUIR"
+"BEZERKER HELM"								"CASQUE BEZERKER"
+"LEATHER JERKIN"							"MAILOOT DE CUIR"
+"SUEDE BOOTS"								"BOTTES EN DAIM"
+"WATER FLASK"								"FIOLE D'EAU"
