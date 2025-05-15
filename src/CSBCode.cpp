@@ -10736,7 +10736,10 @@ RESTARTABLE _ShowPrisonDoor(void)
 ////  TAG001d0c(); // Set critical error handler.
   //TAG020836(LOCAL_130); //??Copy some part of Program Descriptor?? // Never used!
   GameSetup(_1_, 1);
-  if (DMRulesDesignOption)
+  // printf("numlevel %d startingpartyx %d startingpartyy %d\n",d.dungeonDatIndex->NumLevel(),d.dungeonDatIndex->StartingPartyX(),d.dungeonDatIndex->StartingPartyY());
+  if (DMRulesDesignOption || (d.dungeonDatIndex->NumLevel() == 14 &&
+	      d.dungeonDatIndex->StartingPartyX() == 1 &&
+	      d.dungeonDatIndex->StartingPartyY() == 3))
   {
     DM_rules = true;
     RecordFile_Record("#DMRules\n");

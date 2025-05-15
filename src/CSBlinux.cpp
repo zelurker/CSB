@@ -1741,6 +1741,7 @@ void post_render() {
 		    && (encipheredDataFile==NULL)
 		    && !simpleEncipher);
 	    if (ImGui::MenuItem("Non-CSB Items", NULL,false,enabled)) ItemsRemaining(1);
+	    ImGui::MenuItem("DM Rules", NULL,&DM_rules);
 	    ImGui::EndMenu();
 	} else if (!imgui_active) {
 	    if (was_active && !cursorIsShowing) {
