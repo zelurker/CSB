@@ -3094,6 +3094,7 @@ enum HC
   HCmmm,
 };
 
+extern bool bigEndianGraphics;
 
 //i32  DIRECT_CONIN(void); // Trap 1 #0x07
 //i16  CONSTAT(void);      // Trap 1 #0x0b

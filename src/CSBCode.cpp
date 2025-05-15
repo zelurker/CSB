@@ -10187,11 +10187,13 @@ void ReadTablesFromGraphicsFile(void)
   {
     d.Item6414[i].ITEM12_word0 = LE16(d.Item6414[i].ITEM12_word0);
   };
-  d.Word4040[0] = LE16(d.Word4040[0]);
-  swapNwords(d.Word7246, 12);
-  swapNwords(d.Word7222, 30);
-  swapNwords(d.Word7162, 60);
-  swapNwords(d.Word7042, 30);
+  if (bigEndianGraphics) {
+      d.Word4040[0] = LE16(d.Word4040[0]);
+      swapNwords(d.Word7246, 12);
+      swapNwords(d.Word7222, 30);
+      swapNwords(d.Word7162, 60);
+      swapNwords(d.Word7042, 30);
+  }
   btn missingButtons[4] =
   {
     {0x00c8,0x00f4,0x012a,0x002d,0x003a,0x0002},
@@ -10202,35 +10204,39 @@ void ReadTablesFromGraphicsFile(void)
   ASSERT(    (d.GraphicDecompressedSizes[0x231] == 0x804)
           || (d.GraphicDecompressedSizes[0x231] == 0x7d4) ,"graphicSize231");
   ReadAndExpandGraphic(0x8000|0x231,(ui8 *)d.Byte18938+2, 0, 0);
-  SwapGraphic0x231();
+  if (bigEndianGraphics)
+      SwapGraphic0x231();
   if (d.GraphicDecompressedSizes[0x231] == 0x7d4)
   {
     d.Buttons16932[0] = missingButtons[0];
     d.Buttons16932[1] = missingButtons[1];
     d.Buttons16932[2] = missingButtons[2];
     d.Buttons16932[3] = missingButtons[3];
-  };
+  }
   ASSERT(d.GraphicDecompressedSizes[0x230] == 0x4e8,"graphicSize230");
   ReadAndExpandGraphic(0x8000|0x230, (ui8 *)d.Byte20244+2, 0, 0);
-  swapRectPos(&d.wRectPos20202);
-  swapRectPos(&d.wRectPos20210);
-  swapRectPos(&d.wRectPos20218);
-  swapRectPos(&d.wRectPos20226);
-  swapRectPos(&d.wRectPos20234);
+  if (bigEndianGraphics) {
+      swapRectPos(&d.wRectPos20202);
+      swapRectPos(&d.wRectPos20210);
+      swapRectPos(&d.wRectPos20218);
+      swapRectPos(&d.wRectPos20226);
+      swapRectPos(&d.wRectPos20234);
+  }
   for (i=0; i<25; i++) fixSpell(&d.Spells[i]);
   ASSERT(d.GraphicDecompressedSizes[0x22f] == 0xc0e,"graphicsize22f");
   ReadAndExpandGraphic(0x8000|0x22f, (ui8 *)d.Byte10340, 0,0);
+  bool msgPrinted = false;
   for (i=0; i<27; i++)
   {
-    bool msgPrinted = false;
     if (d.MonsterDescriptor[i].movementTicks06 == 0)
     {
-      if (!msgPrinted)
+      if (!msgPrinted) {
            UI_MessageBox("Graphic File error\nMonster 'Time-per-move' == 0", "Warning", MESSAGE_OK);
-      d.MonsterDescriptor[i].movementTicks06 = 1;
-      msgPrinted = true;
-    };
-  };
+	   d.MonsterDescriptor[i].movementTicks06 = 1;
+	   msgPrinted = true;
+      }
+    }
+  }
 
   //d.DBEntrySize[dbSCROLL] = sizeof (DB7);
   //d.DBEntrySize[dbACTUATOR] = sizeof (DB3);

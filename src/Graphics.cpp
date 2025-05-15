@@ -1939,6 +1939,7 @@ void info(char *msg, unsigned int n)
   };
 }
 
+bool bigEndianGraphics = true;
 // *********************************************************
 //
 // *********************************************************
@@ -1946,7 +1947,6 @@ void ReadGraphicsIndex(void) // TAG021d9a
 {
   dReg D0, D3, D6;
   bool success = false;
-  bool bigEndianGraphics = true;
   i32 i;
   //i32 saveD6=D6, saveD7=D7;
   D6L = 0;
