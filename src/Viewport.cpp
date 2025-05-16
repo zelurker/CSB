@@ -117,8 +117,8 @@ class CUSTOMBITMAP
 public:
   CUSTOMBITMAP(void);
   ~CUSTOMBITMAP(void);
-  void  Initialize(ui16 *pGraphic, 
-                   i32 numberOfBitPlanes, 
+  void  Initialize(ui16 *pGraphic,
+                   i32 numberOfBitPlanes,
                    i32 grapahicSize);  //i32 units
   void  InitializeMask(BACKGROUND_MASK *pMask);
   i32   GetPixel1(i32 x, i32 y);
@@ -140,7 +140,7 @@ CUSTOMBITMAP::~CUSTOMBITMAP(void)
 }
 
 void CUSTOMBITMAP::Initialize(
-                      ui16 *pGraphic, 
+                      ui16 *pGraphic,
                       i32   numberOfBitPlanes,
                       i32   graphicSize) // i32 units
 {
@@ -304,7 +304,7 @@ void cgeDebug(const char s[], i32 i, i32 j, i32 k)
 #endif
 
 
-void ApplyBackground (BACKGROUND_MASK *mask, 
+void ApplyBackground (BACKGROUND_MASK *mask,
                       ui32            *bitmap,
                       ui32             bitmapsize);
 void ApplyDecoration (ui16            *pDecoration,
@@ -764,7 +764,7 @@ enum OPCODE
   F4R2                                = 60367,
 
 };
- 
+
 
 
 enum RELATIVE_WALL_NUMBERS
@@ -951,102 +951,102 @@ ui16 StdDrawF4R1Any[] =
 // ****************************************************************
 //              roomSTONE
 // ****************************************************************
-ui16 StdDrawF3L2Stone[] = 
+ui16 StdDrawF3L2Stone[] =
 {
-  StdWallBitmapF3L2,   StdWallRectangleF3L2,   StdBltShape,       
+  StdWallBitmapF3L2,   StdWallRectangleF3L2,   StdBltShape,
   Return
 };
 
-ui16 StdDrawF3R2Stone[] = 
+ui16 StdDrawF3R2Stone[] =
 {
-  StdWallBitmapF3R2,   StdWallRectangleF3R2,   StdBltShape,       
+  StdWallBitmapF3R2,   StdWallRectangleF3R2,   StdBltShape,
   Return
 };
 
-ui16 StdDrawF3L1Stone[] = 
+ui16 StdDrawF3L1Stone[] =
 {
-  StdWallBitmapF3L1,   StdWallRectangleF3L1,   StdBltShape,       
+  StdWallBitmapF3L1,   StdWallRectangleF3L1,   StdBltShape,
   F3L1,  wallDecorationRight,  WallF3L1Right,  StdDrawWallText,
   F3L1,  wallDecorationRight,  WallF3L1Right,  StdDrawWallDecoration,
   F3L1,  wallDecorationFront,  WallF3L1Front,  StdDrawWallText,
   F3L1,  wallDecorationFront,  WallF3L1Front,  StdDrawWallDecoration,
-  Alcove, 
+  Alcove,
       JumpZ, 5,
           F3L1Contents,  F3L1xy, F3L1 , DrawOrder00,  StdDrawRoomObjects,
   Return
 };
 
-ui16 StdDrawF3Stone[] = 
+ui16 StdDrawF3Stone[] =
 {
-  StdWallBitmapF3,   StdWallRectangleF3,   StdBltShape,       
+  StdWallBitmapF3,   StdWallRectangleF3,   StdBltShape,
   F3,  wallDecorationFront,  WallF3Front,  StdDrawWallText,
   F3,  wallDecorationFront,  WallF3Front,  StdDrawWallDecoration,
-  Alcove, 
+  Alcove,
       JumpZ, 5,
           F3Contents,  F3xy, F3 , DrawOrder00,  StdDrawRoomObjects,
   Return
 };
 
-ui16 StdDrawF3R1Stone[] = 
+ui16 StdDrawF3R1Stone[] =
 {
-  StdWallBitmapF3R1,   StdWallRectangleF3R1,   StdBltShape,       
+  StdWallBitmapF3R1,   StdWallRectangleF3R1,   StdBltShape,
   F3R1,  wallDecorationLeft,  WallF3R1Left,  StdDrawWallText,
   F3R1,  wallDecorationLeft,  WallF3R1Left,  StdDrawWallDecoration,
   F3R1,  wallDecorationFront,  WallF3R1Front,  StdDrawWallText,
   F3R1,  wallDecorationFront,  WallF3R1Front,  StdDrawWallDecoration,
-  Alcove, 
+  Alcove,
       JumpZ, 5,
           F3R1Contents,  F3R1xy, F3R1 , DrawOrder00,  StdDrawRoomObjects,
   Return
 };
 
-ui16 StdDrawF2L1Stone[] = 
+ui16 StdDrawF2L1Stone[] =
 {
-  StdWallBitmapF2L1,   StdWallRectangleF2L1,   StdBltShape,       
+  StdWallBitmapF2L1,   StdWallRectangleF2L1,   StdBltShape,
   F2L1,  wallDecorationRight,  WallF2L1Right,  StdDrawWallText,
   F2L1,  wallDecorationRight,  WallF2L1Right,  StdDrawWallDecoration,
   F2L1,  wallDecorationFront,  WallF2L1Front,  StdDrawWallText,
   F2L1,  wallDecorationFront,  WallF2L1Front,  StdDrawWallDecoration,
-  Alcove, 
+  Alcove,
       JumpZ, 5,
           F2L1Contents,  F2L1xy, F2L1 , DrawOrder00,  StdDrawRoomObjects,
   Return
 };
 
-ui16 StdDrawF2Stone[] = 
+ui16 StdDrawF2Stone[] =
 {
-  StdWallBitmapF2,   StdWallRectangleF2,   StdBltShape,       
+  StdWallBitmapF2,   StdWallRectangleF2,   StdBltShape,
   F2,  wallDecorationFront,  WallF2Front,  StdDrawWallText,
   F2,  wallDecorationFront,  WallF2Front,  StdDrawWallDecoration,
-  Alcove, 
+  Alcove,
       JumpZ, 5,
           F2Contents,  F2xy, F2 , DrawOrder00,  StdDrawRoomObjects,
   Return
 };
 
-ui16 StdDrawF2R1Stone[] = 
+ui16 StdDrawF2R1Stone[] =
 {
-  StdWallBitmapF2R1,   StdWallRectangleF2R1,   StdBltShape,       
+  StdWallBitmapF2R1,   StdWallRectangleF2R1,   StdBltShape,
   F2R1,  wallDecorationLeft,  WallF2R1Left,  StdDrawWallText,
   F2R1,  wallDecorationLeft,  WallF2R1Left,  StdDrawWallDecoration,
   F2R1,  wallDecorationFront,  WallF2R1Front,  StdDrawWallText,
   F2R1,  wallDecorationFront,  WallF2R1Front,  StdDrawWallDecoration,
-  Alcove, 
+  Alcove,
       JumpZ, 5,
           F2R1Contents,  F2R1xy, F2R1 , DrawOrder00,  StdDrawRoomObjects,
   Return
 };
 
 
-ui16 StdDrawF1L1Stone[] = 
+ui16 StdDrawF1L1Stone[] =
 {
-  StdWallBitmapF1L1,   StdWallRectangleF1L1,   StdBltShape,       
+  StdWallBitmapF1L1,   StdWallRectangleF1L1,   StdBltShape,
   F1L1,  wallDecorationRight,  WallF1L1Right,  StdDrawWallText,
   F1L1,  wallDecorationRight,  WallF1L1Right,  StdDrawWallDecoration,
   Return
 };
 
-ui16 StdDrawF1Stone[] = 
+ui16 StdDrawF1Stone[] =
 {
   SeeThroughWalls, JumpZ, 28,
     Literal, 1, StdAllocateDerivedGraphic,
@@ -1058,7 +1058,7 @@ ui16 StdDrawF1Stone[] =
     Literal, 112,                       // Source Width
     Literal, 48,                        // destination width
     MinusOne,                           // Transparent color
-        StdBltToDerivedGraphic,                         // 
+        StdBltToDerivedGraphic,                         //
     StdHoleInWallBitmap,               // source
     Literal, 1,                        // destination = derived graphic 1
     StdSeeThruWallsRect,               // destination rectangle
@@ -1068,11 +1068,11 @@ ui16 StdDrawF1Stone[] =
     Literal, 48,                       // Destination width
     Literal, 10,                       // Transparent color
         StdBltToDerivedGraphic,
-  StdWallBitmapF1,   StdWallRectangleF1,   StdBltShape,       
+  StdWallBitmapF1,   StdWallRectangleF1,   StdBltShape,
   F1,  wallDecorationFront,  WallF1Front,  StdDrawWallDecoration,
   F1,  wallDecorationFront, HasDecoration, JumpZ, 1, LeaveMortarJoint,
   F1,  wallDecorationFront,  WallF1Front,  StdDrawWallText,
-  Alcove, 
+  Alcove,
       JumpZ, 5,
           F1Contents,  F1xy, F1 , DrawOrder00,  StdDrawRoomObjects,
   SeeThroughWalls, JumpZ, 16,
@@ -1089,30 +1089,30 @@ ui16 StdDrawF1Stone[] =
   Return
 };
 
-ui16 StdDrawF1R1Stone[] = 
+ui16 StdDrawF1R1Stone[] =
 {
-  StdWallBitmapF1R1,   StdWallRectangleF1R1,   StdBltShape,       
+  StdWallBitmapF1R1,   StdWallRectangleF1R1,   StdBltShape,
   F1R1,  wallDecorationLeft,  WallF1R1Left,  StdDrawWallText,
   F1R1,  wallDecorationLeft,  WallF1R1Left,  StdDrawWallDecoration,
   Return
 };
 
-ui16 StdDrawF0L1Stone[] = 
+ui16 StdDrawF0L1Stone[] =
 {
-  StdWallBitmapF0L1,   StdWallRectangleF0L1,   StdBltShape,       
+  StdWallBitmapF0L1,   StdWallRectangleF0L1,   StdBltShape,
   Return
 };
 
-ui16 StdDrawF0Stone[] = 
+ui16 StdDrawF0Stone[] =
 {
   F0, F0xy, StdDrawCeilingPit,
   F0Contents,  F0xy, F0 , DrawOrder21,  StdDrawRoomObjects,
   Return
 };
 
-ui16 StdDrawF0R1Stone[] = 
+ui16 StdDrawF0R1Stone[] =
 {
-  StdWallBitmapF0R1,   StdWallRectangleF0R1,   StdBltShape,       
+  StdWallBitmapF0R1,   StdWallRectangleF0R1,   StdBltShape,
   Return
 };
 
@@ -1180,30 +1180,30 @@ ui16 StdDrawF1Open[] =
   Return
 };
 
-ui16 StdDrawF1R1Open[] = 
+ui16 StdDrawF1R1Open[] =
 {
-    
+
   F1R1, FloorDecorationGraphicOrdinalF1R1, StdDrawFloorDecoration,
   F1R1, F1R1xy, StdDrawCeilingPit,
   F1R1Contents,  F1R1xy, F1R1 , DrawOrder41,  StdDrawRoomObjects,
   Return
 };
 
-ui16 StdDrawF0L1Open[] = 
+ui16 StdDrawF0L1Open[] =
 {
   F0L1Contents,  F0L1xy, F0L1 , DrawOrder02,  StdDrawRoomObjects,
   F0L1, F0L1xy, StdDrawCeilingPit,
   Return
 };
 
-ui16 StdDrawF0Open[] = 
+ui16 StdDrawF0Open[] =
 {
   F0, F0xy, StdDrawCeilingPit,
   F0Contents,  F0xy, F0 , DrawOrder21,  StdDrawRoomObjects,
   Return
 };
 
-ui16 StdDrawF0R1Open[] = 
+ui16 StdDrawF0R1Open[] =
 {
   F0R1, F0R1xy, StdDrawCeilingPit,
   F0R1Contents,  F0R1xy, F0R1 , DrawOrder01,  StdDrawRoomObjects,
@@ -1215,9 +1215,9 @@ ui16 StdDrawF0R1Open[] =
 // ****************************************************************
 ui16 StdDrawF3L1Pit[] =
 {
-  F3L1, GetDecoration0, 
-      JumpNZ, 4, 
-        Literal, 49, StdFloorPitRectangleF3L1, StdGraphicToViewport, 
+  F3L1, GetDecoration0,
+      JumpNZ, 4,
+        Literal, 49, StdFloorPitRectangleF3L1, StdGraphicToViewport,
   F3L1, FloorDecorationGraphicOrdinalF3L1, StdDrawFloorDecoration,
   F3L1Contents,  F3L1xy, F3L1 , DrawOrder3421,  StdDrawRoomObjects,
   Return
@@ -1225,9 +1225,9 @@ ui16 StdDrawF3L1Pit[] =
 
 ui16 StdDrawF3Pit[] =
 {
-  F3, GetDecoration0, 
-      JumpNZ, 4, 
-        Literal, 50, StdFloorPitRectangleF3, StdGraphicToViewport, 
+  F3, GetDecoration0,
+      JumpNZ, 4,
+        Literal, 50, StdFloorPitRectangleF3, StdGraphicToViewport,
   F3, FloorDecorationGraphicOrdinalF3, StdDrawFloorDecoration,
   F3Contents,  F3xy, F3 , DrawOrder3421,  StdDrawRoomObjects,
   Return
@@ -1235,9 +1235,9 @@ ui16 StdDrawF3Pit[] =
 
 ui16 StdDrawF3R1Pit[] =
 {
-  F3R1, GetDecoration0, 
-      JumpNZ, 4, 
-        Literal, 49, StdFloorPitRectangleF3R1, StdMirrorGraphicToViewport, 
+  F3R1, GetDecoration0,
+      JumpNZ, 4,
+        Literal, 49, StdFloorPitRectangleF3R1, StdMirrorGraphicToViewport,
   F3R1, FloorDecorationGraphicOrdinalF3R1, StdDrawFloorDecoration,
   F3R1Contents,  F3R1xy, F3R1 , DrawOrder4312,  StdDrawRoomObjects,
   Return
@@ -1245,13 +1245,13 @@ ui16 StdDrawF3R1Pit[] =
 
 ui16 StdDrawF2L1Pit[] =
 {
-  F2L1, GetDecoration0, 
-      JumpZ, 4, 
-        Literal, 57, 
-      Jump, 2, 
-        Literal, 51, 
-      StdFloorPitRectangleF2L1, 
-           StdGraphicToViewport, 
+  F2L1, GetDecoration0,
+      JumpZ, 4,
+        Literal, 57,
+      Jump, 2,
+        Literal, 51,
+      StdFloorPitRectangleF2L1,
+           StdGraphicToViewport,
   F2L1, FloorDecorationGraphicOrdinalF2L1, StdDrawFloorDecoration,
   F2L1, F2L1xy, StdDrawCeilingPit,
   F2L1Contents,  F2L1xy, F2L1 , DrawOrder3421,  StdDrawRoomObjects,
@@ -1260,13 +1260,13 @@ ui16 StdDrawF2L1Pit[] =
 
 ui16 StdDrawF2Pit[] =
 {
-  F2, GetDecoration0, 
-      JumpZ, 4, 
-        Literal, 58, 
-      Jump, 2, 
-        Literal, 52, 
-      StdFloorPitRectangleF2, 
-           StdGraphicToViewport, 
+  F2, GetDecoration0,
+      JumpZ, 4,
+        Literal, 58,
+      Jump, 2,
+        Literal, 52,
+      StdFloorPitRectangleF2,
+           StdGraphicToViewport,
   F2, FloorDecorationGraphicOrdinalF2, StdDrawFloorDecoration,
   F2, F2xy, StdDrawCeilingPit,
   F2Contents,  F2xy, F2 , DrawOrder3421,  StdDrawRoomObjects,
@@ -1275,13 +1275,13 @@ ui16 StdDrawF2Pit[] =
 
 ui16 StdDrawF2R1Pit[] =
 {
-  F2R1, GetDecoration0, 
-      JumpZ, 4, 
-        Literal, 57, 
-      Jump, 2, 
-        Literal, 51, 
-      StdFloorPitRectangleF2R1, 
-           StdMirrorGraphicToViewport, 
+  F2R1, GetDecoration0,
+      JumpZ, 4,
+        Literal, 57,
+      Jump, 2,
+        Literal, 51,
+      StdFloorPitRectangleF2R1,
+           StdMirrorGraphicToViewport,
   F2R1, FloorDecorationGraphicOrdinalF2R1, StdDrawFloorDecoration,
   F2R1, F2R1xy, StdDrawCeilingPit,
   F2R1Contents,  F2R1xy, F2R1 , DrawOrder4312,  StdDrawRoomObjects,
@@ -1290,86 +1290,86 @@ ui16 StdDrawF2R1Pit[] =
 
 ui16 StdDrawF1L1Pit[] =
 {
-  F1L1, GetDecoration0, 
-      JumpZ, 4, 
-        Literal, 59, 
-      Jump, 2, 
-        Literal, 53, 
-      StdFloorPitRectangleF1L1, 
-           StdGraphicToViewport, 
+  F1L1, GetDecoration0,
+      JumpZ, 4,
+        Literal, 59,
+      Jump, 2,
+        Literal, 53,
+      StdFloorPitRectangleF1L1,
+           StdGraphicToViewport,
   F1L1, FloorDecorationGraphicOrdinalF1L1, StdDrawFloorDecoration,
   F1L1, F1L1xy, StdDrawCeilingPit,
   F1L1Contents,  F1L1xy, F1L1 , DrawOrder32,  StdDrawRoomObjects,
   Return
 };
 
-ui16 StdDrawF1Pit[] = 
+ui16 StdDrawF1Pit[] =
 {
-  F1, GetDecoration0, 
-      JumpZ, 4, 
-        Literal, 60, 
-      Jump, 2, 
-        Literal, 54, 
-      StdFloorPitRectangleF1, 
-           StdGraphicToViewport, 
+  F1, GetDecoration0,
+      JumpZ, 4,
+        Literal, 60,
+      Jump, 2,
+        Literal, 54,
+      StdFloorPitRectangleF1,
+           StdGraphicToViewport,
   F1, FloorDecorationGraphicOrdinalF1, StdDrawFloorDecoration,
   F1, F1xy, StdDrawCeilingPit,
   F1Contents,  F1xy, F1 , DrawOrder3421,  StdDrawRoomObjects,
   Return
 };
 
-ui16 StdDrawF1R1Pit[] = 
+ui16 StdDrawF1R1Pit[] =
 {
-  F1R1, GetDecoration0, 
-      JumpZ, 4, 
-        Literal, 59, 
-      Jump, 2, 
-        Literal, 53, 
-      StdFloorPitRectangleF1R1, 
-           StdMirrorGraphicToViewport, 
+  F1R1, GetDecoration0,
+      JumpZ, 4,
+        Literal, 59,
+      Jump, 2,
+        Literal, 53,
+      StdFloorPitRectangleF1R1,
+           StdMirrorGraphicToViewport,
   F1R1, FloorDecorationGraphicOrdinalF1R1, StdDrawFloorDecoration,
   F1R1, F1R1xy, StdDrawCeilingPit,
   F1R1Contents,  F1R1xy, F1R1 , DrawOrder41,  StdDrawRoomObjects,
   Return
 };
 
-ui16 StdDrawF0L1Pit[] = 
+ui16 StdDrawF0L1Pit[] =
 {
-  F0L1, GetDecoration0, 
-      JumpZ, 4, 
-        Literal, 61, 
-      Jump, 2, 
-        Literal, 55, 
-      StdFloorPitRectangleF0L1, 
-           StdGraphicToViewport, 
+  F0L1, GetDecoration0,
+      JumpZ, 4,
+        Literal, 61,
+      Jump, 2,
+        Literal, 55,
+      StdFloorPitRectangleF0L1,
+           StdGraphicToViewport,
   F0L1Contents,  F0L1xy, F0L1 , DrawOrder02,  StdDrawRoomObjects,
   F0L1, F0L1xy, StdDrawCeilingPit,
   Return
 };
 
-ui16 StdDrawF0Pit[] = 
+ui16 StdDrawF0Pit[] =
 {
-  F0, GetDecoration0, 
-      JumpZ, 4, 
-        Literal, 62, 
-      Jump, 2, 
-        Literal, 56, 
-      StdFloorPitRectangleF0, 
-           StdGraphicToViewport, 
+  F0, GetDecoration0,
+      JumpZ, 4,
+        Literal, 62,
+      Jump, 2,
+        Literal, 56,
+      StdFloorPitRectangleF0,
+           StdGraphicToViewport,
   F0, F0xy, StdDrawCeilingPit,
   F0Contents,  F0xy, F0 , DrawOrder21,  StdDrawRoomObjects,
   Return
 };
 
-ui16 StdDrawF0R1Pit[] = 
+ui16 StdDrawF0R1Pit[] =
 {
-  F0R1, GetDecoration0, 
-      JumpZ, 4, 
-        Literal, 61, 
-      Jump, 2, 
-        Literal, 55, 
-      StdFloorPitRectangleF0R1, 
-           StdMirrorGraphicToViewport, 
+  F0R1, GetDecoration0,
+      JumpZ, 4,
+        Literal, 61,
+      Jump, 2,
+        Literal, 55,
+      StdFloorPitRectangleF0R1,
+           StdMirrorGraphicToViewport,
   F0R1, F0R1xy, StdDrawCeilingPit,
   F0R1Contents,  F0R1xy, F0R1 , DrawOrder01,  StdDrawRoomObjects,
   Return
@@ -1485,7 +1485,7 @@ ui16 StdDrawF0R1Teleporter[] =
 // ****************************************************************
 ui16 StdDrawF3L1StairFacing[] =
 {
-  F3L1, GetDecoration0, 
+  F3L1, GetDecoration0,
     JumpZ, 5,
       StdStairFacingUpGraphicF3L1, StdStairFacingUpRectangleF3L1, StdGraphicToViewport,
     Jump, 3,
@@ -1497,7 +1497,7 @@ ui16 StdDrawF3L1StairFacing[] =
 
 ui16 StdDrawF3StairFacing[] =
 {
-  F3, GetDecoration0, 
+  F3, GetDecoration0,
     JumpZ, 5,
       StdStairFacingUpGraphicF3, StdStairFacingUpRectangleF3, StdGraphicToViewport,
     Jump, 3,
@@ -1509,7 +1509,7 @@ ui16 StdDrawF3StairFacing[] =
 
 ui16 StdDrawF3R1StairFacing[] =
 {
-  F3R1, GetDecoration0, 
+  F3R1, GetDecoration0,
     JumpZ, 5,
       StdStairFacingUpGraphicF3R1, StdStairFacingUpRectangleF3R1, StdMirrorGraphicToViewport,
     Jump, 3,
@@ -1521,7 +1521,7 @@ ui16 StdDrawF3R1StairFacing[] =
 
 ui16 StdDrawF2L1StairFacing[] =
 {
-  F2L1, GetDecoration0, 
+  F2L1, GetDecoration0,
     JumpZ, 5,
       StdStairFacingUpGraphicF2L1, StdStairFacingUpRectangleF2L1, StdGraphicToViewport,
     Jump, 3,
@@ -1534,7 +1534,7 @@ ui16 StdDrawF2L1StairFacing[] =
 
 ui16 StdDrawF2StairFacing[] =
 {
-  F2, GetDecoration0, 
+  F2, GetDecoration0,
     JumpZ, 5,
       StdStairFacingUpGraphicF2, StdStairFacingUpRectangleF2, StdGraphicToViewport,
     Jump, 3,
@@ -1547,7 +1547,7 @@ ui16 StdDrawF2StairFacing[] =
 
 ui16 StdDrawF2R1StairFacing[] =
 {
-  F2R1, GetDecoration0, 
+  F2R1, GetDecoration0,
     JumpZ, 5,
       StdStairFacingUpGraphicF2R1, StdStairFacingUpRectangleF2R1, StdMirrorGraphicToViewport,
     Jump, 3,
@@ -1560,7 +1560,7 @@ ui16 StdDrawF2R1StairFacing[] =
 
 ui16 StdDrawF1L1StairFacing[] =
 {
-  F1L1, GetDecoration0, 
+  F1L1, GetDecoration0,
     JumpZ, 5,
       StdStairFacingUpGraphicF1L1, StdStairFacingUpRectangleF1L1, StdGraphicToViewport,
     Jump, 3,
@@ -1573,7 +1573,7 @@ ui16 StdDrawF1L1StairFacing[] =
 
 ui16 StdDrawF1StairFacing[] =
 {
-  F1, GetDecoration0, 
+  F1, GetDecoration0,
     JumpZ, 5,
       StdStairFacingUpGraphicF1, StdStairFacingUpRectangleF1, StdGraphicToViewport,
     Jump, 3,
@@ -1586,7 +1586,7 @@ ui16 StdDrawF1StairFacing[] =
 
 ui16 StdDrawF1R1StairFacing[] =
 {
-  F1R1, GetDecoration0, 
+  F1R1, GetDecoration0,
     JumpZ, 5,
       StdStairFacingUpGraphicF1R1, StdStairFacingUpRectangleF1R1, StdMirrorGraphicToViewport,
     Jump, 3,
@@ -1604,7 +1604,7 @@ ui16 StdDrawF0L1StairFacing[] =
 
 ui16 StdDrawF0StairFacing[] =
 {
-  F0, GetDecoration0, 
+  F0, GetDecoration0,
     JumpZ, 8,
       StdStairFacingUpGraphicF0, StdStairFacingUpRectangleF0L, StdGraphicToViewport,
       StdStairFacingUpGraphicF0, StdStairFacingUpRectangleF0R, StdMirrorGraphicToViewport,
@@ -1627,7 +1627,7 @@ ui16 StdDrawF0R1StairFacing[] =
 ui16 StdDrawF3L1StairEdge[] =
 {
   F3L1, FloorDecorationGraphicOrdinalF3L1, StdDrawFloorDecoration,
-  F3L1Contents,  F3L1xy, F3L1, DrawOrder321,  StdDrawRoomObjects,      
+  F3L1Contents,  F3L1xy, F3L1, DrawOrder321,  StdDrawRoomObjects,
   Return
 };
 
@@ -1639,7 +1639,7 @@ ui16 StdDrawF3StairEdge[] =
 ui16 StdDrawF3R1StairEdge[] =
 {
   F3R1, FloorDecorationGraphicOrdinalF3R1, StdDrawFloorDecoration,
-  F3R1Contents,  F3R1xy, F3R1, DrawOrder412,  StdDrawRoomObjects,      
+  F3R1Contents,  F3R1xy, F3R1, DrawOrder412,  StdDrawRoomObjects,
   Return
 };
 
@@ -1648,7 +1648,7 @@ ui16 StdDrawF2L1StairEdge[] =
   StdStairEdgeGraphicF2, StdStairEdgeRectF2L1, StdGraphicToViewport,
   F2L1, FloorDecorationGraphicOrdinalF2L1, StdDrawFloorDecoration,
   F2L1, F2L1xy,  StdDrawCeilingPit,
-  F2L1Contents,  F2L1xy, F2L1, DrawOrder342,  StdDrawRoomObjects,      
+  F2L1Contents,  F2L1xy, F2L1, DrawOrder342,  StdDrawRoomObjects,
   Return
 };
 
@@ -1662,20 +1662,20 @@ ui16 StdDrawF2R1StairEdge[] =
   StdStairEdgeGraphicF2, StdStairEdgeRectF2R1, StdMirrorGraphicToViewport,
   F2R1, FloorDecorationGraphicOrdinalF2R1, StdDrawFloorDecoration,
   F2R1, F2R1xy,  StdDrawCeilingPit,
-  F2R1Contents,  F2R1xy, F2R1, DrawOrder431,  StdDrawRoomObjects,      
+  F2R1Contents,  F2R1xy, F2R1, DrawOrder431,  StdDrawRoomObjects,
   Return
 };
 
 ui16 StdDrawF1L1StairEdge[] =
 {
-  F1L1, GetDecoration0, 
+  F1L1, GetDecoration0,
     JumpZ, 5,
       StdStairEdgeGraphicUpF1, StdStairEdgeUpRectF1L1, StdGraphicToViewport,
     Jump, 3,
       StdStairEdgeGraphicDownF1, StdStairEdgeDownRectF1L1, StdGraphicToViewport,
   F1L1, FloorDecorationGraphicOrdinalF1L1, StdDrawFloorDecoration,
   F1L1, F1L1xy,  StdDrawCeilingPit,
-  F1L1Contents,  F1L1xy, F1L1, DrawOrder32,  StdDrawRoomObjects,      
+  F1L1Contents,  F1L1xy, F1L1, DrawOrder32,  StdDrawRoomObjects,
   Return
 };
 
@@ -1686,15 +1686,15 @@ ui16 StdDrawF1StairEdge[] =
 
 ui16 StdDrawF1R1StairEdge[] =
 {
-  F1R1, GetDecoration0, 
+  F1R1, GetDecoration0,
     JumpZ, 5,
       StdStairEdgeGraphicUpF1, StdStairEdgeUpRectF1R1, StdMirrorGraphicToViewport,
     Jump, 3,
       StdStairEdgeGraphicDownF1, StdStairEdgeDownRectF1R1, StdMirrorGraphicToViewport,
   F1R1, FloorDecorationGraphicOrdinalF1R1, StdDrawFloorDecoration,
   F1R1, F1R1xy,  StdDrawCeilingPit,
-  F1R1Contents,  F1R1xy, F1R1, DrawOrder41,  StdDrawRoomObjects,      
-  Return    
+  F1R1Contents,  F1R1xy, F1R1, DrawOrder41,  StdDrawRoomObjects,
+  Return
 };
 
 ui16 StdDrawF0L1StairEdge[] =
@@ -1707,7 +1707,7 @@ ui16 StdDrawF0L1StairEdge[] =
 ui16 StdDrawF0StairEdge[] =
 {
   F0, F0xy,  StdDrawCeilingPit,
-  F0Contents,  F0xy, F0, DrawOrder21,  StdDrawRoomObjects,      
+  F0Contents,  F0xy, F0, DrawOrder21,  StdDrawRoomObjects,
   Return
 };
 
@@ -1723,7 +1723,7 @@ ui16 StdDrawF0R1StairEdge[] =
 ui16 StdDrawF3L1DoorEdge[] =
 {
   F3L1, FloorDecorationGraphicOrdinalF3L1, StdDrawFloorDecoration,
-  F3L1Contents,  F3L1xy, F3L1, DrawOrder321,  StdDrawRoomObjects,      
+  F3L1Contents,  F3L1xy, F3L1, DrawOrder321,  StdDrawRoomObjects,
   Return
 };
 
@@ -1735,7 +1735,7 @@ ui16 StdDrawF3DoorEdge[] =
 ui16 StdDrawF3R1DoorEdge[] =
 {
   F3R1, FloorDecorationGraphicOrdinalF3R1, StdDrawFloorDecoration,
-  F3R1Contents,  F3R1xy, F3R1, DrawOrder412,  StdDrawRoomObjects,      
+  F3R1Contents,  F3R1xy, F3R1, DrawOrder412,  StdDrawRoomObjects,
   Return
 };
 
@@ -1743,7 +1743,7 @@ ui16 StdDrawF2L1DoorEdge[] =
 {
   F2L1, FloorDecorationGraphicOrdinalF2L1, StdDrawFloorDecoration,
   F2L1, F2L1xy,  StdDrawCeilingPit,
-  F2L1Contents,  F2L1xy, F2L1, DrawOrder342,  StdDrawRoomObjects,      
+  F2L1Contents,  F2L1xy, F2L1, DrawOrder342,  StdDrawRoomObjects,
   Return
 };
 
@@ -1756,7 +1756,7 @@ ui16 StdDrawF2R1DoorEdge[] =
 {
   F2R1, FloorDecorationGraphicOrdinalF2R1, StdDrawFloorDecoration,
   F2R1, F2R1xy,  StdDrawCeilingPit,
-  F2R1Contents,  F2R1xy, F2R1, DrawOrder431,  StdDrawRoomObjects,      
+  F2R1Contents,  F2R1xy, F2R1, DrawOrder431,  StdDrawRoomObjects,
   Return
 };
 
@@ -1764,7 +1764,7 @@ ui16 StdDrawF1L1DoorEdge[] =
 {
   F1L1, FloorDecorationGraphicOrdinalF1L1, StdDrawFloorDecoration,
   F1L1, F1L1xy,  StdDrawCeilingPit,
-  F1L1Contents,  F1L1xy, F1L1, DrawOrder32,  StdDrawRoomObjects,      
+  F1L1Contents,  F1L1xy, F1L1, DrawOrder32,  StdDrawRoomObjects,
   Return
 };
 
@@ -1777,7 +1777,7 @@ ui16 StdDrawF1R1DoorEdge[] =
 {
   F1R1, FloorDecorationGraphicOrdinalF1R1, StdDrawFloorDecoration,
   F1R1, F1R1xy,  StdDrawCeilingPit,
-  F1R1Contents,  F1R1xy, F1R1, DrawOrder41,  StdDrawRoomObjects,      
+  F1R1Contents,  F1R1xy, F1R1, DrawOrder41,  StdDrawRoomObjects,
   Return
 };
 
@@ -1790,13 +1790,13 @@ ui16 StdDrawF0L1DoorEdge[] =
 
 ui16 StdDrawF0DoorEdge[] =
 {
-  SeeThroughWalls, 
+  SeeThroughWalls,
     JumpZ, 3,
-      StdDrawSeeThruDoorEdge, 
+      StdDrawSeeThruDoorEdge,
     Jump, 3,
-      StdDoorEdgeFrameBitmapF0, StdDoorEdgeFrameRectF0, StdBltShapeToViewport,    
+      StdDoorEdgeFrameBitmapF0, StdDoorEdgeFrameRectF0, StdBltShapeToViewport,
   F0, F0xy,  StdDrawCeilingPit,
-  F0Contents,  F0xy, F0, DrawOrder21,  StdDrawRoomObjects,      
+  F0Contents,  F0xy, F0, DrawOrder21,  StdDrawRoomObjects,
   Return
 };
 
@@ -1813,18 +1813,18 @@ ui16 StdDrawF0R1DoorEdge[] =
 ui16 StdDrawF3L1DoorFacing[] =
 {
   F3L1, FloorDecorationGraphicOrdinalF3L1, StdDrawFloorDecoration,
-  F3L1Contents,  F3L1xy, F3L1, DrawOrder218,  StdDrawRoomObjects,      
+  F3L1Contents,  F3L1xy, F3L1, DrawOrder218,  StdDrawRoomObjects,
   StdDoorFacingFrameLeftBitmapF3L1, StdDoorFacingFrameRectF3L1, StdBltShapeToViewport,
   F3L1DoorRecordIndex, F3L1DoorState, StdDoorGraphicsF3, StdDoorRectsF3L1,
           StdDrawDoor,
-  F3L1Contents,  F3L1xy, F3L1, DrawOrder349,  StdDrawRoomObjects,      
+  F3L1Contents,  F3L1xy, F3L1, DrawOrder349,  StdDrawRoomObjects,
   Return
 };
 
 ui16 StdDrawF3DoorFacing[] =
 {
   F3, FloorDecorationGraphicOrdinalF3, StdDrawFloorDecoration,
-  F3Contents,  F3xy, F3, DrawOrder218,  StdDrawRoomObjects,      
+  F3Contents,  F3xy, F3, DrawOrder218,  StdDrawRoomObjects,
   StdDoorFacingFrameLeftBitmapF3, StdDoorFacingFrameLeftRectF3, StdBltShapeToViewport,
   StdDoorFacingFrameLeftBitmapF3, StdDoorFacingFrameRightRectF3, StdMirrorShapeToViewport,
   F3, DoorSwitch,
@@ -1832,40 +1832,40 @@ ui16 StdDrawF3DoorFacing[] =
           Literal, 1, Literal, 1, StdDrawDoorSwitch,
   F3DoorRecordIndex, F3DoorState, StdDoorGraphicsF3, StdDoorRectsF3,
           StdDrawDoor,
-  F3Contents,  F3xy, F3, DrawOrder349,  StdDrawRoomObjects,      
+  F3Contents,  F3xy, F3, DrawOrder349,  StdDrawRoomObjects,
   Return
 };
 
 ui16 StdDrawF3R1DoorFacing[] =
 {
   F3R1, FloorDecorationGraphicOrdinalF3R1, StdDrawFloorDecoration,
-  F3R1Contents,  F3R1xy, F3R1, DrawOrder128,  StdDrawRoomObjects,      
+  F3R1Contents,  F3R1xy, F3R1, DrawOrder128,  StdDrawRoomObjects,
   StdDoorFacingFrameLeftBitmapF3R1, StdDoorFacingFrameRectF3R1, StdMirrorShapeToViewport,
   F3R1, DoorSwitch,
       JumpZ, 5,
           Literal, 1, Literal, 0, StdDrawDoorSwitch,
   F3R1DoorRecordIndex, F3R1DoorState, StdDoorGraphicsF3, StdDoorRectsF3R1,
           StdDrawDoor,
-  F3R1Contents,  F3R1xy, F3R1, DrawOrder439,  StdDrawRoomObjects,      
+  F3R1Contents,  F3R1xy, F3R1, DrawOrder439,  StdDrawRoomObjects,
   Return
 };
 
 ui16 StdDrawF2L1DoorFacing[] =
 {
   F2L1, FloorDecorationGraphicOrdinalF2L1, StdDrawFloorDecoration,
-  F2L1Contents,  F2L1xy, F2L1, DrawOrder218,  StdDrawRoomObjects,      
+  F2L1Contents,  F2L1xy, F2L1, DrawOrder218,  StdDrawRoomObjects,
   StdDoorFacingTopTrackBitmapF2, StdDoorFacingTopTrackRectF2L1, StdBltShapeToViewport,
   F2L1DoorRecordIndex, F2L1DoorState, StdDoorGraphicsF2, StdDoorRectsF2L1,
           StdDrawDoor,
   F2L1, F2L1xy,  StdDrawCeilingPit,
-  F2L1Contents,  F2L1xy, F2L1, DrawOrder349,  StdDrawRoomObjects,      
+  F2L1Contents,  F2L1xy, F2L1, DrawOrder349,  StdDrawRoomObjects,
   Return
 };
 
 ui16 StdDrawF2DoorFacing[] =
 {
   F2, FloorDecorationGraphicOrdinalF2, StdDrawFloorDecoration,
-  F2Contents,  F2xy, F2, DrawOrder218,  StdDrawRoomObjects,      
+  F2Contents,  F2xy, F2, DrawOrder218,  StdDrawRoomObjects,
   StdDoorFacingTopTrackBitmapF2, StdDoorFacingTopTrackRectF2, StdBltShapeToViewport,
   StdDoorFacingFrameLeftBitmapF2, StdDoorFacingFrameLeftRectF2, StdBltShapeToViewport,
   StdDoorFacingFrameLeftBitmapF2, StdDoorFacingFrameRightRectF2, StdMirrorShapeToViewport,
@@ -1874,36 +1874,36 @@ ui16 StdDrawF2DoorFacing[] =
           Literal, 1, Literal, 2, StdDrawDoorSwitch,
   F2DoorRecordIndex, F2DoorState, StdDoorGraphicsF2, StdDoorRectsF2,
           StdDrawDoor,
-  F2Contents,  F2xy, F2, DrawOrder349,  StdDrawRoomObjects,      
+  F2Contents,  F2xy, F2, DrawOrder349,  StdDrawRoomObjects,
   Return
 };
 
 ui16 StdDrawF2R1DoorFacing[] =
 {
   F2R1, FloorDecorationGraphicOrdinalF2R1, StdDrawFloorDecoration,
-  F2R1Contents,  F2R1xy, F2R1, DrawOrder128,  StdDrawRoomObjects,      
+  F2R1Contents,  F2R1xy, F2R1, DrawOrder128,  StdDrawRoomObjects,
   StdDoorFacingTopTrackBitmapF2, StdDoorFacingTopTrackRectF2R1, StdBltShapeToViewport,
   F2R1DoorRecordIndex, F2R1DoorState, StdDoorGraphicsF2, StdDoorRectsF2R1,
           StdDrawDoor,
-  F2R1Contents,  F2R1xy, F2R1, DrawOrder439,  StdDrawRoomObjects,      
+  F2R1Contents,  F2R1xy, F2R1, DrawOrder439,  StdDrawRoomObjects,
   Return
 };
 
 ui16 StdDrawF1L1DoorFacing[] =
 {
   F1L1, FloorDecorationGraphicOrdinalF1L1, StdDrawFloorDecoration,
-  F1L1Contents,  F1L1xy, F1L1, DrawOrder28,  StdDrawRoomObjects,      
+  F1L1Contents,  F1L1xy, F1L1, DrawOrder28,  StdDrawRoomObjects,
   StdDoorFacingTopTrackBitmapF1, StdDoorFacingTopTrackRectF1L1, StdBltShapeToViewport,
   F1L1DoorRecordIndex, F1L1DoorState, StdDoorGraphicsF1, StdDoorRectsF1L1,
           StdDrawDoor,
-  F1L1Contents,  F1L1xy, F1L1, DrawOrder39,  StdDrawRoomObjects,      
+  F1L1Contents,  F1L1xy, F1L1, DrawOrder39,  StdDrawRoomObjects,
   Return
 };
 
 ui16 StdDrawF1DoorFacing[] =
 {
   F1, FloorDecorationGraphicOrdinalF1, StdDrawFloorDecoration,
-  F1Contents,  F1xy, F1, DrawOrder218,  StdDrawRoomObjects,      
+  F1Contents,  F1xy, F1, DrawOrder218,  StdDrawRoomObjects,
   StdDoorFacingTopTrackBitmapF1, StdDoorFacingTopTrackRectF1, StdBltShapeToViewport,
   StdDoorFacingFrameLeftBitmapF1, StdDoorFacingFrameLeftRectF1, StdBltShapeToViewport,
   StdDoorFacingFrameRightBitmapF1, StdDoorFacingFrameRightRectF1, StdBltShapeToViewport,
@@ -1912,18 +1912,18 @@ ui16 StdDrawF1DoorFacing[] =
           Literal, 1, Literal, 3, StdDrawDoorSwitch,
   F1DoorRecordIndex, F1DoorState, StdDoorGraphicsF1, StdDoorRectsF1,
           StdDrawDoor,
-  F1Contents,  F1xy, F1, DrawOrder349,  StdDrawRoomObjects,      
+  F1Contents,  F1xy, F1, DrawOrder349,  StdDrawRoomObjects,
   Return
 };
 
 ui16 StdDrawF1R1DoorFacing[] =
 {
   F1R1, FloorDecorationGraphicOrdinalF1R1, StdDrawFloorDecoration,
-  F1R1Contents,  F1R1xy, F1R1, DrawOrder18,  StdDrawRoomObjects,      
+  F1R1Contents,  F1R1xy, F1R1, DrawOrder18,  StdDrawRoomObjects,
   StdDoorFacingTopTrackBitmapF1, StdDoorFacingTopTrackRectF1R1, StdBltShapeToViewport,
   F1R1DoorRecordIndex, F1R1DoorState, StdDoorGraphicsF1, StdDoorRectsF1R1,
           StdDrawDoor,
-  F1R1Contents,  F1R1xy, F1R1, DrawOrder49,  StdDrawRoomObjects,      
+  F1R1Contents,  F1R1xy, F1R1, DrawOrder49,  StdDrawRoomObjects,
   Return
 };
 
@@ -1935,7 +1935,7 @@ ui16 StdDrawF0L1DoorFacing[] =
 ui16 StdDrawF0DoorFacing[] =
 {
   F0, F0xy,  StdDrawCeilingPit,
-  F0Contents,  F0xy, F0, DrawOrder21,  StdDrawRoomObjects,      
+  F0Contents,  F0xy, F0, DrawOrder21,  StdDrawRoomObjects,
   Return
 };
 
@@ -1949,7 +1949,7 @@ ui16 StdDrawF0R1DoorFacing[] =
 // ****************************************************************
 
 
-ui16 *pStdDrawCode[21][8] = 
+ui16 *pStdDrawCode[21][8] =
 {
   { // F4L2
     NOP,
@@ -2022,7 +2022,7 @@ ui16 *pStdDrawCode[21][8] =
 
   { //F4
     StdDrawF4Any,
-    StdDrawF4Any,   
+    StdDrawF4Any,
     StdDrawF4Any,
     StdDrawF4Any,
     StdDrawF4Any,
@@ -2040,7 +2040,7 @@ ui16 *pStdDrawCode[21][8] =
     StdDrawF3L1DoorFacing,
     StdDrawF3L1StairEdge,
     StdDrawF3L1StairFacing
-  }, 
+  },
 
 
   { //F3R1
@@ -2052,7 +2052,7 @@ ui16 *pStdDrawCode[21][8] =
     StdDrawF3R1DoorFacing,
     StdDrawF3R1StairEdge,
     StdDrawF3R1StairFacing
-  }, 
+  },
 
   { //F3
     StdDrawF3Stone,
@@ -2099,7 +2099,7 @@ ui16 *pStdDrawCode[21][8] =
     StdDrawF2L1DoorFacing,
     StdDrawF2L1StairEdge,
     StdDrawF2L1StairFacing
-  }, 
+  },
 
   { //F2R1
     StdDrawF2R1Stone,
@@ -2422,14 +2422,14 @@ i8 objectDrawingLocations [21] =
 };
 
 
-void Interpret(ui16 *code, 
-               ui16 startAddr, 
-               SUMMARIZEROOMDATA *roomData, 
+void Interpret(ui16 *code,
+               ui16 startAddr,
+               SUMMARIZEROOMDATA *roomData,
                i32 cellNum,
                i32 facing
 #ifdef _DEBUG
                ,bool /*debugging*/
-#endif              
+#endif
                )
 {
   pnt      pBitmap;
@@ -2474,10 +2474,10 @@ void Interpret(ui16 *code,
   rpush(0xffff);
   for (;;)
   {
-    GTRACE_8("    P=%6d instr=%6d  sp=%3d TOS = %d %d %d %d %d\n", 
-             (i32)(P-code), 
-            *P, 
-             (ui8)sp, 
+    GTRACE_8("    P=%6d instr=%6d  sp=%3d TOS = %d %d %d %d %d\n",
+             (i32)(P-code),
+            *P,
+             (ui8)sp,
              stack[(ui8)(sp+0)],
              stack[(ui8)(sp+1)],
              stack[(ui8)(sp+2)],
@@ -2608,7 +2608,7 @@ void Interpret(ui16 *code,
                 };
                 doorState = pop();
                 db0Index = pop();
-                DrawDoor(db0Index, 
+                DrawDoor(db0Index,
                          doorState,
                          pDoorGraphics,
                          graphicSize,
@@ -2858,7 +2858,7 @@ void Interpret(ui16 *code,
             pBitmap = (pnt)StdBitmapPointers(pop());
             BltShapeToViewport( (ui8 *)pBitmap, pRectangle);
             break;
-    case StdMirrorShapeToViewport: 
+    case StdMirrorShapeToViewport:
       pRectangle = StdRectanglePointers(pop());
       pBitmap = (pnt)StdBitmapPointers(pop());
       memmove((ui8 *)tempBitmap,(ui8 *)pBitmap,pRectangle->b.uByte4*pRectangle->b.uByte5);
@@ -3038,28 +3038,28 @@ void Interpret(ui16 *code,
       push(roomData[relativeCell].skinNumber);
       break;
     case CurrentCell: push(roomData[cellNum].relativeCellNumber); break;
-    case WallGraphicID: 
+    case WallGraphicID:
       push(backgroundLib.GetWallGraphicID(pop()));
       break;
-    case FloorGraphicID: 
+    case FloorGraphicID:
       push(backgroundLib.GetFloorGraphicID(pop()));
       break;
-    case MiddleGraphicID: 
+    case MiddleGraphicID:
       push(backgroundLib.GetMiddleGraphicID(pop()));
       break;
-    case CeilingGraphicID: 
+    case CeilingGraphicID:
       push(backgroundLib.GetCeilingGraphicID(pop()));
       break;
-    case WallMaskID: 
+    case WallMaskID:
       push(backgroundLib.GetWallMaskID(pop()));
       break;
-    case FloorMaskID: 
+    case FloorMaskID:
       push(backgroundLib.GetFloorMaskID(pop()));
       break;
-    case MiddleMaskID: 
+    case MiddleMaskID:
       push(backgroundLib.GetMiddleMaskID(pop()));
       break;
-    case CeilingMaskID: 
+    case CeilingMaskID:
       push(backgroundLib.GetCeilingMaskID(pop()));
       break;
     case WallDecorationID:
@@ -3100,9 +3100,9 @@ void Interpret(ui16 *code,
         if (pGraphic == NULL) break; // do nothing
         pAffineMask = (AFFINEMASK *)backgroundLib.GetMask(maskID, maskNumber, 48);
         if (pAffineMask == NULL) break; // do nothing
-        backgroundLib.CreateVirtualBitmap(pGraphic, 
+        backgroundLib.CreateVirtualBitmap(pGraphic,
                                           graphicSize,      //i32 units
-                                          virtualGraphicID, 
+                                          virtualGraphicID,
                                           pAffineMask);
       };
       break;
@@ -3111,9 +3111,9 @@ void Interpret(ui16 *code,
       decorationNumber = pop();
       decorationID = pop();
       if ( backgroundLib.GetDecorationBitmap(
-                            decorationID, 
-                            decorationNumber, 
-                            locationNumber,  
+                            decorationID,
+                            decorationNumber,
+                            locationNumber,
                             &pDecorationBitmap,
                             &pDecorationLocation,
                             &graphicSize) < 0) break;
@@ -3121,34 +3121,34 @@ void Interpret(ui16 *code,
       break;
 
     case  SWAP:
-      temp = stack[sp]; 
+      temp = stack[sp];
       stack[sp] = stack[(ui8)(sp+1)];
       stack[(ui8)(sp+1)] = temp;
       break;
     case  DROP:
-      sp = (ui8)(sp+1); 
+      sp = (ui8)(sp+1);
       break;
     case  TwoDrop:
-      sp = (ui8)(sp+2); 
+      sp = (ui8)(sp+2);
       break;
     case  OVER:
-      push(stack[(ui8)(sp+1)]); 
+      push(stack[(ui8)(sp+1)]);
       break;
-    case  ROT:        
+    case  ROT:
       temp = stack[(ui8)(sp+2)];
       stack[(ui8)(sp+2)] = stack[(ui8)(sp+1)];
       stack[(ui8)(sp+1)] = stack[sp];
       stack[sp] = temp;
       break;
-    case  DUP:        
-      push(stack[(ui8)(sp+0)]);  
+    case  DUP:
+      push(stack[(ui8)(sp+0)]);
       break;
     case TwoDup:
-      push(stack[(ui8)(sp+1)]);  
-      push(stack[(ui8)(sp+1)]);  
+      push(stack[(ui8)(sp+1)]);
+      push(stack[(ui8)(sp+1)]);
       break;
     case  QuestionDUP:
-      if (stack[sp] != 0) push(stack[sp]); 
+      if (stack[sp] != 0) push(stack[sp]);
       break;
     case  PICK:
       temp = stack[sp];
@@ -3238,7 +3238,7 @@ void Interpret(ui16 *code,
                      aMask.Cxx, aMask.Cxy, aMask.Cxc, aMask.Cyx, aMask.Cyy, aMask.Cyc);
         ASSERT(bMask.width > 0,"CreateVirtualMask.width=0");
         if (bMask.width <= 0) break;
-        if ((bMask.width & 15) != 0) break; 
+        if ((bMask.width & 15) != 0) break;
         pNewMask = backgroundLib.CreateNewMask(newMaskID, newMaskNumber, &bMask);
         if (pNewMask == NULL) break;
         //memcpy(pNewMask, &bMask, 12);
@@ -3275,7 +3275,7 @@ void Interpret(ui16 *code,
                         aMask.srcX, aMask.srcY, aMask.srcWidth, aMask.srcHeight, aMask.dstWidth, aMask.dstHeight);
         ASSERT(aMask.dstWidth > 0,"CreateVirtualAffinMask.width=0");
         if (aMask.dstWidth <= 0) break;
-        if ((aMask.dstWidth & 15) != 0) break; 
+        if ((aMask.dstWidth & 15) != 0) break;
         backgroundLib.CreateNewAffineMask(newMaskID, newMaskNumber, &aMask);
 #ifdef _DDEBUG
         backgroundLib.DumpGraphic(newMaskID, "msk");
@@ -3356,11 +3356,11 @@ void DrawCellF4R1(i32 /*facing*/,  SUMMARIZEROOMDATA * /*pRoomData*/)
 {
   /*
   DrawRoomObjects(
-        FindFirstDrawableObject(pRoomData->x, pRoomData->y), 
+        FindFirstDrawableObject(pRoomData->x, pRoomData->y),
         facing,
-        pRoomData->x, 
+        pRoomData->x,
         pRoomData->y,
-        -1, 
+        -1,
         1);
  */
 }
@@ -3369,11 +3369,11 @@ void DrawCellF4(i32 /*facing*/,  SUMMARIZEROOMDATA * /*pRoomData*/)
 {
   /*
   DrawRoomObjects(
-        FindFirstDrawableObject(pRoomData->x,pRoomData->y), 
-        facing, 
-        pRoomData->x, 
-        pRoomData->y, 
-        -3, 
+        FindFirstDrawableObject(pRoomData->x,pRoomData->y),
+        facing,
+        pRoomData->x,
+        pRoomData->y,
+        -3,
         1);
   */
 }
@@ -3412,7 +3412,7 @@ void DrawCellF1R1(i32  facing, SUMMARIZEROOMDATA *pRoomData)
   {
 
   case roomSTAIRFACING:
-        
+
       if (pRoomData->decorations[0] != 0) MirrorGraphicToViewport(d.Word1880,&d.StairFacingRect[13]);
       else MirrorGraphicToViewport(d.Word1894,&d.StairFacingRect[2]);
       DrawFloorDecorations(
@@ -3420,7 +3420,7 @@ void DrawCellF1R1(i32  facing, SUMMARIZEROOMDATA *pRoomData)
               pRoomData->relativeCellNumber);
       CheckCeilingPit(
               pRoomData->relativeCellNumber,
-              pRoomData->x, 
+              pRoomData->x,
               pRoomData->y);
       DrawRoomObjects(
               pRoomData->rn2,
@@ -3429,17 +3429,17 @@ void DrawCellF1R1(i32  facing, SUMMARIZEROOMDATA *pRoomData)
               pRoomData->y,
               pRoomData->relativeCellNumber,
               0x41);
-    
+
       break;
   case roomSTONE:
-    
+
       BltShapeToViewport(d.pWallBitmaps[2], &d.wallRectangles[relativeCellNumber]);
       DrawWallDecoration(d.NumWallDecoration+1,11,pRoomData->text[2]);
       DrawWallDecoration(pRoomData->decorations[2],11,RNeof);
-    
+
       break;
   case roomSTAIREDGE:
-       
+
       if (pRoomData->decorations[0] != 0) MirrorGraphicToViewport(d.StairEdgeGraphic[2], &d.StairEdgeRect[4]);
       else MirrorGraphicToViewport(d.StairEdgeGraphic[1],&d.StairEdgeRect[2]);
       DrawFloorDecorations(
@@ -3456,10 +3456,10 @@ void DrawCellF1R1(i32  facing, SUMMARIZEROOMDATA *pRoomData)
               pRoomData->y,
               pRoomData->relativeCellNumber,
               0x41);
-    
+
       break;
   case roomDOOREDGE:
-    
+
       DrawFloorDecorations(
               pRoomData->decorations[2],
               pRoomData->relativeCellNumber);
@@ -3474,10 +3474,10 @@ void DrawCellF1R1(i32  facing, SUMMARIZEROOMDATA *pRoomData)
               pRoomData->y,
               pRoomData->relativeCellNumber,
               0x41);
-    
+
       break;
   case roomDOORFACING:
-    
+
       DrawFloorDecorations(
               pRoomData->decorations[2],
               pRoomData->relativeCellNumber);
@@ -3489,7 +3489,7 @@ void DrawCellF1R1(i32  facing, SUMMARIZEROOMDATA *pRoomData)
               pRoomData->relativeCellNumber,
               0x18);
       BltShapeToViewport(
-              d.pDoorBitmaps[6], 
+              d.pDoorBitmaps[6],
               (RectPos *)d.Byte3194);
       DrawDoor(
               pRoomData->decorations[1],
@@ -3504,10 +3504,10 @@ void DrawCellF1R1(i32  facing, SUMMARIZEROOMDATA *pRoomData)
               pRoomData->y,
               pRoomData->relativeCellNumber,
               0x49);
-    
+
       break;
   case roomPIT:
-    
+
       MirrorGraphicToViewport(pRoomData->decorations[0]!=0?59:53,(RectPos *)d.Byte2858);
       DrawFloorDecorations(
               pRoomData->decorations[2],
@@ -3523,10 +3523,10 @@ void DrawCellF1R1(i32  facing, SUMMARIZEROOMDATA *pRoomData)
               pRoomData->y,
               pRoomData->relativeCellNumber,
               0x41);
-    
+
       break;
   case roomTELEPORTER:
-    
+
       DrawFloorDecorations(
               pRoomData->decorations[2],
               pRoomData->relativeCellNumber);
@@ -3545,10 +3545,10 @@ void DrawCellF1R1(i32  facing, SUMMARIZEROOMDATA *pRoomData)
             DrawTeleporter(
                  &d.teleporterRectangles[pRoomData->relativeCellNumber],
                  &d.wallRectangles[pRoomData->relativeCellNumber]);
-    
+
       break;
   case roomOPEN:
-    
+
       DrawFloorDecorations(
               pRoomData->decorations[2],
               pRoomData->relativeCellNumber);
@@ -3563,7 +3563,7 @@ void DrawCellF1R1(i32  facing, SUMMARIZEROOMDATA *pRoomData)
               pRoomData->y,
               pRoomData->relativeCellNumber,
               0x41);
-              
+
       break;
   };
 }
@@ -3589,7 +3589,7 @@ void DrawCellF1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData, bool /*skipDrawing
     /*
       if (!skipDrawing)
       {
-        if (pRoomData->decorations[0] != 0) 
+        if (pRoomData->decorations[0] != 0)
                 GraphicToViewport(d.StairFacingUpGraphic[1], &d.StairFacingUpRect[3]);
         else GraphicToViewport(d.StairFacingDownGraphic[1], &d.StairFacingDownRect[3]);
       }
@@ -3643,7 +3643,7 @@ void DrawCellF1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData, bool /*skipDrawing
       //ClearViewport();
       if (!skipDrawing)
       BltRectangleToViewport(
-              d.pWallBitmaps[2], 
+              d.pWallBitmaps[2],
               &d.wallRectangles[pRoomData->relativeCellNumber]);
       D0W = DrawWallDecoration(
               pRoomData->decorations[1],
@@ -3684,7 +3684,7 @@ void DrawCellF1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData, bool /*skipDrawing
   case roomDOORFACING:
     /*
       DrawFloorDecorations(
-              pRoomData->decorations[2], 
+              pRoomData->decorations[2],
               0x7);
       DrawRoomObjects(
               pRoomData->rn2,
@@ -3804,14 +3804,14 @@ void DrawCellF3L1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
         GraphicToViewport(d.StairFacingDownGraphic[6], &d.StairFacingDownRect[10]);
       };
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             0);
       DrawRoomObjects(
-            pRoomData->rn2, 
-            facing, 
-            pRoomData->x, 
-            pRoomData->y, 
-            pRoomData->relativeCellNumber, 
+            pRoomData->rn2,
+            facing,
+            pRoomData->x,
+            pRoomData->y,
+            pRoomData->relativeCellNumber,
             0x3421);
     */
       break;
@@ -3827,20 +3827,20 @@ void DrawCellF3L1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
             0,
             RNeof);
       DrawWallDecoration(
-            d.NumWallDecoration+1, 
+            d.NumWallDecoration+1,
             2,
             pRoomData->text[1]);
       D0W = DrawWallDecoration(
-            pRoomData->decorations[1], 
+            pRoomData->decorations[1],
             2,
             RNeof);
       if (D0W == 0) return;
       DrawRoomObjects(
-            pRoomData->rn2, 
-            facing, 
-            pRoomData->x, 
-            pRoomData->y, 
-            pRoomData->relativeCellNumber, 
+            pRoomData->rn2,
+            facing,
+            pRoomData->x,
+            pRoomData->y,
+            pRoomData->relativeCellNumber,
             0);
     */
       break;
@@ -3848,43 +3848,43 @@ void DrawCellF3L1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
   case roomSTAIREDGE:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             0);
       DrawRoomObjects(
-            pRoomData->rn2, 
-            facing, 
-            pRoomData->x, 
-            pRoomData->y, 
-            pRoomData->relativeCellNumber, 
+            pRoomData->rn2,
+            facing,
+            pRoomData->x,
+            pRoomData->y,
+            pRoomData->relativeCellNumber,
             0x321);
     */
       break;
   case roomDOORFACING:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             0);
       DrawRoomObjects(
-            pRoomData->rn2, 
-            facing, 
-            pRoomData->x, 
-            pRoomData->y, 
-            pRoomData->relativeCellNumber, 
+            pRoomData->rn2,
+            facing,
+            pRoomData->x,
+            pRoomData->y,
+            pRoomData->relativeCellNumber,
             0x218);
       BltShapeToViewport(d.pDoorBitmaps[5], (RectPos *)d.Byte3082);
       DrawDoor(
-            pRoomData->decorations[1], 
-            pRoomData->decorations[0], 
-            d.DoorGraphic[2],//d.Word1910, 
-            984, 
+            pRoomData->decorations[1],
+            pRoomData->decorations[0],
+            d.DoorGraphic[2],//d.Word1910,
+            984,
             0,
             d.DoorRectsF3L1);//d.Byte3274);
       DrawRoomObjects(
-            pRoomData->rn2, 
-            facing, 
-            pRoomData->x, 
-            pRoomData->y, 
-            pRoomData->relativeCellNumber, 
+            pRoomData->rn2,
+            facing,
+            pRoomData->x,
+            pRoomData->y,
+            pRoomData->relativeCellNumber,
             0x349);
     */
       break;
@@ -3896,33 +3896,33 @@ void DrawCellF3L1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
         GraphicToViewport(49, &d.FloorPitRect[11]);
       };
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             0);
       DrawRoomObjects(
-            pRoomData->rn2, 
-            facing, 
-            pRoomData->x, 
-            pRoomData->y, 
-            pRoomData->relativeCellNumber, 
+            pRoomData->rn2,
+            facing,
+            pRoomData->x,
+            pRoomData->y,
+            pRoomData->relativeCellNumber,
             0x3421);
     */
       break;
   case roomTELEPORTER:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             0);
       DrawRoomObjects(
-            pRoomData->rn2, 
-            facing, 
-            pRoomData->x, 
-            pRoomData->y, 
-            pRoomData->relativeCellNumber, 
+            pRoomData->rn2,
+            facing,
+            pRoomData->x,
+            pRoomData->y,
+            pRoomData->relativeCellNumber,
             0x3421);
       if (pRoomData->decorations[0] != 0)
       {
         DrawTeleporter(
-            &d.teleporterRectangles[pRoomData->relativeCellNumber], 
+            &d.teleporterRectangles[pRoomData->relativeCellNumber],
             &d.wallRectangles[pRoomData->relativeCellNumber]);
       };
     */
@@ -3930,14 +3930,14 @@ void DrawCellF3L1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
   case roomOPEN:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             0);
       DrawRoomObjects(
-            pRoomData->rn2, 
-            facing, 
-            pRoomData->x, 
-            pRoomData->y, 
-            pRoomData->relativeCellNumber, 
+            pRoomData->rn2,
+            facing,
+            pRoomData->x,
+            pRoomData->y,
+            pRoomData->relativeCellNumber,
             0x3421);
     */
       break;
@@ -3958,25 +3958,25 @@ void DrawCellF3R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
     /*
       BltShapeToViewport(d.pWallBitmaps[4], &d.wallRectangles[pRoomData->relativeCellNumber]);
       DrawWallDecoration(
-            d.NumWallDecoration+1, 
+            d.NumWallDecoration+1,
             1,
             pRoomData->text[2]);
       DrawWallDecoration(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             1,
             RNeof);
       DrawWallDecoration(
-            d.NumWallDecoration+1, 
+            d.NumWallDecoration+1,
             4,
             pRoomData->text[1]);
       D0W = DrawWallDecoration(
-            pRoomData->decorations[1], 
+            pRoomData->decorations[1],
             4,
             RNeof);
       if (D0W != 0) DrawRoomObjects(
                         pRoomData->rn2,
-                        facing, 
-                        pRoomData->x, 
+                        facing,
+                        pRoomData->x,
                         pRoomData->y,
                         pRoomData->relativeCellNumber,
                         0);
@@ -3985,12 +3985,12 @@ void DrawCellF3R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
   case roomTELEPORTER:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             pRoomData->relativeCellNumber);
       DrawRoomObjects(
             pRoomData->rn2,
-            facing, 
-            pRoomData->x, 
+            facing,
+            pRoomData->x,
             pRoomData->y,
             pRoomData->relativeCellNumber,
             0x4312);
@@ -4002,19 +4002,19 @@ void DrawCellF3R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
               // on the ATARI.  In fact, it seems to make no
               // difference what data is used.
               DrawTeleporter(
-                         &d.teleporterRectangles[pRoomData->relativeCellNumber-1], 
+                         &d.teleporterRectangles[pRoomData->relativeCellNumber-1],
                          &d.wallRectangles[pRoomData->relativeCellNumber]);
     */
       break;
   case roomOPEN:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             pRoomData->relativeCellNumber);
       DrawRoomObjects(
             pRoomData->rn2,
-            facing, 
-            pRoomData->x, 
+            facing,
+            pRoomData->x,
             pRoomData->y,
             pRoomData->relativeCellNumber,
             0x4312);
@@ -4022,15 +4022,15 @@ void DrawCellF3R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
       break;
   case roomPIT:
     /*
-      if (pRoomData->decorations[0] == 0) 
+      if (pRoomData->decorations[0] == 0)
             MirrorGraphicToViewport(49, &d.FloorPitRect[9]);
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             pRoomData->relativeCellNumber);
       DrawRoomObjects(
             pRoomData->rn2,
-            facing, 
-            pRoomData->x, 
+            facing,
+            pRoomData->x,
             pRoomData->y,
             pRoomData->relativeCellNumber,
             0x4312);
@@ -4039,12 +4039,12 @@ void DrawCellF3R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
   case roomDOORFACING:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             pRoomData->relativeCellNumber);
       DrawRoomObjects(
             pRoomData->rn2,
-            facing, 
-            pRoomData->x, 
+            facing,
+            pRoomData->x,
             pRoomData->y,
             pRoomData->relativeCellNumber,
             0x128);
@@ -4064,8 +4064,8 @@ void DrawCellF3R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
             d.DoorRectsF3R1);//d.Byte3434);
       DrawRoomObjects(
             pRoomData->rn2,
-            facing, 
-            pRoomData->x, 
+            facing,
+            pRoomData->x,
             pRoomData->y,
             pRoomData->relativeCellNumber,
             0x439);
@@ -4075,12 +4075,12 @@ void DrawCellF3R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
   case roomSTAIREDGE:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             pRoomData->relativeCellNumber);
       DrawRoomObjects(
             pRoomData->rn2,
-            facing, 
-            pRoomData->x, 
+            facing,
+            pRoomData->x,
             pRoomData->y,
             pRoomData->relativeCellNumber,
             0x412);
@@ -4088,16 +4088,16 @@ void DrawCellF3R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
       break;
   case roomSTAIRFACING:
     /*
-      if (pRoomData->decorations[0] != 0) 
+      if (pRoomData->decorations[0] != 0)
              MirrorGraphicToViewport(d.StairFacingUpGraphic[6], &d.StairFacingUpRect[8]);
       else MirrorGraphicToViewport(d.StairFacingDownGraphic[6], &d.StairFacingDownRect[8]);
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             pRoomData->relativeCellNumber);
       DrawRoomObjects(
             pRoomData->rn2,
-            facing, 
-            pRoomData->x, 
+            facing,
+            pRoomData->x,
             pRoomData->y,
             pRoomData->relativeCellNumber,
             0x4312);
@@ -4119,28 +4119,28 @@ void DrawCellF3(i32 /*facing*/,SUMMARIZEROOMDATA *pRoomData)
   case roomOPEN:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             1);
       DrawRoomObjects(
-            pRoomData->rn2, 
-            facing, 
-            pRoomData->x, 
-            pRoomData->y, 
-            pRoomData->relativeCellNumber, 
+            pRoomData->rn2,
+            facing,
+            pRoomData->x,
+            pRoomData->y,
+            pRoomData->relativeCellNumber,
             0x3421);
     */
       break;
   case roomTELEPORTER:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             1);
       DrawRoomObjects(
-            pRoomData->rn2, 
-            facing, 
-            pRoomData->x, 
-            pRoomData->y, 
-            pRoomData->relativeCellNumber, 
+            pRoomData->rn2,
+            facing,
+            pRoomData->x,
+            pRoomData->y,
+            pRoomData->relativeCellNumber,
             0x3421);
       if (pRoomData->decorations[0] != 0)
           DrawTeleporter(
@@ -4150,31 +4150,31 @@ void DrawCellF3(i32 /*facing*/,SUMMARIZEROOMDATA *pRoomData)
       break;
   case roomPIT:
     /*
-      if (pRoomData->decorations[0] == 0) 
+      if (pRoomData->decorations[0] == 0)
               GraphicToViewport(50, &d.FloorPitRect[10]);
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             1);
       DrawRoomObjects(
-            pRoomData->rn2, 
-            facing, 
-            pRoomData->x, 
-            pRoomData->y, 
-            pRoomData->relativeCellNumber, 
+            pRoomData->rn2,
+            facing,
+            pRoomData->x,
+            pRoomData->y,
+            pRoomData->relativeCellNumber,
             0x3421);
     */
       break;
   case roomDOORFACING:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             1);
       DrawRoomObjects(
-            pRoomData->rn2, 
-            facing, 
-            pRoomData->x, 
-            pRoomData->y, 
-            pRoomData->relativeCellNumber, 
+            pRoomData->rn2,
+            facing,
+            pRoomData->x,
+            pRoomData->y,
+            pRoomData->relativeCellNumber,
             0x218);
       BltShapeToViewport(d.pDoorBitmaps[4], &d.DoorFrameRect[5]);//(RectPos *)d.Byte3098);
       memmove( d.Pointer1848,d.pDoorBitmaps[4], 704);
@@ -4192,11 +4192,11 @@ void DrawCellF3(i32 /*facing*/,SUMMARIZEROOMDATA *pRoomData)
             0,                             //Nearness (0=F3)
             d.DoorRectsF3);                 //rectangle);
       DrawRoomObjects(
-            pRoomData->rn2, 
-            facing, 
-            pRoomData->x, 
-            pRoomData->y, 
-            pRoomData->relativeCellNumber, 
+            pRoomData->rn2,
+            facing,
+            pRoomData->x,
+            pRoomData->y,
+            pRoomData->relativeCellNumber,
             0x349);
     */
       break;
@@ -4204,35 +4204,35 @@ void DrawCellF3(i32 /*facing*/,SUMMARIZEROOMDATA *pRoomData)
     /*
       BltRectangleToViewport(d.pWallBitmaps[4], &d.wallRectangles[pRoomData->relativeCellNumber]);
       DrawWallDecoration(
-            d.NumWallDecoration+1, 
+            d.NumWallDecoration+1,
             3,
             pRoomData->text[1]);
       D0W = DrawWallDecoration(
-            pRoomData->decorations[1], 
+            pRoomData->decorations[1],
             3,
             RNeof);
       if (D0W != 0) DrawRoomObjects(
-                          pRoomData->rn2, 
-                          facing, 
-                          pRoomData->x, 
-                          pRoomData->y, 
+                          pRoomData->rn2,
+                          facing,
+                          pRoomData->x,
+                          pRoomData->y,
                           pRoomData->relativeCellNumber, 0);
     */
       break;
   case roomSTAIRFACING:
     /*
-      if (pRoomData->decorations[0] != 0) 
+      if (pRoomData->decorations[0] != 0)
            GraphicToViewport(d.StairFacingUpGraphic[5], &d.StairFacingUpRect[9]);
       else GraphicToViewport(d.StairFacingDownGraphic[5], &d.StairFacingDownRect[9]);
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             1);
       DrawRoomObjects(
-            pRoomData->rn2, 
-            facing, 
-            pRoomData->x, 
-            pRoomData->y, 
-            pRoomData->relativeCellNumber, 
+            pRoomData->rn2,
+            facing,
+            pRoomData->x,
+            pRoomData->y,
+            pRoomData->relativeCellNumber,
             0x3421);
     */
       break;
@@ -4253,7 +4253,7 @@ void DrawCellF2L1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
   case roomTELEPORTER:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             3);
       CheckCeilingPit(
             pRoomData->relativeCellNumber,
@@ -4266,16 +4266,16 @@ void DrawCellF2L1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
             pRoomData->y,
             pRoomData->relativeCellNumber,
             0x3421);
-      if (pRoomData->decorations[0] != 0) 
+      if (pRoomData->decorations[0] != 0)
                  DrawTeleporter(
-                      &d.teleporterRectangles[pRoomData->relativeCellNumber], 
+                      &d.teleporterRectangles[pRoomData->relativeCellNumber],
                       &d.wallRectangles[pRoomData->relativeCellNumber]);
       break;
     */
   case roomOPEN:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             3);
       CheckCeilingPit(
             pRoomData->relativeCellNumber,
@@ -4294,7 +4294,7 @@ void DrawCellF2L1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
     /*
       GraphicToViewport(pRoomData->decorations[0]==0?51:57,&d.FloorPitRect[8]);
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             3);
       CheckCeilingPit(
             pRoomData->relativeCellNumber,
@@ -4312,22 +4312,22 @@ void DrawCellF2L1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
   case roomDOORFACING:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             3);
       DrawRoomObjects(
             pRoomData->rn2,
-            facing, 
-            pRoomData->x, 
-            pRoomData->y, 
-            pRoomData->relativeCellNumber, 
+            facing,
+            pRoomData->x,
+            pRoomData->y,
+            pRoomData->relativeCellNumber,
             0x218);
       BltShapeToViewport(d.pDoorBitmaps[7], &d.DoorTrackTopRect[5]);
       DrawDoor(
-            pRoomData->decorations[1], 
-            pRoomData->decorations[0], 
-            d.DoorGraphic[1],//d.Word1914, 
-            1952, 
-            1, 
+            pRoomData->decorations[1],
+            pRoomData->decorations[0],
+            d.DoorGraphic[1],//d.Word1914,
+            1952,
+            1,
             d.DoorRectsF2L1);//d.Byte3514);
       CheckCeilingPit(
             pRoomData->relativeCellNumber,
@@ -4345,7 +4345,7 @@ void DrawCellF2L1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
   case roomDOOREDGE:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             3);
       CheckCeilingPit(
             pRoomData->relativeCellNumber,
@@ -4364,7 +4364,7 @@ void DrawCellF2L1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
     /*
       GraphicToViewport(d.StairEdgeGraphic[3], &d.StairEdgeRect[7]);
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             3);
       CheckCeilingPit(
             pRoomData->relativeCellNumber,
@@ -4383,19 +4383,19 @@ void DrawCellF2L1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
     /*
       BltShapeToViewport(d.pWallBitmaps[3], &d.wallRectangles[pRoomData->relativeCellNumber]);
       DrawWallDecoration(
-            d.NumWallDecoration+1, 
+            d.NumWallDecoration+1,
             5,
             pRoomData->text[0]); //wall decorations?
       DrawWallDecoration(
-            pRoomData->decorations[0], 
+            pRoomData->decorations[0],
             5,
             RNeof); //wall decorations?
       DrawWallDecoration(
-            d.NumWallDecoration+1, 
+            d.NumWallDecoration+1,
             7,
             pRoomData->text[1]);//wall decorations
       D0W = DrawWallDecoration(
-            pRoomData->decorations[1], 
+            pRoomData->decorations[1],
             7,
             RNeof);//wall decorations
       if (D0W != 0)
@@ -4416,11 +4416,11 @@ void DrawCellF2L1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
       break;
   case roomSTAIRFACING:
     /*
-      if (pRoomData->decorations[0] != 0) 
+      if (pRoomData->decorations[0] != 0)
            GraphicToViewport(d.StairFacingUpGraphic[4], &d.StairFacingUpRect[7]);
       else GraphicToViewport(d.StairFacingDownGraphic[4], &d.StairFacingDownRect[7]);
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             3);
       CheckCeilingPit(
             pRoomData->relativeCellNumber,
@@ -4446,8 +4446,8 @@ void DrawCellF2R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
             pRoomData->decorations[2],
             pRoomData->relativeCellNumber);
       CheckCeilingPit(
-            pRoomData->relativeCellNumber, 
-            pRoomData->x, 
+            pRoomData->relativeCellNumber,
+            pRoomData->x,
             pRoomData->y);
       DrawRoomObjects(
             pRoomData->rn2,
@@ -4458,7 +4458,7 @@ void DrawCellF2R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
             0x4312);
       if (pRoomData->decorations[0] != 0)
               DrawTeleporter(
-                    &d.teleporterRectangles[pRoomData->relativeCellNumber], 
+                    &d.teleporterRectangles[pRoomData->relativeCellNumber],
                     &d.wallRectangles[pRoomData->relativeCellNumber]);
     */
       break;
@@ -4468,8 +4468,8 @@ void DrawCellF2R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
             pRoomData->decorations[2],
             pRoomData->relativeCellNumber);
       CheckCeilingPit(
-            pRoomData->relativeCellNumber, 
-            pRoomData->x, 
+            pRoomData->relativeCellNumber,
+            pRoomData->x,
             pRoomData->y);
       DrawRoomObjects(
             pRoomData->rn2,
@@ -4487,8 +4487,8 @@ void DrawCellF2R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
             pRoomData->decorations[2],
             pRoomData->relativeCellNumber);
       CheckCeilingPit(
-            pRoomData->relativeCellNumber, 
-            pRoomData->x, 
+            pRoomData->relativeCellNumber,
+            pRoomData->x,
             pRoomData->y);
       DrawRoomObjects(
             pRoomData->rn2,
@@ -4502,14 +4502,14 @@ void DrawCellF2R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
   case roomDOORFACING:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             pRoomData->relativeCellNumber);
       DrawRoomObjects(
             pRoomData->rn2,
-            facing, 
-            pRoomData->x, 
-            pRoomData->y, 
-            pRoomData->relativeCellNumber, 
+            facing,
+            pRoomData->x,
+            pRoomData->y,
+            pRoomData->relativeCellNumber,
             0x128);
       BltShapeToViewport(d.pDoorBitmaps[7], &d.DoorTrackTopRect[3]);
       DrawDoor(
@@ -4534,8 +4534,8 @@ void DrawCellF2R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
             pRoomData->decorations[2],
             pRoomData->relativeCellNumber);
       CheckCeilingPit(
-            pRoomData->relativeCellNumber, 
-            pRoomData->x, 
+            pRoomData->relativeCellNumber,
+            pRoomData->x,
             pRoomData->y);
       DrawRoomObjects(
             pRoomData->rn2,
@@ -4553,8 +4553,8 @@ void DrawCellF2R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
             pRoomData->decorations[2],
             pRoomData->relativeCellNumber);
       CheckCeilingPit(
-            pRoomData->relativeCellNumber, 
-            pRoomData->x, 
+            pRoomData->relativeCellNumber,
+            pRoomData->x,
             pRoomData->y);
       DrawRoomObjects(
             pRoomData->rn2,
@@ -4577,11 +4577,11 @@ void DrawCellF2R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
             6,
             RNeof);
       DrawWallDecoration(
-            d.NumWallDecoration+1, 
+            d.NumWallDecoration+1,
             9,
             pRoomData->text[1]);
       D0W = DrawWallDecoration(
-            pRoomData->decorations[1], 
+            pRoomData->decorations[1],
             9,
             RNeof);
       if (D0W != 0)
@@ -4620,15 +4620,15 @@ void DrawCellF2R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
       break;
   case roomSTAIRFACING:
     /*
-      if (pRoomData->decorations[0]!=0) 
+      if (pRoomData->decorations[0]!=0)
            MirrorGraphicToViewport(d.StairFacingUpGraphic[4],&d.StairFacingUpRect[5]);
       else MirrorGraphicToViewport(d.StairFacingDownGraphic[4], &d.StairFacingDownRect[5]);
       DrawFloorDecorations(
             pRoomData->decorations[2],
             pRoomData->relativeCellNumber);
       CheckCeilingPit(
-            pRoomData->relativeCellNumber, 
-            pRoomData->x, 
+            pRoomData->relativeCellNumber,
+            pRoomData->x,
             pRoomData->y);
       DrawRoomObjects(
             pRoomData->rn2,
@@ -4659,7 +4659,7 @@ void DrawCellF2(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
   case roomTELEPORTER:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             4);
       CheckCeilingPit(
             pRoomData->relativeCellNumber,
@@ -4674,14 +4674,14 @@ void DrawCellF2(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
             0x3421);
       if (pRoomData->decorations[0] != 0)
           DrawTeleporter(
-               &d.teleporterRectangles[pRoomData->relativeCellNumber], 
+               &d.teleporterRectangles[pRoomData->relativeCellNumber],
                &d.wallRectangles[pRoomData->relativeCellNumber]);
     */
       break;
   case roomOPEN:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             4);
       CheckCeilingPit(
             pRoomData->relativeCellNumber,
@@ -4700,7 +4700,7 @@ void DrawCellF2(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
     /*
       GraphicToViewport(pRoomData->decorations[0]==0?52:58,&d.FloorPitRect[7]);
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             4);
       CheckCeilingPit(
             pRoomData->relativeCellNumber,
@@ -4718,7 +4718,7 @@ void DrawCellF2(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
   case roomDOORFACING:
     /*
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             4);
       DrawRoomObjects(
             pRoomData->rn2,
@@ -4754,11 +4754,11 @@ void DrawCellF2(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
     /*
       BltRectangleToViewport(d.pWallBitmaps[3], &d.wallRectangles[pRoomData->relativeCellNumber]);
       DrawWallDecoration(
-            d.NumWallDecoration+1, 
-            8, 
+            d.NumWallDecoration+1,
+            8,
             pRoomData->text[1]);
       D0W = DrawWallDecoration(
-            pRoomData->decorations[1], 
+            pRoomData->decorations[1],
             8,
             RNeof);
       if (D0W != 0)
@@ -4775,11 +4775,11 @@ void DrawCellF2(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
       break;
   case roomSTAIRFACING:
     /*
-      if (pRoomData->decorations[0] != 0) 
+      if (pRoomData->decorations[0] != 0)
            GraphicToViewport(d.StairFacingUpGraphic[3], &d.StairFacingUpRect[6]);
       else GraphicToViewport(d.StairFacingDownGraphic[3], &d.StairFacingDownRect[6]);
       DrawFloorDecorations(
-            pRoomData->decorations[2], 
+            pRoomData->decorations[2],
             4);
       CheckCeilingPit(
             pRoomData->relativeCellNumber,
@@ -4943,7 +4943,7 @@ void DrawCellF1L1(i32 /* facing */, SUMMARIZEROOMDATA *pRoomData)
       break;
   case roomSTAIRFACING:
     /*
-      if (pRoomData->decorations[0] != 0) 
+      if (pRoomData->decorations[0] != 0)
            GraphicToViewport(d.StairFacingUpGraphic[2], &d.StairFacingUpRect[4]);
       else GraphicToViewport(d.StairFacingDownGraphic[2], &d.StairFacingDownRect[4]);
       DrawFloorDecorations(
@@ -5023,7 +5023,7 @@ void DrawCellF0L1(i32 /*facing*/,SUMMARIZEROOMDATA *pRoomData)
             pRoomData->y);
       if (pRoomData->decorations[0] != 0)
               DrawTeleporter(
-                    &d.teleporterRectangles[pRoomData->relativeCellNumber], 
+                    &d.teleporterRectangles[pRoomData->relativeCellNumber],
                     &d.wallRectangles[pRoomData->relativeCellNumber]);
     */
       break;
@@ -5066,13 +5066,13 @@ void DrawCellF0R1(i32 /* facing*/, SUMMARIZEROOMDATA *pRoomData)
   case roomDOOREDGE:
     /*
       CheckCeilingPit(
-            pRoomData->relativeCellNumber, 
-            pRoomData->x, 
+            pRoomData->relativeCellNumber,
+            pRoomData->x,
             pRoomData->y);
       DrawRoomObjects(
             pRoomData->rn2,
-            facing, 
-            pRoomData->x, 
+            facing,
+            pRoomData->x,
             pRoomData->y,
             pRoomData->relativeCellNumber,1);
     */
@@ -5080,46 +5080,46 @@ void DrawCellF0R1(i32 /* facing*/, SUMMARIZEROOMDATA *pRoomData)
   case roomTELEPORTER:
     /*
       CheckCeilingPit(
-            pRoomData->relativeCellNumber, 
-            pRoomData->x, 
+            pRoomData->relativeCellNumber,
+            pRoomData->x,
             pRoomData->y);
       DrawRoomObjects(
             pRoomData->rn2,
-            facing, 
-            pRoomData->x, 
+            facing,
+            pRoomData->x,
             pRoomData->y,
             pRoomData->relativeCellNumber,1);
-      if (pRoomData->decorations[0] != 0) 
+      if (pRoomData->decorations[0] != 0)
               DrawTeleporter(
-                        &d.teleporterRectangles[pRoomData->relativeCellNumber], 
+                        &d.teleporterRectangles[pRoomData->relativeCellNumber],
                         &d.wallRectangles[pRoomData->relativeCellNumber]);
     */
       break;
   case roomOPEN:
     /*
       CheckCeilingPit(
-            pRoomData->relativeCellNumber, 
-            pRoomData->x, 
+            pRoomData->relativeCellNumber,
+            pRoomData->x,
             pRoomData->y);
       DrawRoomObjects(
             pRoomData->rn2,
-            facing, 
-            pRoomData->x, 
+            facing,
+            pRoomData->x,
             pRoomData->y,
             pRoomData->relativeCellNumber,1);
     */
       break;
   case roomPIT:
     /*
-      MirrorGraphicToViewport(pRoomData->decorations[0]!=0?61:55, &d.FloorPitRect[0]);  
+      MirrorGraphicToViewport(pRoomData->decorations[0]!=0?61:55, &d.FloorPitRect[0]);
       CheckCeilingPit(
-            pRoomData->relativeCellNumber, 
-            pRoomData->x, 
+            pRoomData->relativeCellNumber,
+            pRoomData->x,
             pRoomData->y);
       DrawRoomObjects(
             pRoomData->rn2,
-            facing, 
-            pRoomData->x, 
+            facing,
+            pRoomData->x,
             pRoomData->y,
             pRoomData->relativeCellNumber,
             1);
@@ -5237,7 +5237,7 @@ void DrawCellF0(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData,bool /*skipDrawing*
       if (pRoomData->decorations[0] != 0)
       if (!skipDrawing)
               DrawTeleporter(
-                      &d.teleporterRectangles[pRoomData->relativeCellNumber], 
+                      &d.teleporterRectangles[pRoomData->relativeCellNumber],
                       &d.wallRectangles[pRoomData->relativeCellNumber]);
     */
       break;
@@ -5321,7 +5321,7 @@ void DrawCellF0(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData,bool /*skipDrawing*
   };
 }
 
-i8 relposSid[16] = 
+i8 relposSid[16] =
 {
   -2,2,-1,1,0,-2,2,-1,1,0,-1,1,0,-1,1,0
 };
@@ -5348,7 +5348,7 @@ BACKGROUND_LIB::BACKGROUND_LIB(void)
 void BACKGROUND_LIB::Cleanup(void)
 {
   int i;
-  if (backgroundGraphics != NULL) 
+  if (backgroundGraphics != NULL)
   {
     for (i=0; i<num; i++)
     {
@@ -5450,9 +5450,9 @@ void BACKGROUND_LIB::DumpGraphic(i32 graphicID, i32 maskID, const char extension
 #endif
 
 void BACKGROUND_LIB::CreateVirtualBitmap(
-                            ui32         *pGraphic, 
-                            i32           srcSize, 
-                            i32           virtualGraphicID, 
+                            ui32         *pGraphic,
+                            i32           srcSize,
+                            i32           virtualGraphicID,
                             AFFINEMASK   *pMask)
 {
   AFFINEMASK *pxform;
@@ -5509,7 +5509,7 @@ BACKGROUND_MASK *BACKGROUND_LIB::CreateNewMask(ui32 id, ui32 number, BACKGROUND_
     // We need to make some room for the new index.
     n = number - pMaskIndex[0] + 1; // # index entries we need to add.
     backgroundGraphics[idx].size += 4*n;
-    backgroundGraphics[idx].data = (ui8 *)UI_realloc(backgroundGraphics[idx].data, 
+    backgroundGraphics[idx].data = (ui8 *)UI_realloc(backgroundGraphics[idx].data,
                                                     backgroundGraphics[idx].size,
                                                     MALLOC100);
     pbg = backgroundGraphics[idx].data;
@@ -5538,7 +5538,7 @@ BACKGROUND_MASK *BACKGROUND_LIB::CreateNewMask(ui32 id, ui32 number, BACKGROUND_
   // and copy the old mask to the newly allocated area.
   pMaskIndex[number +1] = backgroundGraphics[idx].size;
   backgroundGraphics[idx].size += gsize;
-  backgroundGraphics[idx].data 
+  backgroundGraphics[idx].data
         = (ui8 *)UI_realloc(backgroundGraphics[idx].data,
                             backgroundGraphics[idx].size,
                             MALLOC101);
@@ -5569,7 +5569,7 @@ AFFINEMASK *BACKGROUND_LIB::CreateNewAffineMask(ui32 id, ui32 number, AFFINEMASK
     // We need to make some room for the new index.
     n = number - pMaskIndex[0] + 1; // # index entries we need to add.
     backgroundGraphics[idx].size += 4*n;
-    backgroundGraphics[idx].data = (ui8 *)UI_realloc(backgroundGraphics[idx].data, 
+    backgroundGraphics[idx].data = (ui8 *)UI_realloc(backgroundGraphics[idx].data,
                                                     backgroundGraphics[idx].size,
                                                     MALLOC100);
     pbg = backgroundGraphics[idx].data;
@@ -5598,7 +5598,7 @@ AFFINEMASK *BACKGROUND_LIB::CreateNewAffineMask(ui32 id, ui32 number, AFFINEMASK
   // and copy the old mask to the newly allocated area.
   pMaskIndex[number +1] = backgroundGraphics[idx].size;
   backgroundGraphics[idx].size += gsize;
-  backgroundGraphics[idx].data 
+  backgroundGraphics[idx].data
         = (ui8 *)UI_realloc(backgroundGraphics[idx].data,
                             backgroundGraphics[idx].size,
                             MALLOC101);
@@ -5667,7 +5667,7 @@ i32 BACKGROUND_LIB::GetDecorationBitmap(
 
 
 ui16 *BACKGROUND_LIB::GetSkinDef(ui32 skinNum,
-                                 ui32 minimumSize, 
+                                 ui32 minimumSize,
                                  ui32 *skinDefSize)
 {
   ui8 *result;
@@ -5680,7 +5680,7 @@ ui16 *BACKGROUND_LIB::GetSkinDef(ui32 skinNum,
   idx = GetBackgroundGraphic(1, 2, &actualSize, false);
   // works with this return stmt. return NULL;//debugging
   //this stmt make it work idx = -1; //debuggin
-  if (idx < 0) 
+  if (idx < 0)
   {
     return NULL;
   };
@@ -5820,7 +5820,7 @@ i32 BACKGROUND_LIB::FindGraphicInCache(ui32 graphicID, bool mustExist)
   {
     size += 10;
     backgroundGraphics = (BACKGROUND_GRAPHIC *)UI_realloc(
-                                    backgroundGraphics, 
+                                    backgroundGraphics,
                                     size * sizeof(BACKGROUND_GRAPHIC),
                                     MALLOC092);
     for (i=num; i<size; i++)
@@ -5845,8 +5845,8 @@ i32 BACKGROUND_LIB::FindGraphicInCache(ui32 graphicID, bool mustExist)
   return -1;
 }
 
-i32 BACKGROUND_LIB::BackgroundGraphicExists(ui32 graphicID, 
-                                            i32 minimumSize, 
+i32 BACKGROUND_LIB::BackgroundGraphicExists(ui32 graphicID,
+                                            i32 minimumSize,
                                             ui32 *actualSize,
                                             bool mustExist)
 {
@@ -5859,14 +5859,14 @@ i32 BACKGROUND_LIB::BackgroundGraphicExists(ui32 graphicID,
 }
 
 
-i32 BACKGROUND_LIB::GetBackgroundGraphic(ui32 graphicID, 
-                                         i32 minimumSize, 
+i32 BACKGROUND_LIB::GetBackgroundGraphic(ui32 graphicID,
+                                         i32 minimumSize,
                                          ui32 *actualSize,
                                          bool mustExist)
 {
   i32 i;
   i = FindGraphicInCache(graphicID, mustExist);
-  if (i < 0) 
+  if (i < 0)
   {
     //backgroundGraphics[num].data = NULL;
     backgroundGraphics[num].size = -1;
@@ -5879,7 +5879,7 @@ i32 BACKGROUND_LIB::GetBackgroundGraphic(ui32 graphicID,
 }
 
 
-i32 BACKGROUND_LIB::CreateBackgroundGraphic(ui32 graphicID, 
+i32 BACKGROUND_LIB::CreateBackgroundGraphic(ui32 graphicID,
                                              ui32 graphicSize)
 {
   i32 i, idx;
@@ -5890,7 +5890,7 @@ i32 BACKGROUND_LIB::CreateBackgroundGraphic(ui32 graphicID,
   {
     size += 10;
     backgroundGraphics = (BACKGROUND_GRAPHIC *)UI_realloc(
-                                    backgroundGraphics, 
+                                    backgroundGraphics,
                                     size * sizeof(BACKGROUND_GRAPHIC),
                                     MALLOC092);
     for (i=num; i<size; i++)
@@ -5946,7 +5946,7 @@ static ui32 RightMask[16] = {
 
 
 /*
-void ApplyBackground2 (BACKGROUND_MASK *msk, 
+void ApplyBackground2 (BACKGROUND_MASK *msk,
                        ui32            *src,
                        ui32            bitmapsize)
 {
@@ -5995,7 +5995,7 @@ void ApplyBackground2 (BACKGROUND_MASK *msk,
   //pMsk = first mask word.
   //The first group has zero bits on the front of the mask.
   if (SR < 8)
-  { 
+  {
     SL -= 8;
     for (i=0; i<msk->height; i++)
     {
@@ -6128,7 +6128,7 @@ void ApplyBackground2 (BACKGROUND_MASK *msk,
 }
 */
 
-void ApplyBackground3 (BACKGROUND_MASK *msk, 
+void ApplyBackground3 (BACKGROUND_MASK *msk,
                        ui32            *src,
                        ui32            bitmapsize)
 {
@@ -6151,7 +6151,7 @@ void ApplyBackground3 (BACKGROUND_MASK *msk,
   //ui32 *pSrc;
   //ui16 *pMsk;
   sBit = msk->srcX & 15;
-  if (msk->dstX < 0) 
+  if (msk->dstX < 0)
   {
     negativeWords = (-msk->dstX + 15) / 16; // # words negative
   }
@@ -6201,7 +6201,7 @@ void ApplyBackground3 (BACKGROUND_MASK *msk,
   //pDst = first 4-word group in destination
   //pMsk = first mask word.
   //The first group has zero bits on the front of the mask.
-  if (negativeWords) 
+  if (negativeWords)
   {
     numFullGroups -= negativeWords - (prePixelCount?1:0);
     prePixelCount = 0;
@@ -6210,7 +6210,7 @@ void ApplyBackground3 (BACKGROUND_MASK *msk,
     pSrcLine += negativeWords*2;
   };
   if (SMR == 0)
-  { 
+  {
     SSL -= 8;
     for (i=0; i<msk->height; i++)
     {
@@ -6244,7 +6244,7 @@ void ApplyBackground3 (BACKGROUND_MASK *msk,
     };
   }
   else if (SMR < 8)
-  { 
+  {
     SML -= 8;
     if (SSR < 8)
     {  // SMR<8  SSR<8
@@ -6448,7 +6448,7 @@ void ApplyBackground3 (BACKGROUND_MASK *msk,
 
 
 
-void ApplyBackground (BACKGROUND_MASK *mask, 
+void ApplyBackground (BACKGROUND_MASK *mask,
                       ui32            *bitmap,
                       ui32             bitmapsize)
 {
@@ -6461,7 +6461,7 @@ void ApplyBackground (BACKGROUND_MASK *mask,
   if (mask->dstX > 224) return;
   if (((mask->width)  & 15) != 0) return;
   //if ((mask->width | mask->srcX)  & 15 != 0) return;
-  if (((mask->dstX & 15) | (mask->srcX & 15)) != 0) 
+  if (((mask->dstX & 15) | (mask->srcX & 15)) != 0)
   {
     ApplyBackground3(mask, bitmap, bitmapsize);
     return;
@@ -6574,12 +6574,12 @@ void ApplyDecoration (ui16            *pDecoration,
 void CustomBackgrounds(i32 px, i32 py, i32 facing, i32 roomNum)
 {
   i32 x, y;
-  i32 skinNum; 
+  i32 skinNum;
   ui16 *pSkinDef;
   ui32 skinDefSize;
   BACKGROUND_MASK *pMask;
   ui32 *pBitmap, bitmapSize;
-  //pSkins = backgroundLib.GetSkins(d.LoadedLevel);  
+  //pSkins = backgroundLib.GetSkins(d.LoadedLevel);
 
   x = px+DXSID[facing]*relposSid[roomNum] + DXFWD[facing]*relposFwd[roomNum];
   y = py+DYSID[facing]*relposSid[roomNum] + DYFWD[facing]*relposFwd[roomNum];
@@ -6663,7 +6663,7 @@ void FillViewportCanvas(VIEWPORTCANVAS * /*pvc*/, i32 /*x*/, i32 /*y*/, i32 /*fa
 //      (User Cell Numbers)
 //      [Relative Cell Numbers]
 //  +----------+----------+-----------+-----------+----------+
-//  |          |          |           |           |          | 
+//  |          |          |           |           |          |
 //  |          |          |           |           |          |
 //  |   (0)    |   (4)    |   (6)     |    (5)    |   (1)    |
 //  |          |   [-2]   |   [-3]    |   [-1]    |          |
@@ -6677,14 +6677,14 @@ void FillViewportCanvas(VIEWPORTCANVAS * /*pvc*/, i32 /*x*/, i32 /*y*/, i32 /*fa
 //  |          |          |           |           |          |
 //  |          |          |           |           |          |
 //  +----------+----------+-----------+-----------+----------+
-//  |          |    2     |     3     |     4     |          | 
+//  |          |    2     |     3     |     4     |          |
 //  |          |          |           |           |          |
 //  |   (10)   |   (12)   |    (14)   |    (13)   |   (11)   |
 //  |          |   [3]    |5   [4]   6|    [5]    |          |
 //  |          |          |           |           |          |
 //  |          |          |           |           |          |
 //  +----------+----------+-----------+-----------+----------+
-//             |    7     |     8     |     9     | 
+//             |    7     |     8     |     9     |
 //             |          |           |           |
 //             |   (15)   |10  (17) 11|    (16)   |
 //             |   [6]    |    [7]    |    [8]    |
@@ -6770,23 +6770,23 @@ void DrawViewport(i32 facing,i32 x,i32 y)
   {
     roomData[userCellNum].x = x;
     roomData[userCellNum].y = y;
-    RelativeXY(facing, 
-               relativeY[userCellNum], 
-               relativeX[userCellNum], 
+    RelativeXY(facing,
+               relativeY[userCellNum],
+               relativeX[userCellNum],
                &roomData[userCellNum].x,
                &roomData[userCellNum].y);
-    roomData[userCellNum].skinNumber = 
-                        skinCache.GetSkin(d.LoadedLevel, 
+    roomData[userCellNum].skinNumber =
+                        skinCache.GetSkin(d.LoadedLevel,
                                           roomData[userCellNum].x,
                                           roomData[userCellNum].y);
     if (roomData[userCellNum].skinNumber == 0)
     {
-      roomData[userCellNum].skinNumber = 
+      roomData[userCellNum].skinNumber =
                         skinCache.GetDefaultSkin(d.LoadedLevel);
     };
     SummarizeRoomInfo(&roomData[userCellNum], facing);
     roomData[userCellNum].relativeCellNumber = userCellNum;
-    if (userCellNum == 17)  
+    if (userCellNum == 17)
     {
       d.CellTypeJustAhead = sw(roomData[userCellNum].roomType);
     };
@@ -6813,9 +6813,9 @@ void DrawViewport(i32 facing,i32 x,i32 y)
     }
     else
     {
-      Interpret(pStdDrawCode[userCellNum][roomData[userCellNum].graphicRoomType], 
+      Interpret(pStdDrawCode[userCellNum][roomData[userCellNum].graphicRoomType],
                 0,
-                roomData, 
+                roomData,
                 userCellNum,
                 facing
 #ifdef _DEBUG
@@ -6824,7 +6824,7 @@ void DrawViewport(i32 facing,i32 x,i32 y)
                 );
     };
   };
-#ifndef newgraphics  
+#ifndef newgraphics
   roomData[RF3L2].x = x;
   roomData[RF3L2].y = y;
   RelativeXY(facing, 3, -2, &roomData[RF3L2].x, &roomData[RF3L2].y);
@@ -6838,7 +6838,7 @@ void DrawViewport(i32 facing,i32 x,i32 y)
   {
     DrawCellF3L2(facing, &roomData[RF3L2]);
   };
-  
+
 
 //D0W=GetCelltypeRelative(facing, 3, 2, x, y);
 //if (D0W==roomSTONE)
@@ -7158,7 +7158,7 @@ void DrawViewport(i32 facing,i32 x,i32 y)
     DrawCellF0(facing,&roomData[RF0],skipDrawing);
   };
 
-#endif  
+#endif
   if ((D0W=D4W)!=0)
   {
     d.pWallBitmaps[4] = (ui8 *)d.Pointer2234;
@@ -7237,6 +7237,24 @@ void DrawFoodWaterBar(i16 value,i16 y,i16 color)
 //
 //*********************************************************
 //   TAG0188e4
+int get_def(int chIdx) {
+    // Extracted from CharacterDamage with mask=4 (and there was a P4 parameter at 4 too).
+    // Since I don't know how these mask and P4 values are set, it would be nice to test this for a while
+    dReg D4,D5,D6,D0,D1;
+    int mask = 4;
+    D5W = 0;
+    for (D4W=D5W=D6W=0; D6W<=5; D6W++)
+    {
+      if ((mask & (1<<D6W)) == 0) continue;
+      D4W++;
+      D0W = D6W;
+      D1UW = 0x8000;
+      D5W = sw(D5W + TAG01680a(chIdx, D0W | D1W));
+    }
+    D5W += d.CH16482[chIdx].shieldStrength;
+    return D5W;
+}
+
 void DisplayFoodWater(void)
 {
   CHARDESC *pcA3;
@@ -7255,6 +7273,11 @@ void DisplayFoodWater(void)
   };
   DrawFoodWaterBar(pcA3->food, 69, 5);
   DrawFoodWaterBar(pcA3->water, 92, 14);
+
+  int def = get_def(d.SelectedCharacterOrdinal-1);
+  char buf[50];
+  sprintf(buf,"DEF %d ",def);
+  TextToViewport(140, 112, 13, buf, false);//LOCAL_8 is text color
 }
 
 //*********************************************************

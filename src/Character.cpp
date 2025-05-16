@@ -1219,23 +1219,7 @@ void DisplayBackpackItem(i32 chIdx, i32 itemNum)
 //
 // *********************************************************
 //   TAG014de0
-int get_def(int chIdx) {
-    // Extracted from CharacterDamage with mask=4 (and there was a P4 parameter at 4 too).
-    // Since I don't know how these mask and P4 values are set, it would be nice to test this for a while
-    dReg D4,D5,D6,D0,D1;
-    int mask = 4;
-    D5W = 0;
-    for (D4W=D5W=D6W=0; D6W<=5; D6W++)
-    {
-      if ((mask & (1<<D6W)) == 0) continue;
-      D4W++;
-      D0W = D6W;
-      D1UW = 0x8000;
-      D5W = sw(D5W + TAG01680a(chIdx, D0W | D1W));
-    }
-    return D5W;
-}
-
+extern int get_def(int chIdx);
 void DrawCharacterState(i32 chIdx) // Character box at top of screen                                //
 {//(void)
   static dReg D0, D1, D4;
@@ -1465,10 +1449,6 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
       //strcat(d.Byte12914, " KG");
       TextToViewport(140, 132, LOCAL_8, d.Byte12914, false);// "LOAD  actual/max"
                                                      // LOCAL_8 is text color
-  int def = get_def(chIdx);
-  char buf[50];
-  sprintf(buf,"D%d",def);
-  TextToViewport(134+6*strlen(d.Byte12914)+6, 132, 13, buf, false);//LOCAL_8 is text color
       charFlags |= CHARFLAG_viewportChanged;
     };
     D4W = sw((pcA3->charPosition+4-d.partyFacing) & 3);
@@ -1528,6 +1508,11 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
     };
   };
   pcA3->charFlags &= CHARFLAG_nonGraphicFlags;//0x7f;
+
+  int def = get_def(d.SelectedCharacterOrdinal-1);
+  char buf[50];
+  sprintf(buf,"DEF %d ",def);
+  TextToViewport(140, 112, 13, buf, false);//LOCAL_8 is text color
 
   STShowCursor(HC4);
 }
