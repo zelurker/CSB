@@ -1219,6 +1219,23 @@ void DisplayBackpackItem(i32 chIdx, i32 itemNum)
 //
 // *********************************************************
 //   TAG014de0
+int get_def(int chIdx) {
+    // Extracted from CharacterDamage with mask=4 (and there was a P4 parameter at 4 too).
+    // Since I don't know how these mask and P4 values are set, it would be nice to test this for a while
+    dReg D4,D5,D6,D0,D1;
+    int mask = 4;
+    D5W = 0;
+    for (D4W=D5W=D6W=0; D6W<=5; D6W++)
+    {
+      if ((mask & (1<<D6W)) == 0) continue;
+      D4W++;
+      D0W = D6W;
+      D1UW = 0x8000;
+      D5W = sw(D5W + TAG01680a(chIdx, D0W | D1W));
+    }
+    return D5W;
+}
+
 void DrawCharacterState(i32 chIdx) // Character box at top of screen                                //
 {//(void)
   static dReg D0, D1, D4;
@@ -1430,6 +1447,8 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
           LOCAL_8 = COLOR_13;
         };
       };
+
+  // TextToViewport(39, 17, LOCAL_8, &buf[9], false);//LOCAL_8 is text color
       TextToViewport(104, 132, LOCAL_8, "LOAD", true);//LOCAL_8 is text color
       D4W = sw(pcA3->load / 10);
       pcA0 = (char *)TAG014af6(D4W, 1, 3);
@@ -1443,9 +1462,13 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
       D4W = sw((D0L+5)/10);
       pcA0 = (char *)TAG014af6(D4W, 1, 3);
       strcat(d.Byte12914, pcA0);
-      strcat(d.Byte12914, " KG");
-      TextToViewport(148, 132, LOCAL_8, d.Byte12914, false);// "LOAD  actual/max"
+      //strcat(d.Byte12914, " KG");
+      TextToViewport(140, 132, LOCAL_8, d.Byte12914, false);// "LOAD  actual/max"
                                                      // LOCAL_8 is text color
+  int def = get_def(chIdx);
+  char buf[50];
+  sprintf(buf,"D%d",def);
+  TextToViewport(134+6*strlen(d.Byte12914)+6, 132, 13, buf, false);//LOCAL_8 is text color
       charFlags |= CHARFLAG_viewportChanged;
     };
     D4W = sw((pcA3->charPosition+4-d.partyFacing) & 3);
@@ -1505,6 +1528,7 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
     };
   };
   pcA3->charFlags &= CHARFLAG_nonGraphicFlags;//0x7f;
+
   STShowCursor(HC4);
 }
 
@@ -2773,10 +2797,7 @@ i32 DamageCharacter(i32 chIdx,i32 damage,i16 mask,i16 P4)
           {
             D5W >>= 1;
           }
-          else
-          {
-          };
-        };
+        }
         if (D7W <= 0) return 0;
 
         D0W = sw(130 - D5W);
