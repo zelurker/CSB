@@ -2640,7 +2640,7 @@ void ReadAndExpandGraphic(i32 graphicNum, ui8 *dest, i16 P3, i16 P4, i32 maxSize
   aReg A0, A2;
   SDL_Surface *sf;
   char buf[15];
-  printf("ReadAndExpand %d\n",graphicNum & 0x7fff);
+  // printf("ReadAndExpand %d\n",graphicNum & 0x7fff);
   sprintf(buf,"graph/%04d.bmp",graphicNum & 0x7fff);
   sf = SDL_LoadBMP(buf);
   if (sf) {
