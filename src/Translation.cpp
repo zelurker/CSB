@@ -144,6 +144,7 @@ void ReadTranslationFile(void)
     len = (i32)strlen(buf.buf);
     if (len == 0) continue;
     if (  (buf.buf[0] == '/') && (buf.buf[1] == '/') ) continue;
+    if ( buf.buf[0] == ';') continue;
     dquote[3] = -1;
     numNonblank = 0;
     for (j=0; j<4; j++) // Find 4 double-quotes
