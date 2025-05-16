@@ -2638,6 +2638,31 @@ void ReadAndExpandGraphic(i32 graphicNum, ui8 *dest, i16 P3, i16 P4, i32 maxSize
 {
   dReg D0, D6, D7;
   aReg A0, A2;
+  SDL_Surface *sf;
+  char buf[15];
+  printf("ReadAndExpand %d\n",graphicNum & 0x7fff);
+  sprintf(buf,"graph/%04d.bmp",graphicNum & 0x7fff);
+  sf = SDL_LoadBMP(buf);
+  if (sf) {
+      int x,y;
+      char *p = (char*)sf->pixels;
+      for (y=0; y<sf->h; y++) {
+	  for (x=0; x<sf->w; x+=16) {
+	      for (int plane = 0; plane<4; plane++) {
+		  ui16 word = 0;
+		  for (int n=0; n<16; n++) {
+		      word |= ((p[n] & (1<<plane))>>plane) << (15-n);
+		  }
+		  *dest++ = word >> 8;
+		  *dest++ = word & 0xff;
+	      }
+	      p += 16;
+	  }
+      }
+      SDL_FreeSurface(sf);
+      printf("got my screen\n");
+      return;
+  }
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //i32 saveD6=D6, saveD7=D7;
   //pnt saveA2=A2;
