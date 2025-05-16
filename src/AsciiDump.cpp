@@ -308,32 +308,32 @@ const char *MonsterName(MONSTERTYPE mt)
   const char *name;
   switch (mt)
   {
-  case 0x00: name = "Scorpion"; break;
-  case 0x01: name = "Slime_Devil"; break;
+  case 0x00: name = "Scorpio"; break;
+  case 0x01: name = "Slime Devil"; break;
   case 0x02: name = "Giggler"; break;
-  case 0x03: name = "Flying_Eye"; break;
+  case 0x03: name = "Flying Eye"; break;
   case 0x04: name = "Hellhound"; break;
   case 0x06: name = "Screamer"; break;
-  case 0x07: name = "Rock_Pile"; break;
+  case 0x07: name = "Rock Pile"; break;
   case 0x08: name = "Rive"; break;
-  case 0x09: name = "Stone_Golem"; break;
+  case 0x09: name = "Stone Golem"; break;
   case 0x0a: name = "Mummy"; break;
-  case 0x0b: name = "Black_Flame"; break;
+  case 0x0b: name = "Black Flame"; break;
   case 0x0c: name = "Skeleton"; break;
   case 0x0d: name = "Couatl"; break;
   case 0x0e: name = "Vexirk"; break;
   case 0x0f: name = "Worm"; break;
-  case 0x10: name = "Ant_Man"; break;
+  case 0x10: name = "Ant Man"; break;
   case 0x11: name = "Muncher"; break;
-  case 0x12: name = "Deth_Knight"; break;
+  case 0x12: name = "Deth Knight"; break;
   case 0x13: name = "Zytaz"; break;
-  case 0x14: name = "Water_Elemental"; break;
+  case 0x14: name = "Water Elemental"; break;
   case 0x15: name = "Oitu"; break;
   case 0x16: name = "Demon"; break;
-  case 0x17: name = "Lord_Chaos"; break;
+  case 0x17: name = "Lord Chaos"; break;
   case 0x18: name = "Dragon"; break;
-  case 0x1a: name = "Grey_Lord"; break;
-  default: name = "Unrecognized_Type";
+  case 0x1a: name = "Grey Lord"; break;
+  default: name = "Unrecognized Type";
   };
   return name;
 }
@@ -2566,7 +2566,7 @@ void ItemsRemaining(i32 mode)
                             x + d.pLevelDescriptors[level].offsetX,
                             y + d.pLevelDescriptors[level].offsetY);
               sprintf(line+strlen(line),"%d",object.pos());
-              sprintf(line+strlen(line)," %s",itemName);
+              sprintf(line+strlen(line)," %s",_(itemName));
               listing->AddLine(line);
               totalLine++;
               if (n==2)
@@ -2582,7 +2582,7 @@ void ItemsRemaining(i32 mode)
                 {
                   if (listRemainingDBObject(itemName, poss))
                   {
-                    sprintf(line,"  %s",itemName);
+                    sprintf(line,"  %s",_(itemName));
                     listing->AddLine(line);
                     totalLine++;
                   };
@@ -2599,7 +2599,7 @@ void ItemsRemaining(i32 mode)
                 {
                   if (listRemainingDBObject(itemName, containedObject))
                   {
-                    sprintf(line,"  %s",itemName);
+                    sprintf(line,"  %s",_(itemName));
                     listing->AddLine(line);
                     totalLine++;
                   };

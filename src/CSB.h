@@ -7,6 +7,9 @@
 #define ALIGN4
 #endif
 
+// TranslateLanguage!!! Is there a longer way to say it?
+#define _(str) TranslateLanguage(str)
+
 #include "Dispatch.h"
 #include "UI.h"
 //#ifdef _DEBUG

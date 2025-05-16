@@ -345,38 +345,6 @@ HermesFormat* from_format;
 SDL_Surface *SCRAP = NULL;
 #endif
 
-
-#ifdef USE_OLD_GTK
-GtkWidget *appGlobal;   /* Main Application Handle (menu et al) */
-GSList    *radio_size_grp, *radio_speed_grp;       /* a list of  radio-'buttons' in the menu*/
-
-static void
-appAbout (GtkWidget *w, gpointer data)
-{
- GtkWidget *dlg;
- const char *authors[] = {"It was orginally developed for the Atari ST by FTL Software:",
-        "Director ~ ~ ~ ~ Doug Bell",
-        "asst.director ~ Dennis Walker",
-        "2nd unit director ~ ~ Mike Newton",
-        "graphics ~ ~ Andy Jaros",
-        "graphics ~ ~ David Simon",
-        "producer ~ ~ Wayne Holder", NULL};
- const char *comment= "Port from the ST to windows by\n  Paul R. Stevens\n"
-        " \nAdditional port from Windows to Linux by\n  Erik Svanberg"
-        " and Rebecka Svanberg.\n"
-        ""
-        " \nCheck 'AUTHORS' and 'COPYING' files for details.";//comments
-
-        GString *S = g_string_new( "This game is not GPL and not freeware.\n\n" );
-        int i = 0; while(authors[i]) {g_string_append(S, authors[i]); g_string_append(S, "\n"); i++;}
-        g_string_append(S, "\n\n");
-        g_string_append(S,comment);
-        UI_MessageBox( S->str, APPTITLE " " APPVERSION APPVERMINOR, MESSAGE_OK );
-        g_string_free(S,TRUE);
-
-}
-#endif //USE_OLD_GTK
-
 void done_imgui() {
     // Cleanup
     ImGui_ImplSDLRenderer2_Shutdown();
@@ -402,92 +370,6 @@ void cbAppDestroy(void)
 #endif //USE_OLD_GTK
     exit(0);
 }
-
-
-#ifdef USE_OLD_GTK
-/********************** MENU DEFINITIONS **********************/
-
-static GtkItemFactoryEntry menubar[] = {
-  { "/_File",   NULL,   NULL,   NULL,   "<Branch>" },
-  { "/File/tear",   NULL,   NULL,   NULL,   "<Tearoff>" },
-  { "/File/Quit", "<control>Q", GTK_SIGNAL_FUNC(cbAppDestroy),    NULL,   "<Item>" },
-
-  { "/_Misc",   NULL,   NULL,   NULL,   "<Branch>" },
-  { "/Misc/tear",   NULL,   NULL,   NULL,   "<Tearoff>" },
-  {"/Misc/Size x _1", NULL, GTK_SIGNAL_FUNC(__timer_callback),  ( IDC_Normal ), "<RadioItem>"},
-  {"/Misc/Size x _2", NULL, GTK_SIGNAL_FUNC(__timer_callback),  ( IDC_Double ), "/Misc/Size x 1"},
-  {"/Misc/Size x _3", NULL, GTK_SIGNAL_FUNC(__timer_callback),  ( IDC_Triple ),   "/Misc/Size x 1"},
-  {"/Misc/Size x _4", NULL, GTK_SIGNAL_FUNC(__timer_callback),  ( IDC_Quadruple ),  "/Misc/Size x 1"},
-  { "/Misc/sep",  NULL, NULL,   NULL,   "<Separator>" },
-  {"/Misc/_Record", NULL, GTK_SIGNAL_FUNC(__timer_callback),  ( IDC_Record ), "<Item>"},//10
-  {"/Misc/_Playback", NULL, GTK_SIGNAL_FUNC(__timer_callback),  ( IDC_Playback ), "<Item>"},
-  {"/Misc/_QuickPlay",NULL, GTK_SIGNAL_FUNC(__timer_callback),  ( IDC_QuickPlay ),  "<Item>"},
-  {"/Misc/_DM rules",NULL,  GTK_SIGNAL_FUNC(__timer_callback),  ( IDM_DMRULES ),  "<CheckItem>"},
-  {"/Misc/_Items Remaining",NULL, GTK_SIGNAL_FUNC(__timer_callback),  ( IDC_ItemsRemaining ),"<Item>"},
-  {"/Misc/_Non-CSB Items",NULL, GTK_SIGNAL_FUNC(__timer_callback),  ( IDC_NonCSBItemsRemaining ),"<Item>"},
-
-  { "/_Speed",        NULL,   NULL,   NULL,          "<Branch>" },
-  { "/Speed/tear",      NULL,   NULL,   NULL,         "<Tearoff>" },
-  {"/Speed/_Glacial",     NULL, GTK_SIGNAL_FUNC(__timer_callback),  ( IDM_Glacial ),  "<RadioItem>"},
-  {"/Speed/_Molasses",    NULL, GTK_SIGNAL_FUNC(__timer_callback), ( IDM_Molasses ),  "/Speed/Glacial"},
-  {"/Speed/_Very Slow",   NULL, GTK_SIGNAL_FUNC(__timer_callback), ( IDM_VerySlow ),  "/Speed/Glacial"},
-  {"/Speed/_Slow",      NULL, GTK_SIGNAL_FUNC(__timer_callback), ( IDM_Slow ),    "/Speed/Glacial"},
-  {"/Speed/_Normal",      NULL, GTK_SIGNAL_FUNC(__timer_callback), ( IDM_Normal ),  "/Speed/Glacial"},
-  {"/Speed/_Fast",      NULL, GTK_SIGNAL_FUNC(__timer_callback), ( IDM_Fast ),    "/Speed/Glacial"},
-  {"/Speed/_Quick as a Bunny",  NULL, GTK_SIGNAL_FUNC(__timer_callback), ( IDM_Quick ),   "/Speed/Glacial"},
-{ "/Speed/sep", NULL, NULL,   NULL,   "<Separator>" },
-  {"/Speed/_Extra Ticks",   NULL, GTK_SIGNAL_FUNC(__timer_callback), ( IDM_ExtraTicks ),  "<CheckItem>"},
-  {"/Speed/_Player Clock",    NULL, GTK_SIGNAL_FUNC(__timer_callback), ( IDM_PlayerClock ), "<CheckItem>"},
-
-  { "/_Trace",        NULL,   NULL,   NULL,          "<Branch>" },
-  { "/Trace/tear",      NULL,   NULL,   NULL,         "<Tearoff>" },
-  {"/Trace/_TimerTrace",NULL, GTK_SIGNAL_FUNC(__timer_callback),  ( IDC_TimerTrace ), "<CheckItem>"},
-  {"/Trace/_AttackTrace",NULL,  GTK_SIGNAL_FUNC(__timer_callback),  ( IDC_AttackTrace ),  "<CheckItem>"},
-  {"/Trace/AI Trac_e",NULL, GTK_SIGNAL_FUNC(__timer_callback),  ( IDC_AITrace ),  "<CheckItem>"},
-  {"/Trace/Viewport Trace",NULL,  GTK_SIGNAL_FUNC(__timer_callback),  ( IDM_GraphicTrace ), "<CheckItem>"},
-  {"/Trace/_DSA Trace",NULL,  GTK_SIGNAL_FUNC(__timer_callback),  ( IDC_DSATrace ), "<CheckItem>"},
-  {"/Trace/Dispatch Trace",NULL,  GTK_SIGNAL_FUNC(__timer_callback),  ( IDC_DispatchTrace ),  "<CheckItem>"},
-
-
-  { "/_Help",   NULL,   NULL,   NULL,  "<LastBranch>" },
-  { "/Help/tear",   NULL,   NULL,   NULL,  "<Tearoff>" },
-  { "/Help/_About", NULL, GTK_SIGNAL_FUNC(appAbout),    NULL,  "<Item>" },
-};
-static void __before_misc_menu_is_showed(GtkMenuItem* bush, gpointer saddam) {
-  GtkItemFactory *votes = gtk_item_factory_from_widget(GTK_WIDGET(bush));
-  gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Misc/Record"),
-    BeginRecordOK ); //Record
-  gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Misc/Playback"),
-    BeginRecordOK ); //Playback
-  gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Misc/Items Remaining"),
-    ItemsRemainingOK ); //Items remaining
-  gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Misc/Non-CSB Items"),
-    ItemsRemainingOK ); //Non-CSB Items
-  gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Misc/QuickPlay"),
-          PlayfileIsOpen() ); //Quickplay
-}
-static void __before_trace_menu_is_showed(GtkMenuItem* bush, gpointer saddam) {
-  GtkItemFactory *votes = gtk_item_factory_from_widget(GTK_WIDGET(bush));
-  gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Trace/TimerTrace"),
-    (encipheredDataFile == NULL)); //TimerTrace
-  gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Trace/Dispatch Trace"),
-    true ); //DispatchTrace
-  gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Trace/AI Trace"),
-    true ); //AI Trace
-  gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Trace/AttackTrace"),
-    true ); //AttackTrace
-  gtk_widget_set_sensitive(gtk_item_factory_get_widget( votes, "/Trace/DSA Trace"),
-    TimerTraceActive);//DSA Trace
-//  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(gtk_item_factory_get_widget( votes, "/Misc/AI Trace")), (AITraceActive)); //AI Trace
-//  gtk_check_menu_item_set_active  (GTK_CHECK_MENU_ITEM(gtk_item_factory_get_widget( votes, "/Misc/DM rules")), DM_rules);//DM rules
-}
-#endif //USE_OLD_GTK
-
-#if 0
-// In order to draw SDL in a GTK window.
-// Doesn't work, since gtk swallows every event.
-#include <gdk/gdkx.h>
-#endif
 
 void g_log(const char *, int, const char *, ...)
 {
@@ -1713,7 +1595,7 @@ void post_render() {
 	r.x = 0;
 	r.w = WindowWidth;
 	r.h = WindowHeight - DY;
-	if (ImGui::BeginMenu("File"))
+	if (ImGui::BeginMenu(_("File")))
 	{
 	    imgui_active = true;
 	    was_active = true;
@@ -1721,27 +1603,27 @@ void post_render() {
 		reset_game();
 		// _CALL0 (_4_,st_ReadEntireGame);
 	    }
-	    if (ImGui::MenuItem("Load saved game",NULL,false,d.partyLevel != 255))
+	    if (ImGui::MenuItem(_("Load saved game"),NULL,false,d.partyLevel != 255))
 		open = true;
-	    if (ImGui::MenuItem("Save game",NULL,false,d.partyLevel != 255))
+	    if (ImGui::MenuItem(_("Save game"),NULL,false,d.partyLevel != 255))
 		save = true;
 	    // Limited playback in front the dungeon door
-	    if (ImGui::MenuItem("Playback..", NULL,false,d.partyLevel == 255)) { Process_ecode_IDC_Playback();/* Do stuff */ }
-	    if (ImGui::MenuItem("Quit", NULL))   { cbAppDestroy(); }
+	    if (ImGui::MenuItem(_("Playback.."), NULL,false,d.partyLevel == 255)) { Process_ecode_IDC_Playback();/* Do stuff */ }
+	    if (ImGui::MenuItem(_("Quit"), NULL))   { cbAppDestroy(); }
 	    ImGui::EndMenu();
 	} else if (!fb_shown && !on_menubar && !fb2_shown)
 	    imgui_active = false;
 
-	if (ImGui::BeginMenu("Misc"))
+	if (ImGui::BeginMenu(_("Misc")))
 	{
 	    imgui_active = true;
 	    was_active = true;
-	    ImGui::MenuItem("Party coordinates", NULL,&show_coords);
+	    ImGui::MenuItem(_("Party coordinates"), NULL,&show_coords);
 	    bool enabled = (ItemsRemainingOK
 		    && (encipheredDataFile==NULL)
 		    && !simpleEncipher);
-	    if (ImGui::MenuItem("Non-CSB Items", NULL,false,enabled)) ItemsRemaining(1);
-	    ImGui::MenuItem("DM Rules", NULL,&DM_rules);
+	    if (ImGui::MenuItem(_("Non-CSB Items"), NULL,false,enabled)) ItemsRemaining(1);
+	    ImGui::MenuItem(_("DM Rules"), NULL,&DM_rules);
 	    ImGui::EndMenu();
 	} else if (!imgui_active) {
 	    if (was_active && !cursorIsShowing) {
@@ -1764,16 +1646,16 @@ void post_render() {
     //Remember the name to ImGui::OpenPopup() and showFileDialog() must be same...
     if(open) {
 	fb_shown = true;
-	ImGui::OpenPopup("Load saved game");
+	ImGui::OpenPopup(_("Load saved game"));
     } else if (save) {
 	fb2_shown = true;
-        ImGui::OpenPopup("Save game");
+        ImGui::OpenPopup(_("Save game"));
     }
 
     /* Optional third parameter. Support opening only compressed rar/zip files.
      * Opening any other file will show error, return false and won't close the dialog.
      */
-    if(file_dialog.showFileDialog("Load saved game", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), "csb*"))
+    if(file_dialog.showFileDialog(_("Load saved game"), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), "csb*"))
     {
 	printf("file %s\n",file_dialog.selected_fn.c_str());    // The name of the selected file or directory in case of Select Directory dialog mode
 	printf("path %s\n",file_dialog.selected_path.c_str());  // The absolute path to the selected file
@@ -1782,23 +1664,23 @@ void post_render() {
 	skipToResumeGame = true;
 	reset_game();
 	fb_shown = false;
-    } else if (fb_shown && !ImGui::IsPopupOpen("Load saved game")) {
+    } else if (fb_shown && !ImGui::IsPopupOpen(_("Load saved game"))) {
 	// cancel was pressed!
 	fb_shown = false;
     }
 
-    if(file_dialog.showFileDialog("Save game", imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(700, 310), "csb*"))
+    if(file_dialog.showFileDialog(_("Save game"), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(700, 310), "csb*"))
     {
 	opened_file = (char*)file_dialog.selected_path.c_str();
 	fb2_shown = false;
 	DispatchCSB(st_DisplayDiskMenu);
-    } else if (fb2_shown && !ImGui::IsPopupOpen("Save game")) {
+    } else if (fb2_shown && !ImGui::IsPopupOpen(_("Save game"))) {
 	// cancel was pressed!
 	fb2_shown = false;
     }
     if (listing && listing_title && show_listing) {
 	if (ImGui::Begin(listing_title, &show_listing)) {
-	    if (ImGui::Button("Save to report.txt")) {
+	    if (ImGui::Button(_("Save to report.txt"))) {
 		FILE *f = fopen("report.txt","w");
 		if (f) {
 		    fprintf(f,"%s\n",listing->m_listing);

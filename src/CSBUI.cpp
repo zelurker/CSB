@@ -1095,6 +1095,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
       };
       break;
     case UIM_TERMINATE:
+      printf("returning on UI_STATUS_TERMINATE\n");
         return UI_STATUS_TERMINATE;
     case UIM_CHAR:
         {
@@ -1287,6 +1288,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
 //            fprintf(f," Exit TERMINATE\n");
 //            fclose(f);
 //          };
+	    printf("2nd terminate\n");
           return UI_STATUS_TERMINATE;
         };
         //printf("CSBUI calls DispatchCSB @ %d\n", (ui32)UI_GetSystemTime());
@@ -1308,6 +1310,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
 //    f = fopen("debug", "a");
 //    fprintf(f,"Caught 0x%x\n", v);
 //    fclose(f);
+    printf("terminate on 1st catch\n");
     return UI_STATUS_TERMINATE;
   }
   catch(...)
@@ -1333,6 +1336,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
       CloseTraceFile();
       crash = true;
     };
+    printf("terminate on crash\n");
     return UI_STATUS_TERMINATE;
   }  ;
 };
