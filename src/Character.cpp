@@ -1345,7 +1345,7 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
             };
           };
         };
-        TextToViewport(LOCAL_6, 7, D4W, pcA3->title, false);//D4W is text color
+        TextToViewport(LOCAL_6, 7, D4W, _(pcA3->title), false);//D4W is text color
         charFlags |= CHARFLAG_viewportChanged;
       }
       else
@@ -3342,6 +3342,7 @@ void DisplayScroll(DB7 *pDB7)
              (ui16)0x8002,
              990);
   pText = TranslateLanguage(b_260);
+  // printf("Scroll to translate :%s.\n",b_260);
   if (pText != b_260) strcpy(b_260, pText);
   //Make sure there are TWO zeroes at the end!
   //This fixes the problem when there is only
