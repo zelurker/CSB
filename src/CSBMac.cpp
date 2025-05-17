@@ -37,7 +37,7 @@ char* folderSavedGame="../Resources";
 	#include <DrawSprocket.h>
 	#include <Timer.h>
 	#include <Power.h>
-	
+
 	Rect* GetPortBounds( CGrafPtr a, Rect* b)
 	{
 		BlockMoveData( &a->portRect, b, sizeof( Rect ) );
@@ -60,7 +60,7 @@ char szCSBVersion[]="CSBVersion 9.0?";
 		#error All bitfields must be reversed in order to run!
 	#endif
 #endif
- 
+
 #include "stdafx.h"
 #include "resource.h"
 #include <stdio.h>
@@ -143,6 +143,7 @@ static void initwackyoptions()
 	speedTable[SPEED_NORMAL].vblPerTick = 15;
 	speedTable[SPEED_FAST].vblPerTick = 11;
 	speedTable[SPEED_QUICK].vblPerTick = 7;
+	speedTable[SPEED_SHU].vblPerTick = 1;
 }
 
 
@@ -162,12 +163,12 @@ char *foo[]={"hello","world",NULL};
 int main(int argc, char** argv)
 {
 
- 	if (!InitInstance ()) 
+ 	if (!InitInstance ())
 	{
 		return 0;
 	}
-	
-	
+
+
 
 	initwackyoptions();
 	HideCursor();
@@ -176,7 +177,7 @@ int main(int argc, char** argv)
 	MacShowCursor();
 	ShowMenuBar();
 	ExitInstance();
-	
+
 	return 0;
 }
 
@@ -188,9 +189,9 @@ int main(int argc, char** argv)
 bool interrupt = 0;
 
 pascal void TimerTask(TMTask* task)
-{	
+{
 	TimeTask* tim = (TimeTask*)task;
-	
+
 	tim -> fire = 1;
 	//interrupt = 1;
 	//vblInterrupt();
@@ -210,19 +211,19 @@ bool InitInstance()
 											 32,
 											 32,
 											 2,{0,0,0},false,{0,0,0,0}};
-   
+
     vm_size_t smDSize = 1024;
 
     screenSize = 2;
-    
+
    //  make SmartDiscards writeable
    vm_protect(mach_task_self(), (unsigned int)(*SmartDiscards), smDSize, 0, VM_PROT_READ|VM_PROT_WRITE);
 
-   
+
    InitCursor();
    SetRect(&r,0,0,320,200);
    DSpStartup();
-   
+
    memset(&d,0,sizeof(d));
    memset(&a,0,sizeof(a));
    a.displayWidth = gDSpScreenWidth;
@@ -231,7 +232,7 @@ bool InitInstance()
    a.backBufferDepthMask = 32;
    a.displayDepthMask = 32;
    a.backBufferBestDepth = 32;
-   a.displayBestDepth = 32; 
+   a.displayBestDepth = 32;
    a.pageCount = 1;
    err = DSpFindBestContext(&a,&gContextRef);
    if(err)
@@ -239,15 +240,15 @@ bool InitInstance()
    	DSpShutdown();
    	ExitToShell();
    }
-   
+
    err = InitMacSound();
    if(err)
    {
    	DSpShutdown();
    	ExitToShell();
    }
-   
-   
+
+
    	err = DSpSetDebugMode(true);
    	err = DSpContext_Reserve(gContextRef, &a);
 	//err = DSpContext_FadeGammaOut(gContextRef, NULL);
@@ -265,18 +266,18 @@ else
 	err = DSpContext_SetState(gContextRef, kDSpContextState_Active);
 }
    	//err = DSpContext_FadeGammaIn(gContextRef, NULL);
-	
+
 	//macwindows.h
    /*gCSBWindow = NewCWindow(NULL,&r,"\pChaos Strikes Back",false,noGrowDocProc,(WindowPtr)-1L,true,NULL);
-   
+
    if (!gCSBWindow)
       return false;
-	
+
 	MoveWindow(gCSBWindow,50,50,true);
 	ShowWindow(gCSBWindow);
     SetPort(gCSBWindow);
 	*/
-	
+
 	WndProc(0,WM_CREATE,0,0);
   return true;
 }
@@ -284,7 +285,7 @@ else
 void ExitInstance()
 {
 	OSStatus err;
-	
+
 	RemoveTimeTask((QElemPtr)&gTimer);
 	//DisposeWindow(gCSBWindow);
 	err = DSpContext_FadeGammaOut(gContextRef, NULL);
@@ -316,11 +317,11 @@ extern void swoosh();
 {
 	Point		pt;
 	static 	i32 hidden = 1;
-	
+
 	DSpGetMouse(&pt);
 	if(pt.v < 20)
 	{
-		if(hidden) 
+		if(hidden)
 		{
 			DSpContext_SetState(gContextRef, kDSpContextState_Paused);
 			ShowMenuBar();
@@ -344,7 +345,7 @@ extern void swoosh();
 */
 
 extern bool INTERLACED;
-		
+
 void DoChaosEventLoop()
 {
 	EventRecord 	theEvent;
@@ -353,44 +354,44 @@ void DoChaosEventLoop()
 	Rect			bounds;
 	OSStatus		err = noErr;
 	Boolean			lastMouseDownEventWasLeftMouse, hasIdle;
-	
+
 /*	RgnHandle		chaosWindowRegion, restOfScreenRegion;
 	Rect			mainScreenRect, chaosWindowRect;
-		
+
 	restOfScreenRegion = NewRgn();
 	err = QDError();
-	
+
 	if(!err)
 	{
 		chaosWindowRegion = NewRgn();
 		err = QDError();
 	}
-	
+
 	if(!err)
 	{
 		RectRgn(restOfScreenRegion,GetPixBounds((*LMGetMainDevice())->gdPMap, &mainScreenRect));
 		err = QDError();
-	}  
-	
+	}
+
 	if(!err)
 	{
-		MacSetRect(&chaosWindowRect, 0, CHAOSWINDOW_Y, 640, CHAOSWINDOW_Y+400);  
+		MacSetRect(&chaosWindowRect, 0, CHAOSWINDOW_Y, 640, CHAOSWINDOW_Y+400);
 		RectRgn(chaosWindowRegion, &chaosWindowRect);
 		err = QDError();
 	}
-	
+
 	if(!err)
 	{
 		DiffRgn(restOfScreenRegion, chaosWindowRegion, restOfScreenRegion);
 		err = QDError();
 	}
 */
-	
+
 	if(!err)
 	{
 		err = DSpContext_GetBackBuffer(gContextRef,kDSpBufferKind_Normal,&chaosPort);
 	}
-	
+
 	if(!err)
 	{
 		MacSetPort((GrafPtr)chaosPort);
@@ -399,85 +400,85 @@ void DoChaosEventLoop()
 		EraseRect(GetPortBounds(chaosPort, &bounds));
 		err = DSpContext_SwapBuffers(gContextRef,NULL,NULL);
 	}
-	
+
 	if(!err)
 	{
 		long attr;
 		if(Gestalt(gestaltPowerMgrAttr,&attr)==0)
 			hasIdle = (attr & ( (1L << gestaltPMgrExists) | (1L << gestaltPMgrCPUIdle))) == ( (1L << gestaltPMgrExists) | (1L << gestaltPMgrCPUIdle));
-		
+
 	}
-	
+
 	SetEventMask(mDownMask|mUpMask|autoKeyMask|keyDownMask|keyUpMask|updateMask);
-	
+
 	swoosh();
-		
+
 	//WndProc(0,IDC_DispatchTrace,0,0);
 	//WndProc(0,IDC_TimerTrace,0,0);
 
 
 	gTimer.fire = 0;
-	gTimer.magic = 'tomz';   
+	gTimer.magic = 'tomz';
 	gTimer.task.tmAddr = NewTimerUPP(TimerTask);
 	gTimer.task.tmReserved = NULL;
 	InstallXTimeTask((QElemPtr)&gTimer);
     PrimeTime((QElemPtr)&gTimer,millisecondsPerVBL);
- 
- 
+
+
 	while(gRunning)
 	{
 		EventRecord oldEvent;
-		
+
 		gotEvent = WaitNextEvent(everyEvent, &theEvent, 0, NULL);
 		//MyShowHideMenuBar();
-		
+
 		if(hasIdle)
 		{
 			//  we don't want to cycle and slow down
-		
+
 			IdleUpdate();
 		}
-		
+
 		if(gTimer.fire)
 		{
 			gTimer.fire = 0;
 			WndProc(NULL,WM_TIMER,0,0);
 		}
-		
+
 		if(gScreenIsInvalid)
 		{
 			WndProc(NULL,WM_PAINT,0,0);
 			gScreenIsInvalid = 0;
 		}
-		
+
 		theEvent.where.v -= 40;
-		
+
 		if(theEvent.where.h != oldEvent.where.h || theEvent.where.v != oldEvent.where.v)
 		{
 			WndProc(NULL,WM_MOUSEMOVE,0,(((unsigned long)theEvent.where.v)<<16L)|theEvent.where.h);
 		}
-		
+
 		oldEvent = theEvent;
 		if(!gotEvent) continue;
-		
+
 		//if(TraceFile) flush(TraceFile);
-    
-		
+
+
 		switch(theEvent.what)
 		{
 			case updateEvt:
-				WndProc(NULL,WM_ERASEBKGND,0,0);				
+				WndProc(NULL,WM_ERASEBKGND,0,0);
 				break;
-				
+
 			case autoKey:
 			case keyDown:
-				
+
 				switch((theEvent.message>>8)&0xFF)
 				{
 				    case    0x7A:
 				        theEvent.message = 0x70;
-				        break; 
-				
+				        break;
+
 				    case    0x78:
 				        theEvent.message = 0x71;
 				        break;
@@ -489,18 +490,18 @@ void DoChaosEventLoop()
 				    case    0x76:
 				        theEvent.message = 0x73;
 				        break;
-				        
+
 				    default:
 				        break;
 				}
-				
-				WndProc(NULL,WM_KEYDOWN,(theEvent.message)&0xff, (theEvent.message&0xffff) | ((long)theEvent.modifiers)<<16L);				
-				
-				
+
+				WndProc(NULL,WM_KEYDOWN,(theEvent.message)&0xff, (theEvent.message&0xffff) | ((long)theEvent.modifiers)<<16L);
+
+
 				if(((theEvent.message & 0xff) == 'q') && (theEvent.modifiers & cmdKey))
 				{
-					WndProc(NULL,WM_TIMER,0,0);				
-					WndProc(NULL,WM_DESTROY,0,(((unsigned long)theEvent.where.v)<<16L)|theEvent.where.h);				
+					WndProc(NULL,WM_TIMER,0,0);
+					WndProc(NULL,WM_DESTROY,0,(((unsigned long)theEvent.where.v)<<16L)|theEvent.where.h);
 					PostQuitMessage(0);
 				}
 				if(((theEvent.message & 0xff) == 'i') && (theEvent.modifiers & cmdKey))
@@ -508,37 +509,37 @@ void DoChaosEventLoop()
 					INTERLACED ^= 1;
 					WndProc(hWnd, WM_ERASEBKGND, 0, 0);
 				}
-				
+
 				break;
-			
+
 			case mouseDown:
-				lastMouseDownEventWasLeftMouse = (theEvent.modifiers & controlKey) != controlKey;  
-				
+				lastMouseDownEventWasLeftMouse = (theEvent.modifiers & controlKey) != controlKey;
+
 				if(lastMouseDownEventWasLeftMouse)
-					WndProc(NULL,WM_LBUTTONDOWN,0,(((unsigned long)theEvent.where.v)<<16L)|theEvent.where.h);				
+					WndProc(NULL,WM_LBUTTONDOWN,0,(((unsigned long)theEvent.where.v)<<16L)|theEvent.where.h);
 				else
-					WndProc(NULL,WM_RBUTTONDOWN,0,(((unsigned long)theEvent.where.v)<<16L)|theEvent.where.h);				
-				
+					WndProc(NULL,WM_RBUTTONDOWN,0,(((unsigned long)theEvent.where.v)<<16L)|theEvent.where.h);
+
 				break;
-		
+
 			case mouseUp:
 				if(lastMouseDownEventWasLeftMouse)
-					WndProc(NULL,WM_LBUTTONUP,0,(((unsigned long)theEvent.where.v)<<16L)|theEvent.where.h);				
-				else	
-					WndProc(NULL,WM_RBUTTONUP,0,(((unsigned long)theEvent.where.v)<<16L)|theEvent.where.h);				
-				
+					WndProc(NULL,WM_LBUTTONUP,0,(((unsigned long)theEvent.where.v)<<16L)|theEvent.where.h);
+				else
+					WndProc(NULL,WM_RBUTTONUP,0,(((unsigned long)theEvent.where.v)<<16L)|theEvent.where.h);
+
 				break;
-		
+
 			case app4Evt:
 				if((theEvent.message>>24L)!=0xFA) break;
 				//GlobalToLocal(&theEvent.where);
-				WndProc(NULL,WM_NCMOUSEMOVE,0,(((unsigned long)theEvent.where.v)<<16L)|theEvent.where.h);				
+				WndProc(NULL,WM_NCMOUSEMOVE,0,(((unsigned long)theEvent.where.v)<<16L)|theEvent.where.h);
 				break;
-		
+
 		}
-		
+
 	}
-	
+
 	//if(chaosWindowRegion) 	DisposeRgn(chaosWindowRegion);
 	//if(restOfScreenRegion) 	DisposeRgn(restOfScreenRegion);
 }
@@ -567,12 +568,12 @@ void WndProc(void*, unsigned short message, unsigned short wParam, unsigned long
   if (trace!=NULL) fprintf(trace,"msg=");
   if (trace!=NULL) fflush(trace);
 
-  switch (message) 
+  switch (message)
 	{
 		/*case WM_COMMAND:
       if (trace!=NULL) fprintf(trace,"WM_COMMAND\n");
-			wmId    = LOWORD(wParam); 
-			wmEvent = HIWORD(wParam); 
+			wmId    = LOWORD(wParam);
+			wmEvent = HIWORD(wParam);
 			// Parse the menu selections:
 /*			switch (wmId)
 			{
@@ -605,7 +606,7 @@ void WndProc(void*, unsigned short message, unsigned short wParam, unsigned long
               break;
             };
             break;*/
-            
+
         case IDC_Record:
             csbMessage.type = UIM_SETOPTION;
             csbMessage.p1 = OPT_RECORD;
@@ -639,16 +640,16 @@ void WndProc(void*, unsigned short message, unsigned short wParam, unsigned long
               break;
             };
             break;
-        
+
         case IDC_DispatchTrace:
-            if (trace != NULL) 
+            if (trace != NULL)
             {
               fclose(trace);
               break;
             };
             trace = UI_fopen("trace.log","w");
-            break;	
-		
+            break;
+
 
 		case WM_PAINT:
 		      if (trace!=NULL) fprintf(trace,"WM_PAINT\n");
@@ -701,27 +702,27 @@ void WndProc(void*, unsigned short message, unsigned short wParam, unsigned long
       if (trace!=NULL) fflush(trace);
       break;
 
-        
+
     case WM_DESTROY:
-      if (trace!=NULL) fprintf(trace,"WM_DESTROY\n"); 
+      if (trace!=NULL) fprintf(trace,"WM_DESTROY\n");
       csbMessage.type=UIM_TERMINATE;
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
       {
         PostQuitMessage(0);
         break;
       };
-	
+
 	case WM_CREATE:
-      if (trace!=NULL) fprintf(trace,"WM_CREATE\n"); 
+      if (trace!=NULL) fprintf(trace,"WM_CREATE\n");
       csbMessage.type=UIM_INITIALIZE;
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
       {
         PostQuitMessage(0);
         break;
       };
-	
+
     case WM_ERASEBKGND:
-      if (trace!=NULL) fprintf(trace,"WM_ERASEBKGND\n"); 
+      if (trace!=NULL) fprintf(trace,"WM_ERASEBKGND\n");
       csbMessage.type=UIM_REDRAW_ENTIRE_SCREEN;
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
       {
@@ -774,12 +775,12 @@ void WndProc(void*, unsigned short message, unsigned short wParam, unsigned long
           cursorIsShowing = true;
         };
       };*/
-      
+
 //			return DefWindowProc(hWnd, message, wParam, lParam);
-  
+
   	   break;
     case WM_KEYDOWN:
-      if (trace!=NULL) fprintf(trace,"WM_KEYDOWN\n"); 
+      if (trace!=NULL) fprintf(trace,"WM_KEYDOWN\n");
       csbMessage.type=UIM_KEYDOWN;
       csbMessage.p1 = wParam; //virtual key
       csbMessage.p2 = (lParam>>8)&0xff; //scancode
@@ -791,9 +792,9 @@ void WndProc(void*, unsigned short message, unsigned short wParam, unsigned long
       };
 		//	return DefWindowProc(hWnd, message, wParam, lParam);
     	break;
-    	
+
     case WM_CHAR:
-      if (trace!=NULL) fprintf(trace,"WM_CHAR\n"); 
+      if (trace!=NULL) fprintf(trace,"WM_CHAR\n");
       csbMessage.type=UIM_CHAR;
       csbMessage.p1 = wParam;
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
@@ -803,7 +804,7 @@ void WndProc(void*, unsigned short message, unsigned short wParam, unsigned long
       };
 
     case WM_NCMOUSEMOVE:
-      if (trace!=NULL) fprintf(trace,"WM_NCMOUSEMOVE\n"); 
+      if (trace!=NULL) fprintf(trace,"WM_NCMOUSEMOVE\n");
       if (cursorIsShowing)
       {
       }
@@ -815,7 +816,7 @@ void WndProc(void*, unsigned short message, unsigned short wParam, unsigned long
   		break;
 
 /*    case WM_INITMENUPOPUP:
-      if (trace!=NULL) fprintf(trace,"WM_INITMMENUPOPUP\n"); 
+      if (trace!=NULL) fprintf(trace,"WM_INITMMENUPOPUP\n");
       switch (LOWORD(lParam))
       {
       case 0: //File menu
@@ -864,24 +865,24 @@ void WndProc(void*, unsigned short message, unsigned short wParam, unsigned long
                         MF_BYCOMMAND | flag);
         };
         return 0;
-      case 2: 
+      case 2:
         break;//Help menu
       };
 			return DefWindowProc(hWnd, message, wParam, lParam);
     case WM_ENTERIDLE:
-      if (trace!=NULL) fprintf(trace,"WM_ENTERIDLE\n"); 
+      if (trace!=NULL) fprintf(trace,"WM_ENTERIDLE\n");
 			return DefWindowProc(hWnd, message, wParam, lParam);
     case WM_CAPTURECHANGED:
-      if (trace!=NULL) fprintf(trace,"WM_CAPTURECHANGED\n"); 
+      if (trace!=NULL) fprintf(trace,"WM_CAPTURECHANGED\n");
 			return DefWindowProc(hWnd, message, wParam, lParam);
     case WM_EXITMENULOOP:
-      if (trace!=NULL) fprintf(trace,"WM_EXITMENULOOP\n"); 
+      if (trace!=NULL) fprintf(trace,"WM_EXITMENULOOP\n");
 			return DefWindowProc(hWnd, message, wParam, lParam);
     case WM_NCLBUTTONDOWN:
-      if (trace!=NULL) fprintf(trace,"WM_NCLBUTTONDOWN\n"); 
+      if (trace!=NULL) fprintf(trace,"WM_NCLBUTTONDOWN\n");
 			return DefWindowProc(hWnd, message, wParam, lParam);
     case WM_CLOSE:
-      if (trace!=NULL) fprintf(trace,"WM_CLOSE\n"); 
+      if (trace!=NULL) fprintf(trace,"WM_CLOSE\n");
 			return DefWindowProc(hWnd, message, wParam, lParam);
     case WM_SIZING:
       if (trace!=NULL) fprintf(trace,"WM_SIZING\n");
@@ -893,51 +894,51 @@ void WndProc(void*, unsigned short message, unsigned short wParam, unsigned long
     case WM_LBUTTONDOWN:
       if (trace!=NULL) fprintf(trace,"WM_LBUTTONDOWN\n");
       csbMessage.type=UIM_LEFT_BUTTON_DOWN;
-      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor 
-      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor 
+      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor
+      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
       {
         PostQuitMessage(0);
         break;
       };
 		break;
-    
+
     case WM_LBUTTONUP:
       if (trace!=NULL) fprintf(trace,"WM_LBUTTONUP\n");
       csbMessage.type=UIM_LEFT_BUTTON_UP;
-      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor 
-      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor 
+      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor
+      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
       {
         PostQuitMessage(0);
         break;
       };
 		break;
-		
+
     case WM_RBUTTONDOWN:
       if (trace!=NULL) fprintf(trace,"WM_RBUTTONDOWN\n");
       csbMessage.type=UIM_RIGHT_BUTTON_DOWN;
-      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor 
-      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor 
+      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor
+      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
       {
         PostQuitMessage(0);
         break;
       };
 		break;
-		
+
     case WM_RBUTTONUP:
       if (trace!=NULL) fprintf(trace,"WM_RBUTTONUP\n");
       csbMessage.type=UIM_RIGHT_BUTTON_UP;
-      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor 
-      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor 
+      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor
+      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
       {
         PostQuitMessage(0);
         break;
       };
 		break;
-		
+
 		default:
       if (trace!=NULL) fprintf(trace,"0x%02x\n",message);
 			break;
@@ -998,18 +999,18 @@ static OSErr InitMacSound()
 {
 
 	OSErr	err = noErr;
-	
+
 	gSoundCompletion = NewSndCallBackUPP(MacSoundProc);
 	if(!gSoundCompletion) return memFullErr;
-	
+
 	err = SndNewChannel(&gSoundChannel, sampledSynth, initMono, gSoundCompletion);
 	if(err != noErr)
 	{
 		DisposeSndCallBackUPP(gSoundCompletion);
 		gSoundCompletion = nil;
 	}
-	
-	return err;		
+
+	return err;
 }
 
 
@@ -1018,11 +1019,11 @@ static void ExitMacSound()
 	if(gSoundChannel)
 	{
 		UI_PlaySound(NULL,SND_SYNC);
-		
+
 		SndDisposeChannel(gSoundChannel,true);
 		gSoundChannel = nil;
 	}
-	
+
 	if(gSoundCompletion)
 	{
 		DisposeSndCallBackUPP(gSoundCompletion);

@@ -34,6 +34,7 @@ enum SPEEDS
   SPEED_NORMAL,
   SPEED_FAST,
   SPEED_QUICK,
+  SPEED_SHU,
   SPEED_NUMSPEED
 };
 
@@ -275,7 +276,7 @@ struct DBank {
                          // [7]  ShrinkBLT (Graphic #3)
   ui8 *Pointer22920; // ( length 20608 )
   ui8 *Pointer22916; // Prison dungeon interior ( length 20608 )
-  
+
   const char* Pointer22912;
   const char* Pointer22908;
   const char* Pointer22904;
@@ -396,8 +397,8 @@ struct DBank {
                         // For each graphic number, this is the index in
                         // the graphic cache.
   public:
-  i16 *GraphicIndex0; //pwPointer23266;  
-          // GraphicIndex0 contains NumGraphic(from graphics.dat) 
+  i16 *GraphicIndex0; //pwPointer23266;
+          // GraphicIndex0 contains NumGraphic(from graphics.dat)
           // entries.
           // Each graphics index in ppq23332.
           // 23266 and 23270 contain the graphics buffer index for each
@@ -860,8 +861,8 @@ struct DBank {
                  // 12962 a function of damage???
                  // 12964 = 1, 3, 5, or 7???
 
-  i16 unused12960;  //MissileDelay; // Word12960; 
-                    // Shooter sets to 1 during launch so missile 
+  i16 unused12960;  //MissileDelay; // Word12960;
+                    // Shooter sets to 1 during launch so missile
                     // will not stop before leaving the wall.
   i16 MonsterDamageResult; //0=none died; 1=some but not all died; 2=all died;Word12958;
   DIRECTION SecondaryDirection; //Dir12956; // Set to random 1 or 3 when bump into wall
@@ -1292,7 +1293,7 @@ struct DBank {
   //i8  Byte2794[8];   //RectPos (byte)      ...[11]Floor Pit F3L1
   RectPos StairEdgeRect[8];
   //i8  Byte2786[8];   //RectPos (byte)      ...[0]Stair Edge F0R1
-  //i8  Byte2778[8];   //RectPos (byte)      ...[1]Stair Edge F0L1 
+  //i8  Byte2778[8];   //RectPos (byte)      ...[1]Stair Edge F0L1
   //i8  Byte2770[8];   //RectPos (byte)      ...[2]Stair Edge F1R1 Down
   //i8  Byte2762[8];   //RectPos (byte)      ...[3]Stair Edge F1L1 Down
   //i8  Byte2754[8];   //RectPos (byte)      ...[4]Stair Edge F1R1 Up
@@ -1334,26 +1335,26 @@ struct DBank {
 //********************************************************
   i16 Word2514[1][2];
   FILL(2510,2446)
-  //i16 Word2446[16][2];  
+  //i16 Word2446[16][2];
   i16 LoadedFloorDecorations[16][2]; //Word2446
                         // Fifteen 2-word entries for floor decorations
                         // Plus one 2-word entry for footprints
                         // First word is graphic number of first
                         // graphic for this decoration.  There are
-                        // generally several graphics....for the 
+                        // generally several graphics....for the
                         // various relative cell numbers.
                         // Second word is FLOOR_DECOR_DESC index
   //FILL(2445,2386)
   //i16 Word2386;
   //i16 Word2384;
-  i16 WallDecorationsForLevel[16][2]; 
+  i16 WallDecorationsForLevel[16][2];
                       //[0] = Graphic number of first of two graphics for each
                       //      of up to 16 decorations.
-                      //[1] = 
+                      //[1] =
                       //Wall decoration graphic numbers start at 121
                       //Word2382[16][2]; //Wall decorations for loaded level.
                       // One per BITS0_3(d.pCurLevelDesc[0].word10)
-          
+
   i16 Word2318[34];
   //FILL(2316,2250)
 
@@ -1367,7 +1368,7 @@ struct DBank {
   FILL(1981,1918)
   i16 DoorGraphic[3][2]; // Two door types at three distances
   //i16 Word1918[2]; //[0]Door F1R1 & F1 & F1L1
-  //i16 Word1914[2]; //[1]Door F2L1 & F2 & F2R1 
+  //i16 Word1914[2]; //[1]Door F2L1 & F2 & F2R1
   //i16 Word1910[2]; //[2]Door F3L1 & F3 & F3R1
   i16 StairEdgeGraphic[4];
   //i16 Word1906;//[0]Stair Edge F0L1 & F0R1
@@ -2493,7 +2494,7 @@ class DSAINDEX                                //DSA
   ui32 m_tracing[8]; //One bit per DSA        //DSA
   ui32 m_savedTracing[8];                     //DSA
   bool m_isLoaded;   //Are DSAs loaded?       //DSA
-  i32  m_traceOverride; //-1=NONE; 256=ALL    //DSA 
+  i32  m_traceOverride; //-1=NONE; 256=ALL    //DSA
 public:                                       //DSA
   DSAINDEX(void);                             //DSA
   ~DSAINDEX(void);                            //DSA
@@ -2514,7 +2515,7 @@ public:                                       //DSA
   void TraceOverride(i32 t)                   //DSA
         {m_traceOverride=t;};                 //DSA
   i32  TraceOverride(void)                    //DSA
-        {return m_traceOverride;};            //DSA   
+        {return m_traceOverride;};            //DSA
 };                                            //DSA
 extern DSAINDEX DSAIndex;                     //DSA
 extern ui16 DSALevelIndex[64][32];            //DSA

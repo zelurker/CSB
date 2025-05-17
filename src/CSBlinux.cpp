@@ -1411,6 +1411,7 @@ int main (int argc, char* argv[])
   speedTable[SPEED_NORMAL].vblPerTick = 15;
   speedTable[SPEED_FAST].vblPerTick = 11;
   speedTable[SPEED_QUICK].vblPerTick = 7;
+  speedTable[SPEED_SHU].vblPerTick = 1;
 
   volumeTable[VOLUME_FULL].divisor = 1;
   volumeTable[VOLUME_HALF].divisor = 2;
@@ -1631,6 +1632,8 @@ void post_render() {
 		gameSpeed = SPEED_FAST;
 	    if (ImGui::MenuItem(_("Quick as a bunny"),NULL,gameSpeed == SPEED_QUICK))
 		gameSpeed = SPEED_QUICK;
+	    if (ImGui::MenuItem(_("Shu's speed"),NULL,gameSpeed == SPEED_SHU))
+		gameSpeed = SPEED_SHU;
 	    ImGui::Separator();
 	    ImGui::MenuItem(_("Extra Ticks"),NULL,&extraTicks);
 	    ImGui::MenuItem(_("Player Clock"),NULL,&playerClock);

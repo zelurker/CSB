@@ -125,7 +125,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	//MyRegisterClass(hInstance);
 
  // Perform application initialization:
-  if (!InitInstance (hInstance, nCmdShow)) 
+  if (!InitInstance (hInstance, nCmdShow))
   {
     return FALSE;
   };
@@ -137,6 +137,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
   speedTable[SPEED_NORMAL].vblPerTick = 15;
   speedTable[SPEED_FAST].vblPerTick = 11;
   speedTable[SPEED_QUICK].vblPerTick = 7;
+  speedTable[SPEED_SHU].vblPerTick = 1;
 
   volumeTable[VOLUME_FULL].attenuation = 0;
   volumeTable[VOLUME_HALF].attenuation = 6;
@@ -155,9 +156,9 @@ int WINAPI WinMain( HINSTANCE hInstance,
   hAccelTable = LoadAccelerators(hInstance, (LPCTSTR)IDC_CSBWINCE2002);
 
   // Main message loop:
-  while (GetMessage(&msg, NULL, 0, 0)) 
+  while (GetMessage(&msg, NULL, 0, 0))
   {
-    if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg)) 
+    if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
     {
       TranslateMessage(&msg);
       DispatchMessage(&msg);
@@ -192,7 +193,7 @@ char *ParseOption(char *pCol, char *key, char *value)
   pCol = GetField(pCol, key, '=');
   _strupr(key);
   value[0] = 0;
-  if (*pCol == '=') 
+  if (*pCol == '=')
   {
     if (pCol[1] == '"')
     {
@@ -267,7 +268,7 @@ void ProcessCommandLine(void)
 //
 //  COMMENTS:
 //
-//    It is important to call this function so that the application 
+//    It is important to call this function so that the application
 //    will get 'well formed' small icons associated with it.
 //
 ATOM MyRegisterClass(HINSTANCE hInstance, LPTSTR szWindowClass)
@@ -309,25 +310,25 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
   LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 
   //If it is already running, then focus on the window
-  hWnd = FindWindow(szWindowClass, szTitle);  
-  if (hWnd) 
+  hWnd = FindWindow(szWindowClass, szTitle);
+  if (hWnd)
   {
     // set focus to foremost child window
     // The "| 0x01" is used to bring any owned windows to the foreground and
     // activate them.
     SetForegroundWindow((HWND)((ULONG) hWnd | 0x00000001));
     return 0;
-  } 
+  }
 
   MyRegisterClass(hInstance, szWindowClass);
-  
+
   //result = GetClientRect(hWnd, &rect);
-  
+
   ReadConfigFile();
   hWnd = CreateWindow(szWindowClass, szTitle, WS_VISIBLE,
     CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, hInstance, NULL);
   if (!hWnd)
-  { 
+  {
     return FALSE;
   }
   //When the main window is created using CW_USEDEFAULT the height of the menubar (if one
@@ -383,7 +384,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
   i32 size;
   //TCHAR szHello[MAX_LOADSTRING];
 
-  switch (message) 
+  switch (message)
   {
     /*
     case WM_WINDOWPOSCHANGED:
@@ -440,11 +441,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       };
       break;
     case WM_COMMAND:
-      wmId    = LOWORD(wParam); 
-      wmEvent = HIWORD(wParam); 
+      wmId    = LOWORD(wParam);
+      wmEvent = HIWORD(wParam);
       // Parse the menu selections:
       switch (wmId)
-      { 
+      {
         case 0:
             MTRACE("0\n");
             break;
@@ -474,8 +475,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
               PostQuitMessage(0);
               break;
-            }; 
-            break; 
+            };
+            break;
         */
         case IDM_GameVersion:
             MTRACE("IDM_GameVersion\n");
@@ -486,8 +487,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             {
               PostQuitMessage(0);
               break;
-            }; 
-            break; 
+            };
+            break;
         case IDOK:
           SendMessage(hWnd, WM_ACTIVATE, MAKEWPARAM(WA_INACTIVE, 0), (LPARAM)hWnd);
           SendMessage (hWnd, WM_CLOSE, 0, 0);
@@ -570,7 +571,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
               break;
             };
             break;
-            
+
         case IDM_Quick:
             MTRACE("IDM_Quick\n");
             csbMessage.type = UIM_SETOPTION;
@@ -582,7 +583,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
               break;
             };
             break;
-            
+
         case IDM_PlayerClock:
             MTRACE("IDM_PlayerClock\n");
             csbMessage.type = UIM_SETOPTION;
@@ -698,7 +699,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             /*
         case IDC_DispatchTrace:
             MTRACE("IDC_DispatchTrace\n");
-            if (trace >= 0) 
+            if (trace >= 0)
             {
               CLOSE(trace);
               trace = -1;
@@ -771,7 +772,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       }
       break;
     case WM_CREATE:
-      MTRACE("WM_CREATE\n"); 
+      MTRACE("WM_CREATE\n");
       g_hwndCB = CreateRpCommandBar(hWnd);
             // Initialize the shell activate info structure
             memset (&s_sai, 0, sizeof (s_sai));
@@ -822,7 +823,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case 6:
           switch (latestCharType)
           {
-          case TYPEIGNORED: 
+          case TYPEIGNORED:
             sprintf(msg, "%04x key --> Ignored                         ", latestCharp1);
             break;
           case TYPEKEY:
@@ -846,7 +847,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
           default:
             sprintf(msg,"                                              ");
           };
-          break;    
+          break;
         case 8:
           switch (latestScanType)
           {
@@ -861,7 +862,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
           default:
             sprintf(msg,"                                              ");
           };
-          break;    
+          break;
         case 9:
           sprintf(msg,"Total Moves = %d",totalMoveCount);
           break;
@@ -909,7 +910,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       MTRACE("   Returned\n");
       break;
     case WM_ERASEBKGND:
-      MTRACE("WM_ERASEBKGND\n"); 
+      MTRACE("WM_ERASEBKGND\n");
       csbMessage.type=UIM_REDRAW_ENTIRE_SCREEN;
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
       {
@@ -975,7 +976,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       };
 			return DefWindowProc(hWnd, message, wParam, lParam);
     case WM_KEYDOWN:
-      MTRACE("WM_KEYDOWN\n"); 
+      MTRACE("WM_KEYDOWN\n");
       csbMessage.type=UIM_KEYDOWN;
       csbMessage.p1 = wParam; //virtual key
       csbMessage.p2 = (lParam>>16)&0xff; //scancode
@@ -986,10 +987,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       };
 			return DefWindowProc(hWnd, message, wParam, lParam);
     case WM_KEYUP:
-      MTRACE("WM_KEYUP\n"); 
+      MTRACE("WM_KEYUP\n");
 			return DefWindowProc(hWnd, message, wParam, lParam);
     case WM_CHAR:
-      MTRACE("WM_CHAR\n"); 
+      MTRACE("WM_CHAR\n");
       csbMessage.type=UIM_CHAR;
       csbMessage.p1 = wParam;
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
@@ -999,7 +1000,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
       };
 			return 0;// DefWindowProc(hWnd, message, wParam, lParam);
     case WM_INITMENUPOPUP:
-      MTRACE("WM_INITMMENUPOPUP\n"); 
+      MTRACE("WM_INITMMENUPOPUP\n");
       switch (LOWORD(lParam))
       {
       case IDC_File: //File menu
@@ -1200,15 +1201,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                          MF_BYCOMMAND|flag);
 
         break;
-      case 4: 
+      case 4:
         break;//Help menu
       };
 			return DefWindowProc(hWnd, message, wParam, lParam);
     case WM_LBUTTONDOWN:
       MTRACE("WM_LBUTTONDOWN\n");
       csbMessage.type=UIM_LEFT_BUTTON_DOWN;
-      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor 
-      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor 
+      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor
+      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
       {
         PostQuitMessage(0);
@@ -1218,8 +1219,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_LBUTTONUP:
       MTRACE("WM_LBUTTONUP\n");
       csbMessage.type=UIM_LEFT_BUTTON_UP;
-      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor 
-      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor 
+      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor
+      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
       {
         PostQuitMessage(0);
@@ -1229,8 +1230,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_RBUTTONDOWN:
       MTRACE("WM_RBUTTONDOWN\n");
       csbMessage.type=UIM_RIGHT_BUTTON_DOWN;
-      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor 
-      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor 
+      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor
+      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
       {
         PostQuitMessage(0);
@@ -1240,8 +1241,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_RBUTTONUP:
       MTRACE("WM_RBUTTONUP\n");
       csbMessage.type=UIM_RIGHT_BUTTON_UP;
-      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor 
-      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor 
+      csbMessage.p1 = LOWORD(lParam);  // horizontal position of cursor
+      csbMessage.p2 = HIWORD(lParam);  // vertical position of cursor
       if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
       {
         PostQuitMessage(0);
@@ -1273,7 +1274,7 @@ HWND CreateRpCommandBar(HWND hwnd)
   mbi.nBmpId     = 0;
   mbi.cBmpImages = 0;
 
-  if (!SHCreateMenuBar(&mbi)) 
+  if (!SHCreateMenuBar(&mbi))
     return NULL;
 
   return mbi.hwndMB;
@@ -1287,12 +1288,12 @@ LRESULT CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
   switch (message)
   {
     case WM_INITDIALOG:
-      // Create a Done button and size it.  
+      // Create a Done button and size it.
       shidi.dwMask = SHIDIM_FLAGS;
       shidi.dwFlags = SHIDIF_DONEBUTTON | SHIDIF_SIPDOWN | SHIDIF_SIZEDLGFULLSCREEN;
       shidi.hDlg = hDlg;
       SHInitDialog(&shidi);
-      return TRUE; 
+      return TRUE;
 
 
     case WM_LBUTTONDOWN:
