@@ -1221,9 +1221,17 @@ void DisplayBackpackItem(i32 chIdx, i32 itemNum)
 //   TAG014de0
 int get_def(int chIdx) {
     // Extracted from CharacterDamage with mask=4 (and there was a P4 parameter at 4 too).
-    // Since I don't know how these mask and P4 values are set, it would be nice to test this for a while
+    // Apparently mask is the slot chosen for the hit as a power of 2, 4 means slot 2 which is the head
+    // and so 8 would be slot 3 which is the chest. The 2 most chosen slots are 2 and 3, corresponding to a mask value of 4 and 8 respectively.
+    // Slots values found:
+    // 0: shield hand
+    // 1: sword hand
+    // 2: head
+    // 3: chest
+    // 4: legs
+    // 5: feet
     dReg D4,D5,D6,D0,D1;
-    int mask = 4;
+    int mask = 8;
     D5W = 0;
     for (D4W=D5W=D6W=0; D6W<=5; D6W++)
     {
