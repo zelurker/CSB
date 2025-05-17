@@ -137,7 +137,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
   speedTable[SPEED_NORMAL].vblPerTick = 15;
   speedTable[SPEED_FAST].vblPerTick = 11;
   speedTable[SPEED_QUICK].vblPerTick = 7;
-  speedTable[SPEED_SHU].vblPerTick = 1;
+  speedTable[SPEED_FTL].vblPerTick = 5;
 
   volumeTable[VOLUME_FULL].attenuation = 0;
   volumeTable[VOLUME_HALF].attenuation = 6;

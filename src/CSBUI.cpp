@@ -2182,7 +2182,7 @@ bool UI_ProcessOption(char *key, char *value)
     if (strcmp(value,"NORMAL") == 0) csbMessage.p2 = SPEED_NORMAL;
     if (strcmp(value,"FAST") == 0) csbMessage.p2 = SPEED_FAST;
     if (strcmp(value,"QUICK") == 0) csbMessage.p2 = SPEED_QUICK;
-    if (strcmp(value,"SHU") == 0) csbMessage.p2 = SPEED_SHU;
+    if (strcmp(value,"FTL") == 0) csbMessage.p2 = SPEED_FTL;
     if (csbMessage.p2 != -1) CSBUI(&csbMessage);
   };
   if (strcmp(key,"PLAY") == 0)

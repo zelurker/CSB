@@ -143,7 +143,7 @@ static void initwackyoptions()
 	speedTable[SPEED_NORMAL].vblPerTick = 15;
 	speedTable[SPEED_FAST].vblPerTick = 11;
 	speedTable[SPEED_QUICK].vblPerTick = 7;
-	speedTable[SPEED_SHU].vblPerTick = 1;
+	speedTable[SPEED_FTL].vblPerTick = 5;
 }
 
 
