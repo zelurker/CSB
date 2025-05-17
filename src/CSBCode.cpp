@@ -600,6 +600,7 @@ RESTARTABLE _MainLoop(const CSB_UI_MESSAGE * /*msg*/)
   RESTARTMAP
     RESTART(1)
     RESTART(2)
+    RESTART(3)
     RESTART(4)
    // RESTART(6)
     RESTART(7)
@@ -641,6 +642,12 @@ tag0006d0:
     ShowCredits(_2_,1); // We won the game with 4 corbums in FulYa pit.
                         // Show Credits will never return
   };
+  if (d.attackDamageToDisplay > 0) {
+      // A negative attackDamage can be passed here to tell to redisplay the weapons...
+      FlashAttackDamage(_3_,d.attackDamageToDisplay);
+      DrawLegalAttackTypes();
+      d.attackDamageToDisplay = 0;
+  }
   if (GameIsComplete) RETURN;
   if (d.newPartyLevel != -1) goto tag0006a4;
   if (d.SelectedCharacterOrdinal != 0) goto tag000730;

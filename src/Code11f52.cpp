@@ -2042,6 +2042,7 @@ i16 ProcessMissileEncounter(
       D1L = DeterminePoisonDamage(mt_60, d.Word12962);
       {
         MONSTER_DAMAGE_RESULT monsterDamageResult;
+	d.attackDamageToDisplay = D5W + D1W;
         monsterDamageResult = DamageMonster(
                                             DBmonA2,
                                             monsterOrdinal-1,
