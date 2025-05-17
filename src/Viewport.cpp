@@ -7237,24 +7237,6 @@ void DrawFoodWaterBar(i16 value,i16 y,i16 color)
 //
 //*********************************************************
 //   TAG0188e4
-int get_def(int chIdx) {
-    // Extracted from CharacterDamage with mask=4 (and there was a P4 parameter at 4 too).
-    // Since I don't know how these mask and P4 values are set, it would be nice to test this for a while
-    dReg D4,D5,D6,D0,D1;
-    int mask = 4;
-    D5W = 0;
-    for (D4W=D5W=D6W=0; D6W<=5; D6W++)
-    {
-      if ((mask & (1<<D6W)) == 0) continue;
-      D4W++;
-      D0W = D6W;
-      D1UW = 0x8000;
-      D5W = sw(D5W + TAG01680a(chIdx, D0W | D1W));
-    }
-    D5W += d.CH16482[chIdx].shieldStrength;
-    return D5W;
-}
-
 void DisplayFoodWater(void)
 {
   CHARDESC *pcA3;
@@ -7273,11 +7255,6 @@ void DisplayFoodWater(void)
   };
   DrawFoodWaterBar(pcA3->food, 69, 5);
   DrawFoodWaterBar(pcA3->water, 92, 14);
-
-  int def = get_def(d.SelectedCharacterOrdinal-1);
-  char buf[50];
-  sprintf(buf,"DEF %d ",def);
-  TextToViewport(140, 112, 13, buf, false);//LOCAL_8 is text color
 }
 
 //*********************************************************
