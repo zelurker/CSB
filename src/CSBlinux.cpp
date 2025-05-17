@@ -1614,6 +1614,28 @@ void post_render() {
 	} else if (!fb_shown && !on_menubar && !fb2_shown)
 	    imgui_active = false;
 
+	if (ImGui::BeginMenu(_("Speed"))) {
+	    imgui_active = true;
+	    was_active = true;
+	    if (ImGui::MenuItem(_("Glacial"),NULL,gameSpeed == SPEED_GLACIAL))
+		gameSpeed = SPEED_GLACIAL;
+	    if (ImGui::MenuItem(_("Molasses"),NULL,gameSpeed == SPEED_MOLASSES))
+		gameSpeed = SPEED_MOLASSES;
+	    if (ImGui::MenuItem(_("Very Slow"),NULL,gameSpeed == SPEED_VERYSLOW))
+		gameSpeed = SPEED_VERYSLOW;
+	    if (ImGui::MenuItem(_("Slow"),NULL,gameSpeed == SPEED_SLOW))
+		gameSpeed = SPEED_SLOW;
+	    if (ImGui::MenuItem(_("Normal"),NULL,gameSpeed == SPEED_NORMAL))
+		gameSpeed = SPEED_NORMAL;
+	    if (ImGui::MenuItem(_("Fast"),NULL,gameSpeed == SPEED_FAST))
+		gameSpeed = SPEED_FAST;
+	    if (ImGui::MenuItem(_("Quick as a bunny"),NULL,gameSpeed == SPEED_QUICK))
+		gameSpeed = SPEED_QUICK;
+	    ImGui::Separator();
+	    ImGui::MenuItem(_("Extra Ticks"),NULL,&extraTicks);
+	    ImGui::MenuItem(_("Player Clock"),NULL,&playerClock);
+	    ImGui::EndMenu();
+	}
 	if (ImGui::BeginMenu(_("Misc")))
 	{
 	    imgui_active = true;
