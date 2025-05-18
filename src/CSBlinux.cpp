@@ -1607,7 +1607,7 @@ void post_render() {
 	    }
 	    if (ImGui::MenuItem(_("Select dungeon.dat...")))
 		open_dungeon = true;
-	    if (ImGui::MenuItem(_("Load saved game"),NULL,false,d.partyLevel != 255 && d.NumGraphic>0))
+	    if (ImGui::MenuItem(_("Load saved game"),NULL,false,d.NumGraphic>0))
 		open = true;
 	    if (ImGui::MenuItem(_("Save game"),NULL,false,d.partyLevel != 255 && d.NumGraphic>0))
 		save = true;
@@ -1704,7 +1704,8 @@ void post_render() {
     {
 	printf("file %s\n",file_dialog.selected_fn.c_str());    // The name of the selected file or directory in case of Select Directory dialog mode
 	printf("path %s\n",file_dialog.selected_path.c_str());  // The absolute path to the selected file
-	dungeonName = (char*)file_dialog.selected_path.c_str();
+	// strdup because this string is freed the next time the file selector is used, and if it's to load a save game, it's too bad!
+	dungeonName = strdup((char*)file_dialog.selected_path.c_str());
 	root = (char*)"";
 	skipToDungeon = true;
 	reset_game();
