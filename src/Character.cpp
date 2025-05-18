@@ -1220,7 +1220,7 @@ void DisplayBackpackItem(i32 chIdx, i32 itemNum)
 // *********************************************************
 //   TAG014de0
 int get_def(int chIdx) {
-    // Extracted from CharacterDamage with mask=4 (and there was a P4 parameter at 4 too).
+    // Extracted from DamageCharacter with mask=4 (and there was a P4 parameter at 4 too).
     // Apparently mask is the slot chosen for the hit as a power of 2, 4 means slot 2 which is the head
     // and so 8 would be slot 3 which is the chest. The 2 most chosen slots are 2 and 3, corresponding to a mask value of 4 and 8 respectively.
     // Slots values found:
@@ -3467,6 +3467,7 @@ void DescribeObject(RN object,i16 P2)
   i32 len, i, textColor;
   ui32 key, *pRecord;
   NEWDSAPARAMETERS ndp;
+  CLOTHINGDESC *clA2;
   descriptionMask = 0x0ff0;
   D4W = 0x0ff0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3488,10 +3489,6 @@ void DescribeObject(RN object,i16 P2)
   dbType = object.dbType();
   if (dbType == dbSCROLL)
   {
-
-
-
-   {
       ui32 recKey;
       ui32 *pRec;
       i32 recLen;
@@ -3499,69 +3496,63 @@ void DescribeObject(RN object,i16 P2)
       recKey = (EDT_SpecialLocations<<24)|ESL_VIEWINGFILTER;
       recLen = expool.Locate(recKey,&pRec);
       if (recLen > 0)
-      //Let the DSA process the parameters
+	  //Let the DSA process the parameters
       {
-        RN obj;
-        TIMER timer;
-        i32 objectDB, actuatorType;
-        DB3 * pActuator;
-        LOCATIONREL locr;
-        locr.Integer(*pRec);
-        for (obj = FindFirstObject(
-                        locr.l,
-                        locr.x,
-                        locr.y);
-            obj != RNeof;
-            obj = GetDBRecordLink(obj))
-        {
-          objectDB = obj.dbType();
-          if (objectDB == dbACTUATOR)
-          {
-            pActuator = GetRecordAddressDB3(obj);
-            actuatorType = pActuator->actuatorType();
-            if (actuatorType == 47)
-            {
-              int currentLevel;
-              DSAVARS dsaVars;
-              currentLevel = d.LoadedLevel;
-              LoadLevel(locr.l);
-              timer.timerUByte9(0);//timerFunction
-              timer.timerUByte8(0);//timerPosition
-              timer.timerUByte7((ui8)locr.y);
-              timer.timerUByte6((ui8)locr.x);
-              //timer.timerTime   = locr.l << 24;
-              timer.Time(0);
-              timer.Level((ui8)locr.l);
+	  RN obj;
+	  TIMER timer;
+	  i32 objectDB, actuatorType;
+	  DB3 * pActuator;
+	  LOCATIONREL locr;
+	  locr.Integer(*pRec);
+	  for (obj = FindFirstObject(
+		      locr.l,
+		      locr.x,
+		      locr.y);
+		  obj != RNeof;
+		  obj = GetDBRecordLink(obj))
+	  {
+	      objectDB = obj.dbType();
+	      if (objectDB == dbACTUATOR)
+	      {
+		  pActuator = GetRecordAddressDB3(obj);
+		  actuatorType = pActuator->actuatorType();
+		  if (actuatorType == 47)
+		  {
+		      int currentLevel;
+		      DSAVARS dsaVars;
+		      currentLevel = d.LoadedLevel;
+		      LoadLevel(locr.l);
+		      timer.timerUByte9(0);//timerFunction
+		      timer.timerUByte8(0);//timerPosition
+		      timer.timerUByte7((ui8)locr.y);
+		      timer.timerUByte6((ui8)locr.x);
+		      //timer.timerTime   = locr.l << 24;
+		      timer.Time(0);
+		      timer.Level((ui8)locr.l);
 
-              pDSAparameters[1] = 0; //Phrase Mask
-              pDSAparameters[2] = object.ConvertToInteger(); // Object ID
-              pDSAparameters[3] = d.SelectedCharacterOrdinal-1;
-              pDSAparameters[0] = 3;
-              ProcessDSAFilter(obj, &timer, locr, NULL, &dsaVars);
-              // *****************************
-              // The DSA can modify the phraseMask and the contents of descriptivePhrases[]
-              LoadLevel(currentLevel);
-              if (obj.checkIndirectIndex(pDSAparameters[2]))
-              {
-                obj.ConstructFromInteger(pDSAparameters[2]);
-                if (obj.dbType() == dbSCROLL)
-                {
-                  dbA2 = GetCommonAddress(obj);
-                };
-              };
-              continue;
-            };
-          };
-        };
-      };
-    };
+		      pDSAparameters[1] = 0; //Phrase Mask
+		      pDSAparameters[2] = object.ConvertToInteger(); // Object ID
+		      pDSAparameters[3] = d.SelectedCharacterOrdinal-1;
+		      pDSAparameters[0] = 3;
+		      ProcessDSAFilter(obj, &timer, locr, NULL, &dsaVars);
+		      // *****************************
+		      // The DSA can modify the phraseMask and the contents of descriptivePhrases[]
+		      LoadLevel(currentLevel);
+		      if (obj.checkIndirectIndex(pDSAparameters[2]))
+		      {
+			  obj.ConstructFromInteger(pDSAparameters[2]);
+			  if (obj.dbType() == dbSCROLL)
+			  {
+			      dbA2 = GetCommonAddress(obj);
+			  };
+		      };
+		      continue;
+		  }
+	      }
+	  }
+      }
 
-
-
-
-
-
-    DisplayScroll(dbA2->CastToDB7());
+      DisplayScroll(dbA2->CastToDB7());
   }
   else
   {
@@ -3610,25 +3601,10 @@ void DescribeObject(RN object,i16 P2)
         if (A3 == NULL)
         {
           A3 = d.ObjectNames[objNID6];
-        };
-
-
-
-
-
-
-
-
-
-
-
-        //pcA0 = &d.CH16482[dbA2->CastToDB10()->value()];
-        //A3 = descriptiveText;
+        }
       }
       else
       {
-//
-//
         if (   (dbType == dbPOTION)
             && (objNID6 != objNI_WaterFlask)
             && (objNID6 != objNI_EmptyFlask)
@@ -3686,6 +3662,14 @@ void DescribeObject(RN object,i16 P2)
           D4W <<= 3; //Cursed
           D1W = sw(DB6A0->broken());
           D4W |= D1W << 2;//broken
+	  D0W = sw(DB6A0->clothingType());
+	  ASSERT(D0W <58,"D0 > 58");
+	  clA2 = &d.ClothingDesc[D0W];
+	  char buf[40];
+	  sprintf(buf,"DEFENSE %d",clA2->uByte1());
+	  PrintItemDesc(buf);
+	  sprintf(buf,"PIERCE RES %d",clA2->uByte2());
+	  PrintItemDesc(buf);
           break;
       case dbPOTION:
           descriptionMask = 0x01;//consumable
