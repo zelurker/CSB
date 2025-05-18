@@ -158,9 +158,9 @@ i32 TAG009470(CLOTHINGDESC *P1, bool scale)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (scale)
   {
-    return ScaledMultiply(P1->uByte1(), 3, sw((P1->uByte2()&7) + 4));
+    return ScaledMultiply(P1->Defense(), 3, sw((P1->pierceResistance()&7) + 4));
   };
-  return P1->uByte1();
+  return P1->Defense();
 }
 
 
@@ -2438,7 +2438,7 @@ i16 TAG01680a(i32 chIdx,i32 possessionIndex)
     D0W = sw(DB6A2->clothingType());
     ASSERT(D0W <58,"D0 > 58");
     clA2 = &d.ClothingDesc[D0W];
-    D0W = clA2->uByte2();
+    D0W = clA2->pierceResistance();
     if ((D0W & 0x80) == 0) continue;
     D0L = DetermineThrowingDistance(chIdx, D7W);
     D1L = TAG009470(clA2, D5W!=0);
@@ -3666,9 +3666,9 @@ void DescribeObject(RN object,i16 P2)
 	  ASSERT(D0W <58,"D0 > 58");
 	  clA2 = &d.ClothingDesc[D0W];
 	  char buf[40];
-	  sprintf(buf,"DEFENSE %d",clA2->uByte1());
+	  sprintf(buf,"DEFENSE %d",clA2->Defense());
 	  PrintItemDesc(buf);
-	  sprintf(buf,"PIERCE RES %d",clA2->uByte2());
+	  sprintf(buf,"PIERCE RES %d",clA2->pierceResistance());
 	  PrintItemDesc(buf);
           break;
       case dbPOTION:

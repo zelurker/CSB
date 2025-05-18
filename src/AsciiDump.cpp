@@ -1924,8 +1924,8 @@ void DumpClothing(FILE *f)
     fprintf(f,     "%3d      %3d      0x%02x   0x%02x\n",
                i,
                d.ClothingDesc[i].Weight(),
-               d.ClothingDesc[i].uByte1(),
-               d.ClothingDesc[i].uByte2());
+               d.ClothingDesc[i].Defense(),
+               d.ClothingDesc[i].pierceResistance());
 
   };
 }

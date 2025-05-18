@@ -1707,13 +1707,13 @@ struct CLOTHINGDESC
 {
 private:
   ui8 m_weight;
-  ui8 m_uByte1;
-  ui8 m_uByte2;
+  ui8 defense;
+  ui8 pResistance;
   ui8 m_uByte3;
 public:
   ui8 Weight(void) {return m_weight;};
-  ui8 uByte1(void) {return m_uByte1;};
-  ui8 uByte2(void) {return m_uByte2;};
+  ui8 Defense(void) {return defense;};
+  ui8 pierceResistance(void) {return pResistance;};
 };
 
 #define POST_TRANSLATE_CLICK // 20230506
