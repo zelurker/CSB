@@ -376,7 +376,7 @@ void g_log(const char *, int, const char *, ...)
     die(0x3512);
 }
 
-extern bool resetWhatToDo,resetgamesetup,resetprisondoor;
+extern bool resetWhatToDo,resetgamesetup,resetprisondoor,resettag1,resettag2;
 
 void Process_SDL_MOUSEMOTION(
            bool& cursorIsShowing)
@@ -1559,7 +1559,7 @@ static void reset_game() {
     SDL_ShowCursor(SDL_ENABLE);
     cursorIsShowing = true;
     Cleanup(false);
-    resetWhatToDo=resetgamesetup=resetstartcsb=resetprisondoor=true;
+    resetWhatToDo=resetgamesetup=resetstartcsb=resetprisondoor=resettag1=resettag2=true;
     skipLogo = true;
     csbMessage.type=UIM_INITIALIZE;
     if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
@@ -1605,7 +1605,7 @@ void post_render() {
 		reset_game();
 		// _CALL0 (_4_,st_ReadEntireGame);
 	    }
-	    if (ImGui::MenuItem(_("Select dungeon.dat..."),NULL,false,d.partyLevel != 255))
+	    if (ImGui::MenuItem(_("Select dungeon.dat...")))
 		open_dungeon = true;
 	    if (ImGui::MenuItem(_("Load saved game"),NULL,false,d.partyLevel != 255 && d.NumGraphic>0))
 		open = true;

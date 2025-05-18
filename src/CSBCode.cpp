@@ -9498,14 +9498,18 @@ RESTARTABLE _OpenPrisonDoors(void) //TAG01f47a
 // *********************************************************
 //
 // *********************************************************
-bool skipToResumeGame;
+bool skipToResumeGame,resettag2;
+#define RESTARTMAP6 \
+  static i32 mystate=_0_; \
+if (resettag2) { mystate=0; resettag2=false; } \
+switch (mystate) { case _0_: goto return_0_;
 RESTARTABLE _TAG01f746(void)
 {//(void)
   static aReg A0;
   static RectPos dstPos;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   static dReg D6,D7;
-  RESTARTMAP
+  RESTARTMAP6
     RESTART(1)
     RESTART(2)
     RESTART(3)
@@ -10524,12 +10528,17 @@ void TAG020fbc(void)
 // *********************************************************
 //
 // *********************************************************
+bool resettag1;
+#define RESTARTMAP5 \
+  static i32 mystate=_0_; \
+if (resettag1) { mystate=0; resettag1=false; } \
+switch (mystate) { case _0_: goto return_0_;
 RESTARTABLE _TAG021028(void)
 { //(void)
   static dReg D0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   static i16 LOCAL_2;
-  RESTARTMAP
+  RESTARTMAP5
     //RESTART(1)
     RESTART(2)
     //RESTART(3)
