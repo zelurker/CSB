@@ -1521,7 +1521,7 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
 	int def = get_def(d.SelectedCharacterOrdinal-1);
 	char buf[50];
 	sprintf(buf,"DEF %d ",def);
-	TextToViewport(140, 112, 13, buf, false);//LOCAL_8 is text color
+	TextToViewport(140, 119, 13, buf, false);//LOCAL_8 is text color
     }
     if (charFlags & CHARFLAG_weaponAttack)
     {
@@ -2344,7 +2344,7 @@ i32 DetermineThrowingDistance(i32 chIdx,i32 hand)
        &&(objD4.dbType() == dbWEAPON))
   {
     weaponDescA2 = TAG0099d2(objD4);
-    D7W = sw(D7W + weaponDescA2->uByte2);
+    D7W = sw(D7W + weaponDescA2->damage);
     if (TimerTraceActive)
     {
       fprintf(GETFILE(TraceFile),"%d ",D7W);
@@ -3468,6 +3468,8 @@ void DescribeObject(RN object,i16 P2)
   ui32 key, *pRecord;
   NEWDSAPARAMETERS ndp;
   CLOTHINGDESC *clA2;
+  WEAPONDESC *clW;
+  char buf[40];
   descriptionMask = 0x0ff0;
   D4W = 0x0ff0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3653,6 +3655,14 @@ void DescribeObject(RN object,i16 P2)
               PrintItemDesc(TranslateLanguage("(BURNT OUT)"));
             };
           };
+	  D0W = DB5A0->weaponType();
+	  clW = &d.weapons[D0W];
+	  sprintf(buf,"DAMAGE %d",clW->damage);
+	  PrintItemDesc(buf);
+	  sprintf(buf,"DISTANCE %d",clW->distance);
+	  PrintItemDesc(buf);
+	  sprintf(buf,"SHOOT DAMAGE %d",clW->uByte1);
+	  PrintItemDesc(buf);
           break;
 
       case dbCLOTHING:
@@ -3665,7 +3675,6 @@ void DescribeObject(RN object,i16 P2)
 	  D0W = sw(DB6A0->clothingType());
 	  ASSERT(D0W <58,"D0 > 58");
 	  clA2 = &d.ClothingDesc[D0W];
-	  char buf[40];
 	  sprintf(buf,"DEFENSE %d",clA2->Defense());
 	  PrintItemDesc(buf);
 	  sprintf(buf,"PIERCE RES %d",clA2->pierceResistance());
@@ -3677,6 +3686,18 @@ void DescribeObject(RN object,i16 P2)
           D1W = sw(DB8A0->potionType());
           D4W = sw(D1W + 2);//Compute object index
           D4W = d.ObjDesc[D4W].word4;
+	  switch(DB8A0->potionType()) {
+	  case potion_MonPotionB: PrintItemDesc("STAMINA POTION"); break;
+	  case potion_EEPotion: PrintItemDesc("MANA POTION"); break;
+	  case potion_ViPotion: PrintItemDesc("HEALTH POTION"); break;
+	  case potion_KuPotion: PrintItemDesc("STRENGTH POTION"); break;
+	  case potion_RosPotion: PrintItemDesc("DEXTERITY POTION"); break;
+	  case potion_DanePotion: PrintItemDesc("WISDOM POTION"); break;
+	  case potion_NetaPotion: PrintItemDesc("VITALITY POTION"); break;
+	  case potion_AntiVenin: PrintItemDesc("CURE POISON POTION"); break;
+	  case potion_YaPotion: PrintItemDesc("SHIELD POTION"); break;
+	  case potion_VenPotion: PrintItemDesc("POISON POTION"); break;
+	  }
           break;
       case dbMISC: // Bones, for example.
           if (   (objNID6 >= objNI_Waterskin)

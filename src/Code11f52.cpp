@@ -1598,7 +1598,7 @@ i16 DetermineMagicDamage(DB14 *rec, RN object)
     if (dbType == dbWEAPON)
     {
       weaponDescA2 = TAG0099d2(object);
-      D6W = weaponDescA2->uByte3;
+      D6W = weaponDescA2->distance;
       d.Word12964 = 3;
     }
     else

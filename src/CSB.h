@@ -1359,8 +1359,8 @@ class WEAPONDESC
 public:
   ui8 weight;
   ui8 uByte1;
-  ui8 uByte2;
-  ui8 uByte3;
+  ui8 damage;
+  ui8 distance;
   i16 word4;
 };
 

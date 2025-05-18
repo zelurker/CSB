@@ -731,7 +731,7 @@ i16 ThrowByCharacter(i32 chIdx,i16 hand,i16 LeftOrRight, int disableTime,
     weaponDescA2 = TAG0099d2(objD4);
     if (weaponDescA2->uByte1 <= 12)
     {
-      D5W = weaponDescA2->uByte3;
+      D5W = weaponDescA2->distance;
       D6W = sw(D6W + D5W/4);
     };
   };
