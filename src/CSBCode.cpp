@@ -10727,10 +10727,16 @@ void playmidi(void);
 //
 // *********************************************************
 //   TAG0211a0
+bool resetprisondoor;
+#define RESTARTMAP4 \
+  static i32 mystate=_0_; \
+if (resetprisondoor) { mystate=0; resetprisondoor=false; } \
+switch (mystate) { case _0_: goto return_0_;
+
 RESTARTABLE _ShowPrisonDoor(void)
 {//(void)
   static dReg D7;
-  RESTARTMAP
+  RESTARTMAP4
     RESTART(1)
     //RESTART(2)
     //RESTART(3)
@@ -11545,6 +11551,10 @@ RESTARTABLE _AskWhatToDo(void)
   CountFloppyDrives();
   InitializeHeap();//TAG020286
   ReadGraphicsIndex(); // TAG021d9a
+  if (d.GraphicHandle < 0) {
+      mystate=_0_;
+      RETURN;
+  }
   ReadTablesFromGraphicsFile();
   if (skipLogo) {
       skipLogo = false;

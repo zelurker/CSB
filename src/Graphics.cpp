@@ -1797,6 +1797,7 @@ void openGraphicsFile(void) // TAG021d36
     d.GraphicHandle = OPEN("graphics.dat","rb");
     if (d.GraphicHandle < 0)
     {
+	return;
       UI_MessageBox("Cannot find 'graphics.dat'",NULL,MESSAGE_OK);
       UI_MessageBox(helpMessage,"Help",MESSAGE_OK);
       die(0xbad);
@@ -1951,6 +1952,9 @@ void ReadGraphicsIndex(void) // TAG021d9a
   //i32 saveD6=D6, saveD7=D7;
   D6L = 0;
   openGraphicsFile();  // Open the file
+  if (d.GraphicHandle < 0) {
+      return;
+  }
   D0L = READ(d.GraphicHandle,2,(ui8 *)&d.NumGraphic);
   if (D0L == 2)
   {

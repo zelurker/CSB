@@ -1052,6 +1052,7 @@ void DispatchCSB(CSB_UI_MESSAGE *pMsg)
 #endif
   ASSERT(numState!=0,"numState");
   EC
+      if (numState == 0) return;
   switch (stateStack[numState-1].state)
   {
   case st_StartCSB:

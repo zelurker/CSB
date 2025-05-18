@@ -376,7 +376,7 @@ void g_log(const char *, int, const char *, ...)
     die(0x3512);
 }
 
-extern bool resetWhatToDo,resetgamesetup;
+extern bool resetWhatToDo,resetgamesetup,resetprisondoor;
 
 void Process_SDL_MOUSEMOTION(
            bool& cursorIsShowing)
@@ -1559,7 +1559,7 @@ static void reset_game() {
     SDL_ShowCursor(SDL_ENABLE);
     cursorIsShowing = true;
     Cleanup(false);
-    resetWhatToDo=resetgamesetup=resetstartcsb=true;
+    resetWhatToDo=resetgamesetup=resetstartcsb=resetprisondoor=true;
     skipLogo = true;
     csbMessage.type=UIM_INITIALIZE;
     if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
@@ -1568,7 +1568,7 @@ static void reset_game() {
     }
 }
 
-static bool fb_shown,fb2_shown;
+static bool fb_shown,fb2_shown,fb3_shown;
 extern bool chaosDisplayed,skipToDungeon,skipToResumeGame; // CSBCode.cpp
 
 void post_render() {
@@ -1576,7 +1576,8 @@ void post_render() {
     drawn = 1;
     SDL_Rect r;
     static bool show_coords;
-    bool open = false,save = false;
+    bool open = false,save = false,open_dungeon = false;
+    if (!d.NumGraphic) imgui_active = true;
 
     // Start the Dear ImGui frame
     ImGui_ImplSDLRenderer2_NewFrame();
@@ -1600,19 +1601,21 @@ void post_render() {
 	{
 	    imgui_active = true;
 	    was_active = true;
-	    if (ImGui::MenuItem("Reset", NULL,false,d.partyLevel != 255)) {
+	    if (ImGui::MenuItem("Reset", NULL,false,d.partyLevel != 255 && d.NumGraphic > 0)) {
 		reset_game();
 		// _CALL0 (_4_,st_ReadEntireGame);
 	    }
-	    if (ImGui::MenuItem(_("Load saved game"),NULL,false,d.partyLevel != 255))
+	    if (ImGui::MenuItem(_("Select dungeon.dat..."),NULL,false,d.partyLevel != 255))
+		open_dungeon = true;
+	    if (ImGui::MenuItem(_("Load saved game"),NULL,false,d.partyLevel != 255 && d.NumGraphic>0))
 		open = true;
-	    if (ImGui::MenuItem(_("Save game"),NULL,false,d.partyLevel != 255))
+	    if (ImGui::MenuItem(_("Save game"),NULL,false,d.partyLevel != 255 && d.NumGraphic>0))
 		save = true;
 	    // Limited playback in front the dungeon door
-	    if (ImGui::MenuItem(_("Playback.."), NULL,false,d.partyLevel == 255)) { Process_ecode_IDC_Playback();/* Do stuff */ }
+	    if (ImGui::MenuItem(_("Playback.."), NULL,false,d.partyLevel == 255 && d.NumGraphic > 0)) { Process_ecode_IDC_Playback();/* Do stuff */ }
 	    if (ImGui::MenuItem(_("Quit"), NULL))   { cbAppDestroy(); }
 	    ImGui::EndMenu();
-	} else if (!fb_shown && !on_menubar && !fb2_shown)
+	} else if (!fb_shown && !on_menubar && !fb2_shown && !fb3_shown && d.NumGraphic)
 	    imgui_active = false;
 
 	if (ImGui::BeginMenu(_("Speed"))) {
@@ -1672,6 +1675,9 @@ void post_render() {
     if(open) {
 	fb_shown = true;
 	ImGui::OpenPopup(_("Load saved game"));
+    } else if (open_dungeon) {
+	fb3_shown = true;
+	ImGui::OpenPopup(_("Select dungeon.dat..."));
     } else if (save) {
 	fb2_shown = true;
         ImGui::OpenPopup(_("Save game"));
@@ -1693,6 +1699,18 @@ void post_render() {
 	// cancel was pressed!
 	fb_shown = false;
     }
+
+    if(file_dialog.showFileDialog(_("Select dungeon.dat..."), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), "dungeon.dat,*.dat"))
+    {
+	printf("file %s\n",file_dialog.selected_fn.c_str());    // The name of the selected file or directory in case of Select Directory dialog mode
+	printf("path %s\n",file_dialog.selected_path.c_str());  // The absolute path to the selected file
+	dungeonName = (char*)file_dialog.selected_path.c_str();
+	root = (char*)"";
+	skipToDungeon = true;
+	reset_game();
+	fb3_shown = false;
+    } else if (fb3_shown && !ImGui::IsPopupOpen(_("Select dungeon.dat...")))
+	fb3_shown = false;
 
     if(file_dialog.showFileDialog(_("Save game"), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(700, 310), "csb*"))
     {
@@ -1724,7 +1742,7 @@ void post_render() {
 	    ImGui::End();
 	}
     }
-    if (!was_active && !cursorIsShowing && !fb_shown && !imgui_active && !fb2_shown) {
+    if (!was_active && !cursorIsShowing && !fb_shown && !imgui_active && !fb2_shown && !fb3_shown) {
 	SDL_ShowCursor(SDL_DISABLE);
     }
 
