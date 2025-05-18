@@ -1735,6 +1735,7 @@ int MissileEncounterFilter(int type, LOCATIONREL locr, RN missile, RN projectile
 //
 //
 int encounterCount = 0;
+extern int nextTextTiming; // CBSCode
 // *********************************************************
 //  TAG00e35a
 i16 ProcessMissileEncounter(
@@ -2042,7 +2043,12 @@ i16 ProcessMissileEncounter(
       D1L = DeterminePoisonDamage(mt_60, d.Word12962);
       {
         MONSTER_DAMAGE_RESULT monsterDamageResult;
-	d.attackDamageToDisplay = D5W + D1W;
+	char levelText[25];
+	nextTextTiming = 8;
+	snprintf(levelText,25,"PROJECTILE DAMAGE %d\n",D5W+D1W);
+	// 15 is white like for a standard ST palette, can't believe they don't have any constant for colors!
+	QuePrintLines(15, levelText, false);
+
         monsterDamageResult = DamageMonster(
                                             DBmonA2,
                                             monsterOrdinal-1,
