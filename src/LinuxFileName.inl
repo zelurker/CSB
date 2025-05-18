@@ -129,7 +129,8 @@ FILE *FILENAME::Open(const char *name, const char *flags)
   FILE *result = NULL;
   int i;
   char path[FILENAME_MAX];
-  if (!strcmp(name,"graphics.dat") && strcmp(dungeonName,"dungeon.dat")) {
+  if ((!strcmp(name,"graphics.dat") || !strncmp(name,"hcsb",4) || !strcmp(name,"mini.dat") || !strcmp(name,"playfile.log")) &&
+	  strcmp(dungeonName,"dungeon.dat")) {
       // If we have a dungeonName then it has full path to graphics.dat too
       strcpy(path,dungeonName);
       char *s = strrchr(path,'/');
