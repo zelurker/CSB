@@ -1560,7 +1560,6 @@ static void reset_game() {
     cursorIsShowing = true;
     Cleanup(false);
     resetWhatToDo=resetgamesetup=resetstartcsb=resetprisondoor=resettag1=resettag2=true;
-    skipLogo = true;
     csbMessage.type=UIM_INITIALIZE;
     if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
     {
@@ -1602,6 +1601,7 @@ void post_render() {
 	    imgui_active = true;
 	    was_active = true;
 	    if (ImGui::MenuItem("Reset", NULL,false,d.partyLevel != 255 && d.NumGraphic > 0)) {
+		skipLogo = true;
 		reset_game();
 		// _CALL0 (_4_,st_ReadEntireGame);
 	    }
@@ -1693,6 +1693,7 @@ void post_render() {
 	opened_file = (char*)file_dialog.selected_path.c_str();
 	skipToDungeon = true;
 	skipToResumeGame = true;
+	skipLogo = true;
 	reset_game();
 	fb_shown = false;
     } else if (fb_shown && !ImGui::IsPopupOpen(_("Load saved game"))) {
@@ -1707,7 +1708,7 @@ void post_render() {
 	// strdup because this string is freed the next time the file selector is used, and if it's to load a save game, it's too bad!
 	dungeonName = strdup((char*)file_dialog.selected_path.c_str());
 	root = (char*)"";
-	skipToDungeon = true;
+	skipToDungeon = false;
 	reset_game();
 	fb3_shown = false;
     } else if (fb3_shown && !ImGui::IsPopupOpen(_("Select dungeon.dat...")))
