@@ -1517,7 +1517,7 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
       };
       charFlags |= CHARFLAG_viewportChanged;
     };
-    if (inventoryOpen) {
+    if (inventoryOpen && !d.PressingEye && !d.PotentialCharacterOrdinal && !pcA3->poisonCount) {
 	int def = get_def(d.SelectedCharacterOrdinal-1);
 	char buf[50];
 	sprintf(buf,"DEF %d ",def);
