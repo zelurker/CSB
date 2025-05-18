@@ -1763,7 +1763,7 @@ void post_render() {
 	    r.y = (WindowHeight - r.h)/2;
 	}
     }
-    if (SDL_RenderCopy(sdlRenderer,
+    if (d.NumGraphic>0 && SDL_RenderCopy(sdlRenderer,
 		sdlTexture,
 		NULL,
 		&r) < 0) {
