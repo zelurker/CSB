@@ -1552,10 +1552,12 @@ extern bool resetstartcsb;
 bool show_listing;
 extern i32 lastTime;
 extern bool skipLogo;
+static bool show_coords,open_char_info;
 
 static void reset_game() {
     verticalIntEnabled = false;
     lastTime = 0; // reset _MouseHandleEvents
+    open_char_info = false; // Prevents a freeze when reseting a game with this open
     SDL_ShowCursor(SDL_ENABLE);
     cursorIsShowing = true;
     Cleanup(false);
@@ -1577,6 +1579,7 @@ static int get_rank(int xp) {
 	rank++;
 	base*=2;
     }
+    if (rank > 15) rank = 15;
     return rank;
 }
 
@@ -1643,7 +1646,6 @@ void post_render() {
     static bool was_active;
     drawn = 1;
     SDL_Rect r;
-    static bool show_coords,open_char_info;
     bool open = false,save = false,open_dungeon = false;
     if (!d.NumGraphic) imgui_active = true;
 
