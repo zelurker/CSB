@@ -1674,6 +1674,7 @@ void SCROLLING_TEXT::Printf(i32 color, const char* text, i32 printLinesCount)
 //lines out of the queue and call PrintLines.  We will probably
 //do this in MainLoop.
 // *********************************************************
+// A few colors : 15 is white, 14 dark blue, 13 grey, 12 is dark grey, 11 is yellow!
 void QuePrintLines(i32 color, const char *text, bool translate)
 {
   if (translate)

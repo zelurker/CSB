@@ -1400,6 +1400,8 @@ i16 DeterminePoisonDamage(MONSTERTYPE monsterType, i16 P2)
 //
 // *********************************************************
 //   TAG00dea8
+extern int nextTextTiming; // CBSCode
+
 void CreateCloud(RN P1,
                  i16 size,
                  i32 objX,i32 objY,
@@ -1532,6 +1534,10 @@ void CreateCloud(RN P1,
   D1W = sw(STRandom(2*D4W + 1));
   damage = sw(damage - D1W);
   if (damage <= 0) return;
+  char levelText[25];
+  nextTextTiming = 8;
+  snprintf(levelText,25,"SPELL DAMAGE %d\n",damage);
+  QuePrintLines(11, levelText, false); // 11 is yellow
   d.MonsterDamageResult
      = (i16)DamageMonsterGroup(pDB4_4, objX, objY, damage, 1, false, pmmr);
 }
@@ -1736,7 +1742,6 @@ int MissileEncounterFilter(int type, LOCATIONREL locr, RN missile, RN projectile
 //
 //
 int encounterCount = 0;
-extern int nextTextTiming; // CBSCode
 // *********************************************************
 //  TAG00e35a
 i16 ProcessMissileEncounter(
