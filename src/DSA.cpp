@@ -1554,7 +1554,7 @@ bool ForEach(int thisObj, int srcObj, bool callback(RN thisObj, int srcObj))
     chIdx = -thisObj-1;
     for (i=0; i<30; i++)
     {
-      if (ForEach(d.CH16482[chIdx].Possession(i).ConvertToInteger(), srcObj, callback))
+      if (ForEach(d.hero[chIdx].Possession(i).ConvertToInteger(), srcObj, callback))
       {
 
         pdsaDbank->stack.pop();
@@ -1671,7 +1671,7 @@ static void EX_DEL(void)
       posIdx = (-iLocation)%100;
       if (chIdx >= d.NumCharacter) return;
       if (posIdx >= 30) return;
-      if (d.CH16482[chIdx].Possession(posIdx) == RNnul) return;
+      if (d.hero[chIdx].Possession(posIdx) == RNnul) return;
       thisObj = RemoveCharacterPossession(chIdx, posIdx);
       DrawCharacterState(chIdx);
     };
@@ -1993,7 +1993,7 @@ static void EX_ADD(void)
       posIdx = (-iLocation)%100;
       if (chIdx >= d.NumCharacter) return;
       if (posIdx > 29) return;
-      if (d.CH16482[chIdx].Possession(posIdx) != RNnul) return;
+      if (d.hero[chIdx].Possession(posIdx) != RNnul) return;
     }
     else // Must be a monster
     {
@@ -3215,16 +3215,16 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
       fingerprint = pdsaDbank->stack.pop() & 0xffff;
       for (i=0; i<d.NumCharacter; i++)
       {
-        if (d.CH16482[i].fingerPrint == fingerprint)
+        if (d.hero[i].fingerPrint == fingerprint)
         {
-          pName = d.CH16482[i].name;
+          pName = d.hero[i].name;
           break;
         };
       };
       if (i == d.NumCharacter)
       {
         CHARDESC *pChar;
-        pChar = d.CH16482[0].LocateInWings(fingerprint);
+        pChar = d.hero[0].LocateInWings(fingerprint);
         if (pChar != NULL) pName = pChar->name;
       };
       if (pName != NULL)
@@ -3345,7 +3345,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
       if (possindex > 29) possindex = 0;
       if (chindex >= 0)
       {
-        object = d.CH16482[chindex].Possession(possindex);
+        object = d.hero[chindex].Possession(possindex);
       }
       else
       {
@@ -4194,7 +4194,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         }
         else
         {
-          pc = d.CH16482 + charIdx;
+          pc = d.hero + charIdx;
         };
         result[0] = pc->facing;
         result[1] = pc->food;
@@ -4272,7 +4272,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         }
         else
         {
-          pc = d.CH16482 + charIdx;
+          pc = d.hero + charIdx;
         };
       };
       if (pc==NULL)
@@ -4323,7 +4323,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
         }
         else
         {
-          pc = d.CH16482 + charIdx;
+          pc = d.hero + charIdx;
         };
       };
       if (pc == NULL)
@@ -4369,7 +4369,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
       talents = pdsaDbank->stack.pop(); //Required talents
       for (charIdx=0, msk=1; charIdx<d.NumCharacter; charIdx++, msk<<=1)
       {
-        if ((d.CH16482[charIdx].talents & talents) == talents)
+        if ((d.hero[charIdx].talents & talents) == talents)
         {
           val |= msk;
         };
@@ -4388,7 +4388,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
       fingerPrint = pdsaDbank->stack.pop(); //Character'figerprint
       for (charIdx=0; charIdx<d.NumCharacter; charIdx++)
       {
-        if (d.CH16482[charIdx].fingerPrint == fingerPrint)
+        if (d.hero[charIdx].fingerPrint == fingerPrint)
         {
           val = charIdx;
         };
@@ -4440,7 +4440,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
       if (charIdx >= d.NumCharacter) break;
       if (charIdx < 0) break;
       if (d.PotentialCharacterOrdinal == charIdx+1) break;
-      pc = d.CH16482 + charIdx;
+      pc = d.hero + charIdx;
       n = 59;
       if (num < n) n = num;
       if (n > 100 - index) n = 100-index;
@@ -4550,7 +4550,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
       experience = pdsaDbank->stack.pop();
       skillnum   = pdsaDbank->stack.pop();
       charnum    = pdsaDbank->stack.pop();
-      if ((charnum<d.NumCharacter) && (d.CH16482[charnum].HP()>0)) 
+      if ((charnum<d.NumCharacter) && (d.hero[charnum].HP()>0)) 
       {
         AddToSkill(charnum, skillnum, experience);
       };
@@ -4806,8 +4806,8 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
       for (chidx=0; chidx<d.NumCharacter; chidx++, chMask>>=1)
       {
         if ((chMask & 1) == 0) continue;
-        if (d.CH16482[chidx].HP() <= 0) continue;
-        injuries = d.CH16482[chidx].ouches & injuryMask;
+        if (d.hero[chidx].HP() <= 0) continue;
+        injuries = d.hero[chidx].ouches & injuryMask;
         count +=   bitCounts[injuries&15]
                  + bitCounts[(injuries>>4)&15]
                  + bitCounts[(injuries>>8)&15]

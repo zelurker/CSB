@@ -71,7 +71,7 @@ void SearchCharactersForObject(CHARACTER_SEARCH_PACKET *pPkt)
        pPkt->characterIndex < d.NumCharacter; 
        pPkt->characterIndex++)
   {
-    pChar = &d.CH16482[pPkt->characterIndex];
+    pChar = &d.hero[pPkt->characterIndex];
     for (pPkt->locationOnCharacter = 0;
          pPkt->locationOnCharacter < 30;
          pPkt->locationOnCharacter++)
@@ -148,7 +148,7 @@ i32 FindCharacterSource(i32 chIdx, i32 carryLoc, RN *object, bool doit)
   DBTYPE dbType;
   if (chIdx >= d.NumCharacter) return SER_IllegalCharacterIndex;
   if (carryLoc > 29) return SER_IllegalCarryLocation;
-  *object = d.CH16482[chIdx].Possession(carryLoc);
+  *object = d.hero[chIdx].Possession(carryLoc);
   if (*object == RNnul) return SER_NoObjectAtCarryLocation;
   dbType = object->dbType();
   switch (dbType)
@@ -427,7 +427,7 @@ i32 FindCharacterDestination(i32 chIdx, i32 carryLoc, RN object, bool doit)
   };
   if (chIdx >= d.NumCharacter) return DER_IllegalCharacterIndex;
   if (carryLoc > 29) return DER_IllegalPossessionIndex;
-  if (d.CH16482[chIdx].Possession(carryLoc) != RNnul) return DER_PossessionSlotNotEmpty;
+  if (d.hero[chIdx].Possession(carryLoc) != RNnul) return DER_PossessionSlotNotEmpty;
   //objIdx = GetObjectDescIndex(object);
   locMask = d.ObjDesc[object.DescIndex()].word4;// Possible carry locations
   if ((locMask & d.CarryLocation[carryLoc]) == 0) return DER_IllegalObjectForCarryLocation;

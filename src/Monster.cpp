@@ -245,7 +245,7 @@ void StealFromCharacter(DB4 *pDB4, i32 chIdx)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 //
   w_2 = 0;
-  pcA2 = &d.CH16482[chIdx];
+  pcA2 = &d.hero[chIdx];
   D1W = sw(Quickness(pcA2));
   D7W = sw(100 - D1W);
   D5W = sw(STRandom(8));
@@ -912,7 +912,7 @@ i32 RanLiveChar(void)
   i32 i, n;
   for (i=n=0; i<d.NumCharacter; i++)
   {
-    if (d.CH16482[i].HP() > 0) ch[n++] = i;
+    if (d.hero[i].HP() > 0) ch[n++] = i;
   };
   if (n == 0) return -1;
   return ch[STRandom(n)];
@@ -1089,7 +1089,7 @@ bool MonsterAttacks(RN  monster,
   {
     attackParameters.heroToDamage = STRandom0_3();
     for (D4W = 0;
-         (D4W<4) && (d.CH16482[attackParameters.heroToDamage].HP()==0);
+         (D4W<4) && (d.hero[attackParameters.heroToDamage].HP()==0);
          attackParameters.heroToDamage = ((attackParameters.heroToDamage +1) & 3), D4W++)
          // D4W++) //For four years we didn't increment heroToDamage!
     { //look for random live character.
@@ -1240,7 +1240,7 @@ bool MonsterAttacks(RN  monster,
     else
     {
       D4W = sw(1 + MonsterDamagesCharacter(DB4A3, attackParameters.heroToDamage, attackParameters.supressPoison==1));
-      pch_4 = &d.CH16482[attackParameters.heroToDamage];
+      pch_4 = &d.hero[attackParameters.heroToDamage];
       if (D4W > pch_4->maxRecentDamage)
       {
         pch_4->maxRecentDamage = (UI8)(D4W);
@@ -4547,7 +4547,7 @@ i16 MonsterDamagesCharacter(DB4 *pDB4,i32 chIdx, bool supressPoison)
   i16         w_2;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   DB4A3 = pDB4;
-  chA2 = &d.CH16482[chIdx];
+  chA2 = &d.hero[chIdx];
   if (chIdx >= d.NumCharacter) return 0;
   if (chA2->HP() == 0) return 0;
 

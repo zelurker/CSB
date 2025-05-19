@@ -563,7 +563,7 @@ i32 DeterminePhysicalAttackDamage(
           traceID, pParam->charIdx, monsterPosIndex, P7, P8, pParam->skillNumber);
   };
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  pchA3 = &d.CH16482[pParam->charIdx];
+  pchA3 = &d.hero[pParam->charIdx];
   objMon.ConstructFromInteger(pParam->monsterUnderAttack);
   //DB4A2 = pMonster;
   if (pParam->charIdx >= d.NumCharacter)
@@ -1083,7 +1083,7 @@ i16 AttackWithPhysicalForce(
   pParam->attdep.physicalAttack.attackedMonsterOrdinal = DetermineAttackOrdinal(
                               pParam->attackX, pParam->attackY,
                               d.partyX, d.partyY,
-                              d.CH16482[pParam->charIdx].charPosition);
+                              d.hero[pParam->charIdx].charPosition);
   if (pParam->attdep.physicalAttack.attackedMonsterOrdinal==0)
   {
     if (traceID!=NULL)
@@ -1093,7 +1093,7 @@ i16 AttackWithPhysicalForce(
     PhysicalAttackFilter(pParam, pFilter, traceID);
     return 0;
   };
-  D0W = sw((d.CH16482[pParam->charIdx].charPosition + 4 - d.CH16482[pParam->charIdx].facing) & 3);
+  D0W = sw((d.hero[pParam->charIdx].charPosition + 4 - d.hero[pParam->charIdx].facing) & 3);
   D6W = 0;
   switch (D0W)
   {
@@ -1102,7 +1102,7 @@ i16 AttackWithPhysicalForce(
     // Note fallthrough
   case 3:
     D6W++;
-    D0W = sw(CharacterAtPosition((d.CH16482[pParam->charIdx].charPosition + D6W) & 3));
+    D0W = sw(CharacterAtPosition((d.hero[pParam->charIdx].charPosition + D6W) & 3));
     if (D0W != -1)
     {
       d.attackDamageToDisplay = -1; //Can't Reach
@@ -1145,7 +1145,7 @@ i16 AttackWithPhysicalForce(
     fprintf(GETFILE(TraceFile),"%sD7W=Byte19958[attackType=%d]=%d\n",
                       traceID, pParam->attackType, D7W);
   };
-  objNID0 = d.CH16482[pParam->charIdx].Possession(1).NameIndex();
+  objNID0 = d.hero[pParam->charIdx].Possession(1).NameIndex();
   vorpalOrDisrupt = false;
   if ( (objNID0==objNI_VorpalBlade) || (pParam->attackType==atk_DISRUPT) )
   {
@@ -1162,7 +1162,7 @@ i16 AttackWithPhysicalForce(
   D0L = DeterminePhysicalAttackDamage(
             pParam,
             pFilter,
-            //&d.CH16482[pParam->charIdx],
+            //&d.hero[pParam->charIdx],
             //pParam->charIdx,
             //GetRecordAddressDB4(d.MonsterUnderAttack),
             sw(pParam->attdep.physicalAttack.attackedMonsterOrdinal-1),
@@ -1308,14 +1308,14 @@ i32 AttackWithSpell(//i32   chIdx,
 {
   i32 success;
   RN objSpell;
-  SetCharToPartyFacing(&d.CH16482[pParam->charIdx]);
+  SetCharToPartyFacing(&d.hero[pParam->charIdx]);
   //ASSERT(D4L != 0xccccc); // Uninitialized value
-  if (d.CH16482[pParam->charIdx].Mana() < neededMana)
+  if (d.hero[pParam->charIdx].Mana() < neededMana)
   {
-    //range = Larger(2, (d.CH16482[chIdx].Mana() * range) / neededMana);
-    range = range * d.CH16482[pParam->charIdx].Mana() / neededMana;
+    //range = Larger(2, (d.hero[chIdx].Mana() * range) / neededMana);
+    range = range * d.hero[pParam->charIdx].Mana() / neededMana;
     if (range < 2) range = 2;
-    neededMana = d.CH16482[pParam->charIdx].Mana();
+    neededMana = d.hero[pParam->charIdx].Mana();
   };
   ASSERT(range != 0xccc,"range not defined"); //uninitialized value
   pParam->dataType = ADT_Spell;
@@ -1336,7 +1336,7 @@ i32 AttackWithSpell(//i32   chIdx,
   };
   if (pParam->attdep.spellAttack.decrementCharges != 0)
   {
-    DecrementChargesRemaining(&d.CH16482[pParam->charIdx]);
+    DecrementChargesRemaining(&d.hero[pParam->charIdx]);
   };
   return success;
 }
@@ -1676,7 +1676,7 @@ RESTARTABLE _Attack(const i32 initialChIdx, const ATTACKTYPE initialAttackType)
   {
     RETURN_i16(0);
   };
-  pChar = &d.CH16482[initialChIdx];
+  pChar = &d.hero[initialChIdx];
   // Weapon hand = 1;
   dbA2 = GetCommonAddress(pChar->Possession(1));
   if (pChar->HP() == 0) RETURN_i16(0);
@@ -1694,7 +1694,7 @@ RESTARTABLE _Attack(const i32 initialChIdx, const ATTACKTYPE initialAttackType)
   {
     fprintf(GETFILE(TraceFile),"%s attacks from %02x(%02x,%02x)"
                       " to %02x(%02x,%02x)\n",
-            d.CH16482[pParam->charIdx].name,
+            d.hero[pParam->charIdx].name,
             d.partyLevel,d.partyX,d.partyY,
             d.partyLevel,pParam->attackX, pParam->attackY);
   };

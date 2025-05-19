@@ -23,7 +23,7 @@ i32 DetermineMastery(i32 chIdx,i32 skill,const char *traceID)
   if (traceID!=NULL)
   {
     fprintf(GETFILE(TraceFile), "%sEnter DetermineMastery(hero=%s, skill=%d)\n",
-                       traceID, d.CH16482[chIdx].name, skill);
+                       traceID, d.hero[chIdx].name, skill);
   };
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (d.PartySleeping!=0)
@@ -44,7 +44,7 @@ i32 DetermineMastery(i32 chIdx,i32 skill,const char *traceID)
     fprintf(GETFILE(TraceFile),"%sflag4000 = skill&0x4000 --> %d\n",traceID,ignorePossessions);
     fprintf(GETFILE(TraceFile),"%sSkillNumber = %d\n",traceID,skill);
   };
-  pChar = &d.CH16482[chIdx];
+  pChar = &d.hero[chIdx];
   pSkill = &pChar->skills92[skill];
   experience = pSkill->experience;
   if (ignoreTemporaryAdjustments == 0)
@@ -204,11 +204,11 @@ void TenSecondUpdate(void)
   //LOCAL_2 = sw(D0W >> 2);
   random112 = (d.Time&0x40)|((d.Time&0x80)>>2)|((d.Time&0x100)>>4);
   //D7W = 0;
-  //pcA3 = &d.CH16482;
+  //pcA3 = &d.hero;
 
   for (chIdx=0; chIdx < d.NumCharacter; chIdx++)
   {
-    pcA3 = &d.CH16482[chIdx];
+    pcA3 = &d.hero[chIdx];
     if (pcA3->HP() == 0) continue;
     if (chIdx + 1 == d.PotentialCharacterOrdinal) continue;
     if (pcA3->Mana() < pcA3->MaxMana())

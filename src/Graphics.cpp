@@ -561,8 +561,8 @@ ui8 *FindMemoryBuffer(ui8 *addr, ui8* &end)
   };
   for (chIdx =0; chIdx<4; chIdx++)
   {
-    end = (ui8 *)d.CH16482[chIdx].portrait + 464;
-    if (addr == (ui8 *)d.CH16482[chIdx].portrait) return (ui8 *)d.CH16482[chIdx].portrait;
+    end = (ui8 *)d.hero[chIdx].portrait + 464;
+    if (addr == (ui8 *)d.hero[chIdx].portrait) return (ui8 *)d.hero[chIdx].portrait;
   };
   return NULL;
 }
@@ -1589,7 +1589,7 @@ void PrintWithSubstitution(const char *txt, ui32 color, bool translate)
       switch (*A3)
       {
       case 'p':
-        p_4 = d.CH16482[d.AttackingCharacterOrdinal-1].name;
+        p_4 = d.hero[d.AttackingCharacterOrdinal-1].name;
         break;
       case 'N':
         outbuf.addch(10);

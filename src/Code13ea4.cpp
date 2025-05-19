@@ -150,7 +150,7 @@ RESTARTABLE _ReIncarnate(CHARDESC *pChar)
                D7W < d.NumCharacter-1;
                D7W++)
           {
-            D0W = strcmp(d.CH16482[D7W].name, pChar->name);
+            D0W = strcmp(d.hero[D7W].name, pChar->name);
             if (D0W==0) goto tag014088;
 
           }; // for D7W

@@ -500,7 +500,7 @@ void swapCharacter(i32 i)
   i32 j;
   CHARDESC *pc;
   i16 *pp;
-  pc = &d.CH16482[i];
+  pc = &d.hero[i];
   pc->busyTimer = LE16(pc->busyTimer);
   pc->timerIndex = LE16(pc->timerIndex);
   pc->charFlags = LE16(pc->charFlags);
@@ -556,13 +556,13 @@ void recomputeLoads(void)
   i32 p, c;
   for (c=0; c<d.NumCharacter; c++)
   {
-    DEBUGLOAD(d.CH16482+c, 0, 0, RNeof);
-    d.CH16482[c].load = 0;
+    DEBUGLOAD(d.hero+c, 0, 0, RNeof);
+    d.hero[c].load = 0;
     for (p=0; p<30; p++)
     {
-      DEBUGLOAD(d.CH16482+c, GetObjectWeight(d.CH16482[c].possessions[p]), +1, d.CH16482[c].possessions[p]);
-      d.CH16482[c].load = sw(d.CH16482[c].load
-          + GetObjectWeight(d.CH16482[c].Possession(p)));
+      DEBUGLOAD(d.hero+c, GetObjectWeight(d.hero[c].possessions[p]), +1, d.hero[c].possessions[p]);
+      d.hero[c].load = sw(d.hero[c].load
+          + GetObjectWeight(d.hero[c].Possession(p)));
     };
   };
   //The item in hand gets added elsewhere.
@@ -1033,9 +1033,9 @@ RESTARTABLE _DisplayDiskMenu(void)
       D1L = GetObjectWeight(d.objectInHand);
       LOCAL_4 = D1W;
       obj_LOCAL_4 = d.objectInHand;
-      DEBUGLOAD(d.CH16482+d.HandChar, D1W, -1, d.objectInHand);
-      d.CH16482[d.HandChar].load =
-            sw(d.CH16482[d.HandChar].load - D1W);//owner of cursor
+      DEBUGLOAD(d.hero+d.HandChar, D1W, -1, d.objectInHand);
+      d.hero[d.HandChar].load =
+            sw(d.hero[d.HandChar].load - D1W);//owner of cursor
     };
     gb2.Time = d.Time;
     gb2.ranseed = d.RandomNumber;
@@ -1074,8 +1074,8 @@ RESTARTABLE _DisplayDiskMenu(void)
     //memBlocks[1].address = (pnt)d.Item16;
 //    wordGear(LOCAL_330+330-320) = 16 * d.MaxITEM16;
     //memBlocks[1].size = sw(16 * d.MaxITEM16);
-//    pntGear(LOCAL_330+330-318) = (pnt)&d.CH16482;
-    //memBlocks[2].address = (pnt)d.CH16482;
+//    pntGear(LOCAL_330+330-318) = (pnt)&d.hero;
+    //memBlocks[2].address = (pnt)d.hero;
 //    wordGear(LOCAL_330+330-314) = 3328;
     //memBlocks[2].size = 3328;
 //    pntGear(LOCAL_330+330-312) = (pnt)d.Timers;
@@ -1134,7 +1134,7 @@ RESTARTABLE _DisplayDiskMenu(void)
 //.........................................................
     swapCharacterData();
     gb1A2->CharacterChecksum = GenChecksum(
-                       (ui8 *)&d.CH16482,//
+                       (ui8 *)&d.hero,//
                        gb1A2->CharacterHash,
                        3328/2);
     swapCharacterData();
@@ -1181,7 +1181,7 @@ RESTARTABLE _DisplayDiskMenu(void)
 //.........................................................
     swapCharacterData();
     D0W = WriteScrambled(
-             (pnt)d.CH16482,
+             (pnt)d.hero,
              3328,
              gb1A2->CharacterHash,
              &LOCAL_2);
@@ -1357,9 +1357,9 @@ RESTARTABLE _DisplayDiskMenu(void)
     };
     if (d.EmptyHanded == 0)
     {
-      DEBUGLOAD(d.CH16482+d.HandChar,LOCAL_4,+1, obj_LOCAL_4);
-      d.CH16482[d.HandChar].load =
-            sw(d.CH16482[d.HandChar].load + LOCAL_4);//owner of cursor
+      DEBUGLOAD(d.hero+d.HandChar,LOCAL_4,+1, obj_LOCAL_4);
+      d.hero[d.HandChar].load =
+            sw(d.hero[d.HandChar].load + LOCAL_4);//owner of cursor
     };
     d.CanRestartFromSavegame = 1;
     goto tag01e52c;
@@ -1813,7 +1813,7 @@ tag01ed86:
     if (D0W == 0) goto tag01efee;
     swapITEM16s();
   };
-  D0W = UnscrambleStream((ui8 *)d.CH16482, // buffer
+  D0W = UnscrambleStream((ui8 *)d.hero, // buffer
                          3328,        // # bytes
                          b.gb1.CharacterHash,
                          b.gb1.CharacterChecksum);
@@ -2283,13 +2283,13 @@ void ConvertCharacters(void)
   {
     for (j=0; j<30; j++)
     {
-      if (d.CH16482[i].Possession(j) != RNnul)
+      if (d.hero[i].Possession(j) != RNnul)
       {
         RN temp;
-        temp = d.CH16482[i].Possession(j);
+        temp = d.hero[i].Possession(j);
         ConvertListOfObjects(&temp, false,
                              0,-4,0);
-        d.CH16482[i].SetPossession(j, temp, true);
+        d.hero[i].SetPossession(j, temp, true);
       };
     };
   };

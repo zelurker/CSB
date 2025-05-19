@@ -2641,7 +2641,7 @@ void EnableCharacterAction(i32 chIdx)
   CHARDESC *pChar;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (chIdx > d.NumCharacter) die(0x65cc);
-  pChar = &d.CH16482[chIdx];
+  pChar = &d.hero[chIdx];
   pChar->busyTimer = -1;
   pChar->charFlags &= ~CHARFLAG_attackDisable;
   if (pChar->attackType != -1) //Attack type in progress
@@ -2687,7 +2687,7 @@ void TAG011366(i16 chIdx)
 { // Called when timer function 12 event occurs.
   CHARDESC *pcA3;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   pcA3->timerIndex = -1;
   if (pcA3->HP() == 0) return;
   if (chIdx+1 == d.SelectedCharacterOrdinal)
@@ -2752,11 +2752,11 @@ void ProcessTT_ViAltar(TIMER *pTimer)
           // If this character is in the party we proceed as before
           for (chIndex=0; chIndex<d.NumCharacter; chIndex++)
           {
-            if (d.CH16482[chIndex].fingerPrint == (bonesRecord[0] & 0xffff)) break;
+            if (d.hero[chIndex].fingerPrint == (bonesRecord[0] & 0xffff)) break;
           };
           if (chIndex < d.NumCharacter)
           {
-            if (d.CH16482[chIndex].HP() != 0) break; // ignore if character not dead!
+            if (d.hero[chIndex].HP() != 0) break; // ignore if character not dead!
             DB10A2 = GetRecordAddressDB10(objD4);
             RemoveObjectFromRoom(objD4, bonesX, bonesY, NULL);
             DeleteDBEntry(DB10A2);
@@ -2788,7 +2788,7 @@ void ProcessTT_ViAltar(TIMER *pTimer)
           chIndex = DB10A2->value();
           if (chIndex < d.NumCharacter)
           {
-            if (d.CH16482[chIndex].HP() != 0) break; // ignore if character not dead!
+            if (d.hero[chIndex].HP() != 0) break; // ignore if character not dead!
             RemoveObjectFromRoom(objD4, bonesX, bonesY, NULL);
             DeleteDBEntry(DB10A2);
             //pTimer->timerTime++;

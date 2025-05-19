@@ -223,7 +223,7 @@ void SkillIncreaser(i32 skillNumber, i32 adjustment, i32 P3)
   adjustment = sw(adjustment / d.NumCharacter) ;
   for (D7W=0; D7W<d.NumCharacter; D7W++)
   {
-    if (d.CH16482[D7W].HP() != 0)
+    if (d.hero[D7W].HP() != 0)
     {
       AdjustSkills(D7W, skillNumber, adjustment, ASW_SkillIncreaser2);
     };
@@ -638,7 +638,7 @@ RN RemoveObjectFromHand(void)
   STShowCursor(HC44);
   if (d.HandChar == -1) return (objD7); //owner of cursor
   D1L = GetObjectWeight(objD7);
-  pcA0 = &d.CH16482[d.HandChar];//owner of cursor
+  pcA0 = &d.hero[d.HandChar];//owner of cursor
   DEBUGLOAD(pcA0, D1W, -1, objD7);
   pcA0->load = sw(pcA0->load - D1W);
   ASSERT(pcA0->load < MAXLOAD,"maxload");
@@ -695,7 +695,7 @@ i16 ThrowByCharacter(i32 chIdx,i16 hand,i16 LeftOrRight, int disableTime,
       if (cfp.type == CURSORFILTER_Cancel) return 0;
       objD4 = RemoveObjectFromHand();
     };
-    pcA3 = &d.CH16482[chIdx];
+    pcA3 = &d.hero[chIdx];
     origObjInWeaponHand = pcA3->Possession(1); // Save contents of fighting hand
     pcA3->SetPossession(1, objD4,false); //put obect into fighting hand.
     hand = 1;
@@ -708,7 +708,7 @@ i16 ThrowByCharacter(i32 chIdx,i16 hand,i16 LeftOrRight, int disableTime,
   }
   else
   {
-    if (d.CH16482[chIdx].Possession(hand) != RNnul)
+    if (d.hero[chIdx].Possession(hand) != RNnul)
     {
       if (record)
       {
@@ -937,7 +937,7 @@ void DropObject(i16 pos)
           chIdx = DB10A3->value();
           if (chIdx < d.NumCharacter)
           {
-            if (d.CH16482[chIdx].HP() == 0)
+            if (d.hero[chIdx].HP() == 0)
             {
               D0L = d.Time;
               D1L = d.partyLevel;
@@ -1125,7 +1125,7 @@ void HandleClickInViewport(i32 clickX, i32 clickY)
         {
 	    if (d.FacingWaterFountain) {
 		CHARDESC *pc;
-		pc = &d.CH16482[d.HandChar]; // selected character
+		pc = &d.hero[d.HandChar]; // selected character
 		pc->water = sw(LIMIT(-1023,pc->water+1600,2048));
 		QueueSound(8, d.partyX, d.partyY, 0); // gulp sound for the fountain
 		return;
@@ -1226,7 +1226,7 @@ void HandleClickInViewport(i32 clickX, i32 clickY)
           DrawEightHands();
           D1W = sw(GetObjectWeight(LOCAL_2));
           D1W = sw(D1W - LOCAL_6);
-          pcA0 = &d.CH16482[d.HandChar];//owner of cursor
+          pcA0 = &d.hero[d.HandChar];//owner of cursor
           DEBUGLOAD(pcA0, LOCAL_6, -1, obj_LOCAL_6);
           DEBUGLOAD(pcA0, GetObjectWeight(LOCAL_2), +1, LOCAL_2);
           pcA0->load = sw(pcA0->load + D1W);

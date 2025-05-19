@@ -3097,7 +3097,7 @@ i16 MoveObject(const RN        object,
               if (d.SupressPitDamage != 0)
               {
                 D5W = 0;
-                pcA3 = d.CH16482;
+                pcA3 = d.hero;
                 while (D5UW < d.NumCharacter)
                 {
                   if (pcA3->HP() != 0)
@@ -3734,7 +3734,7 @@ bool DoesPartyHave(OBJ_NAME_INDEX actuatorValue)
   objNID7 = actuatorValue;
   w_4 = 0;
 
-  for (D6W=0, chA3 = &d.CH16482[0];
+  for (D6W=0, chA3 = &d.hero[0];
        D6W < d.NumCharacter;
        D6W++, chA3++)
   {
@@ -4151,7 +4151,7 @@ i32 CharacterAtPosition(i32 pos)
 //  dReg D6, D7;
 //  CHARDESC *pcA3;
 //  D7W = sw(P1);
-//  for (D6W=0, pcA3=d.CH16482; D6W<d.NumCharacter; D6W++, pcA3++)
+//  for (D6W=0, pcA3=d.hero; D6W<d.NumCharacter; D6W++, pcA3++)
 //  {
 //    if ((D7W==pcA3->position)&&(pcA3->HP()))
 //    {
@@ -4162,9 +4162,9 @@ i32 CharacterAtPosition(i32 pos)
   i32 i;
   for (i=0; i<d.NumCharacter; i++)
   {
-    if (d.CH16482[i].charPosition == pos)
+    if (d.hero[i].charPosition == pos)
     {
-      if (d.CH16482[i].HP() != 0) return i;
+      if (d.hero[i].HP() != 0) return i;
       //return -1;
     };
   };
@@ -4188,7 +4188,7 @@ void SetPartyFacing(i32 newDirection)
   if (deltaFacing != 0) // If direction changed.
   {
     deltaFacing += 4;
-    pcA0 = &d.CH16482[0];
+    pcA0 = &d.hero[0];
     D0W = d.NumCharacter;
     while (D0W > 0)
     {
@@ -4295,7 +4295,7 @@ tag0155a8:
     D4W = sw(D7W >> 1);
     if (D6W == D4W+1) continue;
     D0W = (I16)(D7W&1); // One hand, then the other.
-    pcA0 = &d.CH16482[D4W];
+    pcA0 = &d.hero[D4W];
     D0W = DrawModifiedObjectAtLocation(D7W, pcA0->Possession(D0W));
     if (D0W == 0) continue;
     if (D7W & 1) continue; // if (weapon hand)
@@ -4305,7 +4305,7 @@ tag0155a8:
   };
   if (D6W != 0) // Selected Character Ordinal
   {
-    pcA2 = &d.CH16482[D6W-1];
+    pcA2 = &d.hero[D6W-1];
 //    for  (D7W=0, rnA3=&pcA2->possessions[0], modifiedD5=false;
     for  (D7W=0, modifiedD5=false;
           D7W < 30;
@@ -4520,7 +4520,7 @@ void AdjustStamina(i32 chIdx, i32 decrement)
   CHARDESC *pcA3;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (chIdx == -1) return;
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   newStamina = pcA3->Stamina() - decrement;
   //pcA3->Stamina(pcA3->Stamina() - decrement);
   //D7W = pcA3->stamina;

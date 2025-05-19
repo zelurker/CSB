@@ -137,7 +137,7 @@ void MarkBackpackLocations()
   DB9 *pDB9;
   for (ch=0; ch <d.NumCharacter; ch++)
   {
-    pch = d.CH16482+ch;
+    pch = d.hero+ch;
     for (poss=0; poss<30; poss++)
     {
       if (pch->Possession(poss) != RNnul)
@@ -2497,7 +2497,7 @@ void ItemsRemaining(i32 mode)
   {
     for (i=0; i<30; i++)
     {
-      possession = d.CH16482[chIdx].Possession(i);
+      possession = d.hero[chIdx].Possession(i);
       if (possession == RNnul) continue;
       if (possession.dbType()==dbMISC)
       {

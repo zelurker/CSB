@@ -7240,7 +7240,7 @@ void DrawFoodWaterBar(i16 value,i16 y,i16 color)
 void DisplayFoodWater(void)
 {
   CHARDESC *pcA3;
-  pcA3 = &d.CH16482[d.SelectedCharacterOrdinal-1];
+  pcA3 = &d.hero[d.SelectedCharacterOrdinal-1];
   if (TimerTraceActive)
   {
     fprintf(GETFILE(TraceFile),"%06x DisplayFoodWater calling Repack Chest\n",d.Time);

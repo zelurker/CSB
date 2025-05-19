@@ -431,7 +431,7 @@ bool FingerprintExists(ui32 fingerprint)
   CHARDESC character;
   for (i=0; i<d.NumCharacter; i++)
   {
-    if (d.CH16482[i].fingerPrint == fingerprint) return true;
+    if (d.hero[i].fingerPrint == fingerprint) return true;
   };
   if (character.GetFromWings((ui16)fingerprint,true)) return true;
   return false;
@@ -466,7 +466,7 @@ void AddCharacter(i16 charID)
   if (d.EmptyHanded == 0) return; //cursor hand
   if (d.NumCharacter == 4) return;
   LOCAL_2 = d.NumCharacter;
-  pcA3 = &d.CH16482[d.NumCharacter];
+  pcA3 = &d.hero[d.NumCharacter];
   ClearMemory((ui8 *)pcA3, 800);
   d.UseByteCoordinates = 1;
 
@@ -795,7 +795,7 @@ void BringCharacterToLife(ui16 chIdx)
   dReg D0, D7;
   CHARDESC *pcA3;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   D0L = CharacterAtPosition(pcA3->charPosition);
   if (D0L != -1)
   { //Find a position to put the character.
@@ -904,7 +904,7 @@ void DrawLifeBars(i32 chIdx)
   i16 *pwA3;
   CHARDESC *pcA3;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   D6W = 0;
   if (pcA3->HP() > 0)
   {
@@ -1105,7 +1105,7 @@ void DisplayBackpackItem(i32 chIdx, i32 itemNum)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   D7W = sw(itemNum);
   LOCAL_20 = -1;
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   // Is it to be drawn in viewport?
   D5W = sw((d.SelectedCharacterOrdinal == (chIdx+1)) ? 1 : 0);
   if (D5W == 0)
@@ -1241,7 +1241,7 @@ int get_def(int chIdx) {
       D1UW = 0x8000;
       D5W = sw(D5W + TAG01680a(chIdx, D0W | D1W));
     }
-    D5W += d.CH16482[chIdx].shieldStrength;
+    D5W += d.hero[chIdx].shieldStrength;
     return D5W;
 }
 void DrawCharacterState(i32 chIdx) // Character box at top of screen                                //
@@ -1264,7 +1264,7 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
   static i8  LOCAL_1;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   LOCAL_4 = sw(69 * chIdx);
-  pcA3 = d.CH16482 + chIdx;
+  pcA3 = d.hero + chIdx;
   charFlags = pcA3->charFlags;
   if ((charFlags & CHARFLAG_graphicFlags) == 0) return;
   inventoryOpen = ((chIdx+1) == d.SelectedCharacterOrdinal);
@@ -1554,7 +1554,7 @@ i16 TAG0153c2(i32 chIdx,
   WEAPONDESC *weaponDescA2;
   RN  objD7;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   objD7 = pcA3->Possession(possessionIndex1);
   if (objD7 == RNnul) return 0;
   if (objD7.dbType() != dbWEAPON) return 0;
@@ -1818,9 +1818,9 @@ void SetCursed(RN obj, bool curse)
   {
     for (loc=0; loc<30; loc++)
     {
-      if (obj == d.CH16482[ch].Possession(loc))
+      if (obj == d.hero[ch].Possession(loc))
       {
-        pCH = &d.CH16482[ch];
+        pCH = &d.hero[ch];
         break;
       };
     };
@@ -1855,7 +1855,7 @@ RN RemoveCharacterPossession(i32 chIdx,i32 possessionIndex)
   CHARDESC *pcA3;
   i16 LOCAL_2;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   if (possessionIndex >= 30)
   {
     objRemoved = d.rnChestContents[possessionIndex-30];
@@ -1969,7 +1969,7 @@ void AddCharacterPossession(i32 chIdx,RN object,i32 place)
   bool bool_2;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (object == RNnul) return;
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   if (place >= 30) // In a chest?
   {
     d.rnChestContents[place-30] = object;
@@ -2180,7 +2180,7 @@ i16 TAG016426(CHARDESC *pChar,i16 attrNum,i16 P3)
   {
     fprintf(GETFILE(TraceFile),
             "Tag016426(chIdx=%d,attrNum=%d,P3=%d) = %d\n",
-            (i32)(pChar-d.CH16482),attrNum,P3,D0W);
+            (i32)(pChar-d.hero),attrNum,P3,D0W);
   };
   return D0W;
 }
@@ -2301,7 +2301,7 @@ i32 DetermineThrowingDistance(i32 chIdx,i32 hand)
   i16 w_12;
   i16 w_2;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   D3W = pcA3->Attributes[Strength].Current();
   if (TimerTraceActive)
   {
@@ -2423,7 +2423,7 @@ i16 TAG01680a(i32 chIdx,i32 possessionIndex)
   CHARDESC *pcA3;
   DB6      *DB6A2;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   D5W = (UI16)(possessionIndex & 0x8000);
   possessionIndex &= 0x7fff;
   D6W = 0;
@@ -2529,7 +2529,7 @@ void DropAllPossessions(i32 chIdx)
   dReg D4, D6;
   RN objD5;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  D6W = d.CH16482[chIdx].charPosition;
+  D6W = d.hero[chIdx].charPosition;
   for (D4W=0; D4W<30; D4W++)
   {
     objD5 = RemoveCharacterPossession(chIdx, d.DropOrder[D4W]);
@@ -2619,7 +2619,7 @@ void KillCharacter(i32 chIdx)
 
 
 
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   pcA3->HP(0);
   pcA3->charFlags |= CHARFLAG_portraitChanged;
   if (d.SelectedCharacterOrdinal == chIdx+1)
@@ -2694,8 +2694,8 @@ void KillCharacter(i32 chIdx)
                 160);
   DrawCharacterState(chIdx);
   //D5W = 0;
-  //pcA3 = &d.CH16482[0];
-  for (D5W = 0, pcA3 = &d.CH16482[0];
+  //pcA3 = &d.hero[0];
+  for (D5W = 0, pcA3 = &d.hero[0];
       D5W<d.NumCharacter;
       D5W++, pcA3++)
   { // Find a living party member.
@@ -2743,7 +2743,7 @@ i32 DamageCharacter(i32 chIdx,i32 damage,i16 mask,i16 P4)
   if (d.Word11694 != 0) return d.Word11694;
   if (D7W <= 0) return 0;
 
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   if (TimerTraceActive)
   {
     fprintf(GETFILE(TraceFile),"Damage character %d.  HP=%d, Basic damage = %d\n",
@@ -2899,7 +2899,7 @@ i32 DamageCharacter(i32 chIdx,i32 damage,i16 mask,i16 P4)
 
               pDSAparameters[0] = 7;
               pDSAparameters[1] = chIdx;
-              pDSAparameters[2] = d.CH16482[chIdx].fingerPrint;
+              pDSAparameters[2] = d.hero[chIdx].fingerPrint;
               pDSAparameters[3] = damage;
               pDSAparameters[4] = D7W;
               pDSAparameters[5] = mask;
@@ -2990,7 +2990,7 @@ void CHARDESC::SetPossession(int index, RN newObject, bool processFilter)
                 timerA.Level((ui8)equipFilterLocr.l);
 
                 pDSAparameters[0] = 4;
-                pDSAparameters[1] = (i32)(this-d.CH16482);
+                pDSAparameters[1] = (i32)(this-d.hero);
                 pDSAparameters[2] = index;
                 pDSAparameters[4] = 0;
 
@@ -3051,7 +3051,7 @@ void CurePoison(i32 chIdx)
 //
 //
   };
-  d.CH16482[chIdx].poisonCount = 0;
+  d.hero[chIdx].poisonCount = 0;
 }
 
 // *********************************************************
@@ -3897,7 +3897,7 @@ void TAG0189d4(void)
   else
   {
     //D7L = d.Word16614 * 800;
-    pChar = &d.CH16482[d.SelectedCharacterOrdinal-1];
+    pChar = &d.hero[d.SelectedCharacterOrdinal-1];
     objD7 = pChar->Possession(1); // item in Weapon hand
     dbA3 = GetCommonAddress(objD7);
     d.DisplayResurrectChestOrScroll = 0;
@@ -4131,7 +4131,7 @@ RESTARTABLE _FeedCharacter()
   obj_w_20 = objD7;
   chIdx = sw(d.SelectedCharacterOrdinal-1);
   fp.characterIndex = chIdx;
-  pcA2 = &d.CH16482[chIdx];
+  pcA2 = &d.hero[chIdx];
   dbA3 = GetCommonAddress(objD7);
   if ((objNID6 >= objNI_Waterskin) && (objNID6 <= objNI_Water))
   {
@@ -4496,7 +4496,7 @@ RESTARTABLE _FeedCharacter()
       DrawEightHands();
       DEBUGLOAD(pcA0, w_20, -1, obj_w_20);
       D1L = GetObjectWeight(objD7) - w_20; // New weight - old
-      pcA0 = &d.CH16482[d.HandChar];
+      pcA0 = &d.hero[d.HandChar];
       DEBUGLOAD(pcA0, GetObjectWeight(objD7), +1, objD7);
       pcA0->load = sw(pcA0->load + D1W);
       ASSERT(pcA0->load < MAXLOAD,"load > maxload");
@@ -4621,7 +4621,7 @@ void TAG019036(void)
 
 
   D4W = sw(d.SelectedCharacterOrdinal-1);
-  pcA3 = &d.CH16482[D4W];
+  pcA3 = &d.hero[D4W];
   BLT2Viewport(GetBasicGraphicAddress(20), &d.wRectPos926, 72, 8);
   D6W = 58;
   for (D7W=0; D7W<=3; D7W++)
@@ -4683,7 +4683,7 @@ void CharacterPortraitToStatusBox(i32 chIdx)
   LOCAL_8.w.y2 = 28;
   LOCAL_8.w.x1 = sw(chIdx*69+7);
   LOCAL_8.w.x2 = sw(LOCAL_8.w.x1+31);
-  BLT2Screen((ui8 *)d.CH16482[chIdx].portrait,
+  BLT2Screen((ui8 *)d.hero[chIdx].portrait,
             &LOCAL_8,
             16,
             -1);
@@ -4784,7 +4784,7 @@ bool ItemHasChargesLeft(void)
   RN      objD7;
   DBCOMMON *dbA3;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  pcA0 = &d.CH16482[d.AttackingCharacterOrdinal-1];
+  pcA0 = &d.hero[d.AttackingCharacterOrdinal-1];
   objD7 = pcA0->Possession(1);
   dbA3 = GetCommonAddress(objD7);
   switch (objD7.dbType())
@@ -4864,7 +4864,7 @@ void DrawAttackButton(i32 chIdx)
   LOCAL_8.w.y1 = 86;
   LOCAL_8.w.y2 = 120;
   d.UseByteCoordinates = 0;
-  pcA2 = &d.CH16482[chIdx];
+  pcA2 = &d.hero[chIdx];
   if (pcA2->HP() == 0)
   {
     FillRectangle(d.LogicalScreenBase,
@@ -4932,7 +4932,7 @@ void TAG01b1c0(void)
   // did not disappear from the attacker's hand when the attack
   // was 'passed' or had zero delay.
   d.AttackingCharacterOrdinal--;
-  pChar = &d.CH16482[d.AttackingCharacterOrdinal];
+  pChar = &d.hero[d.AttackingCharacterOrdinal];
   pChar->charFlags |= CHARFLAG_weaponAttack;
   DrawCharacterState(d.AttackingCharacterOrdinal);
   d.AttackingCharacterOrdinal = 0;
@@ -4954,7 +4954,7 @@ void PrepareAttack(i16 chIdx)
   ui8 *pLegalAttacks;
   CHARDESC *pcA3;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   if (((pcA3->charFlags & CHARFLAG_attackDisable) != 0) || (pcA3->HP()==0)) return;
   objWeapon = pcA3->Possession(1);
   if (objWeapon == RNnul) // If no weapon wielded
@@ -4999,7 +4999,7 @@ RESTARTABLE _ExecuteAttack(const i32 P1)
   {
     RETURN_i16(0);
   };
-  pChar = &d.CH16482[d.AttackingCharacterOrdinal-1];
+  pChar = &d.hero[d.AttackingCharacterOrdinal-1];
   if (P1 == -1)
   {
     successfulAttack = -1;
@@ -5031,12 +5031,12 @@ void DrawSpellControls(i16 chIdx)
   i16 LOCAL_4;
   i16 LOCAL_2;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   d.UseByteCoordinates = 0;
-  LOCAL_2 = d.CH16482[0].HP();
-  LOCAL_4 = d.CH16482[1].HP();
-  LOCAL_6 = d.CH16482[2].HP();
-  LOCAL_8 = d.CH16482[3].HP();
+  LOCAL_2 = d.hero[0].HP();
+  LOCAL_4 = d.hero[1].HP();
+  LOCAL_6 = d.hero[2].HP();
+  LOCAL_8 = d.hero[3].HP();
   STHideCursor(HC7);
   FillRectangle(d.LogicalScreenBase,
                 (RectPos *)d.Word20242,
@@ -5283,9 +5283,9 @@ bool CHARDESC::CopyCharacter(ui32 fingerprint)
   i32 i;
   for (i=0; i<d.NumCharacter; i++)
   {
-    if (d.CH16482[i].fingerPrint == (ui16)fingerprint)
+    if (d.hero[i].fingerPrint == (ui16)fingerprint)
     {
-      memcpy(this, &d.CH16482[i], sizeof(CHARDESC));
+      memcpy(this, &d.hero[i], sizeof(CHARDESC));
       return true;
     };
   };
@@ -5305,7 +5305,7 @@ void RemoveCharacter(int chIdx)
 
   CHARDESC *pChar;
   int pos;
-  pChar = &d.CH16482[chIdx];
+  pChar = &d.hero[chIdx];
   if (d.SelectedCharacterOrdinal == chIdx+1)
   {
     if (d.PressingEye)
@@ -5354,13 +5354,13 @@ void RemoveCharacter(int chIdx)
                 0,
                 160);
   //D5W = 0;
-  //pcA3 = &d.CH16482[0];
+  //pcA3 = &d.hero[0];
   {
     int livingChar;
     for (livingChar = 0; livingChar<d.NumCharacter; livingChar++)
     { // Find a living party member.
       if (   (chIdx != livingChar)
-          && (d.CH16482[livingChar].HP() != 0) )break;
+          && (d.hero[livingChar].HP() != 0) )break;
     };
 
     if (chIdx == d.HandChar) // owner of cursor
@@ -5384,8 +5384,8 @@ void RedrawEverything(void)
   i32 i;
   for (i=0; i<d.NumCharacter; i++)
   {
-    d.CH16482[i].charFlags |= CHARFLAG_positionChanged;
-    d.CH16482[i].charFlags |= CHARFLAG_weaponAttack;
+    d.hero[i].charFlags |= CHARFLAG_positionChanged;
+    d.hero[i].charFlags |= CHARFLAG_weaponAttack;
   };
   MarkAllPortraitsChanged();
 }
@@ -5397,19 +5397,19 @@ ui32 CharacterDelete(int chIdx)
 
 // No character will replace us so we must
 // shift things left.
-  if (d.CH16482[chIdx].timerIndex != -1)
+  if (d.hero[chIdx].timerIndex != -1)
   {
     // We will simply process the timer as if it had expired.
-    gameTimers.DeleteTimer((HTIMER)d.CH16482[chIdx].timerIndex, "Delete");
+    gameTimers.DeleteTimer((HTIMER)d.hero[chIdx].timerIndex, "Delete");
     TAG011366((i16)chIdx);
   };
   RemoveCharacter(chIdx);
-  d.CH16482[chIdx].SaveToWings();
+  d.hero[chIdx].SaveToWings();
   for (i=chIdx; i<d.NumCharacter-1; i++)
   {
-    memcpy(&d.CH16482[i], &d.CH16482[i+1], sizeof(CHARDESC));
+    memcpy(&d.hero[i], &d.hero[i+1], sizeof(CHARDESC));
     // Adjust any timer entries pointing to this character.
-    if (d.CH16482[i].timerIndex != -1)
+    if (d.hero[i].timerIndex != -1)
     {
       die(0x452a,"Need Playfile to fix");
     };
@@ -5427,7 +5427,7 @@ ui32 CharacterDelete(int chIdx)
     SelectMagicCaster((i16)(d.MagicCaster-1));
   };
   d.NumCharacter--;
-  d.CH16482[d.NumCharacter].HP(0);
+  d.hero[d.NumCharacter].HP(0);
   rectPos.w.y1 = 0;
   rectPos.w.y2 = 28;
   rectPos.w.x1 = sw(69 * d.NumCharacter);
@@ -5459,19 +5459,19 @@ ui32 CharacterDelete(int chIdx)
 ui32 CharacterAdd(int fingerPrint)
 {
   int i, pos;
-  d.CH16482[d.NumCharacter].GetFromWings((ui16)(fingerPrint&0xffff), false);
+  d.hero[d.NumCharacter].GetFromWings((ui16)(fingerPrint&0xffff), false);
   for (pos=0; pos<4; pos++)
   {
     for (i=0; i<d.NumCharacter; i++)
     {
       // Find a nice position for this new party member
-      if (d.CH16482[i].charPosition == pos) break;
+      if (d.hero[i].charPosition == pos) break;
     };
-    if (d.CH16482[i].charPosition == pos) continue;
-    d.CH16482[d.NumCharacter].charPosition = (ui8)pos;
+    if (d.hero[i].charPosition == pos) continue;
+    d.hero[d.NumCharacter].charPosition = (ui8)pos;
     break;
   };
-  d.CH16482[d.NumCharacter].facing = 0;
+  d.hero[d.NumCharacter].facing = 0;
   d.NumCharacter++;
   RedrawEverything();
   return 0;
@@ -5481,30 +5481,30 @@ ui32 CharacterSwap(int index, int fingerPrint)
 {
   int i,pos;
   ui8 facing;
-  if (d.CH16482[index].timerIndex != -1)
+  if (d.hero[index].timerIndex != -1)
   {
     // We will simply process the timer as if it had expired.
-    gameTimers.DeleteTimer((HTIMER)d.CH16482[index].timerIndex, "Delete");
+    gameTimers.DeleteTimer((HTIMER)d.hero[index].timerIndex, "Delete");
     TAG011366((i16)index);
   };
-  facing = d.CH16482[index].facing;
+  facing = d.hero[index].facing;
   RemoveCharacter(index);
-  d.CH16482[index].SaveToWings();
+  d.hero[index].SaveToWings();
 
-  d.CH16482[index].GetFromWings((ui16)(fingerPrint&0xffff), false);
-  d.CH16482[index].charPosition = 5; //An impossible
+  d.hero[index].GetFromWings((ui16)(fingerPrint&0xffff), false);
+  d.hero[index].charPosition = 5; //An impossible
   for (pos=0; pos<4; pos++)
   { // See if we can find an empty position
     for (i=0; i<d.NumCharacter; i++)
     {
       // Find a nice position for this new party member
-      if (d.CH16482[i].charPosition == pos) break;
+      if (d.hero[i].charPosition == pos) break;
     };
-    if (d.CH16482[i].charPosition == pos) continue;
-    d.CH16482[index].charPosition = (ui8)pos;
+    if (d.hero[i].charPosition == pos) continue;
+    d.hero[index].charPosition = (ui8)pos;
     break;
   };
-  d.CH16482[index].facing = facing;
+  d.hero[index].facing = facing;
   RedrawEverything();
 
   return 0;
@@ -5554,7 +5554,7 @@ ui32 SwapCharacter(i32 index, i32 fingerPrint)
   newIndex = d.NumCharacter; // assume no delete
   if (index > 0)
   {
-    d.CH16482[index].SaveToWings();
+    d.hero[index].SaveToWings();
     newIndex = index;
     if (fingerPrint < 0)
     {
@@ -5562,7 +5562,7 @@ ui32 SwapCharacter(i32 index, i32 fingerPrint)
   };
   if (fingerPrint>0)
   {
-    d.CH16482[newIndex].SaveToWings();
+    d.hero[newIndex].SaveToWings();
     if (index >= 0) d.NumCharacter++;
   };
   return 1;

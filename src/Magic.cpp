@@ -98,83 +98,83 @@ void LevelUp(i32 chIdx, i32 basicSkill) // Fighter, ninja, etc.
   {
     maxVitalityIncrement &= newMastery;
   };
-  d.CH16482[chIdx].Attributes[Vitality].IncrMaximum(maxVitalityIncrement);
+  d.hero[chIdx].Attributes[Vitality].IncrMaximum(maxVitalityIncrement);
   antiFireIncrement = STRandomBool() & (~newMastery);
-  d.CH16482[chIdx].Attributes[AntiFire].IncrMaximum(antiFireIncrement);
+  d.hero[chIdx].Attributes[AntiFire].IncrMaximum(antiFireIncrement);
   switch (basicSkill)
   {
   case 0:  // fighter
     //D6W /= 16;
-    maxStaminaIncrement = d.CH16482[chIdx].MaxStamina() / 16;
+    maxStaminaIncrement = d.hero[chIdx].MaxStamina() / 16;
     newMastery *= 3;
-    d.CH16482[chIdx].Attributes[Strength].IncrMaximum(majorAttributeMaxIncrement);
-    d.CH16482[chIdx].Attributes[Dexterity].IncrMaximum(minorAttributeMaxIncrement);
+    d.hero[chIdx].Attributes[Strength].IncrMaximum(majorAttributeMaxIncrement);
+    d.hero[chIdx].Attributes[Dexterity].IncrMaximum(minorAttributeMaxIncrement);
     break;
 
   case 1: // ninja
     //D6W = sw(D6W / 21);
-    maxStaminaIncrement = d.CH16482[chIdx].MaxStamina() / 21;
+    maxStaminaIncrement = d.hero[chIdx].MaxStamina() / 21;
     newMastery = sw(2 * newMastery);
-    d.CH16482[chIdx].Attributes[Strength].IncrMaximum(minorAttributeMaxIncrement) ;
-    d.CH16482[chIdx].Attributes[Dexterity].IncrMaximum(majorAttributeMaxIncrement);
+    d.hero[chIdx].Attributes[Strength].IncrMaximum(minorAttributeMaxIncrement) ;
+    d.hero[chIdx].Attributes[Dexterity].IncrMaximum(majorAttributeMaxIncrement);
     break;
   case 2: // priest
     //D6W = sw(D6W / 25);
-    maxStaminaIncrement = d.CH16482[chIdx].MaxStamina() / 25;
-    d.CH16482[chIdx].IncrMaxMana(newMastery);
+    maxStaminaIncrement = d.hero[chIdx].MaxStamina() / 25;
+    d.hero[chIdx].IncrMaxMana(newMastery);
     newMastery = sw(newMastery + (newMastery+1)/2);
-    d.CH16482[chIdx].Attributes[Wisdom].IncrMaximum(minorAttributeMaxIncrement);
+    d.hero[chIdx].Attributes[Wisdom].IncrMaximum(minorAttributeMaxIncrement);
 //tag016272:
     maxManaIncrement = Smaller(STRandom0_3(), maxManaIncrement-1);
-    if (d.CH16482[chIdx].MaxMana()+maxManaIncrement > MAXMANA) d.CH16482[chIdx].MaxMana(MAXMANA);
-    else d.CH16482[chIdx].IncrMaxMana(maxManaIncrement);
-    d.CH16482[chIdx].Attributes[AntiMagic].IncrMaximum(STRandom(3));
+    if (d.hero[chIdx].MaxMana()+maxManaIncrement > MAXMANA) d.hero[chIdx].MaxMana(MAXMANA);
+    else d.hero[chIdx].IncrMaxMana(maxManaIncrement);
+    d.hero[chIdx].Attributes[AntiMagic].IncrMaximum(STRandom(3));
     break;
   case 3: // wizard
     //D6W = sw(D6W / 32);
-    maxStaminaIncrement = d.CH16482[chIdx].MaxStamina() / 32;
+    maxStaminaIncrement = d.hero[chIdx].MaxStamina() / 32;
     //D0W = D7W;
     //D1W = D7W / 2;
-    if (d.CH16482[chIdx].MaxMana() + newMastery + newMastery/2 <= MAXMANA)
+    if (d.hero[chIdx].MaxMana() + newMastery + newMastery/2 <= MAXMANA)
     {
-      d.CH16482[chIdx].IncrMaxMana(newMastery + newMastery/2);
+      d.hero[chIdx].IncrMaxMana(newMastery + newMastery/2);
     }
     else
     {
-      d.CH16482[chIdx].MaxMana(MAXMANA);
+      d.hero[chIdx].MaxMana(MAXMANA);
     };
-    d.CH16482[chIdx].Attributes[Wisdom].IncrMaximum(majorAttributeMaxIncrement);
+    d.hero[chIdx].Attributes[Wisdom].IncrMaximum(majorAttributeMaxIncrement);
 //tag016272:
     maxManaIncrement = Smaller(STRandom0_3(), maxManaIncrement-1);
-    if (d.CH16482[chIdx].MaxMana()+maxManaIncrement > MAXMANA) d.CH16482[chIdx].MaxMana(MAXMANA);
-    else d.CH16482[chIdx].IncrMaxMana(maxManaIncrement);
-    d.CH16482[chIdx].Attributes[AntiMagic].IncrMaximum(STRandom(3));
+    if (d.hero[chIdx].MaxMana()+maxManaIncrement > MAXMANA) d.hero[chIdx].MaxMana(MAXMANA);
+    else d.hero[chIdx].IncrMaxMana(maxManaIncrement);
+    d.hero[chIdx].Attributes[AntiMagic].IncrMaximum(STRandom(3));
     break;
   };
   maxHPIncrement = newMastery + uw(STRandom(((UI16)newMastery / 2) + 1));
-  if (d.CH16482[chIdx].MaxHP() + maxHPIncrement > 999)
+  if (d.hero[chIdx].MaxHP() + maxHPIncrement > 999)
   {
-    d.CH16482[chIdx].MaxHP(999);
+    d.hero[chIdx].MaxHP(999);
   }
   else
   {
-    d.CH16482[chIdx].IncrMaxHP(maxHPIncrement);
+    d.hero[chIdx].IncrMaxHP(maxHPIncrement);
   };
   //w_26 = uw(STRandom(((UI16)D6W/2)+1));
   if (maxStaminaIncrement == 0) maxStaminaIncrement = 1;
   else maxStaminaIncrement += STRandom(maxStaminaIncrement/2) + 1;
-  if (d.CH16482[chIdx].MaxStamina() + maxStaminaIncrement > 9999)
+  if (d.hero[chIdx].MaxStamina() + maxStaminaIncrement > 9999)
   {
-    d.CH16482[chIdx].MaxStamina(9999);
+    d.hero[chIdx].MaxStamina(9999);
   }
   else
   {
-    d.CH16482[chIdx].IncrMaxStamina(maxStaminaIncrement);
+    d.hero[chIdx].IncrMaxStamina(maxStaminaIncrement);
   };
-  d.CH16482[chIdx].charFlags |= CHARFLAG_statsChanged;
+  d.hero[chIdx].charFlags |= CHARFLAG_statsChanged;
   DrawCharacterState(chIdx);
   PrintLinefeed();
-  QuePrintLines(color = (UI8)(d.Byte1386[chIdx]), d.CH16482[chIdx].name, false);
+  QuePrintLines(color = (UI8)(d.Byte1386[chIdx]), d.hero[chIdx].name, false);
   QuePrintLines(color, " JUST GAINED A ", true);
   QuePrintLines(color, d.Pointer16596[basicSkill], true); //"FIGHTER", "NINJA", etc
   QuePrintLines(color, " LEVEL!", true);
@@ -233,7 +233,7 @@ void AdjustSkills(i32 chIdx,i32 skillNumber,i32 experience, i32 why)
   {
     experience *= d.pCurLevelDesc->experienceMultiplier();
   };
-  pcA2 = &d.CH16482[chIdx];
+  pcA2 = &d.hero[chIdx];
   if (skillNumber >= 4)
   {
     basicSkill = sw((skillNumber-4)/4);
@@ -393,7 +393,7 @@ void AddToSkill(i32 chIdx,i32 skillNumber,i32 experience)
 
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ASSERT( (skillNumber>=0) && (skillNumber<=19),"skillNum");
-  pcA2 = &d.CH16482[chIdx];
+  pcA2 = &d.hero[chIdx];
   if (skillNumber >= 4)
   {
     basicSkill = sw((skillNumber-4)/4);
@@ -477,7 +477,7 @@ i16 CharacterThrowsSpell(i32 chIdx, RN object, i32 range, i32 neededMana)
   CHARDESC *pcA3;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //D7W = sw(P3);
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   if (pcA3->Mana() < neededMana)
   {
     return 0;
@@ -508,7 +508,7 @@ void DisableCharacterAction(i32 chIdx, i32 timeDelay)
   CHARDESC *pcA3;
   TIMER timer;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   D7L = d.Time + timeDelay;
   timer.Function(TT_11);
   timer.timerUByte5((ui8)chIdx);
@@ -558,7 +558,7 @@ RESTARTABLE _MagicSelection(const i32 button)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (button == 108)
   {
-    pcA0 = &d.CH16482[d.MagicCaster];
+    pcA0 = &d.hero[d.MagicCaster];
     D0W = pcA0->incantation[0];
     if (D0W == 0) RETURN;
     FlashButton(_1_,0xea, 0x12f, 0x3f, 0x49);
@@ -724,7 +724,7 @@ void SelectMagicCaster(i16 chIdx)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //D7W = P1;
   if (chIdx == d.MagicCaster) return;
-  if ( (chIdx!=-1) && (d.CH16482[chIdx].HP()==0) ) return;
+  if ( (chIdx!=-1) && (d.hero[chIdx].HP()==0) ) return;
   if (d.MagicCaster == -1)
   {
     STHideCursor(HC36);
@@ -741,7 +741,7 @@ void SelectMagicCaster(i16 chIdx)
     return;
   };
   d.MagicCaster = chIdx;
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   TAG01b408(2);
   D5W = 0;
   pD4 = d.LogicalScreenBase+8112;
@@ -811,7 +811,7 @@ void BackspaceMagicSelection(void)
   dReg D0, D7;
   CHARDESC *pcA3;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  pcA3 = &d.CH16482[d.MagicCaster];
+  pcA3 = &d.hero[d.MagicCaster];
   D0W = strlen((char *)pcA3->incantation);
   if (D0W == 0) return;
   D0W = (UI8)(pcA3->byte33);
@@ -859,11 +859,11 @@ void FillSpellParameters(
   spellParameters.spellClass = -1;
   spellParameters.incantation = 0;
   for (multiplier=1000,i=0;
-       (i<4) && (d.CH16482[caster].incantation[i]!=0);
+       (i<4) && (d.hero[caster].incantation[i]!=0);
        i++, multiplier/=10)
   {
     spellParameters.incantation +=
-      (d.CH16482[caster].incantation[i]-0x60-6*i+1) * multiplier;
+      (d.hero[caster].incantation[i]-0x60-6*i+1) * multiplier;
   };
   spellParameters.unused1 = -1;
   spellParameters.unused2 = -1;
@@ -937,7 +937,7 @@ i16 CastMagic(const i32)
 //    RESTART(1)
   //END_RESTARTMAP
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  pcA3 = &d.CH16482[d.MagicCaster];
+  pcA3 = &d.hero[d.MagicCaster];
   STHideCursor(HC40);
   WaitForButtonFlash(); // If any are active.
   FillSpellParameters(d.MagicCaster, spellParameters);
@@ -1071,8 +1071,8 @@ void StandardSpellMessage(const char *text, int charIndex=0)
     memcpy(newText, text, pPercent-text);
     for (i=0; i<8; i++)
     {
-      if (d.CH16482[charIndex].name[i] == 0) break;
-      newText[pPercent-text+i] = d.CH16482[charIndex].name[i];
+      if (d.hero[charIndex].name[i] == 0) break;
+      newText[pPercent-text+i] = d.hero[charIndex].name[i];
     };
     strcpy(newText+(pPercent-text)+i, text+(pPercent-text)+1);
     QuePrintLines(4,newText, false);
@@ -1151,7 +1151,7 @@ i16 CastSpell(i16 chIdx, SPELL_PARAMETERS& spellParameters)
   };
   if (chIdx >= d.NumCharacter) return 0;
 
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   if (pcA3->HP() == 0) return 0;
   incantation = pcA3->incantation;
   facing = d.partyFacing;

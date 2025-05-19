@@ -1476,7 +1476,7 @@ void DebugLoad(void *p, i32 a, i32 b, RN obj)
     f = fopen("debugload.txt","w");
     for (index=0; index<maxloaditems; index++) additions[index]=0;
   };
-  index = (i32)(((CHARDESC *)p) - d.CH16482);
+  index = (i32)(((CHARDESC *)p) - d.hero);
   if (index != 0) return;
   if ((obj != RNeof) && (obj!=RNnul))
   {
@@ -1497,7 +1497,7 @@ void DebugLoad(void *p, i32 a, i32 b, RN obj)
       return;
     };
   };
-  oldLoad = d.CH16482[index].load;
+  oldLoad = d.hero[index].load;
   if (b == -1) newLoad = oldLoad - a;
   else if (b == 0) newLoad = a;
   else newLoad = oldLoad + a;

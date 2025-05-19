@@ -779,7 +779,7 @@ struct DBank {
   i8  Byte16550;
   FILL(16549,16482)
     // 3328 bytes read into byte16482 .... 16482-3328 = 13154
-  CHARDESC CH16482[4];  //part of 16482
+  CHARDESC hero[4];  //part of 16482
   i16 Brightness;  //13282;//part of 16482 //swapped when read
   i8  SeeThruWalls;//13280;//part of 16482
   i8  MagicFootprintsActive; //Byte13279;       //part of 16482

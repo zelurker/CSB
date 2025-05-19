@@ -2160,11 +2160,11 @@ void TAG0025a6(i32 P1)
     D6W = (i16)(d.Word23144-1);
     d.Word23144 = 0;
     D4W = (i16)CharacterAtPosition((d.partyFacing + D6W) & 3);
-    pcA0 = &d.CH16482[D4W];
+    pcA0 = &d.hero[D4W];
     pcA0->facing = (i8)d.partyFacing;
     if (D6W == D7W)
     {
-      pcA0 = &d.CH16482[D4W];
+      pcA0 = &d.hero[D4W];
       pcA0->charFlags |= CHARFLAG_positionChanged;
       DrawCharacterState(D4W);
     }
@@ -2174,9 +2174,9 @@ void TAG0025a6(i32 P1)
       STHideCursor(HC25);
       if (D5W >= 0)
       {
-        pcA0 = &d.CH16482[D5W];
+        pcA0 = &d.hero[D5W];
         pcA0->charPosition = ub((D6W + d.partyFacing) & 3);
-        d.CH16482[D5W].charFlags |= CHARFLAG_positionChanged;
+        d.hero[D5W].charFlags |= CHARFLAG_positionChanged;
         DrawCharacterState(D5W);
       }
       else
@@ -2186,8 +2186,8 @@ void TAG0025a6(i32 P1)
                       0,
                       160);
       };
-      d.CH16482[D4W].charPosition = (UI8)((D7W+d.partyFacing)&3);
-      d.CH16482[D4W].charFlags |= CHARFLAG_positionChanged;
+      d.hero[D4W].charPosition = (UI8)((D7W+d.partyFacing)&3);
+      d.hero[D4W].charFlags |= CHARFLAG_positionChanged;
       DrawCharacterState(D4W);
       STShowCursor(HC25);
     };
@@ -5266,7 +5266,7 @@ bool SubstituteCharacterName(char * pText,
   int i;
   CHARDESC *pCh;
   if (characterIndex >= d.NumCharacter) return false;
-  pCh = &d.CH16482[characterIndex];
+  pCh = &d.hero[characterIndex];
   for (i=0; i<8; i++)
   {
     if (*col >= maxCol) return true; //No more room.
@@ -6236,7 +6236,7 @@ void TAG0115ee(i32 chIdx, i32 byte6)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   D6W = sw(byte6);
   D7W = sw(chIdx);
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   if (pcA3->Possession(D6W) != RNnul) return;
   D0W = TAG011594(D7W, pcA3, 12, D6W);
   if (D0W != 0) return;
@@ -6258,7 +6258,7 @@ void MarkAllPortraitsChanged(void)
   i32 i;
   for (i=0; i<d.NumCharacter; i++)
   {
-    d.CH16482[i].charFlags |= CHARFLAG_portraitChanged;
+    d.hero[i].charFlags |= CHARFLAG_portraitChanged;
   };
   DrawAllCharacterState();
 }
@@ -6301,7 +6301,7 @@ void TAG0138ec(void)
       };
       ObjectToCursor(objD5, 1);
     };
-    pcA3 = d.CH16482;
+    pcA3 = d.hero;
     D7W = 0;
     while (D7W < d.NumCharacter)
     {
@@ -6499,7 +6499,7 @@ bool ProcessTimers(void) // Parameter ignored, I think.
       case TT_71: d.Invisible--; break;
       case TT_72:
                //D0 = (ui8)LOCAL_1[5] *800;
-               pcA0 = &d.CH16482[timeEnt.timerUByte5()]; //d.Byte16208;
+               pcA0 = &d.hero[timeEnt.timerUByte5()]; //d.Byte16208;
                //A0 += D0;
                //D0W = wordGear(A0)-wordGear(&LOCAL_1[6]);
                {
@@ -6538,7 +6538,7 @@ bool ProcessTimers(void) // Parameter ignored, I think.
                //D0 = D0W * 800;
                //A0 = d.Byte16440 + D0;
                //(*A0)--;
-               pcA0 = &d.CH16482[param];
+               pcA0 = &d.hero[param];
                pcA0->poisonCount--;
                PoisonCharacter(param,timeEnt.timerWord6());
                break;
@@ -6608,7 +6608,7 @@ RESTARTABLE _ResurrectReincarnateCancel(const i32 button)
   END_RESTARTMAP
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   D7W = sw(d.NumCharacter-1);
-  pcA3 = &d.CH16482[D7W];
+  pcA3 = &d.hero[D7W];
   if (button == 162) //'Cancel' when selecting champion
   {
     ShowHideInventory(4); //Hide
@@ -6852,7 +6852,7 @@ void ObjectToCursor(RN object,i16 P2)
   STShowCursor(HC27);
   if (d.HandChar == -1) return; //owner of cursor
   D1L = GetObjectWeight(object);
-  pcA0 = &d.CH16482[d.HandChar]; //owner of cursor
+  pcA0 = &d.hero[d.HandChar]; //owner of cursor
   DEBUGLOAD(pcA0, D1W, +1, object);
   pcA0->load = sw(pcA0->load + D1W);
   ASSERT(pcA0->load < MAXLOAD,"maxload");
@@ -6917,7 +6917,7 @@ void HandleClothingClick(i32 button)
     D7W /= 2;
     if (D7W >= d.NumCharacter) return;
     if (D7W+1 == d.SelectedCharacterOrdinal) return;
-    if (d.CH16482[D7W].HP() == 0) return;
+    if (d.hero[D7W].HP() == 0) return;
     D6W = (I16)(button & 1); // Left or right hand.
   }
   else
@@ -6933,7 +6933,7 @@ void HandleClothingClick(i32 button)
   }
   else
   {
-    objD4 = d.CH16482[D7W].Possession(D6W);
+    objD4 = d.hero[D7W].Possession(D6W);
   };
   if ( (objD4==RNnul) && (objD5==RNnul) ) return;
   if (objD5 != RNnul)
@@ -7072,7 +7072,7 @@ void DisplayCharacterDamage(void)
   i16 LOCAL_2;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   Instrumentation(icntDisplayCharacterDamage);
-  pcA3 = d.CH16482;
+  pcA3 = d.hero;
   for (D7W=0; D7W < d.NumCharacter; D7W++, pcA3++)
   {
     D4W = d.PendingOuches[D7W];
@@ -7195,7 +7195,7 @@ void PoisonCharacter(i32 chIdx,i32 P2)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (chIdx == -1) return;
   if (chIdx+1 == d.PotentialCharacterOrdinal) return;
-  pch_14 = &d.CH16482[chIdx];
+  pch_14 = &d.hero[chIdx];
   DamageCharacter(chIdx, Larger(1, P2/64), 0, 0);
   pch_14->charFlags |= CHARFLAG_statsChanged;
   if (    (chIdx+1 == d.SelectedCharacterOrdinal)
@@ -7238,7 +7238,7 @@ void SelectPaletteForLightLevel(void)
   }
   else
   {
-    pCharacter = &d.CH16482[0];
+    pCharacter = &d.hero[0];
     pwA3 = LOCAL_26;
     for (D5W=0; D5W<4; D5W++,pCharacter++)
     {
@@ -7330,7 +7330,7 @@ void NinetySecondUpdate(void)
   D5W = 0;
   D7W = d.NumCharacter;
   if (d.PotentialCharacterOrdinal != 0) D7W--;
-  pcA3 = d.CH16482;
+  pcA3 = d.hero;
   while ((D7W--) != 0)
   {
     for (D6W=2; (D6W--)!= 0;) // One and zero.  Hands.
@@ -7413,7 +7413,7 @@ void ShowHideInventory(i32 chIdx)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (chIdx != 4)
   {
-    D0W = d.CH16482[chIdx].HP();
+    D0W = d.hero[chIdx].HP();
     if (D0W == 0) return; //Don't show inventory of dead character
   };
   if (d.PressingMouth != 0) return;
@@ -7436,7 +7436,7 @@ void ShowHideInventory(i32 chIdx)
       fprintf(GETFILE(TraceFile),"%06x ShowHideInventory calling Repack Chest\n",d.Time);
     };
     RepackChest();
-    pcA3 = &d.CH16482[D6W-1];
+    pcA3 = &d.hero[D6W-1];
     if (pcA3->HP())
     {
       if (d.PotentialCharacterOrdinal == 0)
@@ -7469,7 +7469,7 @@ void ShowHideInventory(i32 chIdx)
   {
     ShadeRectangleInScreen((RectPos *)d.Word28, 0);
   };
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   TAG022a60(17, d.pViewportBMP);
   if (d.PotentialCharacterOrdinal)
   {
@@ -8093,7 +8093,7 @@ MOVEBUTN *MoveParty(const i32 button)
   {
     d.clockTick = 1;
   };
-  for (charIdx=0, pCharacter = &d.CH16482[0];
+  for (charIdx=0, pCharacter = &d.hero[0];
        charIdx < 4;
        charIdx++, pCharacter++)
   {
@@ -8134,7 +8134,7 @@ MOVEBUTN *MoveParty(const i32 button)
     d.partyMoveDisableTimer = (i16)partyMoveData.delay;
     d.Word11712 = 0;
   };
-  for (charIdx=0, pCharacter = &d.CH16482[0];
+  for (charIdx=0, pCharacter = &d.hero[0];
        charIdx < d.NumCharacter;
        charIdx++, pCharacter++)
   {
@@ -8332,7 +8332,7 @@ MOVEBUTN *MoveParty(const i32 button)
           MoveObject(RN(RNnul),d.partyX,d.partyY,newX,newY,NULL, NULL);
         };
         time2move = 1;
-        for (i=0, pCharacter=d.CH16482;
+        for (i=0, pCharacter=d.hero;
              i < d.NumCharacter;
              i++, pCharacter++)
              {  // Find slowest character
@@ -8402,15 +8402,15 @@ void SetHandOwner(i32 chIdx)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //D7W = P1;
   if (chIdx == d.HandChar) return; //owner of cursor
-  if ( (chIdx != -1) && (d.CH16482[chIdx].HP()==0) ) return;
+  if ( (chIdx != -1) && (d.hero[chIdx].HP()==0) ) return;
   if (d.HandChar != -1) //owner of cursor
   {
     D6W = d.HandChar; //owner of cursor
-    d.CH16482[D6W].charFlags |= CHARFLAG_possession | CHARFLAG_cursor;
+    d.hero[D6W].charFlags |= CHARFLAG_possession | CHARFLAG_cursor;
     ASSERT(RememberToPutObjectInHand == -1,"objInHand");
     D1L = GetObjectWeight(d.objectInHand);
-    DEBUGLOAD(d.CH16482+D6W, D1W, -1, d.objectInHand);
-    d.CH16482[D6W].load = sw(d.CH16482[D6W].load - D1W);
+    DEBUGLOAD(d.hero+D6W, D1W, -1, d.objectInHand);
+    d.hero[D6W].load = sw(d.hero[D6W].load - D1W);
     d.HandChar = -1; //owner of cursor
     DrawCharacterState(D6W);//box at top,pos,dir,weapon
   };
@@ -8420,12 +8420,12 @@ void SetHandOwner(i32 chIdx)
     return;
   };
   d.HandChar = sw(chIdx);//owner of cursor
-  pcA3 = &d.CH16482[chIdx];
+  pcA3 = &d.hero[chIdx];
   pcA3->facing = (ui8)d.partyFacing;
   ASSERT(RememberToPutObjectInHand == -1,"objInHand");
   D1L = GetObjectWeight(d.objectInHand);
-  DEBUGLOAD(d.CH16482+chIdx, D1W, +1, d.objectInHand);
-  d.CH16482[chIdx].load = sw(d.CH16482[chIdx].load + D1W);
+  DEBUGLOAD(d.hero+chIdx, D1W, +1, d.objectInHand);
+  d.hero[chIdx].load = sw(d.hero[chIdx].load + D1W);
   if (chIdx+1 == d.PotentialCharacterOrdinal) return;
   pcA3->charFlags |= CHARFLAG_positionChanged | CHARFLAG_possession | CHARFLAG_cursor;
   DrawCharacterState(chIdx);//box at top,pos,dir,weapon
@@ -8791,7 +8791,7 @@ void DrawLegalAttackTypes(void)
                83,
                0,
                4,
-               d.CH16482[d.AttackingCharacterOrdinal-1].name,
+               d.hero[d.AttackingCharacterOrdinal-1].name,
                7);
 
 
@@ -8842,7 +8842,7 @@ RESTARTABLE _TAG01b29a(void)
   }
   else
   {
-    pcA3 = d.CH16482;
+    pcA3 = d.hero;
     for (D7W=0; D7W<d.NumCharacter; D7W++, pcA3++)
     {
       if (D7W != d.HandChar) //owner of cursro
@@ -8897,7 +8897,7 @@ void TAG01b408(i16 P1)
   i16  LOCAL_12;
   char LOCAL_2[2];
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  pcA3 = &d.CH16482[d.MagicCaster];
+  pcA3 = &d.hero[d.MagicCaster];
   if (P1 ==2)
   {
     memmove( (ui8 *)d.Byte20842,(ui8 *)d.Byte21994, 576);
@@ -8992,7 +8992,7 @@ void TAG01b990(i16 button)
   aReg A0;
   CHARDESC *pcA3;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  pcA3 = &d.CH16482[d.MagicCaster];
+  pcA3 = &d.hero[d.MagicCaster];
   D7W = (UI8)(pcA3->byte33);
   A0 = d.Byte19010 + 6*D7W;
   D6W = (UI8)(A0[button]);

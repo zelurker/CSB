@@ -176,7 +176,7 @@ RESTARTABLE _ShowCredits(const i32 P1) //(void)
       for (D7W=0; D7W<d.NumCharacter; D7W++)
       {
         D6L = 48 * D7W;
-        pcA0 = &d.CH16482[D7W];
+        pcA0 = &d.hero[D7W];
         LOCAL_6 = pcA0;
         BLT2Screen((ui8 *)LOCAL_14, (RectPos *)d.Word132, 32, 10);
         BLT2Screen((ui8 *)LOCAL_6->portrait, (RectPos *)d.Word140, 16, 1);
