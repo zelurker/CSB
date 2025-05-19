@@ -1586,13 +1586,11 @@ static float get_progress(int xp) {
 	rank++;
 	base*=2;
     }
-    printf("get_progress: base %d xp %d next %d progress ",base,xp,base*2);
     int next;
     if (xp > base)
 	xp -= base;
     next = base;
     float progress = 1.0-(next-xp)*1.0/next;
-    printf("%g\n",progress);
     return progress;
 }
 
@@ -1610,7 +1608,10 @@ static void handle_skill(int n,int xp) {
     ImGui::TableNextColumn();
     ImGui::Text(buf);
     ImGui::TableNextColumn();
+    // printf("green %g\n",255-progress*255);
+    // ImGui::PushStyleColor(ImGuiCol_PlotHistogram,ImVec4(1.0,1.0-progress,0,0.5));
     ImGui::ProgressBar(progress,ImVec2(100.0f, 0.0f));
+    // ImGui::PopStyleColor(1);
 }
 
 static int get_def(int chIdx,int mask = 8) {
@@ -1845,16 +1846,18 @@ void post_render() {
 	    ImGui::EndTable();
 	    if (ImGui::CollapsingHeader("Hidden skills")) {
 		ImGui::BeginTable("##table2",2);
-		for (int n=5; n<20; n++)
+		for (int n=4; n<20; n++)
 		    handle_skill(n,d.hero[selected_item].skills92[n].experience);
 		ImGui::EndTable();
 	    }
+	    char buf[80];
+	    sprintf(buf,"Luck %d",d.hero[selected_item].Attributes[0].Current());
+	    ImGui::Text(buf);
 
 	    ImGui::Text("Defense:");
 	    for (int slot=0; slot<=5; slot++) {
 		int def = get_def(selected_item,1<<slot);
 		const char *slots[] = { "left hand", "right hand", "head", "chest", "legs", "feet" };
-		char buf[80];
 		sprintf(buf,"%s: %d",slots[slot],def);
 		ImGui::Text(buf);
 	    }
