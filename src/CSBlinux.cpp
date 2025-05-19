@@ -1609,9 +1609,9 @@ static void handle_skill(int n,int xp) {
     ImGui::Text(buf);
     ImGui::TableNextColumn();
     // printf("green %g\n",255-progress*255);
-    // ImGui::PushStyleColor(ImGuiCol_PlotHistogram,ImVec4(1.0,1.0-progress,0,0.5));
+    ImGui::PushStyleColor(ImGuiCol_PlotHistogram,ImVec4(1.0,1.0-progress,0,0.5));
     ImGui::ProgressBar(progress,ImVec2(100.0f, 0.0f));
-    // ImGui::PopStyleColor(1);
+    ImGui::PopStyleColor(1);
 }
 
 static int get_def(int chIdx,int mask = 8) {
@@ -1825,8 +1825,13 @@ void post_render() {
         const char* combo_preview_value = name[selected_item];
 
 	if (ImGui::Begin("Character info",&open_char_info,ImGuiWindowFlags_AlwaysAutoResize)) {
+	    if (ImGui::IsWindowHovered()) {
+		SDL_ShowCursor(SDL_ENABLE);
+		imgui_active = true;
+	    }
 	    if (ImGui::BeginCombo("##combo1", combo_preview_value))
 	    {
+		imgui_active = true;
 		for (int n = 0; n < d.NumCharacter; n++)
 		{
 		    const bool is_selected = (selected_item == n);
@@ -1857,15 +1862,11 @@ void post_render() {
 	    ImGui::Text("Defense:");
 	    for (int slot=0; slot<=5; slot++) {
 		int def = get_def(selected_item,1<<slot);
-		const char *slots[] = { "left hand", "right hand", "head", "chest", "legs", "feet" };
+		const char *slots[] = { "ready hand", "action hand", "head", "body", "legs", "feet" };
 		sprintf(buf,"%s: %d",slots[slot],def);
 		ImGui::Text(buf);
 	    }
 
-	    if (ImGui::IsWindowHovered()) {
-		SDL_ShowCursor(SDL_ENABLE);
-		imgui_active = true;
-	    }
 	    ImGui::End();
 	} else {
 	    // reduced or closed
