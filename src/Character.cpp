@@ -3646,7 +3646,7 @@ void DescribeObject(RN object,i16 P2)
 	  clA2 = &d.ClothingDesc[D0W];
 	  sprintf(buf,"DEFENSE %d",clA2->Defense());
 	  PrintItemDesc(buf);
-	  sprintf(buf,"PIERCE RES %d",clA2->pierceResistance());
+	  sprintf(buf,"PIERCE RES %d",clA2->pierceResistance() & 0x7f);
 	  PrintItemDesc(buf);
           break;
       case dbPOTION:
