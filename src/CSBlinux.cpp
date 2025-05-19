@@ -1570,11 +1570,79 @@ static void reset_game() {
 static bool fb_shown,fb2_shown,fb3_shown;
 extern bool chaosDisplayed,skipToDungeon,skipToResumeGame; // CSBCode.cpp
 
+static int get_rank(int xp) {
+    if (xp < 500) return 0;
+    int rank = 1, base = 500;
+    while (xp > base*2) {
+	rank++;
+	base*=2;
+    }
+    return rank;
+}
+
+static float get_progress(int xp) {
+    int rank = 1, base = 500;
+    while (xp > base*2) {
+	rank++;
+	base*=2;
+    }
+    printf("get_progress: base %d xp %d next %d progress ",base,xp,base*2);
+    int next;
+    if (xp > base)
+	xp -= base;
+    next = base;
+    float progress = 1.0-(next-xp)*1.0/next;
+    printf("%g\n",progress);
+    return progress;
+}
+
+static void handle_skill(int n,int xp) {
+    const char *ranks[] = { "", "Neophyte", "Novice", "Apprentice", "Journeyman", "Craftsman", "Artisan", "Adept", "Expert", "Master 1", "Master 2", "Mastger 3",
+	"Master 4", "Master 5", "Master 6", "Archmaster" };
+    const char *skills[] = { "Fighter", "Ninja", "Priest", "Wizard",
+	"Swing (hidden fighter skill)", "Thrust (hidden fighter skill)", "Club (hidden fighter skill)", "Parry (hidden fighter skill)",
+	"Steal (hidden ninja skill)", "Fight (hidden ninja skill)", "Throw (hidden ninja skill)", "Shoot (hidden ninja skill)",
+	"Identify (hidden priest skill)", "Heal (hidden priest skill)", "Influence (hidden priest skill)", "Defend (Hidden priest skill)",
+	"Fire (hidden wizard skill)", "Air (hidden wizzard skill)", "Earth (hidden wizard skill)", "Water (hidden wizard skill)" };
+    char buf[80];
+    snprintf(buf,80,"%s: %d %s",skills[n],xp,ranks[get_rank(xp)]);
+    float progress = get_progress(xp);
+    ImGui::TableNextColumn();
+    ImGui::Text(buf);
+    ImGui::TableNextColumn();
+    ImGui::ProgressBar(progress,ImVec2(100.0f, 0.0f));
+}
+
+static int get_def(int chIdx,int mask = 8) {
+    // Extracted from DamageCharacter with mask=4 (and there was a P4 parameter at 4 too).
+    // Apparently mask is the slot chosen for the hit as a power of 2, 4 means slot 2 which is the head
+    // and so 8 would be slot 3 which is the chest. The 2 most chosen slots are 2 and 3, corresponding to a mask value of 4 and 8 respectively.
+    // Slots values found:
+    // 0: shield hand
+    // 1: sword hand
+    // 2: head
+    // 3: chest
+    // 4: legs
+    // 5: feet
+    dReg D4,D5,D6,D0,D1;
+    D5W = 0;
+    for (D4W=D5W=D6W=0; D6W<=5; D6W++)
+    {
+      if ((mask & (1<<D6W)) == 0) continue;
+      D4W++;
+      D0W = D6W;
+      D1UW = 0x8000;
+      D5W = sw(D5W + TAG01680a(chIdx, D0W | D1W));
+    }
+    D5W += d.hero[chIdx].shieldStrength;
+    return D5W;
+}
+
 void post_render() {
     static bool was_active;
     drawn = 1;
     SDL_Rect r;
-    static bool show_coords;
+    static bool show_coords,open_char_info;
     bool open = false,save = false,open_dungeon = false;
     if (!d.NumGraphic) imgui_active = true;
 
@@ -1652,6 +1720,9 @@ void post_render() {
 		    && !simpleEncipher);
 	    if (ImGui::MenuItem(_("Non-CSB Items"), NULL,false,enabled)) ItemsRemaining(1);
 	    ImGui::MenuItem(_("DM Rules"), NULL,&DM_rules);
+	    if (ImGui::MenuItem(_("Extended character info..."),NULL,false,d.NumCharacter > 0))
+		open_char_info = true;
+
 	    ImGui::EndMenu();
 	} else if (!imgui_active) {
 	    if (was_active && !cursorIsShowing) {
@@ -1744,6 +1815,61 @@ void post_render() {
 	    ImGui::End();
 	}
     }
+
+    if (open_char_info) {
+	static int selected_item = 0;
+	char *name[4];
+	for (int n=0; n<d.NumCharacter; n++)
+	    name[n] = d.hero[n].name;
+        const char* combo_preview_value = name[selected_item];
+
+	if (ImGui::Begin("Character info",&open_char_info,ImGuiWindowFlags_AlwaysAutoResize)) {
+	    if (ImGui::BeginCombo("##combo1", combo_preview_value))
+	    {
+		for (int n = 0; n < d.NumCharacter; n++)
+		{
+		    const bool is_selected = (selected_item == n);
+		    if (ImGui::Selectable(name[n], is_selected))
+			selected_item = n;
+
+		    // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+		    if (is_selected)
+			ImGui::SetItemDefaultFocus();
+		}
+		ImGui::EndCombo();
+	    }
+
+	    ImGui::BeginTable("##table1",2);
+	    for (int n=0; n<4; n++)
+		handle_skill(n,d.hero[selected_item].skills92[n].experience);
+	    ImGui::EndTable();
+	    if (ImGui::CollapsingHeader("Hidden skills")) {
+		ImGui::BeginTable("##table2",2);
+		for (int n=5; n<20; n++)
+		    handle_skill(n,d.hero[selected_item].skills92[n].experience);
+		ImGui::EndTable();
+	    }
+
+	    ImGui::Text("Defense:");
+	    for (int slot=0; slot<=5; slot++) {
+		int def = get_def(selected_item,1<<slot);
+		const char *slots[] = { "left hand", "right hand", "head", "chest", "legs", "feet" };
+		char buf[80];
+		sprintf(buf,"%s: %d",slots[slot],def);
+		ImGui::Text(buf);
+	    }
+
+	    if (ImGui::IsWindowHovered()) {
+		SDL_ShowCursor(SDL_ENABLE);
+		imgui_active = true;
+	    }
+	    ImGui::End();
+	} else {
+	    // reduced or closed
+	    ImGui::End();
+	}
+    }
+
     if (!was_active && !cursorIsShowing && !fb_shown && !imgui_active && !fb2_shown && !fb3_shown) {
 	SDL_ShowCursor(SDL_DISABLE);
     }

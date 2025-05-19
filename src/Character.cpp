@@ -1219,31 +1219,6 @@ void DisplayBackpackItem(i32 chIdx, i32 itemNum)
 //
 // *********************************************************
 //   TAG014de0
-int get_def(int chIdx) {
-    // Extracted from DamageCharacter with mask=4 (and there was a P4 parameter at 4 too).
-    // Apparently mask is the slot chosen for the hit as a power of 2, 4 means slot 2 which is the head
-    // and so 8 would be slot 3 which is the chest. The 2 most chosen slots are 2 and 3, corresponding to a mask value of 4 and 8 respectively.
-    // Slots values found:
-    // 0: shield hand
-    // 1: sword hand
-    // 2: head
-    // 3: chest
-    // 4: legs
-    // 5: feet
-    dReg D4,D5,D6,D0,D1;
-    int mask = 8;
-    D5W = 0;
-    for (D4W=D5W=D6W=0; D6W<=5; D6W++)
-    {
-      if ((mask & (1<<D6W)) == 0) continue;
-      D4W++;
-      D0W = D6W;
-      D1UW = 0x8000;
-      D5W = sw(D5W + TAG01680a(chIdx, D0W | D1W));
-    }
-    D5W += d.hero[chIdx].shieldStrength;
-    return D5W;
-}
 void DrawCharacterState(i32 chIdx) // Character box at top of screen                                //
 {//(void)
   static dReg D0, D1, D4;
@@ -1517,12 +1492,6 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
       };
       charFlags |= CHARFLAG_viewportChanged;
     };
-    if (inventoryOpen && !d.PressingEye && !d.PotentialCharacterOrdinal && !pcA3->poisonCount) {
-	int def = get_def(d.SelectedCharacterOrdinal-1);
-	char buf[50];
-	sprintf(buf,"DEF %d ",def);
-	TextToViewport(140, 119, 13, buf, false);//LOCAL_8 is text color
-    }
     if (charFlags & CHARFLAG_weaponAttack)
     {
       DisplayBackpackItem(chIdx, 1);
