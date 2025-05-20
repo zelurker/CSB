@@ -1819,6 +1819,9 @@ void post_render() {
 	}
     }
 
+    if (d.PartyHasDied)
+	open_char_info = false;
+
     if (open_char_info) {
 	static int selected_item = 0;
 	char *name[4];
