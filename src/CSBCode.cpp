@@ -10228,6 +10228,10 @@ void ReadTablesFromGraphicsFile(void)
       swapRectPos(&d.wRectPos20226);
       swapRectPos(&d.wRectPos20234);
   }
+  if (d.experienceForAttacking[32] == 9) { // hotfix for shoot experience, raised from 9 to 20 in dm 1.1!
+      d.experienceForAttacking[32] = 20;
+      printf("Fix Shoot experience for DM 1.1\n");
+  }
   for (i=0; i<25; i++) fixSpell(&d.Spells[i]);
   ASSERT(d.GraphicDecompressedSizes[0x22f] == 0xc0e,"graphicsize22f");
   ReadAndExpandGraphic(0x8000|0x22f, (ui8 *)d.Byte10340, 0,0);
