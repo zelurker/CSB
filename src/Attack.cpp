@@ -1912,7 +1912,7 @@ RESTARTABLE _Attack(const i32 initialChIdx, const ATTACKTYPE initialAttackType)
       QueueSound(16, d.partyX, d.partyY, 1);
       w_42 = sw(DetermineMastery(pParam->charIdx, 11));
       pParam->attdep.shoot.range = pWeapon_18->distance + pWeapon_22->distance;
-      pParam->attdep.shoot.damage = 2 * (pWeapon_18->word4 + w_42);
+      pParam->attdep.shoot.damage = 2 * (pWeapon_18->attribute + w_42);
       pParam->attdep.shoot.damage = D4W;
       pParam->attdep.shoot.success = 1;
       CallAttackFilter(&filter, pParam, 1);

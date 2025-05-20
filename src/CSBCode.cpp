@@ -10267,7 +10267,7 @@ void ReadTablesFromGraphicsFile(void)
   };
   for (i=0; i<46; i++)
   {
-    d.weapons[i].word4 = LE16(d.weapons[i].word4);
+    d.weapons[i].attribute = LE16(d.weapons[i].attribute);
   };
   ASSERT(d.GraphicDecompressedSizes[0x232] == 0x722,"graphicsize232");
   ReadAndExpandGraphic(0x8000|0x232, (ui8 *)d.Byte1832+2, 0,0);

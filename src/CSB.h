@@ -1361,7 +1361,8 @@ public:
   ui8 uByte1;
   ui8 damage;
   ui8 distance;
-  i16 word4;
+  // attribute field gotten from redmdcsb source, &0xff for shoot weapon
+  i16 attribute;
 };
 
 

@@ -2860,7 +2860,7 @@ i32 GetGraphicClass(RN P1)
     if (D6W == dbWEAPON)
     {
       weaponDescA3 = TAG0099d2(objD7);
-      D5W = BITS8_12(weaponDescA3->word4);
+      D5W = BITS8_12(weaponDescA3->attribute);
       if (D5W != 0)
       {
         return sw(-D5W);

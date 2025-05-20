@@ -1943,7 +1943,7 @@ void DumpWeapons(FILE *f)
                d.weapons[i].uByte1,
                d.weapons[i].damage,
                d.weapons[i].distance,
-               d.weapons[i].word4   );
+               d.weapons[i].attribute);
   };
 }
 
