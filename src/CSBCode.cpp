@@ -11515,7 +11515,6 @@ RESTARTABLE _StartCSB(const CSB_UI_MESSAGE * /*msg*/) //
   for (;;)
   {
     MainLoop(_2_); //TAG00068e
-    d.DynamicPaletteSwitching = 0;
     {
       ShowCredits(_3_,d.GameIsLost);
     };

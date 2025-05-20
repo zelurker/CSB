@@ -161,6 +161,8 @@ RESTARTABLE _ShowCredits(const i32 P1) //(void)
      };
 //
     };
+    if (P1)
+	d.DynamicPaletteSwitching = 0;
     wvbl(_3_);
     memmove( &d.Palette11978,(ui8 *)&LOCAL_78, 32);
   }
@@ -266,11 +268,11 @@ tag01fd10:
                                            //  Sets lastTime = 0;
         } while (intResult & 1);
 
-        do 
+        do
         {
           HandleMouseEvents(_15_,0);       //'Restart' sets d.PartyHasDied=1
         } while (intResult & 1);
-        if (DiskMenuNeeded) 
+        if (DiskMenuNeeded)
         {
           DisplayDiskMenu(_23_);
         };
@@ -334,7 +336,7 @@ tag01fd10:
     if (d.MouseSwitches != 0) break;
     wvbl(_19_);//NotImplemented(0x1fea0);//pumper();
     D0W = (I16)UI_CONSTAT();
-  } while ((D0W == 0)&&(!RepeatGame) || (i<2000)&&(RepeatGame)); 
+  } while ((D0W == 0)&&(!RepeatGame) || (i<2000)&&(RepeatGame));
   // A mouse click gets us out of the credits screen to here.
   if (d.CanRestartFromSavegame)
   {
