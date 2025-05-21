@@ -823,6 +823,7 @@ struct BlockDesc
 // *********************************************************
 // TAG001de4c
 extern char *opened_file;
+bool skipToSavenPlay;
 RESTARTABLE _DisplayDiskMenu(void)
 {//void
   static dReg D0, D1, D5, D6, D7;
@@ -887,20 +888,25 @@ RESTARTABLE _DisplayDiskMenu(void)
         // "There is no disk in ~"
   do
   {
-    DoMenu(_1_,
-           A3,
-           TranslateLanguage("READY TO SAVE GAME"),       // "Put the Game Save Disk in ~"
-           TranslateLanguage(d.Pointer22896), // "Save and Play"
-           TranslateLanguage(d.Pointer22900), // "Save and Quit"
-           //d.Pointer22904, // "Format Floppy"
-           TranslateLanguage(d.Pointer22912), // "Cancel"
-           0,
-           0,
-           0,
-           0);
-    STShowCursor(HC45);
-    WaitForMenuSelect(_3_, 3, 0, 0, 0);
-    STHideCursor(HC57);
+      if (skipToSavenPlay) {
+	  skipToSavenPlay = false;
+	  i16Result = 1;
+      } else {
+	  DoMenu(_1_,
+		  A3,
+		  TranslateLanguage("READY TO SAVE GAME"),       // "Put the Game Save Disk in ~"
+		  TranslateLanguage(d.Pointer22896), // "Save and Play"
+		  TranslateLanguage(d.Pointer22900), // "Save and Quit"
+						     //d.Pointer22904, // "Format Floppy"
+		  TranslateLanguage(d.Pointer22912), // "Cancel"
+		  0,
+		  0,
+		  0,
+		  0);
+	  STShowCursor(HC45);
+	  WaitForMenuSelect(_3_, 3, 0, 0, 0);
+	  STHideCursor(HC57);
+      }
     D5W = i16Result;
 //    if (D5W == 2)
 //    {

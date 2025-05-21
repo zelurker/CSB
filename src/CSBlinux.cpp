@@ -1642,6 +1642,7 @@ static int get_def(int chIdx,int mask = 8) {
     return D5W;
 }
 
+extern bool skipToSavenPlay;
 void post_render() {
     static bool was_active;
     drawn = 1;
@@ -1792,6 +1793,7 @@ void post_render() {
     {
 	opened_file = (char*)file_dialog.selected_path.c_str();
 	fb2_shown = false;
+	skipToSavenPlay = true;
 	DispatchCSB(st_DisplayDiskMenu);
     } else if (fb2_shown && !ImGui::IsPopupOpen(_("Save game"))) {
 	// cancel was pressed!
