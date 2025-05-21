@@ -1642,7 +1642,7 @@ static int get_def(int chIdx,int mask = 8) {
     return D5W;
 }
 
-extern bool skipToSavenPlay;
+extern bool skipToSavenPlay,skipReady;
 void post_render() {
     static bool was_active;
     drawn = 1;
@@ -1768,6 +1768,7 @@ void post_render() {
 	opened_file = (char*)file_dialog.selected_path.c_str();
 	skipToDungeon = true;
 	skipToResumeGame = true;
+	skipReady = true;
 	skipLogo = true;
 	reset_game();
 	fb_shown = false;

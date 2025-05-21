@@ -10538,6 +10538,7 @@ bool resettag1;
   static i32 mystate=_0_; \
 if (resettag1) { mystate=0; resettag1=false; } \
 switch (mystate) { case _0_: goto return_0_;
+    bool skipReady;
 RESTARTABLE _TAG021028(void)
 { //(void)
   static dReg D0;
@@ -10577,20 +10578,25 @@ RESTARTABLE _TAG021028(void)
     //FadeToPalette(&d.Palette11978);
     for (;;)
     {
-      DoMenu(_6_,
-             NULL,
-             d.Pointer22812,
-             "PLAY GAME",
-             "ASCII DUMP",
-             NULL,
-             NULL,
-             1,
-             1,
-             1);
-      //if (1 == TAG01d1cc(2,1,0,0)) break;
-      STShowCursor(HC33);
-      WaitForMenuSelect(_2_, 2,1,0,0);
-      STHideCursor(HC33);
+	if (skipReady) {
+	    skipReady = false;
+	    i16Result = 1;
+	} else {
+	    DoMenu(_6_,
+		    NULL,
+		    d.Pointer22812,
+		    "PLAY GAME",
+		    "ASCII DUMP",
+		    NULL,
+		    NULL,
+		    1,
+		    1,
+		    1);
+	    //if (1 == TAG01d1cc(2,1,0,0)) break;
+	    STShowCursor(HC33);
+	    WaitForMenuSelect(_2_, 2,1,0,0);
+	    STHideCursor(HC33);
+	}
       if (i16Result == 1) break;
       AsciiDump();
     } ;
