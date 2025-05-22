@@ -48,7 +48,7 @@ RESTARTABLE _ReIncarnate(CHARDESC *pChar)
                72,
                4);
   TextToViewport(177, 58, COLOR_13, pChar->name, false);//Seven of -
-  TextToViewport(105, 76, COLOR_13, pChar->title, false);// Nineteen
+  TextToViewport(105, 76, COLOR_13, _(pChar->title), false);// Nineteen
   STHideCursor(HC12);
   MarkViewportUpdated(0);
   SetCursorShape(0); // Arrow
@@ -292,7 +292,7 @@ tag014088:
       STHideCursor(HC15);
       TextOut_OneLine(d.LogicalScreenBase,
                       160,
-                      w_2+6*strlen(pChar->title),
+                      w_2+6*strlen(_(pChar->title)),
                       w_4,
                       13,
                       12,
@@ -303,7 +303,7 @@ tag014088:
 tag0142c2:
       D6W = 2;
       A2 = (aReg)pChar->title;
-      w_2 = 105+6*strlen(pChar->title);
+      w_2 = 105+6*strlen(_(pChar->title));
       w_4 = 109;
       D7W = strlen(pChar->title);
       continue;
