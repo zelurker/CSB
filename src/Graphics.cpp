@@ -1794,10 +1794,10 @@ void openGraphicsFile(void) // TAG021d36
 //  while (d.Word23228 != 0) {};
   if ((d.Word23244++) ==0) // Reference count??
   {
-    d.GraphicHandle = OPEN("graphics.dat","rb");
+    d.GraphicHandle = OPEN(graphicName,"rb");
     if (d.GraphicHandle < 0)
     {
-	return;
+	return; // just return in case the program was started without any data file
       UI_MessageBox("Cannot find 'graphics.dat'",NULL,MESSAGE_OK);
       UI_MessageBox(helpMessage,"Help",MESSAGE_OK);
       die(0xbad);

@@ -103,6 +103,7 @@ extern i32  ExtendedFeaturesSize;
 extern char ExtendedFeaturesVersion;
 extern i32 RememberToPutObjectInHand;
 extern char *dungeonName;
+extern char graphicName[FILENAME_MAX];
 extern char *folderName;
 extern char *folderParentName;
 //extern char *folderSavedGame;

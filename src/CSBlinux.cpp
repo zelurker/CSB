@@ -4,6 +4,7 @@
 #include "UI.h"
 #include "resource.h"
 #include <stdio.h>
+#include <unistd.h>
 
 #include "CSBTypes.h"
 
@@ -1569,7 +1570,7 @@ static void reset_game() {
     }
 }
 
-static bool fb_shown,fb2_shown,fb3_shown;
+static bool fb_shown,fb2_shown,fb3_shown,fb4_shown;
 extern bool chaosDisplayed,skipToDungeon,skipToResumeGame; // CSBCode.cpp
 
 static int get_rank(int xp) {
@@ -1763,8 +1764,6 @@ void post_render() {
      */
     if(file_dialog.showFileDialog(_("Load saved game"), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), "csb*"))
     {
-	printf("file %s\n",file_dialog.selected_fn.c_str());    // The name of the selected file or directory in case of Select Directory dialog mode
-	printf("path %s\n",file_dialog.selected_path.c_str());  // The absolute path to the selected file
 	opened_file = (char*)file_dialog.selected_path.c_str();
 	skipToDungeon = true;
 	skipToResumeGame = true;
@@ -1779,16 +1778,39 @@ void post_render() {
 
     if(file_dialog.showFileDialog(_("Select dungeon.dat..."), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), "dungeon.dat,*.dat"))
     {
-	printf("file %s\n",file_dialog.selected_fn.c_str());    // The name of the selected file or directory in case of Select Directory dialog mode
-	printf("path %s\n",file_dialog.selected_path.c_str());  // The absolute path to the selected file
 	// strdup because this string is freed the next time the file selector is used, and if it's to load a save game, it's too bad!
-	dungeonName = strdup((char*)file_dialog.selected_path.c_str());
-	root = (char*)"";
-	skipToDungeon = false;
-	reset_game();
+	strcpy(dungeonName,file_dialog.selected_path.c_str());
+	char path[FILENAME_MAX];
+	strcpy(path,dungeonName);
+	char *s = strrchr(path,'/');
+	if (s) *s = 0;
+	printf("path %s\n",path);
+	chdir(path);
+	strcpy(graphicName,"graphics.dat");
+	FILE *f = fopen(graphicName,"rb");
+	if (!f) {
+	    fb4_shown = true;
+	    ImGui::OpenPopup(_("Select graphics.dat..."));
+	} else
+	    fclose(f);
+	if (!fb4_shown) {
+	    root = (char*)"";
+	    skipToDungeon = false;
+	    reset_game();
+	}
 	fb3_shown = false;
     } else if (fb3_shown && !ImGui::IsPopupOpen(_("Select dungeon.dat...")))
 	fb3_shown = false;
+
+    if(file_dialog.showFileDialog(_("Select graphics.dat..."), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), "graphics.dat,*.dat")) {
+	strcpy(graphicName,file_dialog.selected_path.c_str());
+	fb4_shown = false;
+	// chain on to the selected dungeon.dat
+	root = (char*)"";
+	skipToDungeon = false;
+	reset_game();
+    } else if (fb4_shown && !ImGui::IsPopupOpen(_("Select graphics.dat...")))
+	cbAppDestroy();
 
     if(file_dialog.showFileDialog(_("Save game"), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(700, 310), "csb*"))
     {
