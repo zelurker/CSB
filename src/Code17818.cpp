@@ -110,7 +110,7 @@ i32 DetermineMastery(i32 chIdx,i32 skill,const char *traceID)
         };
         break;
 //
-    case 15: //Priestly skill
+    case 15: //Priestly skill (defend)
         if (objNID5 == objNI_EkkhardCross)
         {
           mastery++;
@@ -122,7 +122,7 @@ i32 DetermineMastery(i32 chIdx,i32 skill,const char *traceID)
         };
         break;
 //
-    case 13: //Priestly skill
+    case 13: //Priestly skill (heal)
         if (  (objNID5==objNI_GemOfAges)
             ||(objNID4==objNI_SceptreOfLyf))
         {
@@ -135,7 +135,7 @@ i32 DetermineMastery(i32 chIdx,i32 skill,const char *traceID)
         };
         break;
 //
-    case 14: //Priestly skill
+    case 14: //Priestly skill (influence)
         if (objNID5 == objNI_Moonstone)
         {
           mastery++;
