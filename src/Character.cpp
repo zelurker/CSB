@@ -3661,19 +3661,24 @@ void DescribeObject(RN object,i16 P2)
           D4W = sw(D1W + 2);//Compute object index
           D4W = d.ObjDesc[D4W].word4;
 	  switch(DB8A0->potionType()) {
-	  case potion_MonPotionB: PrintItemDesc("STAMINA POTION"); break;
-	  case potion_EEPotion: PrintItemDesc("MANA POTION"); break;
-	  case potion_ViPotion: PrintItemDesc("HEALTH POTION"); break;
-	  case potion_KuPotion: PrintItemDesc("STRENGTH POTION"); break;
-	  case potion_RosPotion: PrintItemDesc("DEXTERITY POTION"); break;
-	  case potion_DanePotion: PrintItemDesc("WISDOM POTION"); break;
-	  case potion_NetaPotion: PrintItemDesc("VITALITY POTION"); break;
-	  case potion_AntiVenin: PrintItemDesc("CURE POISON POTION"); break;
-	  case potion_YaPotion: PrintItemDesc("SHIELD POTION"); break;
-	  case potion_VenPotion: PrintItemDesc("POISON POTION"); break;
+	  case potion_MonPotionB: PrintItemDesc(_("STAMINA POTION")); break;
+	  case potion_EEPotion: PrintItemDesc(_("MANA POTION")); break;
+	  case potion_ViPotion: PrintItemDesc(_("HEALTH POTION")); break;
+	  case potion_KuPotion: PrintItemDesc(_("STRENGTH POTION")); break;
+	  case potion_RosPotion: PrintItemDesc(_("DEXTERITY POTION")); break;
+	  case potion_DanePotion: PrintItemDesc(_("WISDOM POTION")); break;
+	  case potion_NetaPotion: PrintItemDesc(_("VITALITY POTION")); break;
+	  case potion_AntiVenin: PrintItemDesc(_("CURE POISON POTION")); break;
+	  case potion_YaPotion: PrintItemDesc(_("SHIELD POTION")); break;
+	  case potion_VenPotion: PrintItemDesc(_("POISON POTION")); break;
 	  }
           break;
       case dbMISC: // Bones, for example.
+	  if (objNID6 == objNI_Moonstone) PrintItemDesc(_("RAISES INFLUENCE SKILL AND MANA"));
+	  if (objNID6 == objNI_GemOfAges || objNID6 == objNI_SceptreOfLyf) PrintItemDesc(_("RAISES HEALING SKILL"));
+	  if (objNID6 == objNI_EkkhardCross) PrintItemDesc(_("RAISES DEFEND SKILL"));
+	  if (objNID6 == objNI_PendantFeral) PrintItemDesc(_("RAISES WIZARD SKILL"));
+	  if ( (objNID6 >= objNI_JewelSymal_a) && (objNID6 <= objNI_JewelSymal_b) ) PrintItemDesc(_("RAISES ANTI-MAGIC"));
           if (   (objNID6 >= objNI_Waterskin)
               && (objNID6 <= objNI_Water) )
           {
