@@ -1770,6 +1770,7 @@ void post_render() {
 	skipReady = true;
 	skipLogo = true;
 	reset_game();
+	gameFrozen = false;
 	fb_shown = false;
     } else if (fb_shown && !ImGui::IsPopupOpen(_("Load saved game"))) {
 	// cancel was pressed!
