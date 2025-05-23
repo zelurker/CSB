@@ -1757,6 +1757,8 @@ void PrintLines(const i32 color, const char *Text)
         LOCAL_56[D6W] = 0;
         if (d.PrintColumn+D6W > lastPrintCol)
         {
+	    // This PrintColumn = 2 and not 0 is to indent very long messages, so that it's easier to follow them, while the display doesn't go to column 0 it's the continuation of
+	    // the same text, otherwise it's a new message, so don't touch this column 2.
           d.PrintColumn = 2;
           scrollingText.CreateNewTextRow(printLinesCount);
         };
