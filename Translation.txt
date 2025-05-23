@@ -264,7 +264,7 @@
 "Extended character info..."			"Info personnage étendue..."
 "Speed"									"Vitesse"
 "Glacial"								"Gelée"
-"Very slow"								"Très lente"
+"Very Slow"								"Très Lente"
 "Slow"									"Lente"
 "Normal"								"Normale"
 "Fast"									"Rapide"
