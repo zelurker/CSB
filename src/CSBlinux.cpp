@@ -1568,6 +1568,7 @@ static void reset_game() {
     {
 	PostQuitMessage(0);
     }
+    gameFrozen = false;
 }
 
 static bool fb_shown,fb2_shown,fb3_shown,fb4_shown;
@@ -1770,7 +1771,6 @@ void post_render() {
 	skipReady = true;
 	skipLogo = true;
 	reset_game();
-	gameFrozen = false;
 	fb_shown = false;
     } else if (fb_shown && !ImGui::IsPopupOpen(_("Load saved game"))) {
 	// cancel was pressed!
