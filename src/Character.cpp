@@ -3632,7 +3632,8 @@ void DescribeObject(RN object,i16 P2)
 	  // attribute & 0xff shows when it's a projectile weapon but the distance / shoot damage is also interesting for ammo, so it's probably better to display it always
 	      sprintf(buf,"DISTANCE %d",clW->distance);
 	      PrintItemDesc(buf);
-	      sprintf(buf,"SHOOT DAMAGE %d",clW->uByte1);
+	      if (clW->uByte1)
+		  sprintf(buf,"SHOOT DAMAGE %d",clW->uByte1);
 	      PrintItemDesc(buf);
 	  // }
 	  if (DB5A0->poisoned())
