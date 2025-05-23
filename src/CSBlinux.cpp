@@ -206,9 +206,9 @@ static CSB_UI_MESSAGE csbMessage;
 
 static void __resize_screen( ui32 w, i32 h ) {
 #if 1
-    if (w < 640 || h < 400) {
+    if (w < 640 || h < 400+DY) {
 	WindowWidth = 640;
-	WindowHeight = 400;
+	WindowHeight = 400+DY;
     } else {
 	WindowWidth = w;
 	WindowHeight = h;
