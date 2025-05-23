@@ -1535,8 +1535,9 @@ void CreateCloud(RN P1,
   damage = sw(damage - D1W);
   if (damage <= 0) return;
   char levelText[25];
+  PrintLinefeed();
   nextTextTiming = 8;
-  snprintf(levelText,25,"SPELL DAMAGE %d\n",damage);
+  snprintf(levelText,25,"SPELL DAMAGE %d",damage);
   QuePrintLines(11, levelText, false); // 11 is yellow
   d.MonsterDamageResult
      = (i16)DamageMonsterGroup(pDB4_4, objX, objY, damage, 1, false, pmmr);
@@ -2050,8 +2051,9 @@ i16 ProcessMissileEncounter(
       {
         MONSTER_DAMAGE_RESULT monsterDamageResult;
 	char levelText[25];
+	PrintLinefeed();
 	nextTextTiming = 8;
-	snprintf(levelText,25,"PROJECTILE DAMAGE %d\n",D5W+D1W);
+	snprintf(levelText,25,"PROJECTILE DAMAGE %d",D5W+D1W);
 	// 15 is white like for a standard ST palette, can't believe they don't have any constant for colors!
 	QuePrintLines(15, levelText, false);
 
