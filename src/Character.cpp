@@ -3635,6 +3635,11 @@ void DescribeObject(RN object,i16 P2)
 	      if (clW->uByte1)
 		  sprintf(buf,"SHOOT DAMAGE %d",clW->uByte1);
 	      PrintItemDesc(buf);
+	      if (DB5A0->charges() && (objNID6 < objNI_Torch_a || objNID6 > objNI_Torch_d)) {
+		  char buf[20];
+		  sprintf(buf,"CHARGES %d",DB5A0->charges());
+		  PrintItemDesc(buf);
+	      }
 	  // }
 	  if (DB5A0->poisoned())
 	      PrintItemDesc("POISONED");
