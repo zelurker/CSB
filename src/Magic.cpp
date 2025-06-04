@@ -1229,7 +1229,7 @@ i16 CastSpell(i16 chIdx, SPELL_PARAMETERS& spellParameters)
                      spellByte5,        //Which skill
                      w_4 >> (D4W-D6W), //Experience gained
                      ASW_CastSpell1);
-        SpellErrorMsg(pcA3, 0, (i16)spellByte5);
+        SpellErrorMsg(pcA3, 0, (i16)spellByte5); // needs more practice with this...
         return 0;
       };
     };

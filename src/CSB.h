@@ -1797,7 +1797,7 @@ public:
               //    1 = needs flask
               //    2 = Missile type 0xff80 + bits4_9
               //    3 = Light, for example.
-              // bits 4-9 = missile type;
+              // bits 4-9 = missile type, also used by non missile spells !!!
               // bits 10-15 = time required for character to recover
 };
 

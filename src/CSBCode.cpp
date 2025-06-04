@@ -10232,7 +10232,7 @@ void ReadTablesFromGraphicsFile(void)
   }
   if (d.experienceForAttacking[32] == 9) { // hotfix for shoot experience, raised from 9 to 20 in dm 1.1!
       d.experienceForAttacking[32] = 20;
-      printf("Fix Shoot experience for DM 1.1\n");
+      printf("Fixed Shoot experience for DM 1.1\n");
   }
   for (i=0; i<25; i++) fixSpell(&d.Spells[i]);
   ASSERT(d.GraphicDecompressedSizes[0x22f] == 0xc0e,"graphicsize22f");
