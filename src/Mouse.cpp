@@ -897,6 +897,33 @@ void DropObject(i16 pos)
     if (d.FacingViAltar != 0)
     {
       objNI_2 = objD4.NameIndex();
+      if (objNI_2 == objNI_RABlade_a || objNI_2 == objNI_RABlade_b || // fury, the only one actually tested so far
+	      objNI_2 == objNI_Storm_a || objNI_2 == objNI_Storm_b || // storm ring probably... !
+	      objNI_2 == objNI_Flamitt_a || objNI_2 == objNI_Flamitt_b ||
+	      objNI_2 == objNI_EyeOfTime_a || objNI_2 == objNI_EyeOfTime_b ||
+	      objNI_2 == objNI_StaffOfClaws_a || objNI_2 == objNI_StaffOfClaws_b) {
+	  DB5 *db = GetRecordAddressDB5(objD4);
+	  if (db->charges() < 7) {
+	      D0L = d.Time;
+	      //D1L = d.partyLevel;
+	      //D1L <<= 24;
+	      //timer_16.timerTime = D0L | D1L;
+	      timer_16.Time(D0L);
+	      timer_16.Level((ui8)d.partyLevel);
+	      timer_16.Function(TT_ViAltar);
+	      //not needed.  timer process will determine character index. timer_16.timerUByte5 = DB10A3->value();
+	      //The bones we put here should be on top of the pile of
+	      //objects in the alcove.
+	      timer_16.timerUByte6(D6B);     //location
+	      timer_16.timerUByte7(D5B);     //location
+	      timer_16.timerUByte5(0);
+	      *timer_16.pTimerObj8() = objD4;
+	      timer_16.packedPos(w_4);
+	      timer_16.packedState(2);
+	      gameTimers.SetTimer(&timer_16);
+	  }
+      }
+
       if (objNI_2 == objNI_Bones_a) // bones??
       {
         DB10A3 = GetRecordAddressDB10(objD4);

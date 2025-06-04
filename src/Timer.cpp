@@ -249,7 +249,7 @@ void MissileTimer(TIMER *pTimer)
                    curPos,
                    missileFilterObject,
                    NULL);
-      if (D0W != 0) 
+      if (D0W != 0)
       {
         missileFilterObject = RNnul;
         return; // Missile is discarded.  Gone!
@@ -267,7 +267,7 @@ void MissileTimer(TIMER *pTimer)
              curPos,
              missileFilterObject,
              NULL);
-      if (D0W != 0) 
+      if (D0W != 0)
       {
         missileFilterObject = RNnul;
         return;
@@ -320,7 +320,7 @@ void MissileTimer(TIMER *pTimer)
       curMapY += d.DeltaY[missileDirection];
       nextCellFlags = GetCellFlags(curMapX, curMapY);
       nextRoomType = (ROOMTYPE)(nextCellFlags >> 5);
-      if (    (curMapX < 0) 
+      if (    (curMapX < 0)
            || (curMapX >= d.width)
            || (curMapY < 0)
            || (curMapY >= d.height)
@@ -350,14 +350,14 @@ void MissileTimer(TIMER *pTimer)
         // Will missile strike wall?
         D0W = ProcessMissileEncounter(
                 nextRoomType,  //Cell type
-                origMapX,    
+                origMapX,
                 origMapY,
                 origMapX,
-                origMapY,   // missile location 
+                origMapY,   // missile location
                 curPos,
                 missileFilterObject,
                 NULL);
-        if (D0W != 0) 
+        if (D0W != 0)
         {
           missileFilterObject = RNnul;
           return; // Missile is gone.
@@ -390,7 +390,7 @@ void MissileTimer(TIMER *pTimer)
     newDir = d.NewDir & 3; //Set to new Direction by MoveObject
     missileFilterTimer.timerWord8() &= 0xf3ff;
     missileFilterTimer.timerWord8() |= newDir<<10; //Set new direction in timer entry
-    missileFilterObject.pos(d.NewPos); //Set new position in object. 
+    missileFilterObject.pos(d.NewPos); //Set new position in object.
     //missileFilterTimer.timerTime &= 0xffffff;
     //D0L |= uw(d.NewLevel) << 24;
     //missileFilterTimer.timerTime |= (d.NewLevel<<24);
@@ -411,7 +411,7 @@ void MissileTimer(TIMER *pTimer)
              curPos,
              missileFilterObject,
              NULL);
-      if (D0W != 0) 
+      if (D0W != 0)
       {
         missileFilterObject = RNnul;
         return;//Missile is gone.
@@ -1008,7 +1008,7 @@ HTIMER GameTimers::SetTimer(TIMER *pNewTimer) //
     m_firstAvailTimer = m_maxTimers;
     EnlargeTimerQueue((m_maxTimers+10)*5/4);
   };
-  if (   (pNewTimer->Function() >= TT_MAP_FIRST) 
+  if (   (pNewTimer->Function() >= TT_MAP_FIRST)
       && (pNewTimer->Function() <= TT_MAP_LAST))
   {
     if (deleteDuplicateTimers != 0)
@@ -1056,7 +1056,7 @@ HTIMER GameTimers::SetTimer(TIMER *pNewTimer) //
   else
   {
     if (pNewTimer->Function() == TT_1) // goto tag010154;
-    
+
     //  =====================================================
     //The old way... look through all timer entries
     {
@@ -1505,7 +1505,7 @@ void ActivateDSA(int level, int x, int y, int pos, int action)
     NotImplemented(0xcca12);
   };
   for (objActuator = FindFirstObject(x,y);
-       objActuator != RNeof; 
+       objActuator != RNeof;
        objActuator = GetDBRecordLink(objActuator) )
   {
 
@@ -1530,9 +1530,9 @@ void ActivateDSA(int level, int x, int y, int pos, int action)
       //timer.timerTime   = level << 24;
       timer.Time(0);
       timer.Level((ui8)level);
-    
+
       ProcessDSATimer5(objActuator, &timer, locr);
-    }; 
+    };
 
 
   };
@@ -1711,8 +1711,8 @@ void ProcessTT_OPENROOM(TIMER *pTimer, ui32 index)
   {
     if (timerTypeModifier[pTimer->timerUByte9()] == 3) return;
     D7W = (I16)objD4.dbType();
-    if (   (D7W == dbTEXT) 
-        && (pTimer->Function() != TT_DESSAGE) 
+    if (   (D7W == dbTEXT)
+        && (pTimer->Function() != TT_DESSAGE)
         && (pTimer->Function() != TT_ParameterMessage))
     {
       pDB2_4 = GetRecordAddressDB2(objD4);
@@ -1735,9 +1735,9 @@ void ProcessTT_OPENROOM(TIMER *pTimer, ui32 index)
           && (targetY == d.partyY)      )
       {
         char text[1000];
-        DecodeText(text, 
-                   GetRecordAddressDB2(objD4), 
-                   1, 
+        DecodeText(text,
+                   GetRecordAddressDB2(objD4),
+                   1,
                    990);
         QuePrintLines(15, text, true);
       };
@@ -1839,13 +1839,13 @@ void ProcessTT_ReactivateGenerator(TIMER *pTimer)
   // The original FTL code looked for the first actuator
   // with type == 0 and turned it into a monster generator.
   // We had a problem with this however.  If a 'once-only'
-  // pressure pad was on the same square then, after the 
+  // pressure pad was on the same square then, after the
   // pad had been used once, its type is set to zero.  Then
-  // when the timer regeneration timer came along it 
-  // turned the pressure pad into a generator and that did 
+  // when the timer regeneration timer came along it
+  // turned the pressure pad into a generator and that did
   // not work well.  Now we store the generator's ID (RN id)
-  // in the timer.  If we can find an actuator with that ID 
-  // then we reactivate it.  Otherwise, we reactivate the 
+  // in the timer.  If we can find an actuator with that ID
+  // then we reactivate it.  Otherwise, we reactivate the
   // first actuator with type==0.  That keeps us backward
   // compatible with old savegames.
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2051,7 +2051,7 @@ void ThrowMissile(i32 missileType,
         {
           if (objectLocation.p == objectToThrow.pos()) break;
         };
-     
+
       };
       if (objectToThrow == RNeof) return;// original had RNnul) return;
       oldLevel = d.LoadedLevel;
@@ -2101,7 +2101,7 @@ static i32 NewState(i32 oldState,
 }
 
 static void ProcessPortraitTimer6(
-                     RN objPortrait, 
+                     RN objPortrait,
                      const TIMER *pTimer)
 {
   i32 level;
@@ -2121,7 +2121,7 @@ static void ProcessPortraitTimer6(
   if (TimerTraceActive)
   {
     fprintf(GETFILE(TraceFile),"Portrait State %d MSG %d\n",
-                      state, 
+                      state,
                       inputMsgType);
   };
   switch (inputMsgType)
@@ -2186,7 +2186,7 @@ bool ProcessTT_STONEROOM(TIMER *pTimer, ui32 index)
   };
   targetY = pTimer->timerUByte7();
   targetX = pTimer->timerUByte6();
-  
+
   targetPos = pTimer->timerUByte8();
   for (objAtTarget = FindFirstObject(targetX, targetY);
        objAtTarget != RNeof;
@@ -2237,7 +2237,7 @@ bool ProcessTT_STONEROOM(TIMER *pTimer, ui32 index)
           continue;
         };
         D4W = pDB3A2->value();
-        if ( (actuatorType == 6)||(actuatorType == 48) ) 
+        if ( (actuatorType == 6)||(actuatorType == 48) )
         {    // Counter
           if (TimerTraceActive)
           fprintf(GETFILE(TraceFile), "Actuator6(counter) %03x %02x(%02x,%02x) ",
@@ -2299,7 +2299,7 @@ bool ProcessTT_STONEROOM(TIMER *pTimer, ui32 index)
               switch (pDB3A2->andOrEdge())
               {
               case 0: //Always
-                break; 
+                break;
               case 1: //only if input changes
                 if (oldState == newState) continue;
                 break;
@@ -2376,7 +2376,7 @@ bool ProcessTT_STONEROOM(TIMER *pTimer, ui32 index)
         };  // if (actuatorType)
       };  // if (actuator)
     };  // if (text)
-    
+
 
   };  // for (each object in room)
   RotateActuatorList();
@@ -2743,9 +2743,18 @@ void ProcessTT_ViAltar(TIMER *pTimer)
         int chIndex;
         ui32 bonesRecord[1];
         if (objD4.pos() != D5UW) continue;
-        if (objD4.dbType() != dbMISC) continue;
+        // if (objD4.dbType() != dbMISC) continue;
         objNI_2 = objD4.NameIndex();
-        if (objNI_2 != objNI_Bones_a) continue;
+	if (objNI_2 == objNI_RABlade_a || objNI_2 == objNI_RABlade_b || // fury, the only one actually tested so far
+		objNI_2 == objNI_Storm_a || objNI_2 == objNI_Storm_b || // storm ring probably... !
+		objNI_2 == objNI_Flamitt_a || objNI_2 == objNI_Flamitt_b ||
+		objNI_2 == objNI_EyeOfTime_a || objNI_2 == objNI_EyeOfTime_b ||
+		objNI_2 == objNI_StaffOfClaws_a || objNI_2 == objNI_StaffOfClaws_b) {
+	    DB5 *db = GetRecordAddressDB5(objD4);
+	    db->charges(7);
+	    break;
+	}
+        if (objNI_2 != objNI_Bones_a ) continue;
         if (objD4 != objBones) continue;
         if (expool.GetChampionBonesRecord(objD4, bonesRecord) == 1)
         {
@@ -2849,7 +2858,7 @@ void ProcessLightLevelTimer(TIMER *pTimer)
   };
   newNumberOfSteps = oldNumberOfSteps - 1;
   ASSERT(oldNumberOfSteps < 16,"steps");
-  changeInBrightness = d.Word1074[oldNumberOfSteps] 
+  changeInBrightness = d.Word1074[oldNumberOfSteps]
                            - d.Word1074[newNumberOfSteps];
   if (negativeChange)
   {
@@ -2882,8 +2891,8 @@ void GameTimers::ConvertToSequencedTimers(void)
   // append a couple of zero bytes which will bet swapped
   // but still remain zero!
   i32 i;
-  //i32 oldSize = sizeof(TIMER) - sizeof(m_timers[0].m_timerSequence); 
-  i32 oldSize = 10; 
+  //i32 oldSize = sizeof(TIMER) - sizeof(m_timers[0].m_timerSequence);
+  i32 oldSize = 10;
   i32 newSize = 12;
   ui8 *pOldTimer;
   ui8 *pNewTimer;
