@@ -294,7 +294,7 @@
 "Skeleton"								"Squelette"
 "IRON KEY"								"CLE EN FER"
 "EMERALD KEY"								"CLE EMERAUDE"
-"DIAMOND EDGE"								"ARRETE DE DIAMANT"
+"DIAMOND EDGE"								"LAME DE DIAMANT"
 "STAFF"									"BATON"
 " CHEST"								" COFFRE"
 "SOLID KEY"								"CLE SOLIDE"
