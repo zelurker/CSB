@@ -897,13 +897,9 @@ void DropObject(i16 pos)
     if (d.FacingViAltar != 0)
     {
       objNI_2 = objD4.NameIndex();
-      if (objNI_2 == objNI_RABlade_a || objNI_2 == objNI_RABlade_b || // fury, the only one actually tested so far
-	      objNI_2 == objNI_Storm_a || objNI_2 == objNI_Storm_b || // storm ring probably... !
-	      objNI_2 == objNI_Flamitt_a || objNI_2 == objNI_Flamitt_b ||
-	      objNI_2 == objNI_EyeOfTime_a || objNI_2 == objNI_EyeOfTime_b ||
-	      objNI_2 == objNI_StaffOfClaws_a || objNI_2 == objNI_StaffOfClaws_b) {
+      if (objD4.dbType() == dbWEAPON) {
 	  DB5 *db = GetRecordAddressDB5(objD4);
-	  if (db->charges() < 7) {
+	  if (db->charges() < get_default_charges(objNI_2)) {
 	      D0L = d.Time;
 	      //D1L = d.partyLevel;
 	      //D1L <<= 24;

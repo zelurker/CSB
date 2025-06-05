@@ -2703,6 +2703,41 @@ void TAG011366(i16 chIdx)
   };
 }
 
+int get_default_charges(OBJ_NAME_INDEX obj) {
+    switch (obj) {
+    case objNI_TeoWand:
+    case objNI_Wand:
+    case objNI_StaffOfIrra: // staff of manar
+    case objNI_SceptreOfLyf:
+    case objNI_SerpentStaff: // the conduit
+	return 14;
+    case objNI_Storm_a:
+    case objNI_Storm_b: // bolt blade
+	return 13;
+    case objNI_YewStaff:
+	return 11;
+    // case objNI_DragonSpit:
+    // The dragonspit was supposed to spit fireballs apparently, but for some reason it doesn't have the ability to do so, even with charges
+    // return 9;
+    case objNI_RABlade_a:
+    case objNI_RABlade_b: // fury
+    case objNI_StaffOfClaws_a:
+    case objNI_StaffOfClaws_b:
+	return 7;
+    case objNI_Flamitt_a:
+    case objNI_Flamitt_b:
+	return 6;
+    case objNI_EyeOfTime_a:
+    case objNI_EyeOfTime_b:
+	return 4;
+    case objNI_StormRing_a:
+    case objNI_StormRing_b:
+	return 3;
+    default:
+	return 0;
+    }
+}
+
 //*********************************************************
 //
 //*********************************************************
@@ -2745,13 +2780,10 @@ void ProcessTT_ViAltar(TIMER *pTimer)
         if (objD4.pos() != D5UW) continue;
         // if (objD4.dbType() != dbMISC) continue;
         objNI_2 = objD4.NameIndex();
-	if (objNI_2 == objNI_RABlade_a || objNI_2 == objNI_RABlade_b || // fury, the only one actually tested so far
-		objNI_2 == objNI_Storm_a || objNI_2 == objNI_Storm_b || // storm ring probably... !
-		objNI_2 == objNI_Flamitt_a || objNI_2 == objNI_Flamitt_b ||
-		objNI_2 == objNI_EyeOfTime_a || objNI_2 == objNI_EyeOfTime_b ||
-		objNI_2 == objNI_StaffOfClaws_a || objNI_2 == objNI_StaffOfClaws_b) {
+	if (objD4.dbType() == dbWEAPON) {
 	    DB5 *db = GetRecordAddressDB5(objD4);
-	    db->charges(7);
+	    int charges = get_default_charges(objNI_2);
+	    db->charges(charges);
 	    break;
 	}
         if (objNI_2 != objNI_Bones_a ) continue;

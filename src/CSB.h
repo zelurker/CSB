@@ -3671,6 +3671,7 @@ void ProcessTimer60and61(TIMER *P1);//TAG011192(void)
 void ProcessTT_PITROOM(TIMER *P1);//TAG01111c//(void)
 void EnableCharacterAction(i32 chIdx);//TAG011292
 void TAG011366(i16 P1);
+int get_default_charges(OBJ_NAME_INDEX obj);
 void ProcessTT_ViAltar(TIMER *P1);//TAG0113c4(void)
 void SetWatchdogTimer(void); //TAG0114d0
 void ProcessLightLevelTimer(TIMER *P1);
