@@ -1745,7 +1745,7 @@ void post_render() {
 
 	if (show_coords) {
 	    ImGui::SameLine(ImGui::GetWindowWidth() - 100);
-	    ImGui::Text("Party %d,%d,%d",d.partyLevel,d.partyX,d.partyY);
+	    ImGui::Text("Party %d,%d,%d",d.partyLevel,d.partyX+d.pLevelDescriptors[d.partyLevel].offsetX,d.partyY+d.pLevelDescriptors[d.partyLevel].offsetY);
 	}
 	ImGui::EndMainMenuBar();
     }
