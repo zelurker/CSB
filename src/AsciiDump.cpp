@@ -2567,6 +2567,17 @@ void ItemsRemaining(i32 mode)
                             y + d.pLevelDescriptors[level].offsetY);
               sprintf(line+strlen(line),"%d",object.pos());
               sprintf(line+strlen(line)," %s",_(itemName));
+	      if (object.dbType() == dbWEAPON) {
+		  OBJ_NAME_INDEX objNI;
+		  objNI = object.NameIndex();
+		  if (objNI < objNI_Torch_a || objNI > objNI_Torch_d) {
+		      DB5 *db = GetRecordAddressDB5(object);
+		      if (db->charges()) sprintf(line+strlen(line)," (%d charges)",db->charges());
+		  }
+	      } else if (object.dbType() == dbCLOTHING) {
+		  DB6 *db = GetRecordAddressDB6(object);
+		  if (db->charges()) sprintf(line+strlen(line)," (%d charges)",db->charges());
+	      }
               listing->AddLine(line);
               totalLine++;
               if (n==2)
