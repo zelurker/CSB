@@ -1554,8 +1554,11 @@ bool show_listing;
 extern i32 lastTime;
 extern bool skipLogo;
 static bool show_coords,open_char_info;
+extern i32 numState;
 
 static void reset_game() {
+    numState = 0; // reset the "stackState" from system.cpp
+		  // because we are creating a new one here.
     verticalIntEnabled = false;
     lastTime = 0; // reset _MouseHandleEvents
     open_char_info = false; // Prevents a freeze when reseting a game with this open
