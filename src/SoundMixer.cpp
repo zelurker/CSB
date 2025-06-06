@@ -419,24 +419,28 @@ static void mix_channels(void *udata, Uint8 *stream, int len)
 		      int x = data->posX - d.partyX;
 		      int y = data->posY - d.partyY;
 		      double dist = sqrt(x*x + y*y);
-		      switch(d.partyFacing) {
-		      case 0: // north
-			  panRight = 0.5 + x/dist/2;
-			  break;
-		      case 1: // east
-			  panRight = 0.5 - y/dist/2;
-			  break;
-		      case 2: // south
-			  panRight = 0.5 - x/dist/2;
-			  break;
-		      case 3:
-			  panRight = 0.5 + y/dist/2;
-			  break;
+		      if (dist < 1e-4) {
+			  panLeft = panRight = 0.5; // sound on party
+		      } else {
+			  switch(d.partyFacing) {
+			  case 0: // north
+			      panRight = 0.5 + x/dist/2;
+			      break;
+			  case 1: // east
+			      panRight = 0.5 - y/dist/2;
+			      break;
+			  case 2: // south
+			      panRight = 0.5 - x/dist/2;
+			      break;
+			  case 3:
+			      panRight = 0.5 + y/dist/2;
+			      break;
+			  }
+			  panLeft = 1 - panRight;
+			  double att = 1/(dist*dist);
+			  panRight *= att;
+			  panLeft *= att;
 		      }
-		      panLeft = 1 - panRight;
-		      double att = 1/(dist*dist);
-		      panRight *= att;
-		      panLeft *= att;
 		  }
 
 		  while (bw < remaining)
@@ -491,20 +495,20 @@ static void mix_channels(void *udata, Uint8 *stream, int len)
 			      for (int n=0; n<cp2; n++) {
 				  int dst = dest[n*2] + src[n]*panLeft;
 				  if (dst > 0x7fff) {
-				      printf("mix overflow %x from %d & %d\n",dst,dest[n*2],src[n]);
-				      dest[n*2] = 0x7fff;
+				      // printf("mix overflow %x from %d & %d\n",dst,dest[n*2],src[n]);
+				      dest[n*2] = (dest[n*2] + src[n]*panLeft)/2;
 				  } else if (dst & 0xffff0000 && !(dst & 0x8000)) {
-				      printf("mix underflow %x from %d & %d\n",dst,dest[n*2],src[n]);
-				      dest[n*2] = -0x7fff;
+				      // printf("mix underflow %x from %d & %d\n",dst,dest[n*2],src[n]);
+				      dest[n*2] = (dest[n*2] + src[n]*panLeft)/2;
 				  } else
 				      dest[n*2] = dst;
 				  dst = dest[n*2+1] + src[n]*panRight;
 				  if (dst > 0x7fff) {
-				      printf("mix overflow %x from %d & %d\n",dst,dest[n*2+1],src[n]);
-				      dest[n*2+1] = 0x7fff;
+				      // printf("mix overflow %x from %d & %d\n",dst,dest[n*2+1],src[n]);
+				      dest[n*2+1] = (dest[n*2+1] + src[n]*panRight)/2;
 				  } else if (dst & 0xffff0000 && !(dst & 0x8000)) {
-				      printf("mix underflow %x from %d & %d\n",dst,dest[n*2+1],src[n]);
-				      dest[n*2+1] = -0x7fff;
+				      // printf("mix underflow %x from %d & %d\n",dst,dest[n*2+1],src[n]);
+				      dest[n*2+1] = (dest[n*2+1] + src[n]*panRight)/2;
 				  } else
 				      dest[n*2+1] = dst;
 			      }
