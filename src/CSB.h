@@ -3579,6 +3579,7 @@ void ThrowMissile(i32 missileType,
 void CreateCloud(RN, i16, i32, i32, i32, i32, i16, MMRECORD *pmmrF);//(void)TAG00dea8
 void TAG00e156(RN);
 void ProcessObjectFromMissile(RN, RN *dest, i32, i32);//TAG00e17a(void)
+extern int projectile_dmg_divider;
 i16  DetermineMagicDamage(DB14 *rec, RN object);//TAG00e218
 //   TAG00e35a
 i16  ProcessMissileEncounter(

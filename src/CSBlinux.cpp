@@ -1731,7 +1731,14 @@ void post_render() {
 	    ImGui::MenuItem(_("DM Rules"), NULL,&DM_rules);
 	    if (ImGui::MenuItem(_("Extended character info..."),NULL,false,d.NumCharacter > 0))
 		open_char_info = true;
-
+	    if (ImGui::BeginMenu(_("Projectile damage divider"))) {
+		if (ImGui::MenuItem(_("16 (default)"),NULL, projectile_dmg_divider == 16)) projectile_dmg_divider = 16;
+		if (ImGui::MenuItem("8",NULL, projectile_dmg_divider == 8)) projectile_dmg_divider = 8;
+		if (ImGui::MenuItem("4",NULL, projectile_dmg_divider == 4)) projectile_dmg_divider = 4;
+		if (ImGui::MenuItem("2",NULL, projectile_dmg_divider == 2)) projectile_dmg_divider = 2;
+		if (ImGui::MenuItem("1",NULL, projectile_dmg_divider == 1)) projectile_dmg_divider = 1;
+		ImGui::EndMenu();
+	    }
 	    ImGui::EndMenu();
 	} else if (!imgui_active) {
 	    if (was_active && !cursorIsShowing) {
