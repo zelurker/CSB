@@ -524,6 +524,7 @@ void PhysicalAttackFilter(ATTACKPARAMETERS *pParam, FILTER *pFilter, const char 
 
 }
 
+extern void LIN_PlayDirect(const char *name,int posX, int posY);
 //*********************************************************
 // Called when we hit monster with sword
 //*********************************************************
@@ -586,7 +587,19 @@ i32 DeterminePhysicalAttackDamage(
     fprintf(GETFILE(TraceFile),"%slevelDifficulty = %d\n",
                       traceID, levelDifficulty);
   };
-  pmtDesc = &d.MonsterDescriptor[GetRecordAddressDB4(objMon)->monsterType()];
+  DB4 *db = GetRecordAddressDB4(objMon);
+  int nb = pParam->attdep.physicalAttack.attackedMonsterOrdinal-1;
+  ITEM16 *pi16_4 = &d.Item16[db->groupIndex()];
+  int attacking = pi16_4->singleMonsterStatus[nb].TestAttacking();
+#if 0
+  printf("nb %d attacking %d %d %d %d\n",nb,
+	  pi16_4->singleMonsterStatus[0].TestAttacking(),
+	  pi16_4->singleMonsterStatus[1].TestAttacking(),
+	  pi16_4->singleMonsterStatus[2].TestAttacking(),
+	  pi16_4->singleMonsterStatus[3].TestAttacking()
+	  );
+#endif
+  pmtDesc = &d.MonsterDescriptor[db->monsterType()];
   objNI_attackWeapon = pchA3->Possession(1).NameIndex(); //weapon hand
   // We modified the calling sequence to separate the
   // vorpalOrDisrupt parameter from parameter P7
@@ -666,7 +679,12 @@ i32 DeterminePhysicalAttackDamage(
       {
         fprintf(GETFILE(TraceFile),"%sD7W = D7W*(P8=%d)/32 = %d\n",traceID,P8,D7W);
       };
-      D4W = sw((ranResult=STRandom(32)) + pmtDesc->defense08 + levelDifficulty);
+      if (attacking && db->monsterType() == mon_RockPile) {
+	  // printf("critical hit\n");
+	  D4W = sw((ranResult=STRandom(32)) + pmtDesc->defense08 + levelDifficulty)/2;
+	  LIN_PlayDirect("critical-damage.mp3",d.partyX,d.partyY);
+      } else
+	  D4W = sw((ranResult=STRandom(32)) + pmtDesc->defense08 + levelDifficulty);
       if (traceID!=NULL)
       {
         fprintf(GETFILE(TraceFile),"%sD4W = (i26->uByte8[0]=%d) + (levelDifficulty=%d) + (random(32)=%d) = %d\n",
