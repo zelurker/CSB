@@ -342,203 +342,212 @@ int Mix_Volume(int which, int volume)
 
 static void mix_channels(void *udata, Uint8 *stream, int len)
 {
-  Uint8 *mix_input;
-  int i, mixable, volume = SDL_MIX_MAXVOLUME;
-  Uint32 sdl_ticks;
-  int mixed = 0;
+    Uint8 *mix_input;
+    int i, mixable, volume = SDL_MIX_MAXVOLUME;
+    Uint32 sdl_ticks;
+    int mixed = 0;
 
 #if SDL_VERSION_ATLEAST(1, 3, 0)
-  /* Need to initialize the stream in SDL 1.3+ */
-  // emset(stream, mixer.silence, len);
+    /* Need to initialize the stream in SDL 1.3+ */
+    // emset(stream, mixer.silence, len);
 #endif
-  /* Mix any playing channels... */
-  sdl_ticks = SDL_GetTicks();
-  for ( i=0; i<num_channels; ++i )
-  {
-      if( ! mix_channel[i].paused )
-      {
-	  if ( mix_channel[i].expire > 0 && mix_channel[i].expire < sdl_ticks )
-	  {
-	      /* Expiration delay for that channel is reached */
-	      mix_channel[i].playing = 0;
-	      mix_channel[i].looping = 0;
-	      mix_channel[i].fading = MIX_NO_FADING;
-	      mix_channel[i].expire = 0;
-	      printf("expire\n");
-	      _Mix_channel_done_playing(i);
-	  }
-	  else if ( mix_channel[i].fading != MIX_NO_FADING )
-	  {
-	      Uint32 ticks = sdl_ticks - mix_channel[i].ticks_fade;
-	      printf("fading\n");
-	      if( ticks > mix_channel[i].fade_length )
-	      {
-		  Mix_Volume(i, mix_channel[i].fade_volume_reset); /* Restore the volume */
-		  if( mix_channel[i].fading == MIX_FADING_OUT )
-		  {
-		      mix_channel[i].playing = 0;
-		      mix_channel[i].looping = 0;
-		      mix_channel[i].expire = 0;
-		      _Mix_channel_done_playing(i);
-		  };
-		  mix_channel[i].fading = MIX_NO_FADING;
-	      }
-	      else
-	      {
-		  if( mix_channel[i].fading == MIX_FADING_OUT )
-		  {
-		      Mix_Volume(i, (mix_channel[i].fade_volume * (mix_channel[i].fade_length-ticks))
-			      / mix_channel[i].fade_length );
-		  }
-		  else
-		  {
-		      Mix_Volume(i, (mix_channel[i].fade_volume * ticks) / mix_channel[i].fade_length );
-		  }
-	      }
-	  }
-	  if ( mix_channel[i].playing > 0 )
-	  {
-	      int index = 0;
-	      int remaining = len;
-	      while (mix_channel[i].playing > 0 && index < len)
-	      {
-		  remaining = len - index;
-		  volume = mix_channel[i].volume;
-		  //mix_input = (Uint8 *)Mix_DoEffects
-		  //    (i, mix_channel[i].samples, mixable);
+    /* Mix any playing channels... */
+    sdl_ticks = SDL_GetTicks();
+    for ( i=0; i<num_channels; ++i )
+    {
+	if( ! mix_channel[i].paused )
+	{
+	    if ( mix_channel[i].expire > 0 && mix_channel[i].expire < sdl_ticks )
+	    {
+		/* Expiration delay for that channel is reached */
+		mix_channel[i].playing = 0;
+		mix_channel[i].looping = 0;
+		mix_channel[i].fading = MIX_NO_FADING;
+		mix_channel[i].expire = 0;
+		printf("expire\n");
+		_Mix_channel_done_playing(i);
+	    }
+	    else if ( mix_channel[i].fading != MIX_NO_FADING )
+	    {
+		Uint32 ticks = sdl_ticks - mix_channel[i].ticks_fade;
+		printf("fading\n");
+		if( ticks > mix_channel[i].fade_length )
+		{
+		    Mix_Volume(i, mix_channel[i].fade_volume_reset); /* Restore the volume */
+		    if( mix_channel[i].fading == MIX_FADING_OUT )
+		    {
+			mix_channel[i].playing = 0;
+			mix_channel[i].looping = 0;
+			mix_channel[i].expire = 0;
+			_Mix_channel_done_playing(i);
+		    };
+		    mix_channel[i].fading = MIX_NO_FADING;
+		}
+		else
+		{
+		    if( mix_channel[i].fading == MIX_FADING_OUT )
+		    {
+			Mix_Volume(i, (mix_channel[i].fade_volume * (mix_channel[i].fade_length-ticks))
+				/ mix_channel[i].fade_length );
+		    }
+		    else
+		    {
+			Mix_Volume(i, (mix_channel[i].fade_volume * ticks) / mix_channel[i].fade_length );
+		    }
+		}
+	    }
+	    if ( mix_channel[i].playing > 0 )
+	    {
+		int index = 0;
+		int remaining = len;
+		while (mix_channel[i].playing > 0 && index < len)
+		{
+		    remaining = len - index;
+		    volume = mix_channel[i].volume;
+		    //mix_input = (Uint8 *)Mix_DoEffects
+		    //    (i, mix_channel[i].samples, mixable);
 
-		  // From SDL_sound, playsample_simple.c callback... !
-		  _Mix_Channel *data = &mix_channel[i];
-		  Sound_Sample *sample = data->chunk;
-		  int bw = 0; /* bytes written to stream this time through the callback */
+		    // From SDL_sound, playsample_simple.c callback... !
+		    _Mix_Channel *data = &mix_channel[i];
+		    Sound_Sample *sample = data->chunk;
+		    int bw = 0; /* bytes written to stream this time through the callback */
 
-		  double panLeft,panRight;
-		  if (data->posX < 0) {
-		      panLeft = panRight = 0.5; // sound on party
-		  } else {
-		      int x = data->posX - d.partyX;
-		      int y = data->posY - d.partyY;
-		      double dist = sqrt(x*x + y*y);
-		      if (dist < 1e-4) {
-			  panLeft = panRight = 0.5; // sound on party
-		      } else {
-			  switch(d.partyFacing) {
-			  case 0: // north
-			      panRight = 0.5 + x/dist/2;
-			      break;
-			  case 1: // east
-			      panRight = 0.5 - y/dist/2;
-			      break;
-			  case 2: // south
-			      panRight = 0.5 - x/dist/2;
-			      break;
-			  case 3:
-			      panRight = 0.5 + y/dist/2;
-			      break;
-			  }
-			  panLeft = 1 - panRight;
-			  double att = 1/(dist*dist);
-			  panRight *= att;
-			  panLeft *= att;
-		      }
-		  }
+		    double panLeft,panRight;
+		    if (data->posX < 0) {
+			panLeft = panRight = 0.5; // sound on party
+		    } else {
+			int x = data->posX - d.partyX;
+			int y = data->posY - d.partyY;
+			double dist = sqrt(x*x + y*y);
+			if (dist < 1e-4) {
+			    panLeft = panRight = 0.5; // sound on party
+			} else {
+			    switch(d.partyFacing) {
+			    case 0: // north
+				panRight = 0.5 + x/dist/2;
+				break;
+			    case 1: // east
+				panRight = 0.5 - y/dist/2;
+				break;
+			    case 2: // south
+				panRight = 0.5 - x/dist/2;
+				break;
+			    case 3:
+				panRight = 0.5 + y/dist/2;
+				break;
+			    }
+			    panLeft = 1 - panRight;
+			    double att = 1/(dist*dist);
+			    panRight *= att;
+			    panLeft *= att;
+			}
+		    }
 
-		  while (bw < remaining)
-		  {
-		      int cpysize;  /* bytes to copy on this iteration of the loop. */
+		    while (bw < remaining)
+		    {
+			int cpysize;  /* bytes to copy on this iteration of the loop. */
 
-		      if (data->decoded_bytes == 0) /* need more data! */
-		      {
-			  /* if there wasn't previously an error or EOF, read more. */
-			  if ( ((sample->flags & SOUND_SAMPLEFLAG_ERROR) == 0) &&
-				  ((sample->flags & SOUND_SAMPLEFLAG_EOF) == 0) )
-			  {
-			      data->decoded_bytes = Sound_Decode(sample);
-			      data->decoded_ptr = (uint8_t*)sample->buffer;
-			  } /* if */
+			if (data->decoded_bytes == 0) /* need more data! */
+			{
+			    /* if there wasn't previously an error or EOF, read more. */
+			    if ( ((sample->flags & SOUND_SAMPLEFLAG_ERROR) == 0) &&
+				    ((sample->flags & SOUND_SAMPLEFLAG_EOF) == 0) )
+			    {
+				data->decoded_bytes = Sound_Decode(sample);
+				data->decoded_ptr = (uint8_t*)sample->buffer;
+			    } /* if */
 
-			  if (data->decoded_bytes == 0)
-			  {
-			      if (data->looping) {
-				  data->looping--;
-				  Sound_Rewind(sample);
-				  continue;
-			      }
+			    if (data->decoded_bytes == 0)
+			    {
+				if (data->looping) {
+				    data->looping--;
+				    Sound_Rewind(sample);
+				    continue;
+				}
 
-			      /* ...there isn't any more data to read! */
-			      SDL_memset(stream + bw, '\0', remaining - bw);  /* write siremainingce. */
-			      mix_channel[i].playing = 0;
-			      break;  /* we're done playback, one way or another. */
-			  } /* if */
-		      } /* if */
+				/* ...there isn't any more data to read! */
+				SDL_memset(stream + bw, '\0', remaining - bw);  /* write siremainingce. */
+				mix_channel[i].playing = 0;
+				break;  /* we're done playback, one way or another. */
+			    } /* if */
+			} /* if */
 
-		      /* we have data decoded and ready to write to the device... */
-		      cpysize = remaining - bw;  /* remaining - bw == amount device still wants. */
-		      if (cpysize > (Sint32)data->decoded_bytes)
-			  cpysize = (Sint32)data->decoded_bytes;  /* clamp to what we have left. */
+			/* we have data decoded and ready to write to the device... */
+			cpysize = remaining - bw;  /* remaining - bw == amount device still wants. */
+			if (cpysize > (Sint32)data->decoded_bytes)
+			    cpysize = (Sint32)data->decoded_bytes;  /* clamp to what we have left. */
 
-		      /* if it's 0, next iteration will decode more or decide we're done. */
-		      if (cpysize > 0)
-		      {
-			  /* write this iteration's data to the device. */
-			  int16_t *dest = (int16_t*)(stream + bw);
-			  int16_t *src = (int16_t*)data->decoded_ptr;
-			  int cp2 = cpysize/2;
-			  // Samples decoded on 1 channel, but played on 2
-			  if (!mixed) {
-			      // SDL_memcpy(stream + bw, (Uint8 *) data->decoded_ptr, cpysize);
-			      for (int n=0; n<cp2; n++) {
-				  dest[n*2] = src[n]*panLeft;
-				  dest[n*2+1] = src[n]*panRight;
-			      }
-			  } else {
-			      for (int n=0; n<cp2; n++) {
-				  int dst = dest[n*2] + src[n]*panLeft;
-				  if (dst > 0x7fff) {
-				      // printf("mix overflow %x from %d & %d\n",dst,dest[n*2],src[n]);
-				      dest[n*2] = (dest[n*2] + src[n]*panLeft)/2;
-				  } else if (dst & 0xffff0000 && !(dst & 0x8000)) {
-				      // printf("mix underflow %x from %d & %d\n",dst,dest[n*2],src[n]);
-				      dest[n*2] = (dest[n*2] + src[n]*panLeft)/2;
-				  } else
-				      dest[n*2] = dst;
-				  dst = dest[n*2+1] + src[n]*panRight;
-				  if (dst > 0x7fff) {
-				      // printf("mix overflow %x from %d & %d\n",dst,dest[n*2+1],src[n]);
-				      dest[n*2+1] = (dest[n*2+1] + src[n]*panRight)/2;
-				  } else if (dst & 0xffff0000 && !(dst & 0x8000)) {
-				      // printf("mix underflow %x from %d & %d\n",dst,dest[n*2+1],src[n]);
-				      dest[n*2+1] = (dest[n*2+1] + src[n]*panRight)/2;
-				  } else
-				      dest[n*2+1] = dst;
-			      }
-			  }
+			/* if it's 0, next iteration will decode more or decide we're done. */
+			if (cpysize > 0)
+			{
+			    /* write this iteration's data to the device. */
+			    int16_t *dest = (int16_t*)(stream + bw);
+			    int16_t *src = (int16_t*)data->decoded_ptr;
+			    int cp2 = cpysize/2;
+			    // Samples decoded on 1 channel, but played on 2
+			    if (!mixed) {
+				// SDL_memcpy(stream + bw, (Uint8 *) data->decoded_ptr, cpysize);
+				for (int n=0; n<cp2; n++) {
+				    dest[n*2] = src[n]*panLeft;
+				    dest[n*2+1] = src[n]*panRight;
+				}
+			    } else {
+				int min=0,max=0;
+				double amp;
+				bool no_amp = false;
+				for (int n=0; n<cp2; n++) {
+				    int dst = dest[n*2] + src[n]*panLeft;
+				    if (dst > 0x7fff && dst > max) {
+					max = dst;
+				    } else if (dst & 0xffff0000 && !(dst & 0x8000) && dst < min) {
+					min = dst;
+				    }
+				}
+				if (abs(min) > max) {
+				    amp = 32767.0/abs(min);
+				} else if (max > 0) {
+				    amp = 32767.0/max;
+				} else {
+				    no_amp = true;
+				}
+				if (no_amp) {
+				    for (int n=0; n<cp2; n++) {
+					dest[n*2] = (dest[n*2] + src[n]*panLeft);
+					dest[n*2+1] = (dest[n*2+1] + src[n]*panRight);
+				    }
+				} else {
+				    for (int n=0; n<cp2; n++) {
+					dest[n*2] = (dest[n*2] + src[n]*panLeft)*amp;
+					dest[n*2+1] = (dest[n*2+1] + src[n]*panRight)*amp;
+				    }
+				}
+			    }
 
-			  /* update state for next iteration or callback */
-			  bw += cpysize*2;
-			  data->decoded_ptr += cpysize;
-			  data->decoded_bytes -= cpysize;
-		      } /* if */
-		  } /* while */
-		  mixed = 1;
-		  index += remaining;
-		  if (!mix_channel[i].playing && !mix_channel[i].looping)
-		  {
-		      _Mix_channel_done_playing(i);
-		  }
-	      }
-	  }
-      }
-  }
+			    /* update state for next iteration or callback */
+			    bw += cpysize*2;
+			    data->decoded_ptr += cpysize;
+			    data->decoded_bytes -= cpysize;
+			} /* if */
+		    } /* while */
+		    mixed = 1;
+		    index += remaining;
+		    if (!mix_channel[i].playing && !mix_channel[i].looping)
+		    {
+			_Mix_channel_done_playing(i);
+		    }
+		}
+	    }
+	}
+    }
 
-  /* rcg06122001 run posteffects... */
-  Mix_DoEffects(MIX_CHANNEL_POST, stream, len);
-  if ( mix_postmix )
-  {
-    mix_postmix(mix_postmix_data, stream, len);
-  }
-  if (!mixed)
-      memset(stream, mixer.silence, len);
+    /* rcg06122001 run posteffects... */
+    Mix_DoEffects(MIX_CHANNEL_POST, stream, len);
+    if ( mix_postmix )
+    {
+	mix_postmix(mix_postmix_data, stream, len);
+    }
+    if (!mixed)
+	memset(stream, mixer.silence, len);
 }
 
 static int devs_audio = -1;
