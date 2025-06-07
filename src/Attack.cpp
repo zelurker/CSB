@@ -642,6 +642,7 @@ i32 DeterminePhysicalAttackDamage(
         fprintf(GETFILE(TraceFile),"%sPhysicalAttack Returning 0\n",traceID);
       };
       DrawCharacterState(pParam->charIdx);
+      QueueSound(16, d.partyX, d.partyY, 1); // basic swing/chop etc sound
       return 0;
     };
     if (traceID!=NULL)
@@ -679,12 +680,14 @@ i32 DeterminePhysicalAttackDamage(
       {
         fprintf(GETFILE(TraceFile),"%sD7W = D7W*(P8=%d)/32 = %d\n",traceID,P8,D7W);
       };
-      if (attacking && db->monsterType() == mon_RockPile) {
+      if (attacking /* && db->monsterType() == mon_RockPile */) {
 	  // printf("critical hit\n");
 	  D4W = sw((ranResult=STRandom(32)) + pmtDesc->defense08 + levelDifficulty)/2;
 	  LIN_PlayDirect("critical-damage.mp3",d.partyX,d.partyY);
-      } else
+      } else {
 	  D4W = sw((ranResult=STRandom(32)) + pmtDesc->defense08 + levelDifficulty);
+	  QueueSound(16, d.partyX, d.partyY, 1); // normal attack sound (swing, chop...)
+      }
       if (traceID!=NULL)
       {
         fprintf(GETFILE(TraceFile),"%sD4W = (i26->uByte8[0]=%d) + (levelDifficulty=%d) + (random(32)=%d) = %d\n",
@@ -763,6 +766,7 @@ i32 DeterminePhysicalAttackDamage(
           fprintf(GETFILE(TraceFile),"%sPhysicalAttack Returning 0\n",traceID);
         };
         DrawCharacterState(pParam->charIdx);
+	QueueSound(16, d.partyX, d.partyY, 1); // normal attack sound (swing, chop...)
         return 0;
       };
       if (traceID!=NULL)
@@ -879,6 +883,7 @@ i32 DeterminePhysicalAttackDamage(
         fprintf(GETFILE(TraceFile),"%sPhysicalAttack Returning 0\n",traceID);
       };
       DrawCharacterState(pParam->charIdx);
+      QueueSound(16, d.partyX, d.partyY, 1); // normal attack sound (swing, chop...)
       return 0;
     };
     D0W = sw((ranResult=STRandom(64)));
@@ -1085,7 +1090,6 @@ i16 AttackWithPhysicalForce(
             traceID, pParam->attackType, pParam->skillNumber);
   };
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  QueueSound(16, d.partyX, d.partyY, 1);
   if (d.MonsterUnderAttack == RNeof)
   {
     if (traceID!=NULL)
@@ -1093,6 +1097,7 @@ i16 AttackWithPhysicalForce(
       fprintf(GETFILE(TraceFile),"%sNo monster in attacked square.  Return 0\n",traceID);
     };
     PhysicalAttackFilter(pParam, pFilter, traceID);
+    QueueSound(16, d.partyX, d.partyY, 1); // normal attack sound (swing, chop...)
     return 0;
   };
   pParam->attdep.physicalAttack.monsterDamage = 0;
@@ -1109,6 +1114,7 @@ i16 AttackWithPhysicalForce(
       fprintf(GETFILE(TraceFile),"%sNo monster can be attacked. Return 0.\n",traceID);
     };
     PhysicalAttackFilter(pParam, pFilter, traceID);
+    QueueSound(16, d.partyX, d.partyY, 1); // normal attack sound (swing, chop...)
     return 0;
   };
   D0W = sw((d.hero[pParam->charIdx].charPosition + 4 - d.hero[pParam->charIdx].facing) & 3);
@@ -1129,6 +1135,7 @@ i16 AttackWithPhysicalForce(
         fprintf(GETFILE(TraceFile),"%sAttempt to attack through party member.  Return 0\n",traceID);
       };
       PhysicalAttackFilter(pParam, pFilter, traceID);
+      QueueSound(16, d.partyX, d.partyY, 1); // normal attack sound (swing, chop...)
       return 0;
     };
   }; // switch (D0W)
@@ -1142,6 +1149,7 @@ i16 AttackWithPhysicalForce(
               "%sDISRUPT but monsterDesc bit 6 word2 = 0. Return 0\n",traceID);
       };
       PhysicalAttackFilter(pParam, pFilter, traceID);
+      QueueSound(16, d.partyX, d.partyY, 1); // normal attack sound (swing, chop...)
       return 0;
     };
   };
