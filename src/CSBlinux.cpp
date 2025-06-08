@@ -1648,6 +1648,9 @@ static int get_def(int chIdx,int mask = 8) {
 }
 
 extern bool skipToSavenPlay,skipReady;
+// The only test so far directly on nostaliga_mode : recharging ability of vi altars in Mouse.cpp
+bool monsters_vulnerable_on_attack = true,nostalgia_mode = false;
+
 void post_render() {
     static bool was_active;
     drawn = 1;
@@ -1733,11 +1736,18 @@ void post_render() {
 		open_char_info = true;
 	    if (ImGui::BeginMenu(_("Projectile damage divider"))) {
 		if (ImGui::MenuItem(_("16 (default)"),NULL, projectile_dmg_divider == 16)) projectile_dmg_divider = 16;
-		if (ImGui::MenuItem("8",NULL, projectile_dmg_divider == 8)) projectile_dmg_divider = 8;
-		if (ImGui::MenuItem("4",NULL, projectile_dmg_divider == 4)) projectile_dmg_divider = 4;
-		if (ImGui::MenuItem("2",NULL, projectile_dmg_divider == 2)) projectile_dmg_divider = 2;
-		if (ImGui::MenuItem("1",NULL, projectile_dmg_divider == 1)) projectile_dmg_divider = 1;
+		if (ImGui::MenuItem("8",NULL, projectile_dmg_divider == 8)) { projectile_dmg_divider = 8; nostalgia_mode = false; }
+		if (ImGui::MenuItem("4",NULL, projectile_dmg_divider == 4)) { projectile_dmg_divider = 4; nostalgia_mode = false; }
+		if (ImGui::MenuItem("2",NULL, projectile_dmg_divider == 2)) { projectile_dmg_divider = 2; nostalgia_mode = false; }
+		if (ImGui::MenuItem("1",NULL, projectile_dmg_divider == 1)) { projectile_dmg_divider = 1; nostalgia_mode = false; }
 		ImGui::EndMenu();
+	    }
+	    if (ImGui::MenuItem(_("Monsters vulnerable on attack"),NULL,&monsters_vulnerable_on_attack))
+		if (monsters_vulnerable_on_attack)
+		    nostalgia_mode = false;
+	    if (ImGui::MenuItem(_("Nostalgia Mode"), NULL, &nostalgia_mode)) {
+		monsters_vulnerable_on_attack = false;
+		projectile_dmg_divider = 16;
 	    }
 	    ImGui::EndMenu();
 	} else if (!imgui_active) {

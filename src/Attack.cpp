@@ -529,6 +529,7 @@ extern void LIN_PlayDirect(const char *name,int posX, int posY);
 // Called when we hit monster with sword
 //*********************************************************
 //  TAG00f930
+extern bool monsters_vulnerable_on_attack;
 i32 DeterminePhysicalAttackDamage(
               ATTACKPARAMETERS *pParam,
               FILTER *pFilter,
@@ -590,7 +591,7 @@ i32 DeterminePhysicalAttackDamage(
   DB4 *db = GetRecordAddressDB4(objMon);
   int nb = pParam->attdep.physicalAttack.attackedMonsterOrdinal-1;
   ITEM16 *pi16_4 = &d.Item16[db->groupIndex()];
-  int attacking = pi16_4->singleMonsterStatus[nb].TestAttacking();
+  int attacking = (monsters_vulnerable_on_attack ? pi16_4->singleMonsterStatus[nb].TestAttacking() : 0);
 #if 0
   printf("nb %d attacking %d %d %d %d\n",nb,
 	  pi16_4->singleMonsterStatus[0].TestAttacking(),
@@ -681,11 +682,12 @@ i32 DeterminePhysicalAttackDamage(
         fprintf(GETFILE(TraceFile),"%sD7W = D7W*(P8=%d)/32 = %d\n",traceID,P8,D7W);
       };
       if (attacking /* && db->monsterType() == mon_RockPile */) {
-	  // printf("critical hit\n");
 	  D4W = sw((ranResult=STRandom(32)) + pmtDesc->defense08 + levelDifficulty)/2;
+	  printf("critical hit defense down to %d\n",D4W);
 	  LIN_PlayDirect("critical-damage.mp3",d.partyX,d.partyY);
       } else {
 	  D4W = sw((ranResult=STRandom(32)) + pmtDesc->defense08 + levelDifficulty);
+	  printf("normal defense %d\n",D4W);
 	  QueueSound(16, d.partyX, d.partyY, 1); // normal attack sound (swing, chop...)
       }
       if (traceID!=NULL)

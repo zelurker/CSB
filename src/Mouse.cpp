@@ -11,6 +11,7 @@
 
 
 extern i32 VBLperTimer;
+extern bool nostalgia_mode;
 
 void info(char *, unsigned int);
 void SwapTextZOrder(void);
@@ -897,7 +898,7 @@ void DropObject(i16 pos)
     if (d.FacingViAltar != 0)
     {
       objNI_2 = objD4.NameIndex();
-      if (objD4.dbType() == dbWEAPON) {
+      if (objD4.dbType() == dbWEAPON && !nostalgia_mode) {
 	  DB5 *db = GetRecordAddressDB5(objD4);
 	  if (db->charges() < get_default_charges(objNI_2)) {
 	      D0L = d.Time;
