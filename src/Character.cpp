@@ -1058,13 +1058,13 @@ void PrintLifeForce(i32 line, i32 current, i32 max)
 //
   TextToViewport(55,
             line,
-            COLOR_13,  //color
+            COLOR_LGRAY,  //color
             TAG014af6(current, 1, 3),
             false);
-  TextToViewport(73, line, COLOR_13, "/", false);
+  TextToViewport(73, line, COLOR_LGRAY, "/", false);
   TextToViewport(79,
             line,
-            COLOR_13,
+            COLOR_LGRAY,
             TAG014af6(max,1,3),
             false);
 }
@@ -1414,7 +1414,7 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
       //LOCAL_42 = D4W;
       if (pcA3->load > maxLoad)
       {
-        LOCAL_8 = COLOR_8;
+        LOCAL_8 = COLOR_RED;
       }
       else
       {
@@ -1423,11 +1423,11 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
         D1L = 5 * D1L;
         if (D0L > D1L)
         {
-          LOCAL_8 = COLOR_11;
+          LOCAL_8 = COLOR_YELLOW;
         }
         else
         {
-          LOCAL_8 = COLOR_13;
+          LOCAL_8 = COLOR_LGRAY;
         };
       };
 
@@ -3444,7 +3444,7 @@ void DescribeObject(RN object,i16 P2)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   descriptivePhrases[1] = ")";
   descriptivePhrases[0] = "(";
-  for (i=0; i<10; i++) phraseColors[i] = COLOR_13;
+  for (i=0; i<10; i++) phraseColors[i] = COLOR_LGRAY;
 //
   if ( (d.PressingEye != 0) || (d.PressingMouth != 0) ) //If food/water or skill levels showing
   {
@@ -3592,7 +3592,7 @@ void DescribeObject(RN object,i16 P2)
           A3 = d.ObjectNames[objNID6];
         };
       };
-      TextToViewport(134, 68, COLOR_13, A3, finalTranslate);
+      TextToViewport(134, 68, COLOR_LGRAY, A3, finalTranslate);
       DrawSmallIcon(objNID6, 111, 59);
       descriptivePhrases[2] = "CONSUMABLE";
       descriptivePhrases[3] = "POISONED";
@@ -4619,7 +4619,7 @@ void TAG019036(void)
     strcpy(LOCAL_24, TranslateLanguage((char *)A0));// "Novice", "Master", etc
     strcat(LOCAL_24, " ");
     strcat(LOCAL_24, TranslateLanguage(d.Pointer16596[D7W]));//"Fighter", etc
-    TextToViewport(108, D6W, COLOR_13, LOCAL_24, false);
+    TextToViewport(108, D6W, COLOR_LGRAY, LOCAL_24, false);
     D6W += 7;
 //
 //
@@ -4628,29 +4628,29 @@ void TAG019036(void)
   for (D7W=1; D7W<=6; D7W++)
   {
     A0 = (aReg)d.Pointer16822[D7W];//"STRENGTH", "DEXTERITY", etc.
-    TextToViewport(108, D6W, COLOR_13, (char *)A0, true);
+    TextToViewport(108, D6W, COLOR_LGRAY, (char *)A0, true);
     D5W = pcA3->Attributes[D7W].Current();
     D0W = pcA3->Attributes[D7W].Maximum();
     LOCAL_4 = D0W;
     if (D5W < LOCAL_4)
     {
-      LOCAL_2 = COLOR_8;
+      LOCAL_2 = COLOR_RED;
     }
     else
     {
       if (D5W > LOCAL_4)
       {
-        LOCAL_2 = COLOR_7;
+        LOCAL_2 = COLOR_GREEN;
       }
       else
       {
-        LOCAL_2 = COLOR_13;
+        LOCAL_2 = COLOR_LGRAY;
       };
     };
     TextToViewport(174, D6W, LOCAL_2, TAG014af6(D5W, 1, 3), false);//LOCAL_2 is text color.
     strcpy(LOCAL_24,"/");
     strcat(LOCAL_24, TAG014af6(LOCAL_4, 1, 3));
-    TextToViewport(192,D6W, COLOR_13, LOCAL_24, false);
+    TextToViewport(192,D6W, COLOR_LGRAY, LOCAL_24, false);
     D6W += 7;
 //
   };

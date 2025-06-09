@@ -7478,9 +7478,9 @@ void ShowHideInventory(i32 chIdx)
   {
     FillRectangle(d.pViewportBMP, (RectPos *)d.Byte1094, 12, 112);
   };
-  TextToViewport(5, 116, COLOR_13, "HEALTH", true);
-  TextToViewport(5, 124, COLOR_13, "STAMINA", true);
-  TextToViewport(5, 132, COLOR_13, "MANA", true);
+  TextToViewport(5, 116, COLOR_LGRAY, "HEALTH", true);
+  TextToViewport(5, 124, COLOR_LGRAY, "STAMINA", true);
+  TextToViewport(5, 132, COLOR_LGRAY, "MANA", true);
 
   for (itemNum=0; itemNum<30; itemNum++)
   {

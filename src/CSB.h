@@ -49,10 +49,10 @@ enum GAMESTATE
 
 enum COLOR
 {
-  COLOR_7  =  7,
-  COLOR_8  =  8,
-  COLOR_11 = 11,
-  COLOR_13 = 13
+  COLOR_GREEN  =  7,
+  COLOR_RED  =  8,
+  COLOR_YELLOW = 11,
+  COLOR_LGRAY = 13 // text on char screen (health, stamina, mana...)
 };
 
 enum MALLOCID
@@ -3800,7 +3800,7 @@ void TenSecondUpdate(void);//TAG017818
 void DrawSmallIcon(OBJ_NAME_INDEX objNI, i16 x, i16 y);//TAG017c7a
 void ShowChestContents(RN object, DB9 *pDB9, i16);//TAG017ce4
 void RepackChest(void);//TAG017da4
-void PrintItemDesc(const char* txt, i32 color = COLOR_13);//TAG017e2a
+void PrintItemDesc(const char* txt, i32 color = COLOR_LGRAY);//TAG017e2a
 i32  EncodeDescriptivePhrases(i32, i32, const char *, i32 *, char *, const char*, const char*);//TAG017ece
 void SelectPaletteForLightLevel(void);//TAG017fa8
 void NinetySecondUpdate(void);//TAG018124//(void)

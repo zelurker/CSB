@@ -47,8 +47,8 @@ RESTARTABLE _ReIncarnate(CHARDESC *pChar)
                &d.wRectPos926,
                72,
                4);
-  TextToViewport(177, 58, COLOR_13, pChar->name, false);//Seven of -
-  TextToViewport(105, 76, COLOR_13, _(pChar->title), false);// Nineteen
+  TextToViewport(177, 58, COLOR_LGRAY, pChar->name, false);//Seven of -
+  TextToViewport(105, 76, COLOR_LGRAY, _(pChar->title), false);// Nineteen
   STHideCursor(HC12);
   MarkViewportUpdated(0);
   SetCursorShape(0); // Arrow

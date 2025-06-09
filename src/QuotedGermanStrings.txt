@@ -115,9 +115,9 @@ CSBCode.cpp        5426            UI_MessageBox("Excessive number of monsters",
 CSBCode.cpp        5880                   //  QuePrintLines(d.Byte1386[chIdx]," SHIELD DECREASED TO ");
 CSBCode.cpp        6144        A0 = " WIEDERBELEBT";
 CSBCode.cpp        6148        A0 = " REINKARNIERT";
-CSBCode.cpp        6833    TextToViewport(5, 116, COLOR_13, "GESUNDHEIT");
-CSBCode.cpp        6834    TextToViewport(5, 124, COLOR_13, "AUSDAUER");
-CSBCode.cpp        6835    TextToViewport(5, 132, COLOR_13, "MANA");
+CSBCode.cpp        6833    TextToViewport(5, 116, COLOR_LGRAY, "GESUNDHEIT");
+CSBCode.cpp        6834    TextToViewport(5, 124, COLOR_LGRAY, "AUSDAUER");
+CSBCode.cpp        6835    TextToViewport(5, 132, COLOR_LGRAY, "MANA");
 CSBCode.cpp        7669                    "AUFWACHEN");
 CSBCode.cpp        7732      return "";
 CSBCode.cpp        8361    for (D7W=0; D7W<18; D7W++) // expanding "CHAOS"
