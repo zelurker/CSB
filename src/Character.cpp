@@ -2412,7 +2412,7 @@ i16 TAG01680a(i32 chIdx,i32 possessionIndex)
     D0L = DetermineThrowingDistance(chIdx, D7W);
     D1L = TAG009470(clA2, D5W!=0);
     D0L += D1L;
-    D1W = (UI8)(d.Byte1412[possessionIndex]);
+    D1W = (UI8)(d.slotProtectionFactor[possessionIndex]);
     D0L = D0W * D1W;
     if (D7W == possessionIndex)
     {
