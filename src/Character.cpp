@@ -2698,9 +2698,12 @@ void KillCharacter(i32 chIdx)
 i32 DamageCharacter(i32 chIdx,i32 damage,i16 mask,i16 P4)
 {
     // P4 seems to be the attack type, but it's hard to tell which is which. What is sure:
-    // 4 : physical attack
     // 1 : fire attack
+    // 2 : wall collision, maybe fall too
+    // 3 : bash attack (trollin, mummy)
+    // 4 : piercing attack (worms, spiders, ...)
     // 5 : magical attack
+    // 7 : could very well be projectile damage, happens usually just before the fire of a fireball
     // but I'll need more testing for the other values!
     // mask is the equipment slot aimed by the attack
   dReg D0, D1, D3, D4, D5, D6, D7;
@@ -2733,7 +2736,7 @@ i32 DamageCharacter(i32 chIdx,i32 damage,i16 mask,i16 P4)
       D0W = D6W;
       if (P4 == 4)
       {
-        D1UW = 0x8000; // scaled defense in case of physical attack
+        D1UW = 0x8000; // scaled defense in case of piercing attack (takes also piercing resistance)
       }
       else
       {
