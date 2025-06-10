@@ -10190,12 +10190,13 @@ void ReadTablesFromGraphicsFile(void)
   d.pViewportBlack = d.pViewportBMP + 3248;
   d.pViewportFloor = d.pViewportBlack + 4144;
   ASSERT(d.GraphicDecompressedSizes[0x22e] == 0x1270,"graphicsize22e");
+
   ReadAndExpandGraphic(0x8000|0x22e, (ui8 *)d.Byte7248+2, 0,0); //TAG022b86
   for (i=0; i<27; i++)
   {
     d.Item6414[i].ITEM12_word0 = LE16(d.Item6414[i].ITEM12_word0);
   };
-  if (bigEndianGraphics) {
+  if (bigEndianGraphics || d.NumGraphic == 713) {
       d.Word4040[0] = LE16(d.Word4040[0]);
       swapNwords(d.Word7246, 12);
       swapNwords(d.Word7222, 30);
@@ -10212,7 +10213,7 @@ void ReadTablesFromGraphicsFile(void)
   ASSERT(    (d.GraphicDecompressedSizes[0x231] == 0x804)
           || (d.GraphicDecompressedSizes[0x231] == 0x7d4) ,"graphicSize231");
   ReadAndExpandGraphic(0x8000|0x231,(ui8 *)d.Byte18938+2, 0, 0);
-  if (bigEndianGraphics)
+  if (bigEndianGraphics || d.NumGraphic == 713)
       SwapGraphic0x231();
   if (d.GraphicDecompressedSizes[0x231] == 0x7d4)
   {
@@ -10223,7 +10224,7 @@ void ReadTablesFromGraphicsFile(void)
   }
   ASSERT(d.GraphicDecompressedSizes[0x230] == 0x4e8,"graphicSize230");
   ReadAndExpandGraphic(0x8000|0x230, (ui8 *)d.Byte20244+2, 0, 0);
-  if (bigEndianGraphics) {
+  if (bigEndianGraphics || d.NumGraphic == 713) {
       swapRectPos(&d.wRectPos20202);
       swapRectPos(&d.wRectPos20210);
       swapRectPos(&d.wRectPos20218);

@@ -1741,6 +1741,25 @@ void FreeGraphicMemory(ITEMQ *pgGraphic)
 // *********************************************************
 //
 // *********************************************************
+static void read_local(int graphicNumber, ui8 *buffer, i32 maxSize) {
+    char name[10];
+    snprintf(name,8,"%d.dat",graphicNumber);
+    FILE *f = fopen(name,"rb");
+    if (!f) {
+	UI_MessageBox("This is a pc graphics.dat with 713 items inside\nYou'll need 558.dat and 561.dat from an ST version","error",MESSAGE_OK);
+	exit(1);
+    }
+    fseek(f,0L,2);
+    int taille = ftell(f);
+    fseek(f,0L,0);
+    if (taille > maxSize) {
+	printf("read_local: taille %d, maxSize %d\n",taille,maxSize);
+	exit(1);
+    }
+    fread(buffer,1,taille,f);
+    fclose(f);
+}
+
 void ReadGraphic(i16 graphicNumber, ui8 *buffer, i32 maxSize) // TAG021af2
 {
   dReg D7;
@@ -1751,6 +1770,10 @@ void ReadGraphic(i16 graphicNumber, ui8 *buffer, i32 maxSize) // TAG021af2
   i32 clusterOffset;
   i32 bytesAvailable;
   i32 bytesToMove;
+  if ((graphicNumber >= 558 && graphicNumber <= 561) && d.NumGraphic == 713) {
+      read_local(graphicNumber,buffer,maxSize);
+      return;
+  }
   //i32 saveD4=D4, saveD5=D5, saveD6=D6, saveD7=D7;
 //  while (d.Word23228!=0) {};
   graphicStart = LocateNthGraphic(graphicNumber);
