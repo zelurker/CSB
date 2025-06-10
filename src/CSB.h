@@ -3359,7 +3359,6 @@ bool MonsterAllowedOnLevel(RN monster, \
 i32  GetObjectWeight(RN obj);//TAG0091e6
 //OBJ_DESC_INDEX  GetObjectDescIndex(RN DBRecordName);//9308
 i32  GetGraphicClass(RN obj); //TAG0093d4(RN obj);
-i32  TAG009470(CLOTHINGDESC *, bool scale);
 i16  MonsterPositionByte(DB4 *pDB4, i16 level, bool noItem16);//TAG0094da
 //  i16  GetMonsterDescWord2(RN monster);//TAG0094ae
 void SetMonsterPositionByte(DB4 *pDB4, i16, i16 level, bool noItem16); //TAG009512

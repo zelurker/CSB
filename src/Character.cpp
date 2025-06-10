@@ -150,10 +150,7 @@ void ShadeRectangleInScreen(RectPos *P1,i16 P2)
                 160);
 }
 
-// *********************************************************
-//
-// *********************************************************
-i32 TAG009470(CLOTHINGDESC *P1, bool scale)
+static i32 getDefenseScaled(CLOTHINGDESC *P1, bool scale)
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (scale)
@@ -2035,8 +2032,9 @@ void AddCharacterPossession(i32 chIdx,RN object,i32 place)
 // *********************************************************
 //
 // *********************************************************
-i16 TAG016426(CHARDESC *pChar,i16 attrNum,i16 P3)
+i16 TAG016426(CHARDESC *pChar,i16 attrNum,i16 damage)
 {
+    // This function computes a damage against an attribute, either vitality, anti magic or anti fire
   dReg D0, D7;
   i16 w_10;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2139,17 +2137,17 @@ i16 TAG016426(CHARDESC *pChar,i16 attrNum,i16 P3)
   //
   if (D7W < 16)
   {
-    D0W = sw(P3 >> 3);
+    D0W = sw(damage >> 3);
   }
   else
   {
-    D0W = ScaledMultiply(P3, 7, D7W);//P3*D7/128
+    D0W = ScaledMultiply(damage, 7, D7W);//damage*D7/128
   };
   if (TimerTraceActive)
   {
     fprintf(GETFILE(TraceFile),
-            "Tag016426(chIdx=%d,attrNum=%d,P3=%d) = %d\n",
-            (i32)(pChar-d.hero),attrNum,P3,D0W);
+            "Tag016426(chIdx=%d,attrNum=%d,damage=%d) = %d\n",
+            (i32)(pChar-d.hero),attrNum,damage,D0W);
   };
   return D0W;
 }
@@ -2384,6 +2382,7 @@ i32 DetermineThrowingDistance(i32 chIdx,i32 hand)
 // *********************************************************
 //
 // *********************************************************
+#define shieldEfficency 0
 i16 TAG01680a(i32 chIdx,i32 possessionIndex)
 {
   dReg D0, D1, D5, D6, D7;
@@ -2410,17 +2409,17 @@ i16 TAG01680a(i32 chIdx,i32 possessionIndex)
     D0W = clA2->pierceResistance();
     if ((D0W & 0x80) == 0) continue;
     D0L = DetermineThrowingDistance(chIdx, D7W);
-    D1L = TAG009470(clA2, D5W!=0);
+    D1L = getDefenseScaled(clA2, D5W!=0);
     D0L += D1L;
     D1W = (UI8)(d.slotProtectionFactor[possessionIndex]);
     D0L = D0W * D1W;
     if (D7W == possessionIndex)
     {
-      D1W = 4;
+      D1W = 4 - shieldEfficency;
     }
     else
     {
-      D1W = 5;
+      D1W = 5 - shieldEfficency;
     };
     D6W = sw(D6W + (D0W >> D1W));
 //
@@ -2463,7 +2462,7 @@ i16 TAG01680a(i32 chIdx,i32 possessionIndex)
          && (objD4.dbType() == dbCLOTHING))
     {
       DB6A2 = GetRecordAddressDB6(objD4);
-      D7W = sw(D7W + TAG009470(&d.ClothingDesc[DB6A2->clothingType()], D5W!=0));
+      D7W = sw(D7W + getDefenseScaled(&d.ClothingDesc[DB6A2->clothingType()], D5W!=0));
       if (TimerTraceActive)
       {
         fprintf(GETFILE(TraceFile),
@@ -2698,6 +2697,12 @@ void KillCharacter(i32 chIdx)
 //  TAG017068
 i32 DamageCharacter(i32 chIdx,i32 damage,i16 mask,i16 P4)
 {
+    // P4 seems to be the attack type, but it's hard to tell which is which. What is sure:
+    // 4 : physical attack
+    // 1 : fire attack
+    // 5 : magical attack
+    // but I'll need more testing for the other values!
+    // mask is the equipment slot aimed by the attack
   dReg D0, D1, D3, D4, D5, D6, D7;
   CHARDESC *pcA3;
   i16 LOCAL_30;
@@ -2728,7 +2733,7 @@ i32 DamageCharacter(i32 chIdx,i32 damage,i16 mask,i16 P4)
       D0W = D6W;
       if (P4 == 4)
       {
-        D1UW = 0x8000;
+        D1UW = 0x8000; // scaled defense in case of physical attack
       }
       else
       {
@@ -2760,14 +2765,14 @@ i32 DamageCharacter(i32 chIdx,i32 damage,i16 mask,i16 P4)
     {
       if (P4 == 5)
       {
-        D7W = TAG016426(pcA3, 5, D7W);
+        D7W = TAG016426(pcA3, AntiMagic, D7W);
         D7W = sw(D7W - d.SpellShield);
       }
       else
       {
         if (P4 == 1)
         {
-          D7W = TAG016426(pcA3, 6, D7W);
+          D7W = TAG016426(pcA3, AntiFire, D7W);
           D7W = sw(D7W - d.FireShield);
         }
         else
@@ -2780,12 +2785,14 @@ i32 DamageCharacter(i32 chIdx,i32 damage,i16 mask,i16 P4)
         if (D7W <= 0) return 0;
 
         D0W = sw(130 - D5W);
+	printf("damage = %d * (130 - %d) / 64 = %d mask %d P4 %d\n",D7W,D5W,ScaledMultiply(D7W, 6,D0W),mask,P4);
         D7W = ScaledMultiply(D7W, 6,D0W); //D6*D7/64
       };
     };
     if (D7W <= 0) return 0;
+    // Below : chance of wound
     D0W = sw(STRandom(128) + 10);
-    D6W = TAG016426(pcA3, 4, D0W);
+    D6W = TAG016426(pcA3, Vitality, D0W);
     LOCAL_10 = D6W;
     if (D7W > LOCAL_10)
     {
@@ -2814,10 +2821,6 @@ i32 DamageCharacter(i32 chIdx,i32 damage,i16 mask,i16 P4)
             "Damage character %d incremented by %d = %d\n",
             chIdx, D7W, d.PendingDamage[chIdx]+D7W);
   };
-
-
-
-
 
 // See if there is a character death filter
   {
@@ -2884,11 +2887,6 @@ i32 DamageCharacter(i32 chIdx,i32 damage,i16 mask,i16 P4)
       };
     };
   };
-
-
-
-
-
 
   d.PendingDamage[chIdx] = sw(d.PendingDamage[chIdx] + D7W);
   return D7W;

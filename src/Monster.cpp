@@ -4610,7 +4610,7 @@ i16 MonsterDamagesCharacter(DB4 *pDB4,i32 chIdx, bool supressPoison)
     {
       if (STRandomBool() != 0)
       {
-        D6W = TAG016426(chA2, 4, D6W);
+        D6W = TAG016426(chA2, Vitality, D6W);
         // There was an impossible jump around the following function call.
         if (!supressPoison)PoisonCharacter(chIdx, D6W);
       };
