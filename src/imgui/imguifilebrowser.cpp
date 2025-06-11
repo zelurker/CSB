@@ -1071,9 +1071,7 @@ namespace imgui_addons
         while(s2 = strchr(s,','))
         {
 	    *s2 = 0;
-	    printf("got s %s\n",s);
             if(*s && strcmp(s, "*.*")) {
-		printf("push_back %s\n",s);
                 valid_exts.push_back(s);
 	    } else if(!strcmp(s,"*.*"))
                 all_files = true;
