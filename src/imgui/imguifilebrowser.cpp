@@ -1065,7 +1065,6 @@ namespace imgui_addons
 	char iss[1024];
 	strncpy(iss,valid_str_lower.c_str(),1024);
 	char *s2,*s; s2 = s = iss;
-	printf("start with iss %s\n",iss);
 	if (!strchr(s,','))
 	    strcat(iss,",");
         while(s2 = strchr(s,','))
@@ -1180,7 +1179,6 @@ namespace imgui_addons
         while(s2 = strchr(s,'/'))
         {
 	    *s2 = 0;
-	    printf("got path_element %s\n",s);
             if(*s)
                 current_dirlist.push_back(s);
 	    s = s2+1;
