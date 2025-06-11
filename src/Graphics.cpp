@@ -1671,6 +1671,7 @@ i32 LocateNthGraphic(i32 n) // TAG021714
 {
   dReg D0;
   D0L = d.NumGraphic*4+2; // Skip index and count.
+  if (d.NumGraphic == 713) D0L += d.NumGraphic*4+2; // 2 words / attribute for each entry, + 1st word for signature
   for (i32 i=0; i < n; i++) D0L += d.GraphicCompressedSizes[i];
   return D0L;
 }
@@ -1746,6 +1747,7 @@ static void read_local(int graphicNumber, ui8 *buffer, i32 maxSize) {
     snprintf(name,8,"%d.dat",graphicNumber);
     FILE *f = fopen(name,"rb");
     if (!f) {
+	printf("%s not found\n",name);
 	UI_MessageBox("This is a pc graphics.dat with 713 items inside\nYou'll need 558.dat and 561.dat from an ST version","error",MESSAGE_OK);
 	exit(1);
     }
@@ -1770,7 +1772,7 @@ void ReadGraphic(i16 graphicNumber, ui8 *buffer, i32 maxSize) // TAG021af2
   i32 clusterOffset;
   i32 bytesAvailable;
   i32 bytesToMove;
-  if ((graphicNumber >= 558 && graphicNumber <= 561) && d.NumGraphic == 713) {
+  if ((graphicNumber >= 558 && graphicNumber <= 562) && (d.NumGraphic == 713 || d.NumGraphic == 575)) {
       read_local(graphicNumber,buffer,maxSize);
       return;
   }
@@ -1967,6 +1969,7 @@ bool bigEndianGraphics = true;
 // *********************************************************
 //
 // *********************************************************
+i16 *graphicAttr;
 void ReadGraphicsIndex(void) // TAG021d9a
 {
   dReg D0, D3, D6;
@@ -1988,7 +1991,9 @@ void ReadGraphicsIndex(void) // TAG021d9a
     };
     if (bigEndianGraphics)
     {
-      d.NumGraphic = LE16(d.NumGraphic);
+	if (d.NumGraphic == 575) bigEndianGraphics = false;
+	else
+	    d.NumGraphic = LE16(d.NumGraphic);
     };
     D6L = d.NumGraphic * 2; // Number of bytes
     success = D6L!= 0;
@@ -2021,6 +2026,12 @@ void ReadGraphicsIndex(void) // TAG021d9a
     D0L = READ(d.GraphicHandle,D6L&0xffff,(ui8 *)d.GraphicDecompressedSizes);
     success = D0L == (D6L&0xffff);
   };
+  if (d.NumGraphic == 713) {
+      if (graphicAttr != NULL) free(graphicAttr);
+      graphicAttr = (i16*)malloc(D6L * 2);
+      D0L = READ(d.GraphicHandle, D6L*2, (ui8*)graphicAttr);
+      success = D0L == D6L*2;
+  }
   if (success)
   {
     if (bigEndianGraphics)

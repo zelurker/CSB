@@ -1426,7 +1426,7 @@ struct DBank {
   i8  SpecialChars[6]; //1422 comma,period,semi-colon,colon,space;
   i8  Byte1416[2];
   i8  Byte1414[2];
-  i8  slotProtectionFactor[6];
+  i8  slotProtectionFactor[6]; // contains normally 5, 5 4, 6 3 1 (from graphics.dat, dm or csb version).
   i16 Word1406[4];   // Rectpos swapped when read
   i16 Word1398[4];   // RectPos swapped when read
   i8  Byte1390[4];   //

@@ -2853,7 +2853,10 @@ void ReadWallBitmaps(i16 newWallGraphicSet)
   if ( (newWallGraphicSet != d.CurrentWallGraphic) || (d.PartyHasDied != 0) )
   {
     d.CurrentWallGraphic = newWallGraphicSet;
-    firstWallGraphic = sw(77 + 13 * newWallGraphicSet);
+    if (d.NumGraphic == 713) // pc version
+	firstWallGraphic = sw(86 + 13 * newWallGraphicSet);
+    else
+	firstWallGraphic = sw(77 + 13 * newWallGraphicSet);
     for (i=0; i<7; i++)
     {
       ReadAndExpandGraphic(firstWallGraphic + i, d.pDoorBitmaps[i+1], 0, 0);
@@ -10096,7 +10099,7 @@ void SwapKeyXlate(pnt p)
   };
 }
 
-void swapRectPos(RectPos *rect)
+static void swapRectPos(RectPos *rect)
 {
   swap4words((i16 *)rect);
 }
@@ -10196,7 +10199,7 @@ void ReadTablesFromGraphicsFile(void)
   {
     d.Item6414[i].ITEM12_word0 = LE16(d.Item6414[i].ITEM12_word0);
   };
-  if (bigEndianGraphics || d.NumGraphic == 713) {
+  if (bigEndianGraphics || d.NumGraphic == 713 || d.NumGraphic == 575) {
       d.Word4040[0] = LE16(d.Word4040[0]);
       swapNwords(d.Word7246, 12);
       swapNwords(d.Word7222, 30);
@@ -10213,9 +10216,9 @@ void ReadTablesFromGraphicsFile(void)
   ASSERT(    (d.GraphicDecompressedSizes[0x231] == 0x804)
           || (d.GraphicDecompressedSizes[0x231] == 0x7d4) ,"graphicSize231");
   ReadAndExpandGraphic(0x8000|0x231,(ui8 *)d.Byte18938+2, 0, 0);
-  if (bigEndianGraphics || d.NumGraphic == 713)
+  if (bigEndianGraphics || d.NumGraphic == 713 || d.NumGraphic == 575)
       SwapGraphic0x231();
-  if (d.GraphicDecompressedSizes[0x231] == 0x7d4)
+  if (d.GraphicDecompressedSizes[0x231] == 0x7d4 || d.NumGraphic == 575 || d.NumGraphic == 713)
   {
     d.Buttons16932[0] = missingButtons[0];
     d.Buttons16932[1] = missingButtons[1];
@@ -10224,7 +10227,7 @@ void ReadTablesFromGraphicsFile(void)
   }
   ASSERT(d.GraphicDecompressedSizes[0x230] == 0x4e8,"graphicSize230");
   ReadAndExpandGraphic(0x8000|0x230, (ui8 *)d.Byte20244+2, 0, 0);
-  if (bigEndianGraphics || d.NumGraphic == 713) {
+  if (bigEndianGraphics || d.NumGraphic == 713 || d.NumGraphic == 575) {
       swapRectPos(&d.wRectPos20202);
       swapRectPos(&d.wRectPos20210);
       swapRectPos(&d.wRectPos20218);
@@ -10972,11 +10975,19 @@ void ExpandGraphic(i8 *src,ui8 *dest,i16 P3,i16 P4,i32 maxSize)
   D5W = P3;
   D4W = P4;
   //D7W = LE16(wordGear(A0)); A0+=2; // GraphicWidth
-  destBytesPerLine = LE16(wordGear(A0)); // GraphicWidth
-  A0+=2;
-  //D6W = LE16(wordGear(A0)); A0+=2; // GraphicHeight
-  totalSize = LE16(wordGear(A0)); // GraphicHeight
-  A0+=2;
+  if (bigEndianGraphics) {
+      destBytesPerLine = LE16(wordGear(A0)); // GraphicWidth
+      A0+=2;
+      //D6W = LE16(wordGear(A0)); A0+=2; // GraphicHeight
+      totalSize = LE16(wordGear(A0)); // GraphicHeight
+      A0+=2;
+  } else {
+      destBytesPerLine = (wordGear(A0)); // GraphicWidth
+      A0+=2;
+      //D6W = LE16(wordGear(A0)); A0+=2; // GraphicHeight
+      totalSize = (wordGear(A0)); // GraphicHeight
+      A0+=2;
+  }
   //D7W = (I16)(((D7W+15)>>1)&0x7ff8); // Number of bytes/GraphicLine
   destBytesPerLine = (I16)(((destBytesPerLine+15)>>1)&0x7ff8); // Number of bytes/GraphicLine
   //if((A1==0) && (A1=(pnt)physbase(),D7W!=160)) // If destination not specified
