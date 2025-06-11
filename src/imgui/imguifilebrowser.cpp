@@ -1058,12 +1058,24 @@ namespace imgui_addons
         std::transform( valid_str_lower.begin(), valid_str_lower.end(), valid_str_lower.begin(), []( unsigned char c ) { return std::tolower( c ); } );
 
         std::string extension = "";
-        std::istringstream iss(valid_str_lower);
-        while(std::getline(iss, extension, ','))
+	/* There is a major problem with the istringstream which was used for iss here.
+	 * As long as the program is compiled in debug mode without any optimization everything is fine.
+	 * But if you compile with any optimization, you get a nice crash on the constructor of istringstream, which could very well be related to the #pragma pack
+	 * used by some files in the project. I can't remove the pragma pack, so I remove the istringstream */
+	char iss[1024];
+	strncpy(iss,valid_str_lower.c_str(),1024);
+	char *s2,*s; s2 = s = iss;
+	printf("start with iss %s\n",iss);
+	if (!strchr(s,','))
+	    strcat(iss,",");
+        while(s2 = strchr(s,','))
         {
-            if(!extension.empty() && extension != "*.*")
-                valid_exts.push_back(extension);
-            else if(extension == "*.*")
+	    *s2 = 0;
+	    printf("got s %s\n",s);
+            if(*s && strcmp(s, "*.*")) {
+		printf("push_back %s\n",s);
+                valid_exts.push_back(s);
+	    } else if(!strcmp(s,"*.*"))
                 all_files = true;
         }
 
@@ -1156,19 +1168,24 @@ namespace imgui_addons
     {
         std::string path_element = "";
         std::string root = "";
+	char buf[FILENAME_MAX];
+	strcpy(buf,path.c_str());
+	char *s = buf, *s2;
 
-        #ifdef OSWIN
+#ifdef OSWIN
         current_dirlist.push_back("Computer");
-        #else
+#else
         if(path[0] == '/')
             current_dirlist.push_back("/");
-        #endif //OSWIN
+#endif //OSWIN
 
-        std::istringstream iss(path);
-        while(std::getline(iss, path_element, '/'))
+        while(s2 = strchr(s,'/'))
         {
-            if(!path_element.empty())
-                current_dirlist.push_back(path_element);
+	    *s2 = 0;
+	    printf("got path_element %s\n",s);
+            if(*s)
+                current_dirlist.push_back(s);
+	    s = s2+1;
         }
     }
 
