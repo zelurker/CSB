@@ -1381,7 +1381,11 @@ int main (int argc, char* argv[])
   ImGui_ImplSDLRenderer2_Init(sdlRenderer);
 
   // Load Fonts
-  io.Fonts->AddFontFromFileTTF("fonts/Vera.ttf", FONT_SIZE);
+  FILE *f = fopen("fonts/Vera.ttf","rb");
+  if (f) {
+      fclose(f);
+      io.Fonts->AddFontFromFileTTF("fonts/Vera.ttf", FONT_SIZE);
+  }
 
   SDL_ShowCursor(SDL_ENABLE);
   cursorIsShowing = true;
