@@ -45,17 +45,13 @@ struct SNDHEAD
   i8  byte0[4];           //"RIFF"
   i32 Size;               //  6076  // #bytes after this integer
   i8  byte8[8];           //"WAVEfmt "
-  i32 int16;              //    18
+  i32 int16;              //    18 block size
   i16 wFormatTag;         //     1
   i16 nChannels;          //     1
   i32 nSamplesPerSecond;  // 11025
   i32 nAvgBytesPerSec;    // 11025 // important
   i16 nBlockAlign;        //     1 // 2 for 16-bit
   i16 wBitsPerSample;     //     8
-  //i16 cbSize;             //    40
-  //i8  byte38[4];          // "fact"
-  //i32 int42;              //     4
-  //i32 numBytes46;         //
   i8  byte50[4];          // "data"
   i32 numSamples54;       //
   i8  sample58[1];
@@ -302,7 +298,7 @@ char *SOUNDDATA::Decode(i32 volume)
   memcpy(WavBuf->byte0,"RIFF",4);
   WavBuf->Size = m_size+58-4;
   memcpy(WavBuf->byte8,"WAVEfmt ",8);
-  WavBuf->int16 = 18; // ????
+  WavBuf->int16 = 16; // this is the offset of the 1st chunk of data !!! Checked by SDL_sound !!!
   WavBuf->wFormatTag = 1;
   WavBuf->nChannels = 1;
   WavBuf->nSamplesPerSecond = 11025;
@@ -326,6 +322,7 @@ char *SOUNDDATA::Decode(i32 volume)
   {
     memcpy(WavBuf->sample58, m_sound, m_size);
   };
+  // memset(WavBuf->sample58 + m_size, 0, 4); // last chunk size = 0 bytes
   return (char *)WavBuf;
 }
 
