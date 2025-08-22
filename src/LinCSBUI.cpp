@@ -453,9 +453,9 @@ void UI_StopSound(void)
 
 struct SNDHEAD
 {
-  i8  byte0[4];           //"RIFF"
+  char  byte0[4];           //"RIFF"
   i32 Size;               //  6076  // #bytes after this integer
-  i8  byte8[8];           //"WAVEfmt "
+  char  byte8[8];           //"WAVEfmt "
   i32 int16;              //    18
   i16 wFormatTag;         //     1
   i16 nChannels;          //     1
@@ -540,34 +540,44 @@ void Channels::Play(SNDHEAD *sndHead, int numSample)
     info.rate = mixer.freq;
     info.channels = 1;
     info.format = mixer.format;
-    // I was hoping that sdl_sound would hide the audio conversion when using raw samples, but no
-    // I guess it's better like that, it allows to convert the samples only once if you wish
-    // Well in this case the conversion should be pretty fast...
-    SDL_AudioCVT cvt;
-    // See all precise audio info here : http://dmweb.free.fr/community/documentation/file-formats/data-files/#data-6
-    if (OpeningPrison)
-	SDL_BuildAudioCVT(&cvt, AUDIO_U8, 1, 4237, mixer.format, 1,mixer.freq);
-    else
-	// Normal samples are supposed to be at 5486, but I get sometimes interruptions while a door is opening
-	// and they don't happen with 5200 Hz
-	SDL_BuildAudioCVT(&cvt, AUDIO_U8, 1, 5200, mixer.format, 1,mixer.freq);
-    cvt.len = numSample;
-    cvt.buf = (Uint8 *) SDL_malloc(cvt.len * cvt.len_mult);
-    memcpy(cvt.buf,sndHead,numSample);
-    SDL_ConvertAudio(&cvt);
-    UI_free(sndHead);
-    keep[i] = 0; // internal sound -> must free the header in the end
-    sample[i] = Sound_NewSampleFromMem(cvt.buf, numSample * cvt.len_ratio,
-	    "RAW",
+    if (!strncmp(sndHead->byte0,"RIFF",4) && !strncmp(sndHead->byte8,"WAVEfmt",7)) {
+	// With dungeons like conflux3, PlayCustomSound is called and returns some wav file here !
+	keep[i] = 1;
+	sample[i] = Sound_NewSampleFromMem((const unsigned char*)sndHead, numSample,
+	    "wav",
 	    &info,
 	    mixer.size/2
 	    );
+    } else {
+	// I was hoping that sdl_sound would hide the audio conversion when using raw samples, but no
+	// I guess it's better like that, it allows to convert the samples only once if you wish
+	// Well in this case the conversion should be pretty fast...
+	SDL_AudioCVT cvt;
+	// See all precise audio info here : http://dmweb.free.fr/community/documentation/file-formats/data-files/#data-6
+	if (OpeningPrison)
+	    SDL_BuildAudioCVT(&cvt, AUDIO_U8, 1, 4237, mixer.format, 1,mixer.freq);
+	else
+	    // Normal samples are supposed to be at 5486, but I get sometimes interruptions while a door is opening
+	    // and they don't happen with 5200 Hz
+	    SDL_BuildAudioCVT(&cvt, AUDIO_U8, 1, 5200, mixer.format, 1,mixer.freq);
+	cvt.len = numSample;
+	cvt.buf = (Uint8 *) SDL_malloc(cvt.len * cvt.len_mult);
+	memcpy(cvt.buf,sndHead,numSample);
+	SDL_ConvertAudio(&cvt);
+	UI_free(sndHead);
+	keep[i] = 0; // internal sound -> must free the header in the end
+	sample[i] = Sound_NewSampleFromMem(cvt.buf, numSample * cvt.len_ratio,
+		"RAW",
+		&info,
+		mixer.size/2
+		);
+	m_sndHead[i] = (SNDHEAD*)cvt.buf;
+    }
     if (sample[i] == NULL)
     {
 	printf("sdl_sound newsample returned null!!!\n");
       return;
     }
-    m_sndHead[i] = (SNDHEAD*)cvt.buf;
     set_sound_pos(i,-1,-1);
     Mix_PlayChannel(i, sample[i], 0);
     return;

@@ -5,7 +5,7 @@
 #include "SDL_sound.h"
 
 #define MIX_EFFECTSMAXSPEED  "MIX_EFFECTSMAXSPEED"
-#define MIX_CHANNELS 8
+#define MIX_CHANNELS 16 // with conflux3 8 is not enough...
 #define MIX_CHANNEL_POST  -2
 #define MIX_MAX_VOLUME		128	/* Volume of a chunk */
 #define Mix_SetError	SDL_SetError
