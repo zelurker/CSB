@@ -1654,12 +1654,13 @@ static int get_def(int chIdx,int mask = 8) {
 extern bool skipToSavenPlay,skipReady;
 // The only test so far directly on nostaliga_mode : recharging ability of vi altars in Mouse.cpp
 bool monsters_vulnerable_on_attack = true,nostalgia_mode = false;
+extern char *PlayfileName; // csbui.cpp
 
 void post_render() {
     static bool was_active;
     drawn = 1;
     SDL_Rect r;
-    bool open = false,save = false,open_dungeon = false;
+    bool open = false,save = false,open_dungeon = false, open_playback = false;
     if (!d.NumGraphic) imgui_active = true;
 
     // Start the Dear ImGui frame
@@ -1696,7 +1697,8 @@ void post_render() {
 	    if (ImGui::MenuItem(_("Save game"),NULL,false,d.partyLevel != 255 && d.NumGraphic>0))
 		save = true;
 	    // Limited playback in front the dungeon door
-	    if (ImGui::MenuItem(_("Playback.."), NULL,false,d.partyLevel == 255 && d.NumGraphic > 0)) { Process_ecode_IDC_Playback();/* Do stuff */ }
+	    if (ImGui::MenuItem(_("Playback.."), NULL,false,d.partyLevel == 255 && d.NumGraphic > 0))
+		open_playback = true;
 	    if (ImGui::MenuItem(_("Quit"), NULL))   { cbAppDestroy(); }
 	    ImGui::EndMenu();
 	} else if (!fb_shown && !on_menubar && !fb2_shown && !fb3_shown && d.NumGraphic)
@@ -1779,6 +1781,9 @@ void post_render() {
     } else if (open_dungeon) {
 	fb3_shown = true;
 	ImGui::OpenPopup(_("Select dungeon.dat..."));
+    } else if (open_playback) {
+	fb_shown = true;
+	ImGui::OpenPopup(_("Select playback file..."));
     } else if (save) {
 	fb2_shown = true;
         ImGui::OpenPopup(_("Save game"));
@@ -1787,6 +1792,13 @@ void post_render() {
     /* Optional third parameter. Support opening only compressed rar/zip files.
      * Opening any other file will show error, return false and won't close the dialog.
      */
+    if(file_dialog.showFileDialog(_("Select playback file..."), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), "*.log")) {
+	PlayfileName = (char*)file_dialog.selected_path.c_str();
+	Process_ecode_IDC_Playback();
+	fb_shown = false;
+    } else if (fb_shown && !ImGui::IsPopupOpen(_("Select playback file...")))
+	fb_shown = false;
+
     if(file_dialog.showFileDialog(_("Load saved game"), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), "csb*"))
     {
 	opened_file = (char*)file_dialog.selected_path.c_str();
