@@ -400,8 +400,10 @@ i32 ReadExtendedFeatures(i32 handle)
   RecordFile_Record(DM_rules ? "#DMRules\n" : "#NoDMRules\n");
   drawAsSize4Monsters =
        (efb.extendedFlags & EXTENDEDFEATURESBLOCK::DrawAsSize4Monsters) != 0;
-  RecordDesignOption =
-       (efb.flags & EXTENDEDFEATURESBLOCK::AutoRecord) != 0;
+  if ((efb.flags & EXTENDEDFEATURESBLOCK::AutoRecord) != 0) {
+      if (UI_MessageBox("This dungeon asks to create a recording file.\nDo you agree ?", NULL, MESSAGE_YESNO) == MESSAGE_IDYES)
+	  RecordDesignOption = 1;
+  }
   extendedPortraits =
        (efb.flags & EXTENDEDFEATURESBLOCK::ExpandedPortraits) != 0;
   indirectText =
