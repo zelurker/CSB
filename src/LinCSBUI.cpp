@@ -419,7 +419,14 @@ void __dialog_reset( gpointer A ) { dialog_answer = 0; dialog_not_clicked = FALS
 #endif //USE_OLD_GTK
 
 extern SDL_Window *sdlWindow;
+
 i32 UI_MessageBox(const char *msg, const char *title, i32 flags ) {
+#ifdef _LINUX
+    if (flags == MESSAGE_YESNO) {
+	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING,"Problem", "The next messagebox expects a yes or no answer\nbut this can't be handled by sdl2\njust press ok to see the message anyway",sdlWindow);
+    }
+#endif
+
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING,title,msg,sdlWindow);
 
   return MESSAGE_IDOK;
