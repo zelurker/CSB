@@ -19,6 +19,9 @@
 #include "CSB.h"
 #include "Data.h"
 #include "SDL_sound.h"
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer2.h"
 
 extern int eventNum;
 extern void ReadConfigFile(void);
@@ -418,14 +421,27 @@ void __dialog_unset( gpointer A ) { dialog_answer = 1; dialog_not_clicked = FALS
 void __dialog_reset( gpointer A ) { dialog_answer = 0; dialog_not_clicked = FALSE; gtk_widget_destroy(GTK_WIDGET(A)); }
 #endif //USE_OLD_GTK
 
+extern void open_popup(const char *msg);
 extern SDL_Window *sdlWindow;
+extern int want_popup, yes_selected;
+extern void post_render();
 
 i32 UI_MessageBox(const char *msg, const char *title, i32 flags ) {
-#ifdef _LINUX
     if (flags == MESSAGE_YESNO) {
-	SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING,"Problem", "The next messagebox expects a yes or no answer\nbut this can't be handled by sdl2\njust press ok to see the message anyway",sdlWindow);
+	open_popup(msg);
+	while (want_popup) {
+	    SDL_Event evert;
+	    SDL_PollEvent(&evert);
+
+	    ImGui_ImplSDL2_ProcessEvent(&evert);
+	    post_render();
+	}
+	if (yes_selected) {
+	    yes_selected = 0;
+	    return MESSAGE_IDYES;
+	}
+	return MESSAGE_IDNO;
     }
-#endif
 
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING,title,msg,sdlWindow);
 

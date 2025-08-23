@@ -1656,6 +1656,17 @@ extern bool skipToSavenPlay,skipReady;
 bool monsters_vulnerable_on_attack = true,nostalgia_mode = false;
 extern char *PlayfileName; // csbui.cpp
 
+int want_popup;
+char popup_msg[80];
+int yes_selected;
+
+void open_popup(const char *msg) {
+    imgui_active = want_popup = 1;
+    strncpy(popup_msg,msg,80);
+    popup_msg[79] = 0;
+    yes_selected = 0;
+}
+
 void post_render() {
     static bool was_active;
     drawn = 1;
@@ -1667,6 +1678,9 @@ void post_render() {
     ImGui_ImplSDLRenderer2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
+
+    if (want_popup)
+	ImGui::OpenPopup("Question");
 
     if (chaosDisplayed) ImGui::BeginDisabled();
     if (ImGui::BeginMainMenuBar())
@@ -1701,7 +1715,7 @@ void post_render() {
 		open_playback = true;
 	    if (ImGui::MenuItem(_("Quit"), NULL))   { cbAppDestroy(); }
 	    ImGui::EndMenu();
-	} else if (!fb_shown && !on_menubar && !fb2_shown && !fb3_shown && d.NumGraphic)
+	} else if (!fb_shown && !on_menubar && !fb2_shown && !fb3_shown && d.NumGraphic && !want_popup)
 	    imgui_active = false;
 
 	if (ImGui::BeginMenu(_("Speed"))) {
@@ -1941,6 +1955,21 @@ void post_render() {
 	}
     }
 
+    if (ImGui::BeginPopupModal("Question", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+    {
+	ImGui::Text(popup_msg);
+	ImGui::Separator();
+
+	//static int unused_i = 0;
+	//ImGui::Combo("Combo", &unused_i, "Delete\0Delete harder\0");
+
+	if (ImGui::Button("Yes", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); yes_selected = 1; want_popup = 0; }
+	ImGui::SetItemDefaultFocus();
+	ImGui::SameLine();
+	if (ImGui::Button("No", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); want_popup = 0; }
+	ImGui::EndPopup();
+    }
+
     if (!was_active && !cursorIsShowing && !fb_shown && !imgui_active && !fb2_shown && !fb3_shown) {
 	SDL_ShowCursor(SDL_DISABLE);
     }
@@ -1970,4 +1999,6 @@ void post_render() {
     }
     ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData(),sdlRenderer);
     SDL_RenderPresent(sdlRenderer);
+    if (want_popup)
+	imgui_active = 1;
 }
