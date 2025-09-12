@@ -7,6 +7,8 @@ but they have been merged into this git quite some time ago already.
 You can compile a windows version either 32 or 64 bits from this source, or a linux version. Just
 select the right target at the top of the makefile. For now the only thing required is sdl2.
 
-You'll find a summary of the changes in this forum thread :
+You'll find a summary of the changes in this forum thread : (along with links to
+the binary version, containing dungeon.dat and graphics.dat for the original
+dungeon master).
 https://www.dungeon-master.com/forum/viewforum.php?f=46&sid=8a3fff47bdddd3b2888d5b4919bd22d5
 
