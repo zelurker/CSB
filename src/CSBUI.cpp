@@ -1146,7 +1146,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
           latestScanp1 = msg->p1;
           latestScanp2 = msg->p2;
           //printf("CSBUI(UIM_KEYDOWN)@%d\n",(ui32)UI_GetSystemTime());
-          if ((key = keyxlate.translate(msg->p2&0xff,
+          if ((key = keyxlate.translate(msg->p2,
                                         keyboardMode,
                                         TYPESCAN))!= 0)
           {
