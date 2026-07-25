@@ -32,30 +32,24 @@ key  1 00001b 00001b  ;  escape = Freeze Game
 key  1 00006b 480000  ; 'k' = move forward
 key  1 00004b 480000  ; 'K' = move forward
 scan 1 000060 480000  ; Keypad '8' = move forward
-key  1 000108 480000  ; SDL Keypad '8' = move forward
 ;
 key  1 00006c 470000  ; 'l' = turn right
 key  1 00004c 470000  ; 'L' = turn right
 scan 1 000061 470000  ; Keypad '9' = turn right
-key  1 000109 470000  ; SDL Keypad '9'
 ;
 key  1 00006a 520000  ; 'j' = turn left
 key  1 00004a 520000  ; 'J' = turn left
 scan 1 00005f 520000  ; Keypad '7' = turn left
-key  1 000107 520000  ; SDL Keypad '7'
 ;
 key  1 00002e 4d0000  ; '.' = move right
 scan 1 00005e 4d0000  ; Keypad '6' = move right
-key  1 000106 4d0000  ; SDL Keypad '6'
 ;
 key  1 00006d 4b0000  ; 'm' = move left
 key  1 00004d 4b0000  ; 'M' = move left
 scan 1 00005c 4b0000  ; Keypad '4' = move left
-key  1 000104 4b0000  ; SDL Keypad '4'
 ;
 key  1 00002c 500000  ; ',' = move backward
 scan 1 00005d 500000  ; Keypad '5' = move backward
-key  1 000105 500000  ; SDL Keypad '5'
 ;
 mscan 1 0071  f0 5c L  ; SDL 'q' = character 1 weapon / first attack
 mscan 1 0077 104 5c L  ; SDL 'w' = character 2 weapon / first attack
