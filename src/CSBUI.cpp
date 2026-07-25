@@ -2422,14 +2422,7 @@ void *UI_realloc(void *buf, i32 size, ui32 /*id*/)
   };
   return (void *)(result + 1);
 #else
-  if (buf == NULL)
-  {
-    result = (MEM_BLOCKHEADER *)realloc(NULL, size);
-  }
-  else
-  {
-    result = (MEM_BLOCKHEADER *)realloc((char *)buf, size);
-  };
+  result = (MEM_BLOCKHEADER *)realloc((char *)buf, size);
   if (result == NULL) AllocationError();
   return (void *)((char *)result);
 #endif //040
