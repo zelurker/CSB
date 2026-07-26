@@ -27,15 +27,15 @@ timer "10";
 ; mode 2 is used during ReIncarnation.
 ;
 ;
-key  1 00001b 00001b  ;  escape = Freeze Game
+scan  1 29 00001b  ;  escape = Freeze Game
 ;
-key  1 00006b 480000  ; 'k' = move forward
+scan 1 00000e 480000  ; 'k' = move forward
 scan 1 000060 480000  ; Keypad '8' = move forward
 ;
-key  1 00006c 470000  ; 'l' = turn right
+scan 1 00000f 470000  ; 'l' = turn right
 scan 1 000061 470000  ; Keypad '9' = turn right
 ;
-key  1 00006a 520000  ; 'j' = turn left
+scan 1 00000d 520000  ; 'j' = turn left
 scan 1 00005f 520000  ; Keypad '7' = turn left
 ;
 scan 1 000036 4d0000  ; '.' = move right
