@@ -550,6 +550,7 @@ public:
   };
   void addkey(i32 scan, i32 key, i32 mode, XLATETYPE type);
   i32 translate(i32 scan, i32 mode, XLATETYPE type);
+  i32 getnb();
 };
 
 void KEYXLATE::addkey(i32 scan, i32 key, i32 mode, XLATETYPE type)
@@ -560,6 +561,10 @@ void KEYXLATE::addkey(i32 scan, i32 key, i32 mode, XLATETYPE type)
   m_xlate[m_numkey*4+2] = mode;
   m_xlate[m_numkey*4+3] = type;
   m_numkey++;
+}
+
+i32 KEYXLATE::getnb() {
+    return m_numkey;
 }
 
 i32 KEYXLATE::translate(i32 scan, i32 mode, XLATETYPE type)
@@ -574,6 +579,10 @@ i32 KEYXLATE::translate(i32 scan, i32 mode, XLATETYPE type)
 }
 
 KEYXLATE keyxlate;
+
+i32 get_nbkeys() {
+    return keyxlate.getnb();
+}
 
 char *getfield(const char *buf, i32& col)
 {
@@ -1112,7 +1121,14 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
           };
           latestCharp1 = msg->p1;
           latestCharType = TYPEIGNORED;
-          i32 key = keyxlate.translate(msg->p1, keyboardMode, TYPEKEY);
+	  i32 key;
+	  if (keyboardMode == 2)  // Reincarnate, accept ascii keys...
+	      // Notice that actually the key codes accepted are very limited, it's only the drawn keys on screen, no numbers, almost no special character except , ; ., no arrow keys
+	      // By passing the key codes like this some keys return a bad character like arrow keys or some keys from the numeric key pad, but it simplifies the configuration
+	      // and allows to skip the whole "key 2 " section from config.linux
+	      key = msg->p1;
+	  else
+	      key = keyxlate.translate(msg->p1, keyboardMode, TYPEKEY);
           if (key != 0)
           {
             if (key == 0x1b) // Escape

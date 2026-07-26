@@ -1089,8 +1089,8 @@ void Process_SDL_KEYDOWN(void)
     if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
     {
       PostQuitMessage(0x23);
-    };
-  };
+    }
+  }
 }
 
 void Process_SDL_KEYUP(void)
@@ -1445,7 +1445,7 @@ int main (int argc, char* argv[])
    ********************************************
    */
   if (get_nbkeys() == 0)
-      UI_MessageBox("Aucun raccourci clavier !\nVérifiez que le fichier config.linux est disponbile.","Avertissement",MESSAGE_OK);
+      UI_MessageBox("No keyboard shortcut !\nCheck that the config.linux file is available.","Warning",MESSAGE_OK);
 
   while (true)
   {
@@ -1511,6 +1511,7 @@ int main (int argc, char* argv[])
       case SDL_MOUSEBUTTONDOWN: Process_SDL_MOUSEBUTTONDOWN(); break;
       case SDL_MOUSEBUTTONUP:   Process_SDL_MOUSEBUTTONUP();   break;
       case SDL_KEYDOWN:         Process_SDL_KEYDOWN();         break;
+      // Notice that TEXTINPUT event are passed too, but since the keycodes accepted by the game are very limited, it's useless for now...
       case SDL_KEYUP:           Process_SDL_KEYUP();           break;
       case SDL_WINDOWEVENT:     Process_SDL_WINDOWEVENT();    break;
       /*
