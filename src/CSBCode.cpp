@@ -3482,8 +3482,13 @@ i16 DrawWallDecoration(i32 graphicOrdinal,
           else
           {
             pSourceRect = (ui16 *)d.ppUnExpandedGraphics[graphicID];
-            width = LE16(pSourceRect[0]);        //width in pixels
-            height = LE16(pSourceRect[1]);
+	    if (bigEndianGraphics) {
+		width = LE16(pSourceRect[0]);        //width in pixels
+		height = LE16(pSourceRect[1]);
+	    } else {
+		width = (pSourceRect[0]);        //width in pixels
+		height = (pSourceRect[1]);
+	    }
           };
           width = (width+15)&0xfff0; //Round up to multiple of 16
           width >>= 1;               //Width in bytes

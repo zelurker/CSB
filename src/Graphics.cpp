@@ -13,6 +13,7 @@
 
 //extern CDC *OnDrawDC;
 
+bool bigEndianGraphics = true;
 void info(char *, unsigned int);
 void CleanupAltMonCache(void);
 void CleanupWallDecorations(void);
@@ -1965,7 +1966,6 @@ void info(char *msg, unsigned int n)
   };
 }
 
-bool bigEndianGraphics = true;
 // *********************************************************
 //
 // *********************************************************
@@ -2623,8 +2623,13 @@ ui8 *GetBasicGraphicAddress(i32 graphicNum, i32 minimumWidth, i32 minimumHeight)
     else
     {
       A2 = d.ppUnExpandedGraphics[D7W];
-      D5W = (i16)(LE16(wordGear(A2))); //width in pixels
-      height = (ui16)LE16(wordGear(A2+2));
+      if (bigEndianGraphics) {
+	  D5W = (i16)(LE16(wordGear(A2))); //width in pixels
+	  height = (ui16)LE16(wordGear(A2+2));
+      } else {
+	  D5W = (i16)((wordGear(A2))); //width in pixels
+	  height = (ui16)(wordGear(A2+2));
+      }
       if ( (D5W < minimumWidth) || (height < minimumHeight) )
       {
         // This error occurs in the standard Graphic.dat!!!!
