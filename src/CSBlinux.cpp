@@ -1444,6 +1444,9 @@ int main (int argc, char* argv[])
    *
    ********************************************
    */
+  if (get_nbkeys() == 0)
+      UI_MessageBox("Aucun raccourci clavier !\nVérifiez que le fichier config.linux est disponbile.","Avertissement",MESSAGE_OK);
+
   while (true)
   {
 

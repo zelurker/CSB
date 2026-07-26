@@ -168,6 +168,7 @@ FILE *UI_fopen(const char *name, const char *flags);
 void *UI_malloc(ui32 size, ui32 id);
 void *UI_realloc(void *buf, i32 size, ui32 id);
 void  UI_CheckMemoryLeaks(void);
+i32 get_nbkeys();
 
 #if defined _MSVC_INTEL || defined _LINUX || defined _MSVC_CE2002ARM
 void UI_free(void *buf);
