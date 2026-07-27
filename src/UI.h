@@ -34,8 +34,6 @@ enum XLATETYPE
   TYPEMSCANR
 };
 
-
-
 enum MTYPE
 {
   UIM_NULL = 0,
@@ -245,5 +243,34 @@ public:
   void NewLine(void);        // Add newline sequence.
   void AddText(const char *text);  // Add text with no endline sequence.
 };
+
+class KEYXLATE
+{
+private:
+  i32 m_numkey;
+  i32 *m_xlate;
+  i32 *getscan(i32 index);
+  i32 *getmscan(i32 index);
+public:
+  KEYXLATE(void)
+  {
+    m_numkey=0;
+    m_xlate=NULL;
+  };
+  ~KEYXLATE(void)
+  {
+    if (m_xlate!=NULL) UI_free(m_xlate);
+    m_xlate = NULL;
+  };
+  void addkey(i32 scan, i32 key, XLATETYPE type);
+  i32 translate(i32 scan, XLATETYPE type);
+  i32 *getkey(i32 st_key, i32 index);
+  void setkey(i32 scan, i32 key, XLATETYPE type, int index);
+  i32 getnb();
+  void read_conf();
+  void write_conf();
+};
+
+extern KEYXLATE keyxlate;
 
 #endif // UI_H

@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 #include "CSBTypes.h"
+#include "confile.h"
 
 #include "Dispatch.h"
 #include "Objects.h"
@@ -19,6 +20,8 @@
 
 imgui_addons::ImGuiFileBrowser file_dialog; // As a class member or globally
 bool imgui_active = false;
+static bool capturing_key;
+static int captured_key;
 char *opened_file;
 
 #define FONT_SIZE 14
@@ -70,7 +73,20 @@ int SDL_VIDEOEXPOSE = 0;
   HildonWindow *hildonmainwindow = NULL;
 #endif//MAEMO_NOKIA_770
 
+ui32 TImER=0;
+
+static void save_conf() {
+    csb_push_config_state();
+    csb_set_config_file((char*)"csb.cfg");
+    csb_set_config_int("settings","timer",TImER);
+    keyxlate.write_conf();
+    csb_pop_config_state();
+}
+
 void PostQuitMessage( int a ) {
+    if (UI_MessageBox("Save params ?","Quit",MESSAGE_YESNO) == MESSAGE_IDYES) {
+	save_conf();
+    }
     SDL_Event event;
 //    FILE *f;
 //    f = fopen("debug","a");
@@ -282,7 +298,6 @@ extern bool AITraceActive;
 extern bool PlaybackCommandOption;
 extern unsigned char *encipheredDataFile;// Oh?
 
-ui32 TImER=0;
 extern i32 NoSpeedLimit;
 extern i32 GameMode;
 extern i32 MostRecentlyAdjustedSkills[2];
@@ -954,11 +969,17 @@ void Process_SDL_USEREVENT(void)
   };
 }
 
+static void stop_capture(int);
+
 void Process_SDL_MOUSEBUTTONDOWN(void)
 {
   MTRACE("SDL_MOUSEBUTTONDOWN->");
   {
     SDL_MouseButtonEvent  *e = (SDL_MouseButtonEvent*) &evert;
+    if (capturing_key) {
+	stop_capture(e->button);
+	return;
+    }
     switch(e->button)
     {// btn down, left or right
       case SDL_BUTTON_LEFT:
@@ -983,8 +1004,8 @@ void Process_SDL_MOUSEBUTTONDOWN(void)
           PostQuitMessage(0x1e);
         };
         break;
-    };
-  };
+    }
+  }
   //printf("at (%x, %x)\n", X_TO_CSB(mouseX,screenSize),Y_TO_CSB(mouseY,screenSize));
 }
 
@@ -1033,6 +1054,10 @@ void Process_SDL_KEYDOWN(void)
     csbMessage.type=UIM_KEYDOWN;
     csbMessage.p1 =  evert.key.keysym.sym; //virtual key
     csbMessage.p2 = evert.key.keysym.scancode; //scancode
+    if (capturing_key) {
+	captured_key = csbMessage.p2;
+	return;
+    }
     //printf("key press %x %x mod %x\n",csbMessage.p1,csbMessage.p2,evert.key.keysym.mod);
     //printf("Key 0x%x pressed @%d\n",(int)csbMessage.p1, (ui32)UI_GetSystemTime());
 //    if ((csbMessage.p1 == 3) && (prevp1 == 3))
@@ -1044,8 +1069,8 @@ void Process_SDL_KEYDOWN(void)
     if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
     {
       PostQuitMessage(0x21);
-    };
-  };
+    }
+  }
   {
     static int prevKeyUp = -1;
     csbMessage.type=UIM_CHAR;
@@ -1160,6 +1185,67 @@ void Process_SDL_WINDOWEVENT(void)
 ImGuiIO io;
 static int drawn = 0;
 void post_render();
+
+typedef struct {
+    const char *desc;
+    int key;
+    int key1, key2;
+    bool active1,active2;
+} TDescKeys;
+
+static TDescKeys mykeys[] = {
+    { "Pause", 0x1b },
+    { "Forward", 0x480000 },
+    { "Turn Right", 0x470000 },
+    { "Turn Left", 0x520000 },
+    { "Move right", 0x4d0000 },
+    { "Move Left", 0x4b0000 },
+    { "Move back", 0x500000 },
+    { NULL, 0 }
+};
+
+static TDescKeys mkeys[] = { // Mouse to keyboard inputs...
+    { "1st char 1st attack", 0xf0005c },
+    { "2nd char 1st attack", 0x104005c },
+    { "3rd char 1st attack", 0x11c005c },
+    { "4th char 1st attack", 0x138005c },
+
+    { "1st char 2nd attack", 0xf00068 },
+    { "2nd char 2nd attack", 0x1040068 },
+    { "3rd char 2nd attack", 0x11c0068 },
+    { "4th char 2nd attack", 0x1380068 },
+
+    { "1st char 3rd attack", 0xf00074 },
+    { "2nd char 3rd attack", 0x1040074 },
+    { "3rd char 3rd attack", 0x11c0074 },
+    { "4th char 3rd attack", 0x1380074 },
+
+    { "1st rune", 0xf00037 },
+    { "2nd rune", 0xfe0037 },
+    { "3nd rune", 0x10a0037 },
+    { "4th rune", 0x11d0037 },
+    { "5th rune", 0x1280037 },
+    { "6th rune", 0x1360037 },
+    { "backspace rune", 0x1360043 },
+    { "cast spell", 0x10d0041 },
+    { "1st magic caster", 0x200002e },
+    { "2nd magic caster", 0x201002e },
+    { "3rd magic caster", 0x202002e },
+    { "4th magic caster", 0x203002e },
+
+    { "No operation", 0x114002f },
+    { "Pass (cancel attack)", 0x1310050 },
+
+    { "Pick up left near", 0x43009d },
+    { "Pick up right near", 0x9a009f },
+    { "Pick up left far", 0x4d008c },
+    { "Pick up alcove", 0x6b0073 },
+    { "Pick up right far", 0x96008c },
+    { "Door switch", 0xa90051 },
+    { "Throw Left", 0x6f0050 },
+    { "Throw Right", 0x93004f },
+    { NULL, 0},
+};
 
 /********************** MAIN **********************/
 int main (int argc, char* argv[])
@@ -1468,11 +1554,11 @@ int main (int argc, char* argv[])
     ImGui_ImplSDL2_ProcessEvent(&evert);
     if (imgui_active) {
 	switch(evert.type) {
-	case SDL_MOUSEBUTTONDOWN:
 	case SDL_MOUSEBUTTONUP:
-	case SDL_KEYDOWN:
 	case SDL_KEYUP:
 	case SDL_MOUSEMOTION: continue;
+	case SDL_MOUSEBUTTONDOWN:
+	case SDL_KEYDOWN: if (!capturing_key) continue;
 	}
     }
     // uint32_t tick = SDL_GetTicks();
@@ -1558,7 +1644,7 @@ extern void ItemsRemaining(i32 mode); // CSBUI.cpp
 extern const char *listing_title; // LinCSBUI.cpp
 extern LISTING *listing; // AsciiDump.cpp
 extern bool resetstartcsb;
-bool show_listing;
+bool show_listing,show_keys;
 extern i32 lastTime;
 extern bool skipLogo;
 static bool show_coords,open_char_info;
@@ -1671,6 +1757,54 @@ void open_popup(const char *msg) {
     yes_selected = 0;
 }
 
+static float active_red = 0.75, inc_active = 0.02;
+
+static void stop_capture(int button) {
+    captured_key = 0;
+    capturing_key = false;
+    int n = 0;
+    while (mykeys[n].desc) {
+	if (mykeys[n].active1) {
+	    mykeys[n].active1 = false;
+	    if (button == SDL_BUTTON_RIGHT)
+		mykeys[n].key1 = 0;
+	    return;
+	}
+	if (mykeys[n].active2) {
+	    mykeys[n].active2 = false;
+	    if (button == SDL_BUTTON_RIGHT)
+		mykeys[n].key2 = 0;
+	    return;
+	}
+	n++;
+    }
+    n = 0;
+    while (mkeys[n].desc) {
+	if (mkeys[n].active1) {
+	    mkeys[n].active1 = false;
+	    if (button == SDL_BUTTON_RIGHT)
+		mkeys[n].key1 = 0;
+	    return;
+	}
+	n++;
+    }
+}
+
+static void prepare_red(float &red) {
+    red = active_red;
+    active_red += inc_active;
+    if (active_red > 1) {
+	inc_active = -0.02;
+	active_red += inc_active;
+    } else if (active_red < 0.5) {
+	inc_active = 0.02;
+	active_red += inc_active;
+    }
+    ImGui::PushStyleColor(ImGuiCol_Button,ImVec4(red, 0.26f, 0.40f, 1.0f) );
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(red, 0.26f, 0.40f, 1.0f));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(red, 0.26f, 0.40f, 1.0f));
+}
+
 void post_render() {
     static bool was_active;
     drawn = 1;
@@ -1717,7 +1851,11 @@ void post_render() {
 	    // Limited playback in front the dungeon door
 	    if (ImGui::MenuItem(_("Playback.."), NULL,false,d.partyLevel == 255 && d.NumGraphic > 0))
 		open_playback = true;
-	    if (ImGui::MenuItem(_("Quit"), NULL))   { cbAppDestroy(); }
+	    if (ImGui::MenuItem(_("Save params"), NULL))
+		save_conf();
+	    if (ImGui::MenuItem(_("Quit"), NULL))
+		// Impossible to insert an UI_MessageBox here, post_render can't loop on itself
+		cbAppDestroy();
 	    ImGui::EndMenu();
 	} else if (!fb_shown && !on_menubar && !fb2_shown && !fb3_shown && d.NumGraphic && !want_popup)
 	    imgui_active = false;
@@ -1750,6 +1888,25 @@ void post_render() {
 	{
 	    imgui_active = true;
 	    was_active = true;
+	    if (ImGui::MenuItem(_("Keyboard shortcuts"), NULL, false)) {
+		int n = 0;
+		while (mykeys[n].desc) {
+		    mykeys[n].key1 = mykeys[n].key2 = 0;
+		    i32 *key = keyxlate.getkey(mykeys[n].key,0);
+		    if (key) mykeys[n].key1 = key[0];
+		    key = keyxlate.getkey(mykeys[n].key,1);
+		    if (key) mykeys[n].key2 = key[0];
+		    n++;
+		}
+		n = 0;
+		while (mkeys[n].desc) {
+		    mkeys[n].key1 = mkeys[n].key2 = 0;
+		    i32 *key = keyxlate.getkey(mkeys[n].key,0);
+		    if (key) mkeys[n].key1 = key[0];
+		    n++;
+		}
+		show_keys = true;
+	    }
 	    ImGui::MenuItem(_("Party coordinates"), NULL,&show_coords);
 	    bool enabled = (ItemsRemainingOK
 		    && (encipheredDataFile==NULL)
@@ -1877,6 +2034,120 @@ void post_render() {
 	// cancel was pressed!
 	fb2_shown = false;
     }
+    if (show_keys) {
+	if (ImGui::Begin("Keys",&show_keys)) {
+	    bool popstyle = false;
+	    imgui_active = true;
+	    static ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
+	    ImGui::Text("Left click to cancel key, Right click to delete input");
+	    if (ImGui::BeginTable("table1", 3, flags))
+	    {
+		// Display headers so we can inspect their interaction with borders
+		// (Headers are not the main purpose of this section of the demo, so we are not elaborating on them now. See other sections for details)
+		ImGui::TableSetupColumn(" ");
+		ImGui::TableSetupColumn("Key 1");
+		ImGui::TableSetupColumn("Key 2");
+		ImGui::TableHeadersRow();
+
+		for (int row = 0; mykeys[row].desc; row++)
+		{
+		    ImGui::TableNextRow();
+		    ImGui::TableSetColumnIndex(0);
+		    ImGui::TextUnformatted(mykeys[row].desc);
+		    ImGui::TableSetColumnIndex(1);
+
+		    float red = 0.13f;
+		    // The handling of each button is quite long to my dismay, it's because ImGui doesn't seem very convenient to generate color buttons, you must use styles, and
+		    // 3 styles for each button, it's heavy and not convenient. It would be much shorter without the color change, but it would be less fun and less nice!
+		    ImGui::PushID(row*2);
+		    if (mykeys[row].active1) {
+			prepare_red(red);
+			popstyle = true;
+		    }
+
+		    if (ImGui::Button(SDL_GetScancodeName((SDL_Scancode)mykeys[row].key1), ImVec2(-FLT_MIN, 0.0f))) {
+			mykeys[row].active1 = true;
+			capturing_key = true;
+			captured_key = 0;
+		    }
+		    if (popstyle) {
+			ImGui::PopStyleColor(3);
+			popstyle = false;
+		    }
+		    ImGui::PopID();
+		    if (mykeys[row].active1 && captured_key) {
+			mykeys[row].active1 = false;
+			capturing_key = false;
+			mykeys[row].key1 = captured_key;
+			keyxlate.setkey(captured_key, mykeys[row].key, TYPESCAN, 0);
+			captured_key = 0;
+		    }
+
+		    ImGui::TableSetColumnIndex(2);
+		    ImGui::PushID(row*2+1);
+		    if (mykeys[row].active2) {
+			prepare_red(red);
+			popstyle = true;
+		    }
+
+		    if (ImGui::Button(SDL_GetScancodeName((SDL_Scancode)mykeys[row].key2), ImVec2(-FLT_MIN, 0.0f))) {
+			mykeys[row].active2 = true;
+			capturing_key = true;
+			captured_key = 0;
+		    }
+		    if (popstyle) {
+			ImGui::PopStyleColor(3);
+			popstyle = false;
+		    }
+		    ImGui::PopID();
+		    if (mykeys[row].active2 && captured_key) {
+			mykeys[row].active2 = false;
+			capturing_key = false;
+			mykeys[row].key2 = captured_key;
+			keyxlate.setkey(captured_key, mykeys[row].key, TYPESCAN, 1);
+			captured_key = 0;
+		    }
+		}
+		for (int row = 0; mkeys[row].desc; row++)
+		{
+		    ImGui::TableNextRow();
+		    ImGui::TableSetColumnIndex(0);
+		    ImGui::TextUnformatted(mkeys[row].desc);
+		    ImGui::TableSetColumnIndex(1);
+
+		    float red = 0.13f;
+		    // The handling of each button is quite long to my dismay, it's because ImGui doesn't seem very convenient to generate color buttons, you must use styles, and
+		    // 3 styles for each button, it's heavy and not convenient. It would be much shorter without the color change, but it would be less fun and less nice!
+		    ImGui::PushID(row*2+30);
+		    if (mkeys[row].active1) {
+			prepare_red(red);
+			popstyle = true;
+		    }
+
+		    if (ImGui::Button(SDL_GetScancodeName((SDL_Scancode)mkeys[row].key1), ImVec2(-FLT_MIN, 0.0f))) {
+			mkeys[row].active1 = true;
+			capturing_key = true;
+			captured_key = 0;
+		    }
+		    if (popstyle) {
+			ImGui::PopStyleColor(3);
+			popstyle = false;
+		    }
+		    ImGui::PopID();
+		    if (mkeys[row].active1 && captured_key) {
+			mkeys[row].active1 = false;
+			capturing_key = false;
+			mkeys[row].key1 = captured_key;
+			keyxlate.setkey(captured_key, mkeys[row].key, TYPEMSCANL, 0);
+			captured_key = 0;
+		    }
+		}
+		ImGui::EndTable();
+	    }
+	    ImGui::End();
+	}
+    }
+
     if (listing && listing_title && show_listing) {
 	if (ImGui::Begin(listing_title, &show_listing)) {
 	    if (ImGui::Button(_("Save to report.txt"))) {

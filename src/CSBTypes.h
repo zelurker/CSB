@@ -1,7 +1,7 @@
 #ifndef __TYPES__
 #define __TYPES__
 
-
+#include <stdint.h> // definition of uint32_t
 
 #ifdef TARGET_OS_MAC
 	#if __MWERKS__
@@ -103,7 +103,9 @@ typedef __int32          i32;  // PRS 20190701
 # endif
 #endif
 
+#ifdef __cplusplus
 void _Assert(bool, const char [], i32, const char [] = NULL);
+#endif
 
 #undef ASSERT
 #ifdef _DEBUG
@@ -111,6 +113,14 @@ void _Assert(bool, const char [], i32, const char [] = NULL);
 #else
 #define ASSERT(value, text) ;
 #endif
+
+#ifndef MIN
+#define MIN(x,y)	 (((x) < (y)) ? (x) : (y))
+#define MAX(x,y)	 (((x) > (y)) ? (x) : (y))
+#define MID(x,y,z)	 MAX((x), MIN((y), (z)))
+#endif
+
+#define ASCII_ID(a,b,c,d)	  ((a<<24) | (b<<16) | (c<<8) | (d<<0))
 
 #define MAX_SCROLL_LINE_LENGTH 16
 #define MAX_LINES_IN_SCROLL 9
@@ -277,6 +287,7 @@ extern ui8 *dataTypeMap;
 extern ui16 *dataIndexMap;
 extern i32 dataMapLength;
 
+#ifdef __cplusplus
 class RN // Record Name
 {
   friend class DATABASES;
@@ -435,6 +446,7 @@ public:
   void operator =(const char *atext);
   unsigned short *Text(void);
 };
+#endif
 #endif
 
 #endif //__TYPES__

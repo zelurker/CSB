@@ -10,6 +10,7 @@
 //#define WIN32_SOUNDMIXER
 
 #include <stdio.h>
+#include "confile.h"
 
 //typedef DWORD *DWORD_PTR;  // Needed by dsound.h
 
@@ -532,53 +533,90 @@ i32 EditDialog::DoModal(void)
 }
 #endif //005
 
-class KEYXLATE
-{
-private:
-  i32 m_numkey;
-  i32 *m_xlate;
-public:
-  KEYXLATE(void)
-  {
-    m_numkey=0;
-    m_xlate=NULL;
-  };
-  ~KEYXLATE(void)
-  {
-    if (m_xlate!=NULL) UI_free(m_xlate);
-    m_xlate = NULL;
-  };
-  void addkey(i32 scan, i32 key, i32 mode, XLATETYPE type);
-  i32 translate(i32 scan, i32 mode, XLATETYPE type);
-  i32 getnb();
-};
+// ROQUEN: massive temp hack
+#ifndef _MSC_VER //006
 
-void KEYXLATE::addkey(i32 scan, i32 key, i32 mode, XLATETYPE type)
+#ifdef  TARGET_OS_MAC //007
+#define strupr( a ) _strupr( a )
+static void _strupr(char *str) {
+    if( str ) {
+	while(*str) {
+	    *str = toupper( *str );
+	    str++;
+	}
+    }
+}
+#else
+#define _strupr(X) SDL_strupr(X)
+#define strupr(X)  SDL_strupr(X)
+#endif //007
+#endif  //006
+
+void KEYXLATE::addkey(i32 scan, i32 key, XLATETYPE type)
 {
-  m_xlate = (i32 *)UI_realloc(m_xlate, 16*(m_numkey+1), 0xffff);
-  m_xlate[m_numkey*4+0] = scan;
-  m_xlate[m_numkey*4+1] = key;
-  m_xlate[m_numkey*4+2] = mode;
-  m_xlate[m_numkey*4+3] = type;
+  m_xlate = (i32 *)UI_realloc(m_xlate, 12*(m_numkey+1), 0xffff);
+  m_xlate[m_numkey*3+0] = scan;
+  m_xlate[m_numkey*3+1] = key;
+  m_xlate[m_numkey*3+2] = type;
   m_numkey++;
+}
+
+i32 *KEYXLATE::getkey(i32 st_key, i32 index) {
+    for (int n=0; n<m_numkey; n++) {
+	if (m_xlate[n*3+1] == st_key) {
+	    if (index == 0) return &m_xlate[n*3];
+	    index--;
+	}
+    }
+    return NULL;
+}
+
+i32 *KEYXLATE::getscan(i32 index) {
+    for (int n=0; n<m_numkey; n++) {
+	if (m_xlate[n*3+2] == TYPESCAN) {
+	    if (index == 0)
+		return &m_xlate[n*3];
+	    index--;
+	}
+    }
+    return NULL;
+}
+
+i32 *KEYXLATE::getmscan(i32 index) {
+    for (int n=0; n<m_numkey; n++) {
+	if (m_xlate[n*3+2] == TYPEMSCANL ||
+		m_xlate[n*3+2] == TYPEMSCANR) {
+	    if (index == 0) return &m_xlate[n*3];
+	    index--;
+	}
+    }
+    return NULL;
+}
+
+void KEYXLATE::setkey(i32 scan, i32 key, XLATETYPE type, int index) {
+    i32 *idx = getkey(key,index);
+    if (idx) {
+	idx[0] = scan;
+	idx[1] = key;
+	idx[2] = type;
+	return;
+    }
+    addkey(scan,key,type);
 }
 
 i32 KEYXLATE::getnb() {
     return m_numkey;
 }
 
-i32 KEYXLATE::translate(i32 scan, i32 mode, XLATETYPE type)
+i32 KEYXLATE::translate(i32 scan, XLATETYPE type)
 {
   for (i32 i=0; i<m_numkey; i++)
   {
-    if (   (m_xlate[4*i+0] == scan)
-        && (m_xlate[4*i+2] == mode)
-        && (m_xlate[4*i+3] == type) ) return m_xlate[4*i+1];
+      if (   (m_xlate[3*i+0] == scan)
+	      && (m_xlate[3*i+2] == type) ) return m_xlate[3*i+1];
   };
   return 0;
 }
-
-KEYXLATE keyxlate;
 
 i32 get_nbkeys() {
     return keyxlate.getnb();
@@ -600,7 +638,7 @@ char *getfield(const char *buf, i32& col)
     term = '"';
     col++;
   };
-  while (buf[col] != '\n')
+  while (buf[col] != '\n' && buf[col] != 0)
   {
     if (   (buf[col]==term)
         || ((term==' ') && (buf[col]=='\t'))) break;
@@ -621,26 +659,69 @@ i32 gethex(char *buf, i32& col)
   return result;
 }
 
-
-// ROQUEN: massive temp hack
-#ifndef _MSC_VER //006
-
-#ifdef  TARGET_OS_MAC //007
-#define strupr( a ) _strupr( a )
-static void _strupr(char *str) {
-    if( str ) {
-	while(*str) {
-	    *str = toupper( *str );
-	    str++;
+void KEYXLATE::read_conf() {
+    char buf[20];
+    int nb_scan = 1;
+    char *s;
+    do {
+	sprintf(buf,"scan%02d",nb_scan++);
+	s = csb_get_config_string("keys",buf,NULL);
+	if (s) {
+	    int col = 0;
+	    int scancode=gethex(s,col);
+	    int key     =gethex(s,col);
+	    addkey(scancode, key, TYPESCAN);
 	}
-    }
+    } while (s);
+    int nb_mscan = 1;
+    do {
+	sprintf(buf,"mscan%02d",nb_mscan++);
+	s = csb_get_config_string("keys",buf,NULL);
+	if (s) {
+	    int col = 0;
+	    int scancode=gethex(s,col);
+	    int x       =gethex(s,col);
+	    int y       =gethex(s,col);
+	    char *button  =getfield(s,col);
+	    _strupr(button);
+	    XLATETYPE type;
+	    if (strcmp(button,"L")==0) type=TYPEMSCANL; else type=TYPEMSCANR;
+	    addkey(scancode, (x<<16)+y, type);
+	}
+    } while (s);
 }
-#else
-#define _strupr(X) SDL_strupr(X)
-#define strupr(X)  SDL_strupr(X)
-#endif //007
 
-#endif  //006
+void KEYXLATE::write_conf() {
+  int nb_scan = 0;
+  i32 *idx;
+  char buf[20],buf2[20];
+  do {
+      idx = getscan(nb_scan);
+      if (idx) {
+	  int scan = idx[0];
+	  int key = idx[1];
+	  sprintf(buf,"scan%02d",++nb_scan);
+	  sprintf(buf2,"%x %x",scan,key);
+	  csb_set_config_string("keys",buf,buf2);
+      }
+  } while (idx);
+  int nb_mscan = 0;
+  do {
+      idx = getmscan(nb_mscan);
+      if (idx) {
+	  int scan = idx[0];
+	  int key = idx[1];
+	  int x = key>>16;
+	  int y = key & 0xff;
+	  XLATETYPE type = (XLATETYPE)idx[2];
+	  sprintf(buf,"mscan%02d",++nb_mscan);
+	  sprintf(buf2,"%x %x %x %c",scan,x,y,(type == TYPEMSCANL ? 'L' : 'R'));
+	  csb_set_config_string("keys",buf,buf2);
+      }
+  } while (idx);
+}
+
+KEYXLATE keyxlate;
 
 /*
 i32 AddSmartDiscard(const char *buf)
@@ -751,11 +832,7 @@ const char *SmartDiscards[] = {
 #endif
 
 // ROQUEN: humm...
-#if !defined(_LINUX) //008
-#define CONFIG_NAME "config.txt"
-#else
-#define CONFIG_NAME "config.linux"
-#endif //008
+#define CONFIG_NAME "csb.cfg"
 
 #if defined TARGET_OS_MAC //009
 #define strupr( a ) _strupr( a )
@@ -784,119 +861,18 @@ void ReadConfigFile(void)
     if (AddSmartDiscard(SmartDiscards[i]) == 0) continue;
   };
   */
-  f=OPEN(CONFIG_NAME, "r");
-  if (f < 0) return;
-  while (GETS(buf,500,f) != NULL)
-  {
-    lineNumber++;
-    col=0;
-    if (buf[0] == ';') continue;
-    field=getfield(buf,col);
-    _strupr(field);
-    if (strcmp(field, ";")==0) continue;
-    if (strcmp(field, "") ==0) continue;
-    if (strcmp(field, "KEY")==0)
-    {
-      mode    =gethex(buf,col);
-      scancode=gethex(buf,col);
-      key     =gethex(buf,col);
-      keyxlate.addkey(scancode, key, mode, TYPEKEY);
-      continue;
-    };
-    if (strcmp(field,"SCAN")==0)
-    {
-      mode    =gethex(buf,col);
-      scancode=gethex(buf,col);
-      key     =gethex(buf,col);
-      keyxlate.addkey(scancode, key, mode, TYPESCAN);
-      continue;
-    };
-    if (strcmp(field,"MSCAN")==0)
-    {
-      i32 x, y;
-      XLATETYPE type;
-      char *button;
-      mode    =gethex(buf,col);
-      scancode=gethex(buf,col);
-      x       =gethex(buf,col);
-      y       =gethex(buf,col);
-      button  =getfield(buf,col);
-      _strupr(button);
-      if (strcmp(button,"L")==0) type=TYPEMSCANL; else type=TYPEMSCANR;
-      keyxlate.addkey(scancode, (x<<16)+y, mode, type);
-      continue;
-    };
-    if (strcmp(field,"DIRECTORY")==0)
-    {
-      field = getfield(buf,col);
-      if (folderName != NULL) UI_free(folderName);
-      //folderName = (char *) UI_malloc(strlen(field) + 1, MALLOC012);
-      folderName = (char *) UI_malloc((i32)strlen(field) + 1, MALLOC012);
-      if (folderName!=NULL)
-      {
-        strcpy(folderName, field);
-        folderParentName = parentFolder(folderName, folderName+strlen(folderName+1));
-      };
-      continue;
-    };
+  csb_push_config_state();
+  csb_set_config_file((char*)"csb.cfg");
 
 #if defined(_LINUX) //010
-extern ui32 TImER;
-     if (strcmp(field,"TIMER")==0)
-    {
-      field = getfield(buf,col);
-      if (TImER) continue; //cmd line has higher priority than config.linux
-      //sscanf(TIMER,"%d", field);
-      TImER=strtol( field,NULL, 10);
-      continue;
-    };
+  // Not sure this setting is still useful, but it's still read so I'll keep it for now...
+  extern ui32 TImER;
+  TImER = csb_get_config_int("settings","timer",10);
 #endif //010
 
-    if (strcmp(field,"PLACE") == 0)
-    {
-      i32 k, size, srcx, srcy, width, height, x, y;
-      field = getfield(buf,col);
-      if ( (field[0] < 'A')||(field[0] > 'E') ) continue;
-      k = field[0] - 'A';
-      size = gethex(buf,col);
-      if ( (size < 0)||(size > 6) ) continue;
-      srcx = gethex(buf,col);
-      if ( (srcx<0) || (srcx>319) ) continue;
-      srcy = gethex(buf,col);
-      if ( (srcy<0) || (srcy>199) ) continue;
-      width = gethex(buf,col);
-      if ( (width<1) || (srcx+width>320) )continue;
-      height = gethex(buf,col);
-      if ( (height<1) || (srcy+height>200) )continue;
-      x = gethex(buf,col);
-      if ( (x < 0)||(x > 4096) ) continue;
-      y = gethex(buf,col);
-      if ( (y < 0)||(y >4096) ) continue;
-      videoSegSize[k] = size;
-      videoSegSrcX[k] = srcx;
-      videoSegSrcY[k] = srcy;
-      videoSegWidth[k] = width;
-      videoSegHeight[k] = height;
-      videoSegX[k] = x;
-      videoSegY[k] = y;
-      continue;
-    };
-    if (numerror==0)
-    {
-      char msg[200];
-      if (strlen(buf)>0)
-        if (buf[strlen(buf)-1] == '\n')
-          buf[strlen(buf)-1] = 0;
-      buf[100] = 0; //Just in case it is very long;
-      sprintf(msg,"Line number = %d\n%s",lineNumber,buf);
-      UI_MessageBox(msg,"Bad Config Line",MESSAGE_OK);
-      numerror++;
-    };
-  };
-  CLOSE(f);
+  keyxlate.read_conf();
+  csb_pop_config_state();
 }
-
-
 
 i32 UI_DisableAllMessages(void)
 {
@@ -1128,7 +1104,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
 	      // and allows to skip the whole "key 2 " section from config.linux
 	      key = msg->p1;
 	  else
-	      key = keyxlate.translate(msg->p1, keyboardMode, TYPEKEY);
+	      key = keyxlate.translate(msg->p1, TYPEKEY);
           if (key != 0)
           {
             if (key == 0x1b) // Escape
@@ -1163,7 +1139,6 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
           latestScanp2 = msg->p2;
           //printf("CSBUI(UIM_KEYDOWN)@%d\n",(ui32)UI_GetSystemTime());
           if ((key = keyxlate.translate(msg->p2,
-                                        keyboardMode,
                                         TYPESCAN))!= 0)
           {
             latestScanType = TYPESCAN;
@@ -1178,7 +1153,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
             };
           }
           else
-          if ((key = keyxlate.translate(msg->p1, keyboardMode, TYPEMSCANL))!= 0)
+          if ((key = keyxlate.translate(msg->p1, TYPEMSCANL))!= 0)
           {
             //printf("CSBUI->TYPEMSCANL\n");
             latestScanType = TYPEMSCANL;
@@ -1187,7 +1162,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
             OnMouseSwitchAction(0);
           }
           else
-          if ((key = keyxlate.translate(msg->p1, keyboardMode, TYPEMSCANR))!= 0)
+          if ((key = keyxlate.translate(msg->p1, TYPEMSCANR))!= 0)
           {
             latestScanType = TYPEMSCANR;
             //printf("CSBUI->TYPEMSCANR\n");
