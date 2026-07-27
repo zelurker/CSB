@@ -75,13 +75,7 @@ int SDL_VIDEOEXPOSE = 0;
 
 ui32 TImER=0;
 
-static void save_conf() {
-    csb_push_config_state();
-    csb_set_config_file((char*)"csb.cfg");
-    csb_set_config_int("settings","timer",TImER);
-    keyxlate.write_conf();
-    csb_pop_config_state();
-}
+static void save_conf();
 
 void PostQuitMessage( int a ) {
     if (UI_MessageBox("Save params ?","Quit",MESSAGE_YESNO) == MESSAGE_IDYES) {
@@ -133,7 +127,6 @@ static uint32_t __Timer_Callback(uint32_t interval, void *param)
 {
   size_t code;
   code = (size_t)(param);
-  uint32_t ticks = SDL_GetTicks();
   if (code == IDC_Timer)
   {
       SDL_SemWait(sem);
@@ -165,7 +158,6 @@ static uint32_t __Timer_Callback(uint32_t interval, void *param)
         ((SDL_UserEvent*) &ev)->code = IDC_Timer;
         if (SDL_PushEvent(&ev) < 0)
         {
-          char line[80];
           UI_MessageBox(SDL_GetError(), "PushEvent Failed",MESSAGE_OK);
           die(0x66aa);
         };
@@ -207,14 +199,14 @@ static void PushEvent(void *param)
   if (SDL_PushEvent(&ev) < 0)
   {
     char line[80];
-    sprintf(line," code = %d", (size_t)(param));
+    sprintf(line," code = %zd", (size_t)(param));
     UI_MessageBox(SDL_GetError(), "PushEvent Failed",MESSAGE_OK);
     UI_Die(0x66ab);
   };
   return;
 }
 
-int WindowWidth = 320*4;
+int WindowWidth = 320*4,winx,winy;
 int WindowHeight = 200*4 + DY;
 float st_X = 320.0 / WindowWidth;
 float st_Y = 200.0 / (WindowHeight - 20);
@@ -424,8 +416,6 @@ void Process_SDL_MOUSEMOTION(
   };
   absMouseX = x;
   absMouseY = y;
-  i32 st_mouseX = X_TO_CSB(absMouseX,screenSize);
-  i32 st_mouseY = Y_TO_CSB(absMouseY,screenSize);
   if (resetgamesetup) return;
   if (GameMode == 1)
   {
@@ -528,15 +518,6 @@ void Process_ecode_IDC_VIDEOEXPOSE(void)
     //          LatestSkillValues[1]);
       break;
     case 6:
-      switch (latestCharType)
-      {
-        case TYPEIGNORED:
-    //      g_print( "%04x key --> Ignored                         ", latestCharp1);
-          break;
-        case TYPEKEY:
-    //      g_print( "%04x key --> Translated %08x", latestCharp1, latestCharXlate);
-          break;
-      };
       break;
     case 7:
       switch (latestScanType)
@@ -870,7 +851,7 @@ void Process_ecode_IDC_NonCSBItemsRemaining(void)
   };
 }
 
-void Process_ecode_IDC_Playback(void)
+static void Process_ecode_IDC_Playback(void)
 {
   MTRACE("IDC_Playback\n");
   csbMessage.type = UIM_SETOPTION;
@@ -883,7 +864,7 @@ void Process_ecode_IDC_Playback(void)
   };
 }
 
-void Process_ecode_IDC_DispatchTrace(void)
+static void Process_ecode_IDC_DispatchTrace(void)
 {
   MTRACE("IDC_DispatchTrace\n");
   if (trace  >= 0 )
@@ -897,7 +878,7 @@ void Process_ecode_IDC_DispatchTrace(void)
   };
 }
 
-void Process_ecode_IDM_GraphicTrace(void)
+static void Process_ecode_IDM_GraphicTrace(void)
 {
   MTRACE("IDC_GraphicTrace\n");
   csbMessage.type = UIM_SETOPTION;
@@ -910,7 +891,7 @@ void Process_ecode_IDM_GraphicTrace(void)
   };
 }
 
-void Process_ecode_IDC_DSATrace(void)
+static void Process_ecode_IDC_DSATrace(void)
 {
   MTRACE("IDC_DSATrace\n");
   csbMessage.type = UIM_SETOPTION;
@@ -923,8 +904,7 @@ void Process_ecode_IDC_DSATrace(void)
   };
 }
 
-
-void Process_SDL_USEREVENT(void)
+static void Process_SDL_USEREVENT(void)
 {
   MTRACE("sdl_userevent->");
   SDL_UserEvent *e = (SDL_UserEvent*) &evert;
@@ -971,7 +951,7 @@ void Process_SDL_USEREVENT(void)
 
 static void stop_capture(int);
 
-void Process_SDL_MOUSEBUTTONDOWN(void)
+static void Process_SDL_MOUSEBUTTONDOWN(void)
 {
   MTRACE("SDL_MOUSEBUTTONDOWN->");
   {
@@ -1009,7 +989,7 @@ void Process_SDL_MOUSEBUTTONDOWN(void)
   //printf("at (%x, %x)\n", X_TO_CSB(mouseX,screenSize),Y_TO_CSB(mouseY,screenSize));
 }
 
-void Process_SDL_MOUSEBUTTONUP(void)
+static void Process_SDL_MOUSEBUTTONUP(void)
 {
   MTRACE("SDL_MOUSEBUTTONUP->");
   {// btn up, left or right
@@ -1040,7 +1020,7 @@ void Process_SDL_MOUSEBUTTONUP(void)
   };
 }
 
-void Process_SDL_KEYDOWN(void)
+static void Process_SDL_KEYDOWN(void)
 {
 //  static int prevp1 = -1;
   MTRACE("SDL_KEYDOWN\n");
@@ -1096,17 +1076,18 @@ void Process_SDL_KEYDOWN(void)
     };
 #if defined SDL20
     if ((evert.key.keysym.mod & (KMOD_ALT)) && evert.key.keysym.sym == SDLK_RETURN) {
-	static int oldw, oldh;
 	SDL_DisplayMode mode;
 	SDL_GetDesktopDisplayMode(0,&mode);
 
 	if (fullscreenActive) {
-	    fullscreenActive = 0;
+	    fullscreenActive = false;
 	} else {
-	    fullscreenActive = SDL_WINDOW_FULLSCREEN_DESKTOP;
+	    fullscreenActive = true;
+	    winx = WindowWidth;
+	    winy = WindowHeight;
 	    SDL_SetWindowDisplayMode(sdlWindow,&mode);
 	}
-	SDL_SetWindowFullscreen(sdlWindow,fullscreenActive);
+	SDL_SetWindowFullscreen(sdlWindow,(fullscreenActive ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
     }
 #endif
 
@@ -1118,7 +1099,7 @@ void Process_SDL_KEYDOWN(void)
   }
 }
 
-void Process_SDL_KEYUP(void)
+static void Process_SDL_KEYUP(void)
 {
   MTRACE("SDL_KEYUP\n");
 }
@@ -1248,7 +1229,9 @@ static TDescKeys mkeys[] = { // Mouse to keyboard inputs...
 };
 
 /********************** MAIN **********************/
-int main (int argc, char* argv[])
+static void read_conf();
+
+int main(int argc, char* argv[])
 {
 #ifdef MAEMO_NOKIA_770
   HildonProgram* program;
@@ -1277,6 +1260,7 @@ int main (int argc, char* argv[])
   {
     root=(char*)"./";
   }
+  read_conf();
 
   //    ***** Init the Aplication enviroment ******
 
@@ -1388,7 +1372,8 @@ int main (int argc, char* argv[])
                    szCSBVersion,
                    SDL_WINDOWPOS_CENTERED,
                    SDL_WINDOWPOS_CENTERED,
-                   WindowWidth,WindowHeight,
+                   fullscreenRequested ? winx : WindowWidth,
+		   fullscreenRequested ? winy : WindowHeight,
                    flags)) == NULL)
     {
       UI_MessageBox(SDL_GetError(),
@@ -1428,6 +1413,13 @@ int main (int argc, char* argv[])
 #else
     xxxError
 #endif
+	if (fullscreenRequested) {
+	    fullscreenActive = true;
+	    fullscreenRequested = false;
+	    SDL_DisplayMode mode;
+	    SDL_GetDesktopDisplayMode(0,&mode);
+	    SDL_SetWindowDisplayMode(sdlWindow,&mode);
+	}
 #ifdef _DYN_WINSIZE
     if(!Hermes_Init()) g_error("No hermes...");
     from_palette = Hermes_PaletteInstance();
@@ -1683,9 +1675,8 @@ static int get_rank(int xp) {
 }
 
 static float get_progress(int xp) {
-    int rank = 1, base = 500;
+    int base = 500;
     while (xp > base*2) {
-	rank++;
 	base*=2;
     }
     int next;
@@ -1751,7 +1742,8 @@ char popup_msg[80];
 int yes_selected;
 
 void open_popup(const char *msg) {
-    imgui_active = want_popup = 1;
+    imgui_active = true;
+    want_popup = 1;
     strncpy(popup_msg,msg,80);
     popup_msg[79] = 0;
     yes_selected = 0;
@@ -1803,6 +1795,45 @@ static void prepare_red(float &red) {
     ImGui::PushStyleColor(ImGuiCol_Button,ImVec4(red, 0.26f, 0.40f, 1.0f) );
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(red, 0.26f, 0.40f, 1.0f));
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(red, 0.26f, 0.40f, 1.0f));
+}
+
+static void read_conf() {
+    csb_push_config_state();
+    csb_set_config_file((char*)"csb.cfg");
+    TImER = csb_get_config_int("settings","timer",10);
+    fullscreenRequested = csb_get_config_int("settings","fullscreen",false);
+    WindowWidth = csb_get_config_int("settings","width", 320*4);
+    WindowHeight = csb_get_config_int("settings","height", 200*4);
+    winx = csb_get_config_int("settings","winx",320*4);
+    winy = csb_get_config_int("settings","winy",200*4);
+    gameSpeed = (SPEEDS)csb_get_config_int("settings","gameSpeed",4); // 4 seems to be SPEED_NORMAL
+    show_coords = csb_get_config_int("settings","show_coords",0);
+    projectile_dmg_divider = csb_get_config_int("settings","projectile_dmg_divider",16);
+    monsters_vulnerable_on_attack = csb_get_config_int("settings","monsters_vulnerable_on_attack",0);
+    nostalgia_mode = csb_get_config_int("settings","nostalgia_mode",0);
+
+    st_X = 320.0 / WindowWidth;
+    st_Y = 200.0 / (WindowHeight - 20);
+    keyxlate.read_conf();
+    csb_pop_config_state();
+}
+
+static void save_conf() {
+    csb_push_config_state();
+    csb_set_config_file((char*)"csb.cfg");
+    csb_set_config_int("settings","timer",TImER);
+    csb_set_config_int("settings","fullscreen",fullscreenActive);
+    csb_set_config_int("settings","width",WindowWidth);
+    csb_set_config_int("settings","height",WindowHeight);
+    csb_set_config_int("settings","winx",winx);
+    csb_set_config_int("settings","winy",winy);
+    csb_set_config_int("settings","gameSpeed",gameSpeed);
+    csb_set_config_int("settings","show_coords",show_coords);
+    csb_set_config_int("settings","projectile_dmg_divider",projectile_dmg_divider);
+    csb_set_config_int("settings","monsters_vulnerable_on_attack",monsters_vulnerable_on_attack);
+    csb_set_config_int("settings","nostalgia_mode",nostalgia_mode);
+    keyxlate.write_conf();
+    csb_pop_config_state();
 }
 
 void post_render() {

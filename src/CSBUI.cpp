@@ -845,34 +845,6 @@ static void _strupr(char *str) {
     }
 }
 #endif //009
-void ReadConfigFile(void)
-{
-  char buf[501];
-  i16 f;
-  i32 lineNumber = 0;
-  i32 col, numerror=0;
-  char *field;
-  i32 scancode, key, mode;
-
-  /*
-  for (i32 i=0; SmartDiscards[i] != NULL; i++)
-  {
-    //_strupr(SmartDiscards[i]);
-    if (AddSmartDiscard(SmartDiscards[i]) == 0) continue;
-  };
-  */
-  csb_push_config_state();
-  csb_set_config_file((char*)"csb.cfg");
-
-#if defined(_LINUX) //010
-  // Not sure this setting is still useful, but it's still read so I'll keep it for now...
-  extern ui32 TImER;
-  TImER = csb_get_config_int("settings","timer",10);
-#endif //010
-
-  keyxlate.read_conf();
-  csb_pop_config_state();
-}
 
 i32 UI_DisableAllMessages(void)
 {
@@ -905,7 +877,6 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
     switch (msg->type)
     {
     case UIM_INITIALIZE:
-        ReadConfigFile();
         //Set the GameMode //0=quit
                            //1=dungeon
                            //2=utility
