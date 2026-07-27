@@ -297,7 +297,7 @@ namespace imgui_addons
                     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 1.0f, 1.0f, 0.01f));
                     ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f,1.0f));
 		    char id[5];
-		    snprintf(id,5,"##%d",i);
+		    snprintf(id,5,"##%zd",i);
                     ImGui::ArrowButtonEx(id, ImGuiDir_Right, ImVec2(frame_height, frame_height), ImGuiItemFlags_Disabled);
                     ImGui::SameLine(0,0);
                     ImGui::PopStyleColor(2);
@@ -1067,13 +1067,16 @@ namespace imgui_addons
 	char *s2,*s; s2 = s = iss;
 	if (!strchr(s,','))
 	    strcat(iss,",");
-        while(s2 = strchr(s,','))
+        while((s2 = strchr(s,',')))
         {
 	    *s2 = 0;
             if(*s && strcmp(s, "*.*")) {
                 valid_exts.push_back(s);
 	    } else if(!strcmp(s,"*.*"))
                 all_files = true;
+	    s = s2+1;
+            if(*s && strcmp(s, "*.*")) // last entry, no finishing ,
+                valid_exts.push_back(s);
         }
 
         //Add an option to support all valid extensions
@@ -1176,7 +1179,7 @@ namespace imgui_addons
             current_dirlist.push_back("/");
 #endif //OSWIN
 
-        while(s2 = strchr(s,'/'))
+        while((s2 = strchr(s,'/')))
         {
 	    *s2 = 0;
             if(*s)
