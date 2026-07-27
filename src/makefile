@@ -18,7 +18,7 @@ ifeq ($(target), Raspberry)
 endif
 ifeq ($(target), SDL20)
 	#	debug options (make sure the ldflags line is uncommented if you use this)
-	options =   -g -fsanitize=address -D _LINUX -D RGB655 -D SDL20 -c
+	options =   -g -fsanitize=address -D _LINUX -D RGB655 -D SDL20 -Wall -c
 # optimized build options (comment out ldflags below to remove -fsanitize=address!!!)
 	#options =   -O2 -D _LINUX -D RGB655 -D SDL20 -c
 	ldflags := -g -fsanitize=address
