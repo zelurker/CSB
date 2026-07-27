@@ -652,11 +652,7 @@ RESTARTABLE _wvbl(const CSB_UI_MESSAGE *pMsg)
   while (oldCount == VBLCount)
   {
     WAITFORMESSAGE(_1_); //a UIM_VBL will do.
-    switch (pMsg->type)
-    {
-    case UIM_VBL: break;
-    };
-  };
+  }
   RETURN;
 }
 
@@ -1468,7 +1464,6 @@ void DebugLoad(void *p, i32 a, i32 b, RN obj)
 {
   static FILE *f=NULL;
   static i32 additions[maxloaditems];
-  static i32 timeadd[maxloaditems];
   static RN objadd[maxloaditems];
   i32 newLoad, oldLoad, index;
   if (f == NULL)
@@ -1481,7 +1476,6 @@ void DebugLoad(void *p, i32 a, i32 b, RN obj)
   if ((obj != RNeof) && (obj!=RNnul))
   {
     RN cont;
-    i32 w;
     DB9 *pChest;
     if (obj.dbType() == dbCHEST)
     {
@@ -1491,8 +1485,8 @@ void DebugLoad(void *p, i32 a, i32 b, RN obj)
            cont != RNeof;
            cont = GetDBRecordLink(cont))
       {
-        w = GetObjectWeight(cont);
-        DEBUGLOAD(p, w, b, cont);
+        GetObjectWeight(cont);
+        // DEBUGLOAD(p, w, b, cont);
       };
       return;
     };
@@ -1518,7 +1512,6 @@ void DebugLoad(void *p, i32 a, i32 b, RN obj)
       {
         additions[index] = a;
         objadd[index] = obj;
-        timeadd[index] = d.Time;
         return;
       };
     };

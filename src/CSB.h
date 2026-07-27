@@ -1291,6 +1291,7 @@ class DB11:public DBCOMMON
   friend class EXPOOL;
   ui16 size;
   ui32 d[63]; //Total size = 256 bytes
+  void clear() { size = 0; memset(d,0,63*4); }
   void swap(void);
   void Size(i32 s){size = (ui16)s;};
 };

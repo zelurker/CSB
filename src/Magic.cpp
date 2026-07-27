@@ -720,7 +720,6 @@ void SelectMagicCaster(i16 chIdx)
 {
   dReg D5, D6;
   ui8 *pD4;
-  CHARDESC *pcA3;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //D7W = P1;
   if (chIdx == d.MagicCaster) return;
@@ -741,7 +740,6 @@ void SelectMagicCaster(i16 chIdx)
     return;
   };
   d.MagicCaster = chIdx;
-  pcA3 = &d.hero[chIdx];
   TAG01b408(2);
   D5W = 0;
   pD4 = d.LogicalScreenBase+8112;
@@ -1129,7 +1127,7 @@ i16 CastSpell(i16 chIdx, SPELL_PARAMETERS& spellParameters)
     msg = "THIS SPELL IS TOO DIFFICULT.";
     break;
   case 6:
-    msg = "% NEEDS MORE PRACTICE WITH THIS SPELL.", chIdx;
+    msg = "% NEEDS MORE PRACTICE WITH THIS SPELL.";
     break;
   case 7:
     msg = "THIS SPELL REQUIRES A COMPONENT.";

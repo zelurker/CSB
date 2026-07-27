@@ -85,6 +85,7 @@ void TraceTimer(TIMER *pTimer, i32 index, const char *msg)
     fprintf(GETFILE(TraceFile)," %s CELLFLAG 0x08 at %02x,%02x",
                 action(timerTypeModifier[pTimer->timerUByte9()]),pTimer->timerUByte6(),pTimer->timerUByte7());
     break;
+  default: break; // just to avoid plenty of warnings about unhandled values
   };
   fprintf(GETFILE(TraceFile),"\n");
 }
@@ -211,7 +212,6 @@ void MissileTimer(TIMER *pTimer)
   //i32 nextCellFlags;
   i32 deltaEnergy; // From timer entry
   i32 newX, newY, newDir;
-  i32 saveTimerIndex;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (missileFilterObject != RNnul)
   {
@@ -222,7 +222,7 @@ void MissileTimer(TIMER *pTimer)
   //objD7 = objMissile;
   ASSERT(missileFilterObject.dbType() == dbMISSILE,"missile");
   pDBMissile = GetRecordAddressDB14(missileFilterObject);
-  saveTimerIndex = pDBMissile->timerIndex();
+  pDBMissile->timerIndex();
   pDBMissile->timerIndex(0xffff);
   origMapX = BITS0_4(missileFilterTimer.timerWord8()); //mapX
   origMapY = BITS5_9(missileFilterTimer.timerWord8()); //mapY

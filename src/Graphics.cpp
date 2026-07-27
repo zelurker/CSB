@@ -106,11 +106,11 @@ ui8 *SCREEN::logbase(void)
   {
     if (m_logAllocated == NULL)
       m_logAllocated = (ui8 *)UI_malloc(32000, MALLOC027);
-      if (m_logAllocated == NULL)
-      {
-        UI_MessageBox("Cannot allocate memory",NULL,MESSAGE_OK);
-        die(0x6fd3);
-      };
+    if (m_logAllocated == NULL)
+    {
+	UI_MessageBox("Cannot allocate memory",NULL,MESSAGE_OK);
+	die(0x6fd3);
+    };
     m_logScreenBase = m_logAllocated;
   };
   return m_logScreenBase;

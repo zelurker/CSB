@@ -188,7 +188,6 @@ RN MakeMoreRoomInDB(DBTYPE dbType)
   DB6  *pDB6_4;
   DB8  *pDB8_4;
   DB10 *pDB10_4;
-  DB14 *pDB14_4;
   RN  *rnA2;
   i16 w_14;
   i16 w_12;
@@ -275,7 +274,7 @@ RN MakeMoreRoomInDB(DBTYPE dbType)
                 // around the things that needed to be different.
                 // I separated the two entirely.
               case dbMISSILE:
-                  pDB14_4 = GetRecordAddressDB14(rnD5);
+                  GetRecordAddressDB14(rnD5);
                 // We will use the DB4 pointer for both
                 // types of object even though they are
                 // very different.  Hmmm...

@@ -814,7 +814,7 @@ void DATABASES::DeAllocate(i32 dbNum)
 i32 DATABASES::Enlarge(i32 dbNum)
 { // Returns index of newly available entry or -1
   i32 max, iNew, i;
-  i32 result;
+  // i32 result;
   i32 newSize;
   DBCOMMON *pC;
   char msg[1000];
@@ -842,8 +842,8 @@ i32 DATABASES::Enlarge(i32 dbNum)
              ,m_numEnt[dbNum]
              ,max);
         AutoEnlarge = true; // ***************** PRS 26 Octover 2002
-  if (AutoEnlarge) result = MESSAGE_IDYES;
-  else result = UI_MessageBox(msg,NULL,MESSAGE_YESNO);
+/*  if (AutoEnlarge) result = MESSAGE_IDYES;
+  else result = UI_MessageBox(msg,NULL,MESSAGE_YESNO); */
   //if (result == MESSAGE_IDNO)
   //{
   //  m_noEnlarge |= 1 << dbNum;
@@ -1622,7 +1622,8 @@ void EXPOOL::enlarge(ui32 size)
   //e = p+64;
   n = 63 / size;
   pDB11 = (DB11 *)m + numBlock-1;
-  memset(pDB11, 0,256);
+  //memset(pDB11, 0,256);
+  pDB11->clear();
   pDB11->link(RNeof);
   pDB11->Size(size);
   for (i=0; i<n; i++, p+=size)
