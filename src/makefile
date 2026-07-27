@@ -1,10 +1,10 @@
 #target = Raspberry
-# target = SDL20
+target = SDL20
 # This target below is for some cross compilation from linux to windows
 # it works, but windows gives 2 channels instead of the requested 1, creating bad sound when run in wine, and no sound at all in native windows 11 !
 # so consider it experimental for now !
 # target = x86_64-w64-mingw32
-target=i686-w64-mingw32
+# target=i686-w64-mingw32
 CXX = g++
 MD = mkdir
 # comment out following line to see compiler invocation
@@ -61,7 +61,7 @@ OBJS=	DSA.o       data.o         Code11f52.o  Graphics.o  Magic.o          \
         SaveGame.o  Translation.o  Bitmaps.o    md5C.o      utility.o        \
         WinScreen.o Code13ea4.o    Codea59a.o   RC4.o       Attack.o         \
         Sound.o     Code1f9e6.o    Code390e.o   Code222ea.o Statistics.o     \
-        SoundMixer.o
+        SoundMixer.o confile.o
 
 OBJDIR = obj
 OBJDIRS = $(OBJDIR) \
