@@ -332,7 +332,7 @@ void UI_GetCursorPos(i32 *_x, i32 *_y)
 
 
 
-char szCSBVersion[] = "CSB for Windows/Linux Version " __DATE__;
+char szCSBVersion[] = "CSB Version " __DATE__;
 int WindowX = 0;
 int WindowY = 0;
 bool fullscreenRequested = false;
