@@ -82,6 +82,7 @@ struct MBHEAD
 MBHEAD *firstMemoryBlock=NULL; // Debug list of allocated blocks
 
 DBank d;
+static DBank DBank_cleared;
 
 void _MessageBox(const char *msg)
 {
@@ -324,7 +325,7 @@ void SetButtonPointers(void)
 DBank::DBank(void)
 {
   //memset (this,0,sizeof (*this));
-  *this = {};
+  *this = DBank_cleared;
 }
 
 DBank::~DBank(void)
@@ -340,7 +341,7 @@ void DBank::Initialize(void) // TAG00332a
   ASSERT((k == 23412) || (k == 25056),"k");
   //d.Word1834=512;
   // memset (this,0,sizeof (*this));
-  *this = {};
+  *this = DBank_cleared;
   Word1844=512;
   Word1870 = 1;
   Pointer2066[0] = &Byte1982;
