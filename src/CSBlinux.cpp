@@ -1972,7 +1972,8 @@ void post_render() {
 	    }
 	}
 
-	if (show_coords) {
+	if (show_coords && d.pLevelDescriptors) {
+	    // Apparently d.pLevelDescriptors becomes unavailable during the loading of a saved game...
 	    ImGui::SameLine(ImGui::GetWindowWidth() - 100);
 	    ImGui::Text("Party %d,%d,%d",d.partyLevel,d.partyX+d.pLevelDescriptors[d.partyLevel].offsetX,d.partyY+d.pLevelDescriptors[d.partyLevel].offsetY);
 	}
