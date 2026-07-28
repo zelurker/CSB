@@ -82,7 +82,6 @@ struct MBHEAD
 MBHEAD *firstMemoryBlock=NULL; // Debug list of allocated blocks
 
 DBank d;
-static DBank DBank_cleared;
 
 void _MessageBox(const char *msg)
 {
@@ -325,7 +324,7 @@ void SetButtonPointers(void)
 DBank::DBank(void)
 {
   //memset (this,0,sizeof (*this));
-  *this = DBank_cleared;
+  *this = {};
 }
 
 DBank::~DBank(void)
@@ -334,12 +333,14 @@ DBank::~DBank(void)
 
 void DBank::Initialize(void) // TAG00332a
 {
+#ifdef _DEBUG
   int k;
   k = sizeof(*this);
+#endif
   ASSERT((k == 23412) || (k == 25056),"k");
   //d.Word1834=512;
   // memset (this,0,sizeof (*this));
-  *this = DBank_cleared;
+  *this = {};
   Word1844=512;
   Word1870 = 1;
   Pointer2066[0] = &Byte1982;
@@ -673,9 +674,6 @@ tag000730:
     d.Time++;
     if (TimerTraceActive)
     {
-      i64 stime;
-      static i64 prevstime;
-      stime = UI_GetSystemTime();
 #ifdef _LINUX
       //fprintf(GETFILE(TraceFile),"%lld %lld Increment virtual game Time\n", stime, stime-prevstime);
       fprintf(GETFILE(TraceFile), "Increment virtual game Time to %08x\n", d.Time);
@@ -683,7 +681,6 @@ tag000730:
       //fprintf(GETFILE(TraceFile),"%I64d %I64d Increment virtual game Time\n", stime, stime-prevstime);
       fprintf(GETFILE(TraceFile), "Increment virtual game Timeto %08x\n", d.Time);
 #endif
-      prevstime = stime;
     };
     if ((currentOverlay.m_p3 != 0) && (currentOverlay.m_p3 < d.Time)) overlayActive = false;
     parameterMessageSequence = 0;
@@ -1485,7 +1482,7 @@ void SCROLLING_TEXT::SetPrintPosition(i32 column, i32 row)
 //           TAG0018f6
 void SCROLLING_TEXT::RemoveTimedOutText(void)
 {
-  dReg D0, D5, D6;
+  dReg D0, D5;
   RectPos LOCAL_8;
   //RESTARTMAP
   //  RESTART(1)
@@ -1853,11 +1850,11 @@ void TAG0020ca(void)
 
 void KeyclickOff(void) //TAG002164
 {
-  aReg A0;
+  // aReg A0;
   pnt LOCAL_4;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   LOCAL_4 = (pnt)dosound(0); // Stop any existing sound
-  A0 = d.Pointer23040;
+  // A0 = d.Pointer23040;
    ////  d.Byte23042 = *A0; // save old keyclick state
    ////  *A0 &= 2; // keyclick off.
   dosound((ui8 *)LOCAL_4); // Restart sound
@@ -3991,6 +3988,7 @@ void DrawFloorDecorations(i32 graphicOrdinal,i32 relativeCell)
 // *********************************************************
 void TAG004b26(i32 P1, i32 P2)
 {
+    // D1 actually used
   dReg D0, D1, D4, D5, D6, D7;
   aReg A2, A3;
   ui8 *pnt_4;
@@ -6019,15 +6017,11 @@ void StartMonsterMovementTimers(i32 mapX,i32 mapY)
 void AttachItem16ToMonster(RN P1,i32 mapX,i32 mapY)
 {
   dReg        D0, D1, D6;
-  aReg        A0;
   MONSTERDESC *pmtDesc;
   ITEM16      *pi16A2;
   DB4         *pDB4A3;
   i16         item16Index;
-  i16         LOCAL_6;
-  static i32  message = 0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  A0 = NULL;
   pi16A2 = d.Item16;
   item16Index = 0;
   while (pi16A2->word0 >= 0)
@@ -6086,7 +6080,6 @@ void AttachItem16ToMonster(RN P1,i32 mapX,i32 mapY)
   pi16A2->uByte4 = (UI8)(d.Time - 127); // about 20 seconds
   pmtDesc = &d.MonsterDescriptor[pDB4A3->monsterType()];
   SET(D0B, pmtDesc->horizontalSize() == 1);
-  LOCAL_6 = (I16)(D0W & 1);
   D6W = pDB4A3->numMonM1();
   do
   {
@@ -6229,10 +6222,8 @@ i16 TAG011594(i16 chIdx,
 {//(i16)
   dReg D5, D6, D7;
   RN   objD0;
-  CHARDESC *pcA3;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   D7W = chIdx;
-  pcA3 = pChar;
   D6W = srcPossession;
   D5W = dstPossession;
   if (pChar->Possession(D6W) == RNnul) return 0;
@@ -6517,11 +6508,11 @@ bool ProcessTimers(void) // Parameter ignored, I think.
                //A0 += D0;
                //D0W = wordGear(A0)-wordGear(&LOCAL_1[6]);
                {
-                 i32 oldShieldLevel, newShieldLevel;
-                 oldShieldLevel = pcA0->shieldStrength/50;
+                 // i32 oldShieldLevel, newShieldLevel;
+                 // oldShieldLevel = pcA0->shieldStrength/50;
                  pcA0->shieldStrength =
                        uw(pcA0->shieldStrength - timeEnt.timerUWord6());
-                 newShieldLevel = pcA0->shieldStrength/50;
+                 // newShieldLevel = pcA0->shieldStrength/50;
                  //if (oldShieldLevel != newShieldLevel)
                  //{
                  //  chIdx = timeEnt.timerUByte5;
@@ -7333,6 +7324,7 @@ void SelectPaletteForLightLevel(void)
 void NinetySecondUpdate(void)
 { //(void)
   // Decrement bits 10-13 of weapon types 4, 5, 6, and 7
+    // D5 actually used
   dReg D0, D3, D5, D6, D7;
   OBJ_NAME_INDEX objNID4;
   DB5      *DB5A2;
@@ -7607,6 +7599,7 @@ void OnMouseClick(i32 x,i32 y,i32 buttons)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #ifdef POST_TRANSLATE_CLICK
   // 20230506
+    // D0 actually used
   dReg D0, D6, D7;
 #else
   // 20230506
@@ -7877,7 +7870,7 @@ RESTARTABLE _TurnParty(const i32 direction)
 { //(void)
   // 1 = left
   // 2 = right
-  static dReg D0, D7;
+  static dReg D7;
   static i32 deltaFacing;
   static int cellFlags;
   RESTARTMAP
@@ -9153,9 +9146,10 @@ i16 FetchDataBytes(ui8 *P1,i16 *P2,i32 P3) //TAG01d138
 // *********************************************************
 i16 InsertDisk(const i32 P1,const i32 P2)
 {//(i16)
+    // D6 actually used
   static dReg D0, D5, D6, D7;
-  static aReg A3;
-  static i8  LOCAL_80[80];
+  // static aReg A3;
+  // static i8  LOCAL_80[80];
 //  RESTARTMAP
 //    RESTART(1)
 //    RESTART(2)
@@ -9244,7 +9238,7 @@ i16 ReadUnscrambleBlock(ui8 *P1)
 //   TAG01f140
 RESTARTABLE _DisplayChaosStrikesBack(void)
 {//(void)
-  static dReg D0, D5, D6, D7;
+  static dReg D7;
   static aReg A2, A3;
   static PALETTE  LOCAL_340;
   static str10 LOCAL_308[18]; // 10-byte structures
@@ -9423,7 +9417,6 @@ RESTARTABLE _OpenPrisonDoors(void) //TAG01f47a
   static dReg D7;
   //static aReg A0, A1, A3;
   static aReg A0, A1;
-  static UI8 **ppUI8_A3;
   static ui8 *LOCAL_4, *LOCAL_8;
   static i32 i;
   RESTARTMAP
@@ -9432,7 +9425,6 @@ RESTARTABLE _OpenPrisonDoors(void) //TAG01f47a
     RESTART(3);
   END_RESTARTMAP
   //A3 = (pnt)&d.Pointer22952; // Prison door left
-  ppUI8_A3 = d.Pointer22952; // Prison door left
   LOCAL_4 = d.LogicalScreenBase + 4800;
   //LOCAL_8 = (ui8 *)pntGear((pnt)A3 + 36);
   LOCAL_8 = d.Pointer22916;
@@ -9760,16 +9752,13 @@ void AtariMemCleanup(void)
 void InitializeHeap(void)
 {
   dReg D0, D5,D6,D7;
-  aReg A0, A1;
   // i32 D4;
   DisableCursor();
   firstMemoryBlock = NULL;
   D0L = GetAvailMemory();
   D7L = D0L-20;
   SetSupervisorMode();
-  A1 = (aReg)0x5000; // System start address
   D6L = 0x19c00; // System end address;
-  A0 = (aReg)0x19bf4; // ???
   D5L = 0x19c00; // What is 4(a0) // End of available memory
   D5L -= D6L; // say there is no space above OS
   ClearSupervisorMode();
@@ -9878,7 +9867,7 @@ RESTARTABLE _SelectSaveGame(const i32 P1, const i32 checkExist, i32 alwaysDate)
   STHideCursor(HC52);
   // Apparently the ui can display only uppercase strings, so convert the fNames to uppercase...
   for (int i=0; i<4; i++) {
-      for (int n=0; n<strlen(fNames[i]); n++)
+      for (size_t n=0; n<strlen(fNames[i]); n++)
 	  if (fNames[i][n] >= 'a' && fNames[i][n] <= 'z')
 	      fNames[i][n] &= (~32);
   }
@@ -10048,6 +10037,7 @@ void TAG0207cc(void)
 
 void TAG020836(i8 *P1)
 {
+    // D0 actually used
   dReg D0, D7;
   //i32 D6;
   aReg A3;
@@ -10555,6 +10545,7 @@ switch (mystate) { case _0_: goto return_0_;
     bool skipReady;
 RESTARTABLE _TAG021028(void)
 { //(void)
+    // D0 actually used
   static dReg D0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   static i16 LOCAL_2;
@@ -10769,7 +10760,6 @@ switch (mystate) { case _0_: goto return_0_;
 
 RESTARTABLE _ShowPrisonDoor(void)
 {//(void)
-  static dReg D7;
   RESTARTMAP4
     RESTART(1)
     //RESTART(2)
@@ -11257,13 +11247,11 @@ tagReturn:
 
 void checkMemory(void)
 {
-  MBHEAD *prevblk=NULL;
   MBHEAD *blk = (MBHEAD *)firstMemoryBlock;
   //return;
   while (blk != NULL)
   {
     ASSERT(blk->debugvalue == memDebugFlag,"blk+8");
-    prevblk=blk;
     blk = blk->pNextMB;
   };
 }
@@ -11512,16 +11500,12 @@ switch (mystate) { case _0_: goto return_0_;
 
 RESTARTABLE _StartCSB(const CSB_UI_MESSAGE * /*msg*/) //
 {//(void)
-  static aReg A4, A5;
   RESTARTMAP3
     RESTART(1)
     RESTART(2)
     RESTART(3)
   END_RESTARTMAP
 //  i32 dBankLen=programDescriptor[5]+programDescriptor[7];
-  A4 =  (pnt)(&d);
-  A4 += programDescriptor[7]; // uninitialized data,a4,initialized data
-  A5=NULL; // Should stay that way.
   // Clear uninitialized memory.
   //memset (A4-programDescriptor[7],0,sizeof (d));
   Cleanup(false);
