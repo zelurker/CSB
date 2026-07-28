@@ -312,7 +312,7 @@ const char *helpMessage = "CSBlinux will need the orginal datafiles "
       "   hcsb.hct\n"
       "   mini.dat\n"
       "   graphics.dat\n"
-      "   config.linux";
+      "   csb.cfg";
 
 /* This is a bad place for these id's */
 
@@ -1504,7 +1504,6 @@ int main(int argc, char* argv[])
 
   MTRACE("*** First initialization ***\n");
   csbMessage.type=UIM_INITIALIZE;
-  /* Parse config.linux */
   if (CSBUI(&csbMessage) != UI_STATUS_NORMAL)
   {
     PostQuitMessage(0x25);
@@ -1523,7 +1522,7 @@ int main(int argc, char* argv[])
    ********************************************
    */
   if (get_nbkeys() == 0)
-      UI_MessageBox("No keyboard shortcut !\nCheck that the config.linux file is available.","Warning",MESSAGE_OK);
+      UI_MessageBox("No keyboard shortcut !\nCheck that the csb.cfg file is available.","Warning",MESSAGE_OK);
 
   while (true)
   {
