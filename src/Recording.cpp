@@ -1235,25 +1235,25 @@ void RECORDFILE::Record(MouseQueueEnt *ent)
         CycleRandom(gameSpeed);
       };
       if (   ((d.RandomNumber & 0x351a8) == 0)
-          || (!m_graphicSignature) && (graphicSignature1!=0))
+          || ((!m_graphicSignature) && (graphicSignature1!=0)))
       {
         Signature(graphicSignature1, 0x6666);
         m_graphicSignature = true;
       };
       if (   ((d.RandomNumber & 0x351a4) == 0)
-          || (!m_CSBgraphicSignature) && (CSBgraphicSignature1!=0))
+          || ((!m_CSBgraphicSignature) && (CSBgraphicSignature1!=0)))
       {
         Signature(CSBgraphicSignature1, 0x666a);
         m_CSBgraphicSignature = true;
       };
       if (   ((d.RandomNumber & 0x8a153) == 0)
-          || (!m_dungeonSignature) && (dungeonSignature1!=0))
+          || ((!m_dungeonSignature) && (dungeonSignature1!=0)))
       {
         Signature(dungeonSignature1, 0x6667);
         m_dungeonSignature = true;
       };
       if (   ((d.RandomNumber & 0x8a163) == 0)
-          || (!m_versionSignature) && (versionSignature!=0))
+          || ((!m_versionSignature) && (versionSignature!=0)))
       {
         Signature(versionSignature, 0x6665);
         m_versionSignature = true;

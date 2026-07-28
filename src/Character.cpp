@@ -1514,7 +1514,7 @@ i16 TAG0153c2(i32 chIdx,
               i32 possessionIndex1,
               i32 possessionIndex2)
 {
-  dReg D0, D6;
+  dReg D6;
   CHARDESC   *pcA3;
   WEAPONDESC *weaponDescA2;
   RN  objD7;
@@ -1548,7 +1548,6 @@ i16 TAG0153c2(i32 chIdx,
   if (objD7 == RNnul) return 0;
   if (objD7.dbType() != dbWEAPON) return 0;
   weaponDescA2 = TAG0099d2(objD7);
-  D0W = sw(objD7.dbType());
   //Must be 5! ... if (D0W != 5) return 0;
   if (weaponDescA2->uByte1 != D6W) return 0;
   return 1;
@@ -1648,22 +1647,15 @@ void AdjustStatsForItemCarried (
             switch (objNI)
             {
             case objNI_Staff: D4W = 2; break;
-
             case objNI_Wand: D4W = 1; break;
-
             case objNI_TeoWand: D4W = 6; break;
-
             case objNI_YewStaff: D4W = 4; break;
-
             case objNI_StaffOfIrra: D4W = 10; break;
-
             case objNI_CrossOfNeta: D4W = 8; break;
-
             case objNI_SerpentStaff: D4W = 16; break;
-
             case objNI_DragonSpit: D4W = 7; break;
-
             case objNI_SceptreOfLyf: D4W = 5; break;
+	    default: break; // no warning
             };
           }
           else
@@ -1773,10 +1765,8 @@ void AdjustStatsForItemCarried (
 
 void SetCursed(RN obj, bool curse)
 {
-  i32 chIdx;
   CHARDESC *pCH;
   pCH = NULL;
-  chIdx = -1;
   i32 ch;
   i32 loc=-1;
   for (ch=0; ch<d.NumCharacter; ch++)
@@ -3603,55 +3593,53 @@ void DescribeObject(RN object,i16 P2)
       descriptivePhrases[8] = "";
       descriptivePhrases[9] = "";
       d.TextOutY = 87;
-      switch (dbType)
-      {
-//
+      switch (dbType) {
       case dbWEAPON:
-          descriptionMask = 0x0e;//Cursed,broken,poisoned
-          DB5A0 = dbA2->CastToDB5();
-          D4W = sw(DB5A0->cursed());
-          D4W <<= 3; //Cursed
-          D1W = sw(DB5A0->poisoned());
-          D4W |= D1W << 1;//Poisoned
-          D1W = sw(DB5A0->broken());
-          D4W |= D1W << 2;//Broken
-          if (   (objNID6 >= objNI_Torch_a)
-              && (objNID6 <= objNI_Torch_d) )
-          {
-            D0W = sw(DB5A0->charges());
-            if (D0W == 0)
-            {
-              PrintItemDesc(TranslateLanguage("(BURNT OUT)"));
-            };
-          };
+	  descriptionMask = 0x0e;//Cursed,broken,poisoned
+	  DB5A0 = dbA2->CastToDB5();
+	  D4W = sw(DB5A0->cursed());
+	  D4W <<= 3; //Cursed
+	  D1W = sw(DB5A0->poisoned());
+	  D4W |= D1W << 1;//Poisoned
+	  D1W = sw(DB5A0->broken());
+	  D4W |= D1W << 2;//Broken
+	  if (   (objNID6 >= objNI_Torch_a)
+		  && (objNID6 <= objNI_Torch_d) )
+	  {
+	      D0W = sw(DB5A0->charges());
+	      if (D0W == 0)
+	      {
+		  PrintItemDesc(TranslateLanguage("(BURNT OUT)"));
+	      };
+	  };
 	  D0W = DB5A0->weaponType();
 	  clW = &d.weapons[D0W];
 	  sprintf(buf,"DAMAGE %d",clW->damage);
 	  PrintItemDesc(buf);
 	  // if (clW->attribute & 0xff) {
 	  // attribute & 0xff shows when it's a projectile weapon but the distance / shoot damage is also interesting for ammo, so it's probably better to display it always
-	      sprintf(buf,"DISTANCE %d",clW->distance);
+	  sprintf(buf,"DISTANCE %d",clW->distance);
+	  PrintItemDesc(buf);
+	  if (clW->uByte1)
+	      sprintf(buf,"SHOOT DAMAGE %d",clW->uByte1);
+	  PrintItemDesc(buf);
+	  if (DB5A0->charges() && (objNID6 < objNI_Torch_a || objNID6 > objNI_Torch_d)) {
+	      char buf[20];
+	      sprintf(buf,"CHARGES %d",DB5A0->charges());
 	      PrintItemDesc(buf);
-	      if (clW->uByte1)
-		  sprintf(buf,"SHOOT DAMAGE %d",clW->uByte1);
-	      PrintItemDesc(buf);
-	      if (DB5A0->charges() && (objNID6 < objNI_Torch_a || objNID6 > objNI_Torch_d)) {
-		  char buf[20];
-		  sprintf(buf,"CHARGES %d",DB5A0->charges());
-		  PrintItemDesc(buf);
-	      }
+	  }
 	  // }
 	  if (DB5A0->poisoned())
 	      PrintItemDesc("POISONED");
-          break;
+	  break;
 
       case dbCLOTHING:
-          descriptionMask = 0x0c;//cursed, broken
-          DB6A0 = dbA2->CastToDB6();
-          D4W = sw(DB6A0->cursed());
-          D4W <<= 3; //Cursed
-          D1W = sw(DB6A0->broken());
-          D4W |= D1W << 2;//broken
+	  descriptionMask = 0x0c;//cursed, broken
+	  DB6A0 = dbA2->CastToDB6();
+	  D4W = sw(DB6A0->cursed());
+	  D4W <<= 3; //Cursed
+	  D1W = sw(DB6A0->broken());
+	  D4W |= D1W << 2;//broken
 	  D0W = sw(DB6A0->clothingType());
 	  ASSERT(D0W <58,"D0 > 58");
 	  clA2 = &d.ClothingDesc[D0W];
@@ -3659,13 +3647,13 @@ void DescribeObject(RN object,i16 P2)
 	  PrintItemDesc(buf);
 	  sprintf(buf,"PIERCE RES %d",clA2->pierceResistance() & 0x7f);
 	  PrintItemDesc(buf);
-          break;
+	  break;
       case dbPOTION:
-          descriptionMask = 0x01;//consumable
-          DB8A0 = dbA2->CastToDB8();
-          D1W = sw(DB8A0->potionType());
-          D4W = sw(D1W + 2);//Compute object index
-          D4W = d.ObjDesc[D4W].word4;
+	  descriptionMask = 0x01;//consumable
+	  DB8A0 = dbA2->CastToDB8();
+	  D1W = sw(DB8A0->potionType());
+	  D4W = sw(D1W + 2);//Compute object index
+	  D4W = d.ObjDesc[D4W].word4;
 	  switch(DB8A0->potionType()) {
 	  case potion_MonPotionB: PrintItemDesc(_("STAMINA POTION")); break;
 	  case potion_EEPotion: PrintItemDesc(_("MANA POTION")); break;
@@ -3677,56 +3665,58 @@ void DescribeObject(RN object,i16 P2)
 	  case potion_AntiVenin: PrintItemDesc(_("CURE POISON POTION")); break;
 	  case potion_YaPotion: PrintItemDesc(_("SHIELD POTION")); break;
 	  case potion_VenPotion: PrintItemDesc(_("POISON POTION")); break;
+	  default: break; // no warning
 	  }
-          break;
+	  break;
       case dbMISC: // Bones, for example.
 	  if (objNID6 == objNI_Moonstone) PrintItemDesc(_("RAISES INFLUENCE SKILL AND MANA"));
 	  if (objNID6 == objNI_GemOfAges || objNID6 == objNI_SceptreOfLyf) PrintItemDesc(_("RAISES HEALING SKILL"));
 	  if (objNID6 == objNI_EkkhardCross) PrintItemDesc(_("RAISES DEFEND SKILL"));
 	  if (objNID6 == objNI_PendantFeral) PrintItemDesc(_("RAISES WIZARD SKILL"));
 	  if ( (objNID6 >= objNI_JewelSymal_a) && (objNID6 <= objNI_JewelSymal_b) ) PrintItemDesc(_("RAISES ANTI-MAGIC"));
-          if (   (objNID6 >= objNI_Waterskin)
-              && (objNID6 <= objNI_Water) )
-          {
-            descriptionMask = 0;
-            DB10A0 = dbA2->CastToDB10();
-            switch (DB10A0->value()) //BITS14_15(DB10A0->word2))
-            {
-            case 0:
-              A3 = "(EMPTY)";
-              break;
-            case 1:
-              A3 = "(ALMOST EMPTY)";
-              break;
-            case 2:
-              A3 = "(ALMOST FULL)";
-              break;
-            case 3:
-              A3 = "(FULL)";
-              break;
-            }; //switch ()
-            PrintItemDesc(TranslateLanguage(A3));
-          }
-          else
-          {
-            if (   (objNID6 >= objNI_Compass_N)
-                && (objNID6 <= objNI_Compass_W) )
-            {
-              descriptionMask = 0;
-              strcpy(descriptiveText, TranslateLanguage("PARTY FACING"));
-	      strcat(descriptiveText, " ");
-              strcat(descriptiveText, TranslateLanguage(d.DirectionNames[objNID6-objNI_Compass_N]));
-              PrintItemDesc(descriptiveText);
-            }
-            else
-            {
-              descriptionMask = 0x09; //Cursed, Consumable
-              // compute object index
-              D4W = sw(dbA2->CastToDB10()->miscType() + 127);
-              D4W = d.ObjDesc[D4W].word4;
-              if (dbA2->CastToDB10()->cursed()) D4W |= 8;
-            };
-          };
+	  if (   (objNID6 >= objNI_Waterskin)
+		  && (objNID6 <= objNI_Water) )
+	  {
+	      descriptionMask = 0;
+	      DB10A0 = dbA2->CastToDB10();
+	      switch (DB10A0->value()) //BITS14_15(DB10A0->word2))
+	      {
+	      case 0:
+		  A3 = "(EMPTY)";
+		  break;
+	      case 1:
+		  A3 = "(ALMOST EMPTY)";
+		  break;
+	      case 2:
+		  A3 = "(ALMOST FULL)";
+		  break;
+	      case 3:
+		  A3 = "(FULL)";
+		  break;
+	      }; //switch ()
+	      PrintItemDesc(TranslateLanguage(A3));
+	  }
+	  else
+	  {
+	      if (   (objNID6 >= objNI_Compass_N)
+		      && (objNID6 <= objNI_Compass_W) )
+	      {
+		  descriptionMask = 0;
+		  strcpy(descriptiveText, TranslateLanguage("PARTY FACING"));
+		  strcat(descriptiveText, " ");
+		  strcat(descriptiveText, TranslateLanguage(d.DirectionNames[objNID6-objNI_Compass_N]));
+		  PrintItemDesc(descriptiveText);
+	      }
+	      else
+	      {
+		  descriptionMask = 0x09; //Cursed, Consumable
+					  // compute object index
+		  D4W = sw(dbA2->CastToDB10()->miscType() + 127);
+		  D4W = d.ObjDesc[D4W].word4;
+		  if (dbA2->CastToDB10()->cursed()) D4W |= 8;
+	      };
+	  };
+      default: break; // no warning
       }; //switch (DB type)
 
       phraseMask = descriptionMask & D4W & 0x0f;
@@ -3872,7 +3862,6 @@ void TAG0189d4(void)
 {
   dReg D0;
   RN objD7;
-  DBCOMMON *dbA3;
   CHARDESC *pChar;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (d.PotentialCharacterOrdinal)
@@ -3884,7 +3873,6 @@ void TAG0189d4(void)
     //D7L = d.Word16614 * 800;
     pChar = &d.hero[d.SelectedCharacterOrdinal-1];
     objD7 = pChar->Possession(1); // item in Weapon hand
-    dbA3 = GetCommonAddress(objD7);
     d.DisplayResurrectChestOrScroll = 0;
     D0W = -1;
     if (objD7 != RNnul) D0W = sw(objD7.dbType());
@@ -4027,7 +4015,7 @@ RESTARTABLE _FeedCharacter()
 { //(void)
   //We got here when I fed a character some bones. (But
   // they turned out to be not consumable.)
-  static dReg D0, D1, D4;
+  static dReg D0, D1;
   static i32 chIdx;
   static OBJ_NAME_INDEX objNID6;
   static RN  objD7;
@@ -4135,7 +4123,6 @@ RESTARTABLE _FeedCharacter()
     //One gulp is now gone.
     //dbA3->CastToDB10()->value(dbA3->CastToDB10()->value()-1);
     };
-    D4W = 0;
     fp.emptyHand = false;
     fp.performFeeding = true;
   }
@@ -4143,7 +4130,6 @@ RESTARTABLE _FeedCharacter()
   {
     if (dbType_18 == dbPOTION) // DB type
     {
-      D4W = 0;
       fp.emptyHand = false;
       fp.gulp = 8;
     }
@@ -4379,9 +4365,9 @@ RESTARTABLE _FeedCharacter()
     AdjustStamina(chIdx, -fp.staminaAdjust);
     if (fp.shieldStrengthAdjust != 0)
     {
-      i32 oldShieldLevel, newShieldLevel;
+      // i32 oldShieldLevel, newShieldLevel;
       //char ascii[10];
-      oldShieldLevel = pcA2->shieldStrength/50;
+      // oldShieldLevel = pcA2->shieldStrength/50;
       if (pcA2->shieldStrength + fp.shieldStrengthAdjust < 0)
       {
         pcA2->shieldStrength = 0;
@@ -4391,7 +4377,7 @@ RESTARTABLE _FeedCharacter()
         pcA2->shieldStrength
            = sw(pcA2->shieldStrength + fp.shieldStrengthAdjust);
       };
-      newShieldLevel = pcA2->shieldStrength/50;
+      //newShieldLevel = pcA2->shieldStrength/50;
       //if (oldShieldLevel != newShieldLevel)
       //{
       //  PrintLinefeed();
@@ -5239,7 +5225,8 @@ bool CHARDESC::GetFromWings(ui16 fingerprint, bool testOnly)
   if (pChar->fingerPrint != fingerprint) result = false;
   if (result)
   {
-    memcpy(this, &character, 800);
+      // This affectation is to avoid a memcpy and a warning here, but I'm not really sure it's safer actually... !
+    *this = *((CHARDESC*)&character);
   };
   return result;
 }

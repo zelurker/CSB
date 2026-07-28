@@ -1038,7 +1038,9 @@ void ProcessMonsterDeleteFilter(i32 mapX, i32 mapY, DELETEMONSTERPARAMETERS *pdm
           memcpy(pDSAparameters+1, pdmp, sizeof (*pdmp));
           pDSAparameters[0] = sizeof(*pdmp)/sizeof(pDSAparameters[0]);
           ProcessDSAFilter(obj, &timer, locr, NULL, &dsaVars);
-          memcpy(pdmp, pDSAparameters+1, sizeof (*pdmp));
+          // memcpy(pdmp, pDSAparameters+1, sizeof (*pdmp));
+	  // memcpy is not recommended because of complex object, now the problem is that c++ transtyping is not exactly intuitive and very error prone... !
+	  *pdmp = *(DELETEMONSTERPARAMETERS*)(pDSAparameters+1);
           LoadLevel(currentLevel);
         };
       };
@@ -1768,7 +1770,6 @@ i16 ProcessMissileEncounter(
   dReg        D0, D1, D4, D5;
   WEAPONTYPE  wtD6;
   RN          RNprojectile;
-  OBJ_NAME_INDEX  objNID6;
   DB4         *DBmonA2;
   DB8         *DB8A2;
   DB14        *pDBmissile;
@@ -1780,7 +1781,6 @@ i16 ProcessMissileEncounter(
   i16         w_54=-1;
   i16         w_52;
   bool        nonPoison_Spell;
-  i8          b_35;
   //i16         w_34;
   //i16         w_32;
   //i16         w_30; // y_octant
@@ -1798,7 +1798,6 @@ i16 ProcessMissileEncounter(
   DB8         *pdb_4=NULL;
   LOCATIONREL missileLocr;
   D5L = -1;
-  objNID6 = (OBJ_NAME_INDEX)0x7ddd;
   encounterCount++;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   pDBmissile = GetRecordAddressDB14(missile);
@@ -1887,7 +1886,6 @@ i16 ProcessMissileEncounter(
     {
       i32 cellflags, doorstate;
       cellflags = d.LevelCellFlags[objX][objY];
-      b_35 = (ui8)cellflags;
       doorstate = cellflags & 7;
       pdb_12 = GetRecordAddressDB0(FindFirstDoor(objX, objY));
 
@@ -2240,12 +2238,9 @@ DIRECTION GetPrimaryAndSecondaryDirection(
   // If the target is less than 45 degrees from the primary direction
   // then the secondary is chosen at random from the two directions
   // 90 degress from the primary direction.
-  dReg D0, D5, D6, D7;
+  dReg D0;
   DIRECTION dirD4, dirD7;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  D7W = sw(oldX);
-  D6W = sw(oldY);
-  D5W = sw(newX);
   if (oldX == newX)
   {
     D0L = STRandom();
@@ -2762,7 +2757,6 @@ i16 CheckMoveFromMissile(i32 oldX,i32 oldY,i32 newX,i32 newY, RN movedObject, MM
         TIMERTRACE((missileX<<16) + missileY);
         TIMERTRACE(objD7.ConvertToInteger());
         //D0W = ; // misc data type
-        i32 missilePos;
         //D0W = objD7.idx() << 3;
         //D0W = wordGear((pnt)d.misc1052eight[14] + D0W + 6);
         D0W = GetRecordAddressDB14(objD7)->timerIndex();
@@ -2770,7 +2764,6 @@ i16 CheckMoveFromMissile(i32 oldX,i32 oldY,i32 newX,i32 newY, RN movedObject, MM
         TIMERTRACE(0x11ea6);
         TIMERTRACE(tt);
         if (tt == TT_Missile0) continue; // Still in thrower's square
-        missilePos = objD7.pos();
         D0W = objD7.pos();
         D5W = whoLeavesCell[D0W];
         if (D5W == 0) continue;
@@ -3498,6 +3491,7 @@ i16 MoveObject(const RN        object,
 		case mon_Dragon:
 		    LIN_PlayDirect("dragon_move.mp3",newX,newY);
 		    break;
+		default: break; // to avoid unhandled values in the switch
 		}
 	    }
 	}
