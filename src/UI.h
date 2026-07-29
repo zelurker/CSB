@@ -272,5 +272,6 @@ public:
 };
 
 extern KEYXLATE keyxlate;
+void print_ingame(int showtime, const char *format, ...);
 
 #endif // UI_H
