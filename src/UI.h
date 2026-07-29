@@ -6,6 +6,7 @@ extern SDL_Surface *SCR;
 extern SDL_Surface *WND;
 extern float st_Y;
 extern float st_X;
+extern bool nostalgia_mode;
 //void LIN_PlaySound(i8* audio, ui32 size, i32 volume);
 void UI_Initialize_sounds(void);
 //void LIN_KillSound(i8*);

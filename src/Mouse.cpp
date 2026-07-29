@@ -11,7 +11,6 @@
 
 
 extern i32 VBLperTimer;
-extern bool nostalgia_mode;
 
 void info(char *, unsigned int);
 void SwapTextZOrder(void);

@@ -579,7 +579,8 @@ i32 DeterminePhysicalAttackDamage(
       {
         fprintf(GETFILE(TraceFile),"%sAttack failed.  Quickness too small. Luck(1/4) failed.  TAG16476(75-(P7=%d) returned false.  Return 0\n",traceID, P7);
       }
-      print_ingame(300,"Missed. Too slow: %d (required:%d)",D0W,D1W);
+      if (!nostalgia_mode)
+	  print_ingame(300,"Missed. Too slow: %d (required:%d)",D0W,D1W);
       //AdjustStamina(pParam->charIdx, StaminaDec=STRandomBool() + 2);
       pParam->attdep.physicalAttack.staminaAdjust = 2 + STRandomBool();
       PhysicalAttackFilter(pParam, pFilter, traceID);
