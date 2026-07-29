@@ -131,12 +131,8 @@ bool IsCellOccupied(i32 x, i32 y)
 //   TAG00f340
 RESTARTABLE _Fusion(const i32 attackX, const i32 attackY)
 {//(void)
-  static dReg D0, D4, D5, D6, D7;
+  static dReg D0, D6, D7;
   static RN  obj_16;
-  static i32 i_14[4];
-  static i16 w_6;
-  static i16 w_4;
-  static i16 w_2;
   i32 i, j, temp;
   i32 direction[4], x1[4], y1[4], x2[4], y2[4];
   bool fluxCageOrWall[4], empty1[4], empty2[4];
@@ -157,8 +153,6 @@ RESTARTABLE _Fusion(const i32 attackX, const i32 attackY)
   CreateCloud(RN(RNDispellMissile), 0xff, D7W, D6W, D7W, D6W, 0xff, NULL);
   obj_16 = IsLordChaosHere(D7W, D6W);
   if (obj_16 == RNempty) RETURN;
-#define NewFusion
-#ifdef NewFusion
   for (i=0; i<4; i++) direction[i] = i; // Initially north, east, south, west
   // Now scramble the four directions
   for (i=3; i>0; i--)
@@ -210,51 +204,6 @@ RESTARTABLE _Fusion(const i32 attackX, const i32 attackY)
     };
   };
   // Sorry, Mr. Chaos.  You are toast.
-#else  // OldFusion
-  i_14[0] = IsCellFluxcage(D7W-1, D6W) ? 1 : 0;
-  i_14[1] = IsCellFluxcage(D7W+1, D6W) ? 1 : 0;
-  i_14[2] = IsCellFluxcage(D7W, D6W-1) ? 1 : 0;
-  i_14[3] = IsCellFluxcage(D7W, D6W+1) ? 1 : 0;
-  for (w_2 = sw(i_14[0] + i_14[1] + i_14[2] + i_14[3]);
-       w_2 < 4;
-       w_2++) // Examine each non-fluxcage cells in random order.
-  {
-    D5W = D7W;
-    D4W = D6W;
-    w_4 = (i16)STRandom0_3();
-    for (w_6 = 4; w_6!=0; w_6--)
-    { // Look in four directions from Lord Chaos starting with random direction in w_4.
-      D0L = i_14[w_4];
-      if (D0W == 0)
-      {
-        i_14[w_4] = 1;
-        switch (w_4)
-        {
-        case 0: D5W--; break; //west
-        case 1: D5W++; break; //east
-        case 2: D4W--; break; //north
-        case 3: D4W++; break; //south
-        }; //switch
-        break;
-      };
-      w_4 = sw((w_4 + 1) & 3);
-//
-    };
-    if (OpenTeleporterPitOrDoor(D5W, D4W))
-    if ( (D5W != d.partyX) || (D4W != d.partyY) )
-    if (FindFirstMonster(D5W, D4W) == RNeof) // Don't put Lord Chaos on top
-                                             // of another monster!
-    {
-      D0W = MoveObject(obj_16, D7W, D6W, D5W, D4W);
-      if (D0W == 0)
-      {
-        StartMonsterMovementTimers(D5W, D4W);
-        RETURN;
-      };
-    };
-//
-  };
-#endif // NewFusion
   FusionSequence(_3_); //TAG01fefc
   RETURN;
 }
@@ -563,7 +512,7 @@ i32 DeterminePhysicalAttackDamage(
     fprintf(GETFILE(TraceFile),
           "%sEntering DeterminePhysicalAttackDamage(char=%d,monster,P4=%d,P7=%d,P8=%d,skillNumber=%d)\n",
           traceID, pParam->charIdx, monsterPosIndex, P7, P8, pParam->skillNumber);
-  };
+  }
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   pchA3 = &d.hero[pParam->charIdx];
   objMon.ConstructFromInteger(pParam->monsterUnderAttack);
@@ -629,7 +578,8 @@ i32 DeterminePhysicalAttackDamage(
       if (traceID!=NULL)
       {
         fprintf(GETFILE(TraceFile),"%sAttack failed.  Quickness too small. Luck(1/4) failed.  TAG16476(75-(P7=%d) returned false.  Return 0\n",traceID, P7);
-      };
+      }
+      print_ingame(300,"Missed. Too slow: %d (required:%d)",D0W,D1W);
       //AdjustStamina(pParam->charIdx, StaminaDec=STRandomBool() + 2);
       pParam->attdep.physicalAttack.staminaAdjust = 2 + STRandomBool();
       PhysicalAttackFilter(pParam, pFilter, traceID);
@@ -683,11 +633,9 @@ i32 DeterminePhysicalAttackDamage(
       };
       if (attacking /* && db->monsterType() == mon_RockPile */) {
 	  D4W = sw((ranResult=STRandom(32)) + pmtDesc->defense08 + levelDifficulty)/2;
-	  printf("critical hit defense down to %d\n",D4W);
 	  LIN_PlayDirect("critical-damage.mp3",d.partyX,d.partyY);
       } else {
 	  D4W = sw((ranResult=STRandom(32)) + pmtDesc->defense08 + levelDifficulty);
-	  printf("normal defense %d\n",D4W);
 	  QueueSound(16, d.partyX, d.partyY, 1); // normal attack sound (swing, chop...)
       }
       if (traceID!=NULL)
@@ -701,7 +649,7 @@ i32 DeterminePhysicalAttackDamage(
         if (traceID!=NULL)
         {
           fprintf(GETFILE(TraceFile),"%sDiamond Edge so subtract 25%% from D4W --> %d\n",traceID,D4W);
-        };
+        }
       }
       else
       {
@@ -711,9 +659,9 @@ i32 DeterminePhysicalAttackDamage(
           if (traceID!=NULL)
           {
             fprintf(GETFILE(TraceFile),"%sExecutioner so subtract 12.5%% from D4W --> %d\n",traceID,D4W);
-          };
-        };
-      };
+          }
+        }
+      }
     // D4 is perhaps like the monster's Armor effectiveness???
       D7W = sw(D7W + (ranResult=STRandom(32)) - D4W);
       D6W = D7W;  // chance of hitting?????
@@ -1304,7 +1252,8 @@ void DecrementChargesRemaining(CHARDESC *pChar)
         DB10A3->value(DB10A3->value() - 1);
       };
       break;
-  }; //switch(db)
+  default: break; // no warning
+  } //switch(db)
   DrawEightHands();
 }
 
@@ -1450,12 +1399,10 @@ i32 WarCryEtc(ATTACKPARAMETERS *pParam,
   MONSTERDESC *pmtDesc;
   //i32         effectiveMastery;
   ITEM16      *pi16_4;
-  i32         Mastery;
   i32         temp;
   pParam->dataType = ADT_WarCry;
   pParam->attdep.warcryetc.skillIncrement = 0xccccc;
   pParam->attdep.warcryetc.requiredMastery = 0xccccc;
-  Mastery = 0xccccc;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   success = 0;
   if (AttackTraceActive)
