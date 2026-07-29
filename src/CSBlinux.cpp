@@ -24,6 +24,18 @@ static bool capturing_key;
 static int captured_key;
 char *opened_file;
 
+/**[Message List Stuff]*************************************/
+
+#define MSG_LIST_SIZE	10	// maximum messages onscreen
+
+typedef struct MESSAGE
+{
+   ui32  messagetime;		// time before message expires
+   char message[256];		// message string
+} MESSAGE;
+
+static struct MESSAGE MsgList[MSG_LIST_SIZE];
+
 #define FONT_SIZE 14
 #define DY (FONT_SIZE+6)
 
@@ -1616,6 +1628,11 @@ int main(int argc, char* argv[])
 	    post_render();
 	    drawn = 0;
 	}
+    } else {
+	for(int tb=0;tb<MSG_LIST_SIZE;tb++){
+	    if (MsgList[tb].messagetime>0)
+		MsgList[tb].messagetime--;
+	}
     }
 
   } /* Eof Lord Message Loop */
@@ -1833,6 +1850,83 @@ static void save_conf() {
     csb_set_config_int("settings","nostalgia_mode",nostalgia_mode);
     keyxlate.write_conf();
     csb_pop_config_state();
+}
+
+static int mbase;		// Which message is top of the list
+
+// BlitScreen():
+// Entry to screen blitting, takes care of pause mode, eagle mode
+
+// print_ingame():
+// Add Message to Ingame Message List, using a printf() style format string.
+
+void print_ingame(int showtime, const char *format, ...)
+{
+#ifdef SDL
+    if (silent_hud) return;
+#endif
+   va_list ap;
+   va_start(ap,format);
+   vsprintf(MsgList[mbase].message,format,ap);
+   va_end(ap);
+
+   MsgList[mbase].messagetime = showtime;
+
+   mbase++;
+   if(mbase>=MSG_LIST_SIZE) mbase=0;
+}
+
+// clear_ingame_message_list():
+// Clear the ingame message list
+
+void clear_ingame_message_list(void)
+{
+   int ta;
+
+   mbase = 0;
+   for(ta = 0; ta < MSG_LIST_SIZE; ta ++){
+      MsgList[ta].messagetime = 0;
+      sprintf(MsgList[ta].message," ");
+   }
+}
+
+static void render_overlay_interface() {
+    // Renders a text overlay interface on top of the imgui screen
+    // Not certain it's the fastest way to do this thing, but imgui is really efficient, so let's try that...
+    bool active = false;
+    for(int tb=0;tb<MSG_LIST_SIZE;tb++){
+	if (MsgList[tb].messagetime>0) {
+	    active = true;
+	    break;
+	}
+    }
+    if (!active) return; // We try to avoid to create the fullscreen window if useless... !
+
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBackground;
+    const ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->WorkPos);
+    ImGui::SetNextWindowSize(viewport->WorkSize);
+
+    if (ImGui::Begin("Example: Fullscreen window", NULL, flags)) {
+	ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255,255,255,255));
+       for(int tb=0;tb<MSG_LIST_SIZE;tb++){
+
+	   int ta=tb+mbase;
+
+	   if(ta>=MSG_LIST_SIZE)
+	       ta-=MSG_LIST_SIZE;
+
+	   if(MsgList[ta].messagetime>0){
+
+	       MsgList[ta].messagetime -= 1;
+
+	       ImGui::SetCursorPos(ImVec2(0,WindowHeight-40+20*(((MSG_LIST_SIZE-1)-tb))));
+	       ImGui::Text(MsgList[ta].message);
+	   }
+       }
+       ImGui::PopStyleColor();
+       ImGui::End();
+    }
 }
 
 void post_render() {
@@ -2279,6 +2373,8 @@ void post_render() {
     if (!was_active && !cursorIsShowing && !fb_shown && !imgui_active && !fb2_shown && !fb3_shown) {
 	SDL_ShowCursor(SDL_DISABLE);
     }
+
+    render_overlay_interface();
 
     // Rendering
     ImGui::Render();
