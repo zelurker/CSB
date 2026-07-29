@@ -1887,8 +1887,9 @@ void post_render() {
 		// Impossible to insert an UI_MessageBox here, post_render can't loop on itself
 		cbAppDestroy();
 	    ImGui::EndMenu();
-	} else if (!fb_shown && !on_menubar && !fb2_shown && !fb3_shown && d.NumGraphic && !want_popup)
+	} else if (!fb_shown && !on_menubar && !fb2_shown && !fb3_shown && d.NumGraphic && !want_popup) {
 	    imgui_active = false;
+	}
 
 	if (ImGui::BeginMenu(_("Speed"))) {
 	    imgui_active = true;
@@ -2002,7 +2003,7 @@ void post_render() {
 	PlayfileName = (char*)file_dialog.selected_path.c_str();
 	Process_ecode_IDC_Playback();
 	fb_shown = false;
-    } else if (fb_shown && !ImGui::IsPopupOpen(_("Select playback file...")))
+    } else if (fb_shown && !ImGui::IsPopupOpen(_("Select playback file...")) && !ImGui::IsPopupOpen(_("Load saved game")))
 	fb_shown = false;
 
     if(file_dialog.showFileDialog(_("Load saved game"), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), "csb*"))
@@ -2014,7 +2015,7 @@ void post_render() {
 	skipLogo = true;
 	reset_game();
 	fb_shown = false;
-    } else if (fb_shown && !ImGui::IsPopupOpen(_("Load saved game"))) {
+    } else if (fb_shown && !ImGui::IsPopupOpen(_("Load saved game")) && !ImGui::IsPopupOpen(_("Select playback file..."))) {
 	// cancel was pressed!
 	fb_shown = false;
     }
@@ -2269,10 +2270,9 @@ void post_render() {
 	//static int unused_i = 0;
 	//ImGui::Combo("Combo", &unused_i, "Delete\0Delete harder\0");
 
-	if (ImGui::Button("Yes", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); yes_selected = 1; want_popup = 0; }
-	ImGui::SetItemDefaultFocus();
+	if (ImGui::Button("Yes", ImVec2(120, 0)) || ImGui::IsKeyPressed(ImGuiKey_Enter)) { ImGui::CloseCurrentPopup(); yes_selected = 1; want_popup = 0; }
 	ImGui::SameLine();
-	if (ImGui::Button("No", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); want_popup = 0; }
+	if (ImGui::Button("No", ImVec2(120, 0)) || ImGui::IsKeyPressed(ImGuiKey_Escape)) { ImGui::CloseCurrentPopup(); want_popup = 0; }
 	ImGui::EndPopup();
     }
 
