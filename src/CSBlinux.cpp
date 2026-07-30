@@ -1813,9 +1813,20 @@ static void prepare_red(float &red) {
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(red, 0.26f, 0.40f, 1.0f));
 }
 
+static void select_dungeon(char *dungeonName) {
+    char path[FILENAME_MAX];
+    strcpy(path,dungeonName);
+    char *s = strrchr(path,'/');
+    if (s) *s = 0;
+    printf("path %s\n",path);
+    chdir(path);
+}
+
 static void read_conf() {
     csb_push_config_state();
-    csb_set_config_file((char*)"csb.cfg");
+    char path[FILENAME_MAX+8];
+    snprintf(path,FILENAME_MAX+8,"%s/csb.cfg",pwd);
+    csb_set_config_file(path);
     TImER = csb_get_config_int("settings","timer",10);
     fullscreenRequested = csb_get_config_int("settings","fullscreen",false);
     WindowWidth = csb_get_config_int("settings","width", 320*4);
@@ -1827,6 +1838,9 @@ static void read_conf() {
     projectile_dmg_divider = csb_get_config_int("settings","projectile_dmg_divider",16);
     monsters_vulnerable_on_attack = csb_get_config_int("settings","monsters_vulnerable_on_attack",0);
     nostalgia_mode = csb_get_config_int("settings","nostalgia_mode",0);
+    strcpy(dungeonName, csb_get_config_string("settings","dungeonName",(char*)"dungeon.dat")); // dungeonName points to dungeonname which is char[FILENAME_MAX]
+    select_dungeon(dungeonName);
+    strcpy(graphicName,csb_get_config_string("settings","graphicName",(char*)"graphics.dat"));
 
     st_X = 320.0 / WindowWidth;
     st_Y = 200.0 / (WindowHeight - 20);
@@ -1836,7 +1850,9 @@ static void read_conf() {
 
 static void save_conf() {
     csb_push_config_state();
-    csb_set_config_file((char*)"csb.cfg");
+    char path[FILENAME_MAX+8];
+    snprintf(path,FILENAME_MAX+8,"%s/csb.cfg",pwd);
+    csb_set_config_file(path);
     csb_set_config_int("settings","timer",TImER);
     csb_set_config_int("settings","fullscreen",fullscreenActive);
     csb_set_config_int("settings","width",WindowWidth);
@@ -1848,6 +1864,8 @@ static void save_conf() {
     csb_set_config_int("settings","projectile_dmg_divider",projectile_dmg_divider);
     csb_set_config_int("settings","monsters_vulnerable_on_attack",monsters_vulnerable_on_attack);
     csb_set_config_int("settings","nostalgia_mode",nostalgia_mode);
+    csb_set_config_string("settings","dungeonName",dungeonName);
+    csb_set_config_string("settings","graphicName",graphicName);
     keyxlate.write_conf();
     csb_pop_config_state();
 }
@@ -2118,12 +2136,7 @@ void post_render() {
     {
 	// strdup because this string is freed the next time the file selector is used, and if it's to load a save game, it's too bad!
 	strcpy(dungeonName,file_dialog.selected_path.c_str());
-	char path[FILENAME_MAX];
-	strcpy(path,dungeonName);
-	char *s = strrchr(path,'/');
-	if (s) *s = 0;
-	printf("path %s\n",path);
-	chdir(path);
+	select_dungeon(dungeonName);
 	strcpy(graphicName,"graphics.dat");
 	FILE *f = fopen(graphicName,"rb");
 	if (!f) {
