@@ -1,6 +1,7 @@
 #ifndef UI_H
 #define UI_H
 
+extern char pwd[FILENAME_MAX];
 #ifdef _LINUX
 extern SDL_Surface *SCR;
 extern SDL_Surface *WND;
