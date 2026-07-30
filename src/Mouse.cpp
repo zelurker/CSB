@@ -95,6 +95,7 @@ i32 GetObjectWeight(RN item)
   case dbSCROLL:
       totalWeight = 1;
       break;
+  default: break; // no warning
   };
   return totalWeight;
 }
@@ -1642,10 +1643,6 @@ RESTARTABLE _HandleMouseEvents(const i32 delta)
   // 20230506
   D6W = pMouseQueue[d.MouseQStart].num;
 #endif
-  if (D6W == 0x51)
-  {
-    int kkk = 1;
-  };
   if (  (D6W >= 3)
       &&(D6W <= 6)
       &&(  (d.partyMoveDisableTimer!=0)
