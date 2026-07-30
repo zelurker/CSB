@@ -629,7 +629,6 @@ void LIN_PlayDirect(const char *name,int posX, int posY) {
     Sound_AudioInfo info;
     char name2[FILENAME_MAX+8];
     snprintf(name2,FILENAME_MAX+8,"%s/sounds/%s",pwd,name);
-    printf("LIN_PlayDirect %s\n",name2);
     info.rate = mixer.freq;
     info.channels = 1;
     info.format = mixer.format;
