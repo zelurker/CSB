@@ -841,6 +841,20 @@ namespace imgui_addons
             {
                 bool is_hidden = false;
                 std::string name(ent->d_name);
+		if (ent->d_type == DT_LNK) {
+		    struct stat buf;
+		    char path[FILENAME_MAX];
+		    snprintf(path,FILENAME_MAX,"%s%s",pathdir.c_str(),ent->d_name);
+		    if (stat(path,&buf)) {
+			continue; // broken symlink
+		    } else {
+			// Apparently we must use the macros here to test bits and not test them directly...
+			if (S_ISDIR(buf.st_mode))
+			    ent->d_type = DT_DIR;
+			else
+			    ent->d_type = DT_REG;
+		    }
+		}
 
                 //Ignore current directory
                 if(name == ".")
