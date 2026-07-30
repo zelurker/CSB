@@ -1568,12 +1568,10 @@ void PrintWithSubstitution(const char *txt, ui32 color, bool translate)
   const char *A3;
   //i8  b_132[128];
   OUTBUF outbuf;
-  i32 srclen;
   if (translate) txt = TranslateLanguage(txt);
   const char *p_4 = "HUH???";
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   A3 = txt;
-  srclen = (ui32)strlen(txt);
   // *(A2++) = 10;
   outbuf.addch(10);
   do
@@ -1628,7 +1626,6 @@ RESTARTABLE _FadeToPalette(const PALETTE *P1) //TAG01f04e
 {//void
   static dReg D0, D1, D4, D5, D6, D7;
   static i16 *pPalette;
-  static i32 i;
   RESTARTMAP
     RESTART(1)
   END_RESTARTMAP
@@ -1949,20 +1946,11 @@ void OpenCSBgraphicsFile(void)
 
 void info(char *msg, unsigned int n)
 {
-  static int inf[100];
-  static int i=0;
-  inf[i++] = *((unsigned int *)msg);
-  inf[i++] = n;
-  if (i>=100) i=0;
 //  if (n & 0x80000000)
   {
     char t[80];
     sprintf(t,"%s %d",msg,n&0x7ffffff);
     UI_MessageBox(t,"Debug Graphics",MESSAGE_OK);
-//    FILE *f = UI_fopen("CSBwin\\Info.txt","wb");
-//    if (f==NULL) return;
-//    fwrite(inf,1,400,f);
-//    fclose(f);
   };
 }
 
@@ -2682,9 +2670,9 @@ void ReadAndExpandGraphic(i32 graphicNum, ui8 *dest, i16 P3, i16 P4, i32 maxSize
   dReg D0, D6, D7;
   aReg A0, A2;
   SDL_Surface *sf;
-  char buf[15];
+  char buf[16];
   // printf("ReadAndExpand %d\n",graphicNum & 0x7fff);
-  sprintf(buf,"graph/%04d.bmp",graphicNum & 0x7fff);
+  snprintf(buf,16,"graph/%04d.bmp",graphicNum & 0x7fff);
   sf = SDL_LoadBMP(buf);
   if (sf) {
       int x,y;
