@@ -25,6 +25,7 @@
 
 extern int eventNum;
 extern void ReadConfigFile(void);
+char pwd[FILENAME_MAX];
 
 
 void EnqueMouseClick(i32, i32, i32);
@@ -82,21 +83,6 @@ extern bool NoRecordMenuOption;
 extern bool extendedPortraits;
 
 //char* folderSavedGame;
-
-
-
-#if defined(_LINUX) && !defined(MINGW)
-#define strupr( a ) _strupr( a )
-static void _strupr(char *str) {
-    if( str ) {
-	while(*str) {
-	    *str = toupper( *str );
-	    str++;
-	}
-    }
-}
-#endif
-
 
 #if 1
 extern i32 CSBUI(CSB_UI_MESSAGE *msg);
@@ -453,13 +439,6 @@ i32 UI_MessageBox(const char *msg, const char *title, i32 flags ) {
 * The audio management
 */
 
-const unsigned int WAV_OFFSET = 58;
-static const unsigned int AUDIOCOUNT = 3;//16;
-static unsigned int AUDIOPOS = 0;
-static int AUDIO[AUDIOCOUNT];
-static i8* AUDIODATA[AUDIOCOUNT];
-static ui32 AUDIOSIZE[AUDIOCOUNT];
-static ui32 AUDIOWRITTEN[AUDIOCOUNT];
 #include <signal.h>
 #include <fcntl.h>
 
@@ -648,8 +627,9 @@ static bool LIN_PlaySound(i8* audio, const ui32 size, int volume)
 
 void LIN_PlayDirect(const char *name,int posX, int posY) {
     Sound_AudioInfo info;
-    char name2[35];
-    snprintf(name2,35,"sounds/%s",name);
+    char name2[FILENAME_MAX+8];
+    snprintf(name2,FILENAME_MAX+8,"%s/sounds/%s",pwd,name);
+    printf("LIN_PlayDirect %s\n",name2);
     info.rate = mixer.freq;
     info.channels = 1;
     info.format = mixer.format;
@@ -695,12 +675,14 @@ bool UI_ProcessOption(char **argv, int &argc)
     int state=0;
     int c_index=0;
     int _argc = argc;
+    getcwd(pwd,FILENAME_MAX);
+    printf("Base path: %s\n",pwd);
 #ifdef SOUND__ESOUND
     doInitializeSounds = SOUND_IS_ESD;
 #endif //SOUND__ESOUND
     while(_argc-->0)
     {
-	char *key=argv[c_index++], *value;
+	char *key=argv[c_index++];
 	switch(state) {
 
 		default:
@@ -1077,7 +1059,7 @@ void UI_SetDIBitsToDevice(
                            int
                          )
 {
-  SDL_Rect textureRect;
+  // SDL_Rect textureRect;
   int line;
   if (sdlTexture == NULL) return;
 //  textureRect.x = 0;
