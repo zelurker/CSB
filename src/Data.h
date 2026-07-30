@@ -653,8 +653,8 @@ struct DBank {
                    //Indexed by attack type.
   i8  Byte20090[44];
   i8  Byte20046[44];//Indexed by attack type
-  i8  Byte20002[44];//Strength required????
-  i8  Byte19958[44];
+  i8  hit_chance[44];
+  i8  critical_chance[44];
   i8  Byte19914[44];// indexed by attack type
                     // very small integers (2, 6,12, 5) the
                     // largest is 38.

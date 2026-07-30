@@ -1867,8 +1867,8 @@ void DumpAttacks(FILE *f)
                   (UI8)(d.SkillNumber[i]), // Skill Number
                   (UI8)(d.Byte20090[i]),   // Defense
                   (UI8)(d.Byte20046[i]),   // Energy
-                  (UI8)(d.Byte20002[i]),   // Strength Required
-                  (UI8)(d.Byte19958[i]),   // Damage
+                  (UI8)(d.hit_chance[i]),
+                  (UI8)(d.critical_chance[i]),   // Damage
                   (UI8)(d.Byte19914[i]));  // Probability
     if (i%5 == 4) fprintf(f,"\n");
   };

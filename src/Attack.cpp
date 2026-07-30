@@ -794,18 +794,18 @@ i32 DeterminePhysicalAttackDamage(
     {
       fprintf(GETFILE(TraceFile), "%sD7W += (random(D7W)=%d)--> %d\n",
                           traceID, ranResult, D7W);
-    };
+    }
     D7W /= 4;
     if (traceID!=NULL)
     {
       fprintf(GETFILE(TraceFile),"%sDivide D7W by 4 --> %d\n", traceID, D7W);
-    };
+    }
     D7W = sw(D7W + (ranResult=STRandom0_3()) + 1);
     if (traceID!=NULL)
     {
       fprintf(GETFILE(TraceFile),"%sD7W += (random(4)=%d) + 1 --> %d\n",
                                 traceID, ranResult, D7W);
-    };
+    }
 //
 //
     if (traceID!=NULL)
@@ -817,7 +817,10 @@ i32 DeterminePhysicalAttackDamage(
                            traceID, D7W/2);
       }
     }
-    print_ingame(300,"divide attack by 2 because vorpalblade");
+    if (    (objNI_attackWeapon == objNI_VorpalBlade)
+	    && !pmtDesc->nonMaterial() )
+	print_ingame(300,"divide by 2 because vorpal blade against material being");
+
     if (   (objNI_attackWeapon == objNI_VorpalBlade  )
         && (!pmtDesc->nonMaterial()  )
         && ((D7W = sw(D7W/2)) == 0)  )
@@ -1109,22 +1112,22 @@ i16 AttackWithPhysicalForce(
       return 0;
     };
   };
-  D6W = (UI8)(d.Byte20002[pParam->attackType]);
+  D6W = (UI8)(d.hit_chance[pParam->attackType]);
        //Lots of zeroes with scattered 20s, 30s, 40s
        //block,chop,punch,kick,stab1,hit,swing,stab2,thrust,
        //jab,parry,hack,berzerk,disrupt,melee,slash,
        //cleave,bash,stun.  Appears to be things that
        //require strength or physical action.
-  D7W = (UI8)(d.Byte19958[pParam->attackType]);
+  D7W = (UI8)(d.critical_chance[pParam->attackType]);
        //Scattered non-zero values.  Block, chop, punch,
        //kick, stab, hit, swng, stab, thrust, jab, parry,
        //hack, berzerk, disrupt, melee, slach, cleave,
        //bash, stun,
   if (traceID!=NULL)
   {
-    fprintf(GETFILE(TraceFile),"%sD6W=Byte20002[attackType=%d]=%d\n",
+    fprintf(GETFILE(TraceFile),"%sD6W=hit_chance[attackType=%d]=%d\n",
                       traceID, pParam->attackType, D6W);
-    fprintf(GETFILE(TraceFile),"%sD7W=Byte19958[attackType=%d]=%d\n",
+    fprintf(GETFILE(TraceFile),"%sD7W=critical_chance[attackType=%d]=%d\n",
                       traceID, pParam->attackType, D7W);
   };
   objNID0 = d.hero[pParam->charIdx].Possession(1).NameIndex();
