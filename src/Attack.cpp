@@ -651,6 +651,7 @@ i32 DeterminePhysicalAttackDamage(
         {
           fprintf(GETFILE(TraceFile),"%sDiamond Edge so subtract 25%% from D4W --> %d\n",traceID,D4W);
         }
+	print_ingame(300,"Diamond Edge so subtract 25%% from defense --> %d\n",D4W);
       }
       else
       {
@@ -661,6 +662,7 @@ i32 DeterminePhysicalAttackDamage(
           {
             fprintf(GETFILE(TraceFile),"%sExecutioner so subtract 12.5%% from D4W --> %d\n",traceID,D4W);
           }
+	  print_ingame(300,"Executioner so subtract 12.5%% from defense --> %d\n",D4W);
         }
       }
     // D4 is perhaps like the monster's Armor effectiveness???
@@ -671,14 +673,14 @@ i32 DeterminePhysicalAttackDamage(
         fprintf(GETFILE(TraceFile),"%sD7W = D7W + (random(32)=%d) - (D4W=%d) = %d\n",
                            traceID,ranResult, D4W, D7W);
         fprintf(GETFILE(TraceFile),"%sD6W = D7W = %d\n", traceID, D6W);
-      };
+      }
     }
     else
     {///  }}}}}}
       D6W = 0; //Added 23Jun2004.  Tiggy 'Bashing' with a stone
                //club resulted in throwingDistance==0 and D6W
                //never got set.
-    };
+    }
     if ((throwingDistance==0)||(D6W <= 1))
     {
       if (traceID!=NULL)
@@ -705,6 +707,7 @@ i32 DeterminePhysicalAttackDamage(
           fprintf(GETFILE(TraceFile),"%sAttack failed because ",traceID);
           fprintf(GETFILE(TraceFile)," we were not Lucky (D7W==0)\n");
         };
+	print_ingame(300,"attack failed because of bad luck!");
         //AdjustStamina(pParam->charIdx, StaminaDec=STRandomBool() + 2);
         pParam->attdep.physicalAttack.staminaAdjust = 2 + STRandomBool();
         PhysicalAttackFilter(pParam, pFilter, traceID);
@@ -812,8 +815,9 @@ i32 DeterminePhysicalAttackDamage(
       {
         fprintf(GETFILE(TraceFile),"%sDivide D7W by 2 because VorpalBlade and i26 Word2 bit 6 = 0 --> %d\n",
                            traceID, D7W/2);
-      };
-    };
+      }
+    }
+    print_ingame(300,"divide attack by 2 because vorpalblade");
     if (   (objNI_attackWeapon == objNI_VorpalBlade  )
         && (!pmtDesc->nonMaterial()  )
         && ((D7W = sw(D7W/2)) == 0)  )
@@ -821,7 +825,8 @@ i32 DeterminePhysicalAttackDamage(
       if (traceID!=NULL)
       {
         fprintf(GETFILE(TraceFile),"%sAttack failed because Vorpal, i26 word 2 bit 6=0, and D7W=0\n",traceID);
-      };
+      }
+      print_ingame(300,"Attack failed because Vorpal");
       //AdjustStamina(pParam->charIdx, StaminaDec=STRandomBool() + 2);
       pParam->attdep.physicalAttack.staminaAdjust = 2 + STRandomBool();
       PhysicalAttackFilter(pParam, pFilter, traceID);
@@ -910,7 +915,7 @@ i32 DeterminePhysicalAttackDamage(
   if (traceID!=NULL)
   {
     fprintf(GETFILE(TraceFile),"%sPhysicalAttack returning D7W = %d\n",traceID,D7W);
-  };
+  }
   return pParam->attdep.physicalAttack.monsterDamage;
 }
 
