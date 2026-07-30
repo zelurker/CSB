@@ -15,7 +15,6 @@ struct _Mix_effectinfo
 
 static int reserved_channels = 0;
 /* Used to calculate fading steps */
-static int ms_per_step;
 typedef _Mix_effectinfo effect_info;
 
 static effect_info *posteffects = NULL;
@@ -342,8 +341,8 @@ int Mix_Volume(int which, int volume)
 
 static void mix_channels(void *udata, Uint8 *stream, int len)
 {
-    Uint8 *mix_input;
-    int i, mixable, volume = SDL_MIX_MAXVOLUME;
+    // Uint8 *mix_input;
+    int i; // , mixable, volume = SDL_MIX_MAXVOLUME;
     Uint32 sdl_ticks;
     int mixed = 0;
 
@@ -403,7 +402,7 @@ static void mix_channels(void *udata, Uint8 *stream, int len)
 		while (mix_channel[i].playing > 0 && index < len)
 		{
 		    remaining = len - index;
-		    volume = mix_channel[i].volume;
+		    // volume = mix_channel[i].volume;
 		    //mix_input = (Uint8 *)Mix_DoEffects
 		    //    (i, mix_channel[i].samples, mixable);
 

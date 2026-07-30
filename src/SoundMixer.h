@@ -45,5 +45,4 @@ extern DECLSPEC int SDLCALL Mix_Playing(int channel);
 
 int Mix_OpenAudio();
 void Mix_CloseAudio(void);
-static void mix_channels(void *udata, Uint8 *stream, int len);
 
