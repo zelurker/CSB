@@ -24,21 +24,6 @@
 "SAVE AND QUIT"                             "SVG ET QUITTER" // good
 "SAVE AND PLAY"                             "SAUVEGARDER ET JOUER" // good
 "READY TO SAVE GAME"                        "PRET A SAUVEGARDER ?" // good
-"NEOPHYTE"                                  "NEOPHYTE"  // good
-"NOVICE"                                    "NOVICE" // good
-"APPRENTICE"                                "APPRENTI" // good
-"JOURNEYMAN"                                "COMPAGNON" // good
-"CRAFTSMAN"                                 "ARTISAN" // good
-"ARTISAN"                                   "PATRON" // good
-"ADEPT"                                     "ADEPTE" // good
-"EXPERT"                                    "EXPERT" // good
-"` MASTER"                                  "` MAITRE" // good
-"a MASTER"                                  "a MAITRE" // good
-"b MASTER"                                  "b MAITRE" // (WORKS !!!) not see
-"c MASTER"                                  "c MAITRE"
-"d MASTER"                                  "d MAITRE"
-"e MASTER"                                  "e MAITRE"
-"ARCHMASTER"                                "GRD MAITRE"
 " RESURRECTED."                              " RESSUSCITE(E)." // good
 " REINCARNATED."                             " REINCARNE(E)." // good
 "LOAD"                                      "CHARGE" // Good
@@ -211,10 +196,6 @@
 "SWORD"									"EPEE"
 "SABER"									"SABRE"
 "THROW"									"LANCER"
-"STAB"									"POIGNARDER"
-"CHOP"									"COUPER"
-"SWING"									"BALANCER"
-"PARRY"									"PARER"
 "SHOOT"									"TIRER"
 "BUCKLER"								"BOUCLIER"
 "SLING"									"FRONDE"
@@ -294,7 +275,6 @@
 "Skeleton"								"Squelette"
 "IRON KEY"								"CLE EN FER"
 "EMERALD KEY"								"CLE EMERAUDE"
-"DIAMOND EDGE"								"LAME DE DIAMANT"
 "STAFF"									"BATON"
 " CHEST"								" COFFRE"
 "SOLID KEY"								"CLE SOLIDE"
