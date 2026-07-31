@@ -1614,7 +1614,7 @@ void FluxCage(i32 mapX,i32 mapY, ATTACKPARAMETERS *pParam)
   };
 }
 
-
+bool shootingMissile;
 
 //*********************************************************
 //
@@ -1900,6 +1900,7 @@ RESTARTABLE _Attack(const i32 initialChIdx, const ATTACKTYPE initialAttackType)
       pParam->attdep.shoot.damage = D4W;
       pParam->attdep.shoot.success = 1;
       CallAttackFilter(&filter, pParam, 1);
+      shootingMissile = true;
       LaunchObject(
                    pChar,
                    obj_4,

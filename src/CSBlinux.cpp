@@ -1657,6 +1657,7 @@ extern i32 lastTime;
 extern bool skipLogo;
 static bool show_coords,open_char_info;
 extern i32 numState;
+i32 launcher_power;
 
 static void reset_game() {
     numState = 0; // reset the "stackState" from system.cpp
@@ -1841,6 +1842,7 @@ static void read_conf() {
     strcpy(dungeonName, csb_get_config_string("settings","dungeonName",(char*)"dungeon.dat")); // dungeonName points to dungeonname which is char[FILENAME_MAX]
     select_dungeon(dungeonName);
     strcpy(graphicName,csb_get_config_string("settings","graphicName",(char*)"graphics.dat"));
+    launcher_power = csb_get_config_int("settings","launcher_power",1);
 
     st_X = 320.0 / WindowWidth;
     st_Y = 200.0 / (WindowHeight - 20);
@@ -1866,6 +1868,7 @@ static void save_conf() {
     csb_set_config_int("settings","nostalgia_mode",nostalgia_mode);
     csb_set_config_string("settings","dungeonName",dungeonName);
     csb_set_config_string("settings","graphicName",graphicName);
+    csb_set_config_int("settings","launcher_power",launcher_power);
     keyxlate.write_conf();
     csb_pop_config_state();
 }
@@ -2058,6 +2061,15 @@ void post_render() {
 	    ImGui::MenuItem(_("DM Rules"), NULL,&DM_rules);
 	    if (ImGui::MenuItem(_("Extended character info..."),NULL,false,d.NumCharacter > 0))
 		open_char_info = true;
+	    if (ImGui::BeginMenu(_("Launchers power"))) {
+		if (ImGui::MenuItem(_("1 (default)"), NULL, launcher_power == 1)) launcher_power = 1;
+		if (ImGui::MenuItem("2", NULL, launcher_power == 2)) { launcher_power = 2; nostalgia_mode = false; }
+		if (ImGui::MenuItem("3", NULL, launcher_power == 3)) { launcher_power = 3; nostalgia_mode = false; }
+		if (ImGui::MenuItem("4", NULL, launcher_power == 4)) { launcher_power = 4; nostalgia_mode = false; }
+		if (ImGui::MenuItem("5", NULL, launcher_power == 5)) { launcher_power = 5; nostalgia_mode = false; }
+		if (ImGui::MenuItem("6", NULL, launcher_power == 6)) { launcher_power = 6; nostalgia_mode = false; }
+		ImGui::EndMenu();
+	    }
 	    if (ImGui::BeginMenu(_("Projectile damage divider"))) {
 		if (ImGui::MenuItem(_("16 (default)"),NULL, projectile_dmg_divider == 16)) projectile_dmg_divider = 16;
 		if (ImGui::MenuItem("8",NULL, projectile_dmg_divider == 8)) { projectile_dmg_divider = 8; nostalgia_mode = false; }

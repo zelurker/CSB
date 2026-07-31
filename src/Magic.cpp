@@ -3,13 +3,15 @@
 #include "UI.h"
 
 #include <stdio.h>
+#include <vector>
 
 //#include "Objects.h"
 #include "Dispatch.h"
 #include "CSB.h"
 #include "Data.h"
 
-
+std::vector <DB14*> shots;
+extern bool shootingMissile;
 // ***********************************************************
 //
 // ***********************************************************
@@ -71,6 +73,11 @@ i16 LaunchMissile(
   timer.timerWord8() = (I16)((timer.timerWord8() & 0x0fff) | (D3W << 12));
   timer.timerWord8() = (I16)((timer.timerWord8() & 0xf3ff) | ((dir & 3) << 10));
   DB14A3->timerIndex(gameTimers.SetTimer(&timer));
+  if (shootingMissile) {
+      printf("missile created %p\n",DB14A3);
+      shootingMissile = false;
+      shots.push_back(DB14A3);
+  }
   return sw((DB14A3->timerIndex()));
 }
 

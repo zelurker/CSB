@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <vector>
 
 #include "UI.h"
 
@@ -285,6 +286,16 @@ void MissileTimer(TIMER *pTimer)
       RemoveObjectFromRoom(missileFilterObject, curMapX, curMapY, NULL);
       ProcessObjectFromMissile(missileFilterObject, NULL, curMapX, curMapY);
       missileFilterObject = RNnul;
+      extern std::vector<DB14*> shots;
+      size_t pos=0;
+      printf("MissileTimer: checking shots for %p\n",pDBMissile);
+      for (std::vector<DB14*>::iterator it = shots.begin(); it != shots.end(); pos++) {
+	  DB14 *shot = shots.at(pos);
+	  if (shot == pDBMissile) {
+	      printf("falling missile %p pos %d\n",pDBMissile,pos);
+	      shots.erase(it);
+	  }
+      }
       return;
     };
     pDBMissile->rangeRemaining(

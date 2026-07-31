@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <vector>
 
 #include "UI.h"
 
@@ -1664,6 +1665,17 @@ i16 DetermineMagicDamage(DB14 *rec, RN object)
   D0W = rec->damageRemaining();
   D1W = sw(D1W - D0W/8);
   D6W = sw(Larger(D6W/2, D6W-D1W));
+  extern std::vector<DB14*> shots;
+  size_t pos=0;
+  printf("checking shots for %p\n",rec);
+  for (std::vector<DB14*>::iterator it = shots.begin(); it != shots.end(); pos++) {
+      DB14 *shot = shots.at(pos);
+      if (shot == rec) {
+	  printf("got missile %p pos %zd\n",rec,pos);
+	  D6W *= 4;
+	  shots.erase(it);
+      }
+  }
   return D6W;
 }
 
@@ -2174,6 +2186,15 @@ i16 ProcessMissileEncounter(
   };
   ASSERT(missileX < 32,"w_28");
   ASSERT(missileY < 32,"w_30");
+  extern std::vector<DB14*> shots;
+  size_t pos=0;
+  for (std::vector<DB14*>::iterator it = shots.begin(); it != shots.end(); pos++) {
+      DB14 *shot = shots.at(pos);
+      if (shot == pDBmissile) {
+	  printf("got interrupted missile %p pos %zd\n",pDBmissile,pos);
+	  shots.erase(it);
+      }
+  }
   RemoveObjectFromRoom(missile,
                        missileX,
                        missileY,
