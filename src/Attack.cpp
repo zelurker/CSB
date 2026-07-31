@@ -1874,7 +1874,8 @@ RESTARTABLE _Attack(const i32 initialChIdx, const ATTACKTYPE initialAttackType)
           CallAttackFilter(&filter, pParam, 1);
           break;
         };
-        D4W -= 16;
+	if (!launcher_helper)
+	    D4W -= 16;
       }
       else
       {

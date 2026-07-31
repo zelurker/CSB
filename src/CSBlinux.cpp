@@ -1766,6 +1766,7 @@ void open_popup(const char *msg) {
 }
 
 static float active_red = 0.75, inc_active = 0.02;
+bool launcher_helper;
 
 static void stop_capture(int button) {
     captured_key = 0;
@@ -1841,6 +1842,7 @@ static void read_conf() {
     strcpy(dungeonName, csb_get_config_string("settings","dungeonName",(char*)"dungeon.dat")); // dungeonName points to dungeonname which is char[FILENAME_MAX]
     select_dungeon(dungeonName);
     strcpy(graphicName,csb_get_config_string("settings","graphicName",(char*)"graphics.dat"));
+    launcher_helper = csb_get_config_int("settings","launcher_helper",false);
 
     st_X = 320.0 / WindowWidth;
     st_Y = 200.0 / (WindowHeight - 20);
@@ -1866,6 +1868,7 @@ static void save_conf() {
     csb_set_config_int("settings","nostalgia_mode",nostalgia_mode);
     csb_set_config_string("settings","dungeonName",dungeonName);
     csb_set_config_string("settings","graphicName",graphicName);
+    csb_set_config_int("settings","launcher_helper",launcher_helper);
     keyxlate.write_conf();
     csb_pop_config_state();
 }
@@ -2058,6 +2061,7 @@ void post_render() {
 	    ImGui::MenuItem(_("DM Rules"), NULL,&DM_rules);
 	    if (ImGui::MenuItem(_("Extended character info..."),NULL,false,d.NumCharacter > 0))
 		open_char_info = true;
+	    ImGui::MenuItem(_("Launchers helper"), NULL, &launcher_helper); // Just try to make the launchers less crazy... !
 	    if (ImGui::BeginMenu(_("Projectile damage divider"))) {
 		if (ImGui::MenuItem(_("16 (default)"),NULL, projectile_dmg_divider == 16)) projectile_dmg_divider = 16;
 		if (ImGui::MenuItem("8",NULL, projectile_dmg_divider == 8)) { projectile_dmg_divider = 8; nostalgia_mode = false; }

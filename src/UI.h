@@ -2,6 +2,7 @@
 #define UI_H
 
 extern char pwd[FILENAME_MAX];
+extern bool launcher_helper;
 #ifdef _LINUX
 extern SDL_Surface *SCR;
 extern SDL_Surface *WND;

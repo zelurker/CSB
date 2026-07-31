@@ -1651,7 +1651,7 @@ i16 DetermineMagicDamage(DB14 *rec, RN object)
         D6W = sw(5 * D6W);
       };
     };
-  };
+  }
   if (dbType == dbWEAPON) {
       // printf("distance %d rangeremaining %d word129 %d\n",weaponDescA2->distance,rec->rangeRemaining(),d.Word12964);
       D6W = sw((D6W + D5W)/projectile_dmg_divider + 1);
@@ -1663,7 +1663,10 @@ i16 DetermineMagicDamage(DB14 *rec, RN object)
   D1W = 32;
   D0W = rec->damageRemaining();
   D1W = sw(D1W - D0W/8);
-  D6W = sw(Larger(D6W/2, D6W-D1W));
+  if (launcher_helper)
+      D6W = sw(Larger(D6W/2, D0W)); // D6W-D1W));
+  else
+      D6W = sw(Larger(D6W/2, D6W-D1W));
   return D6W;
 }
 
