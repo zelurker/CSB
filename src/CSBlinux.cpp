@@ -2076,6 +2076,7 @@ void post_render() {
 	    if (ImGui::MenuItem(_("Nostalgia Mode"), NULL, &nostalgia_mode)) {
 		monsters_vulnerable_on_attack = false;
 		projectile_dmg_divider = 16;
+		launcher_helper = false;
 	    }
 	    ImGui::EndMenu();
 	} else if (!imgui_active) {
