@@ -134,7 +134,9 @@ void ReadTranslationFile(void)
   int handle, len, len1, len2, lineNum, numNonblank;
   int dquote[4];
   xlate.Clear();
-  handle = OPEN("Translation.txt", "r");
+  char path[FILENAME_MAX+17];
+  snprintf(path,FILENAME_MAX+17,"%s/Translation.txt",pwd);
+  handle = OPEN(path, "r");
   if (handle < 0) return;
   lineNum = 0;
   while (GETS(buf.buf, buf.size-1, (i16)handle) != NULL)
