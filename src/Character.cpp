@@ -1441,7 +1441,7 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
       D4W = sw((D0L+5)/10);
       pcA0 = (char *)TAG014af6(D4W, 1, 3);
       strcat(d.Byte12914, pcA0);
-      //strcat(d.Byte12914, " KG");
+      strcat(d.Byte12914, " KG");
       TextToViewport(140, 132, LOCAL_8, d.Byte12914, false);// "LOAD  actual/max"
                                                      // LOCAL_8 is text color
       charFlags |= CHARFLAG_viewportChanged;
