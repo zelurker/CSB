@@ -6517,10 +6517,10 @@ bool ProcessTimers(void) // Parameter ignored, I think.
                  //{
                  //  chIdx = timeEnt.timerUByte5;
                  //  PrintLinefeed();
-                 //  QuePrintLines(d.Byte1386[chIdx],pcA0->name);
-                 //  QuePrintLines(d.Byte1386[chIdx]," SHIELD DECREASED TO ");
+                 //  QuePrintLines(d.charColor[chIdx],pcA0->name);
+                 //  QuePrintLines(d.charColor[chIdx]," SHIELD DECREASED TO ");
                  //  sprintf(ascii, "%d", pcA0->shieldStrength);
-                 //  QuePrintLines(d.Byte1386[chIdx], ascii);
+                 //  QuePrintLines(d.charColor[chIdx], ascii);
                  //};
                };
                //wordGear(A0) = D0W;
@@ -6779,7 +6779,7 @@ RESTARTABLE _ResurrectReincarnateCancel(const i32 button)
       DrawSpellControls(d.MagicCaster);
     };
     PrintLinefeed();
-    QuePrintLines(D6W = (UI8)(d.Byte1386[D7W]), pcA3->name, false);
+    QuePrintLines(D6W = (UI8)(d.charColor[D7W]), pcA3->name, false);
     if (button == 160)
     {
       A0 = " RESURRECTED.";

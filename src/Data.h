@@ -1430,7 +1430,7 @@ struct DBank {
   i16 Word1406[4];   // Rectpos swapped when read
   i16 Word1398[4];   // RectPos swapped when read
   i8  Byte1390[4];   //
-  i8  Byte1386[4];   //
+  i8  charColor[4];   //
   ui8 Byte1382[16];  //ColorMap
   ui8 Byte1366[16];  //ColorMap
   i8  Byte1350[128]; //        ...

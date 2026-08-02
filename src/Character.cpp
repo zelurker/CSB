@@ -1454,7 +1454,7 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
 //
          FillRectangle(d.LogicalScreenBase,   // Fill pos/dir rectangle
                       &d.wRectPos1454[D4W], // with character's color
-                      d.Byte1386[chIdx],
+                      d.charColor[chIdx],
                       160);
          TAG0088b2(GetBasicGraphicAddress(28),  // Overlay character's pos/dir icon
                    (ui8 *)d.LogicalScreenBase,
@@ -4211,10 +4211,10 @@ RESTARTABLE _FeedCharacter()
         //  if (oldShieldLevel != newShieldLevel)
         //  {
         //    PrintLinefeed();
-        //    QuePrintLines(d.Byte1386[chIdx],pcA2->name);
-        //    QuePrintLines(d.Byte1386[chIdx]," SHIELD INCREASED TO ");
+        //    QuePrintLines(d.charColor[chIdx],pcA2->name);
+        //    QuePrintLines(d.charColor[chIdx]," SHIELD INCREASED TO ");
         //    sprintf(ascii, "%d", pcA2->shieldStrength);
-        //    QuePrintLines(d.Byte1386[chIdx], ascii);
+        //    QuePrintLines(d.charColor[chIdx], ascii);
         //  };
         //};
         //timer.Function(TT_72);
@@ -4381,10 +4381,10 @@ RESTARTABLE _FeedCharacter()
       //if (oldShieldLevel != newShieldLevel)
       //{
       //  PrintLinefeed();
-      //  QuePrintLines(d.Byte1386[chIdx],pcA2->name);
-      //  QuePrintLines(d.Byte1386[chIdx]," SHIELD INCREASED TO ");
+      //  QuePrintLines(d.charColor[chIdx],pcA2->name);
+      //  QuePrintLines(d.charColor[chIdx]," SHIELD INCREASED TO ");
       //  sprintf(ascii, "%d", pcA2->shieldStrength);
-      //  QuePrintLines(d.Byte1386[chIdx], ascii);
+      //  QuePrintLines(d.charColor[chIdx], ascii);
       //};
       timer.Function(TT_72);
       //D0L = d.Time + fp.shieldDuration;

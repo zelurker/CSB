@@ -181,7 +181,7 @@ void LevelUp(i32 chIdx, i32 basicSkill) // Fighter, ninja, etc.
   d.hero[chIdx].charFlags |= CHARFLAG_statsChanged;
   DrawCharacterState(chIdx);
   PrintLinefeed();
-  QuePrintLines(color = (UI8)(d.Byte1386[chIdx]), d.hero[chIdx].name, false);
+  QuePrintLines(color = (UI8)(d.charColor[chIdx]), d.hero[chIdx].name, false);
   QuePrintLines(color, " JUST GAINED A ", true);
   QuePrintLines(color, d.Pointer16596[basicSkill], true); //"FIGHTER", "NINJA", etc
   QuePrintLines(color, " LEVEL!", true);
