@@ -49,10 +49,21 @@ enum GAMESTATE
 
 enum COLOR
 {
-  COLOR_GREEN  =  7,
-  COLOR_RED  =  8,
-  COLOR_YELLOW = 11,
-  COLOR_LGRAY = 13 // text on char screen (health, stamina, mana...)
+    COLOR_BLACK = 0,
+    COLOR_GRAY3, // 333
+    COLOR_GRAY4, // 444
+    // 3 is super dark orange 310
+    COLOR_CYAN = 4, // 66
+    COLOR_DARK_ORANGE = 5, // 420
+  COLOR_DARK_GREEN = 6, // 40
+  COLOR_GREEN  =  7, // 60
+  COLOR_RED  =  8,  // 700
+  COLOR_ORANGE = 9, // orange 750
+  COLOR_YELLOW = 11, // 770
+  COLOR_DARK_GRAY = 12, // (222)
+  COLOR_LGRAY = 13, // text on char screen (health, stamina, mana...) (555)
+  COLOR_BLUE = 14, // dark blue, char color (7)
+  COLOR_WHITE, // default text color (777)
 };
 
 enum MALLOCID
