@@ -727,7 +727,7 @@ tag0007c8:
     pPrintEntry = printQueue.GetEntry();
     if (pPrintEntry != NULL)
     {
-      PrintLines(pPrintEntry->m_color,pPrintEntry->m_text);
+      PrintLines(pPrintEntry->m_color,TranslateLanguage(pPrintEntry->m_text));
       UI_free (pPrintEntry);
     };
     WAITFORMESSAGE(_8_);//Any message!;//pumper();
@@ -3990,7 +3990,7 @@ void DrawFloorDecorations(i32 graphicOrdinal,i32 relativeCell)
 void TAG004b26(i32 P1, i32 P2)
 {
     // D1 actually used
-  dReg D0, D1, D4, D5, D6, D7;
+  dReg D0, D4, D5, D6, D7;
   aReg A2, A3;
   ui8 *pnt_4;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4002,7 +4002,6 @@ void TAG004b26(i32 P1, i32 P2)
   D5W = d.Word2514[D7W][0];
   //D4W = wordGear(d.Byte2512 + 4*D7W);
   D4W = d.Word2514[D7W][1];
-  D1L = 18 * D4W;
   A3 = (aReg)d.Byte5070 + 18*D4W + 6*D6W;
   if (D6W == 2)
   {
@@ -7326,7 +7325,7 @@ void NinetySecondUpdate(void)
 { //(void)
   // Decrement bits 10-13 of weapon types 4, 5, 6, and 7
     // D5 actually used
-  dReg D0, D3, D5, D6, D7;
+  dReg D0, D3, D6, D7;
   OBJ_NAME_INDEX objNID4;
   DB5      *DB5A2;
   CHARDESC *pcA3;
@@ -7334,7 +7333,6 @@ void NinetySecondUpdate(void)
 //  verifyppq();
 //#endif
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  D5W = 0;
   D7W = d.NumCharacter;
   if (d.PotentialCharacterOrdinal != 0) D7W--;
   pcA3 = d.hero;
@@ -7357,7 +7355,6 @@ void NinetySecondUpdate(void)
       {
         DB5A2->important(false);
       };
-      D5W = 1;
 //
     };
     pcA3++;
@@ -7600,11 +7597,10 @@ void OnMouseClick(i32 x,i32 y,i32 buttons)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #ifdef POST_TRANSLATE_CLICK
   // 20230506
-    // D0 actually used
-  dReg D0, D6, D7;
+  dReg D6, D7;
 #else
   // 20230506
-  dReg D0, D4, D6, D7;
+  dReg D4, D6, D7;
 #endif
   i32 numEnt;
   //SaveRegs(0x0f00);
@@ -7616,7 +7612,6 @@ void OnMouseClick(i32 x,i32 y,i32 buttons)
     d.FakeMouseX = D7W;
     d.FakeMouseY = D6W;
     d.FakeMouseButton = sw(buttons);
-    D0W = d.Word16868;
   }
   else
   {
@@ -9148,7 +9143,7 @@ i16 FetchDataBytes(ui8 *P1,i16 *P2,i32 P3) //TAG01d138
 i16 InsertDisk(const i32 P1,const i32 P2)
 {//(i16)
     // D6 actually used
-  static dReg D0, D5, D6, D7;
+  static dReg D0, D5, D7;
   // static aReg A3;
   // static i8  LOCAL_80[80];
 //  RESTARTMAP
@@ -9158,7 +9153,6 @@ i16 InsertDisk(const i32 P1,const i32 P2)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //SaveRegs(0x0710);
   D7W = sw(P1);
-  D6W = sw(P2);
   D5W = 1;
   D0W = 0;
   if (D7W !=2)
@@ -10039,7 +10033,7 @@ void TAG0207cc(void)
 void TAG020836(i8 *P1)
 {
     // D0 actually used
-  dReg D0, D7;
+  dReg D7;
   //i32 D6;
   aReg A3;
   i16 index;
@@ -10050,11 +10044,8 @@ void TAG020836(i8 *P1)
   {
     P1[index] = A3[index];
   };
-  D0W=index;
   index++;
-  D0W=index;
   P1[index]=0;
-  D0W=D7W;
 }
 
 i16 TAG020880(i16 width,i16 height,i16 scale)
@@ -10547,7 +10538,6 @@ switch (mystate) { case _0_: goto return_0_;
 RESTARTABLE _TAG021028(void)
 { //(void)
     // D0 actually used
-  static dReg D0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   static i16 LOCAL_2;
   RESTARTMAP5
@@ -10577,7 +10567,6 @@ RESTARTABLE _TAG021028(void)
   d.pKeyXlate2 = (KeyXlate *)d.Byte18400;
   d.pKeyXlate1 = d.Byte18428;
   LoadPartyLevel(d.partyLevel);
-  D0W = d.gameState;
   if (d.gameState == GAMESTATE_ResumeSavedGame)
   {
     //ClearMemory(d.LogicalScreenBase, 32000);
