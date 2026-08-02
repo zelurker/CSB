@@ -1471,10 +1471,12 @@ int main(int argc, char* argv[])
   ImGui_ImplSDLRenderer2_Init(sdlRenderer);
 
   // Load Fonts
-  FILE *f = fopen("fonts/Vera.ttf","rb");
+  char font[FILENAME_MAX+15];
+  snprintf(font,FILENAME_MAX+15,"%s/fonts/Vera.ttf",pwd);
+  FILE *f = fopen(font,"rb");
   if (f) {
       fclose(f);
-      io.Fonts->AddFontFromFileTTF("fonts/Vera.ttf", FONT_SIZE);
+      io.Fonts->AddFontFromFileTTF(font, FONT_SIZE);
   }
 
   SDL_ShowCursor(SDL_ENABLE);
@@ -1751,7 +1753,7 @@ static int get_def(int chIdx,int mask = 8) {
 
 extern bool skipToSavenPlay,skipReady;
 // The only test so far directly on nostaliga_mode : recharging ability of vi altars in Mouse.cpp
-bool monsters_vulnerable_on_attack = true,nostalgia_mode = false;
+bool monsters_vulnerable_on_attack = true,nostalgia_mode = false,filter_dsa_door_sound;
 extern char *PlayfileName; // csbui.cpp
 
 int want_popup;
@@ -1843,6 +1845,7 @@ static void read_conf() {
     select_dungeon(dungeonName);
     strcpy(graphicName,csb_get_config_string("settings","graphicName",(char*)"graphics.dat"));
     launcher_power = csb_get_config_int("settings","launcher_power",1);
+    filter_dsa_door_sound = csb_get_config_int("settings","filter_dsa_door_sound",0);
 
     st_X = 320.0 / WindowWidth;
     st_Y = 200.0 / (WindowHeight - 20);
@@ -1869,6 +1872,7 @@ static void save_conf() {
     csb_set_config_string("settings","dungeonName",dungeonName);
     csb_set_config_string("settings","graphicName",graphicName);
     csb_set_config_int("settings","launcher_power",launcher_power);
+    csb_set_config_int("settings","filter_dsa_door_sound",filter_dsa_door_sound);
     keyxlate.write_conf();
     csb_pop_config_state();
 }
@@ -1941,7 +1945,7 @@ static void render_overlay_interface() {
 
 	       MsgList[ta].messagetime -= 1;
 
-	       ImGui::SetCursorPos(ImVec2(0,WindowHeight-40+20*(((MSG_LIST_SIZE-1)-tb))));
+	       ImGui::SetCursorPos(ImVec2(0,WindowHeight-DY-20-20*(((MSG_LIST_SIZE-1)-tb))));
 	       ImGui::Text(MsgList[ta].message);
 	   }
        }
@@ -2059,6 +2063,7 @@ void post_render() {
 		    && !simpleEncipher);
 	    if (ImGui::MenuItem(_("Non-CSB Items"), NULL,false,enabled)) ItemsRemaining(1);
 	    ImGui::MenuItem(_("DM Rules"), NULL,&DM_rules);
+	    ImGui::MenuItem(_("Filter DSA door sounds (for Conflux!)"),NULL, &filter_dsa_door_sound);
 	    if (ImGui::MenuItem(_("Extended character info..."),NULL,false,d.NumCharacter > 0))
 		open_char_info = true;
 	    if (ImGui::BeginMenu(_("Launchers power"))) {

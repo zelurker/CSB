@@ -4617,7 +4617,8 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
       flags = pdsaDbank->stack.pop();
       volume = pdsaDbank->stack.pop();
       soundNum = pdsaDbank->stack.pop();
-      PlayCustomSound(soundNum, volume, flags);
+      if (!filter_dsa_door_sound || soundNum != 503)
+	  PlayCustomSound(soundNum, volume, flags);
     };
     break;
   case STKOP_MonBlk:
