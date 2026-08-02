@@ -177,9 +177,16 @@ void ReadTranslationFile(void)
   CLOSE(handle);
 }
 
+static char tr_linefeed[256];
+
 const char *XTABL::Translate(const char *text)
 {
   int idx, i;
+  if (text[0] == 10) {
+      tr_linefeed[0] = 10;
+      strncpy(&tr_linefeed[1],Translate(text+1),255);
+      return tr_linefeed;
+  }
   idx = text[0];
   if (text[0] != 0) idx += text[1];
   idx &= 0x1f;
