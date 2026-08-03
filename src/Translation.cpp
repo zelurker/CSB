@@ -183,8 +183,11 @@ const char *XTABL::Translate(const char *text)
 {
   int idx, i;
   if (text[0] == 10) {
+      int pos = 1;
       tr_linefeed[0] = 10;
-      strncpy(&tr_linefeed[1],Translate(text+1),255);
+      while (text[pos] == 10)
+	  tr_linefeed[pos++] = 10;
+      strncpy(&tr_linefeed[pos],Translate(text+pos),256-pos);
       return tr_linefeed;
   }
   idx = text[0];
