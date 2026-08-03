@@ -1,3 +1,7 @@
+// Keep imgui includes at the top to avoid the pragma pack in CSB.h
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer2.h"
 #ifdef _LINUX
 #include "stdafx.h"
 //#include <csl/csl.h> // ********************************* rabbahiff
@@ -19,9 +23,6 @@
 #include "CSB.h"
 #include "Data.h"
 #include "SDL_sound.h"
-#include "imgui.h"
-#include "imgui_impl_sdl2.h"
-#include "imgui_impl_sdlrenderer2.h"
 
 extern int eventNum;
 extern void ReadConfigFile(void);
