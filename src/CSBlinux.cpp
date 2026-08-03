@@ -1,5 +1,10 @@
 // CSBlinux.cpp : Linux-specific file instead of windows-specific CSBwin.cpp.
 // Note: CSBTypes.h needs to be included after stdafx.h
+// Keep imgui includes at the top to avoid the pragma pack in CSB.h
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_sdlrenderer2.h"
+#include "imguifilebrowser.h"
 #include "stdafx.h"
 #include "UI.h"
 #include "resource.h"
@@ -13,12 +18,7 @@
 #include "Objects.h"
 #include "CSB.h"
 #include "Data.h"
-#include "imgui.h"
-#include "imgui_impl_sdl2.h"
-#include "imgui_impl_sdlrenderer2.h"
-#include "imguifilebrowser.h"
 
-imgui_addons::ImGuiFileBrowser file_dialog; // As a class member or globally
 bool imgui_active = false;
 static bool capturing_key;
 static int captured_key;
@@ -30,6 +30,7 @@ char *opened_file;
 
 typedef struct MESSAGE
 {
+    int color;
    ui32  messagetime;		// time before message expires
    char message[256];		// message string
 } MESSAGE;
@@ -1476,7 +1477,15 @@ int main(int argc, char* argv[])
   FILE *f = fopen(font,"rb");
   if (f) {
       fclose(f);
-      io.Fonts->AddFontFromFileTTF(font, FONT_SIZE);
+      ImFontConfig cfg;
+      cfg.OversampleH = 1;
+      static ImVector<ImWchar> gr;
+      gr.clear();
+      static ImFontGlyphRangesBuilder range;
+      range.Clear();
+      range.AddRanges(io.Fonts->GetGlyphRangesJapanese());
+      range.BuildRanges(&gr);
+      io.Fonts->AddFontFromFileTTF(font, FONT_SIZE,&cfg,gr.Data);
   }
 
   SDL_ShowCursor(SDL_ENABLE);
@@ -1887,20 +1896,36 @@ static int mbase;		// Which message is top of the list
 
 void print_ingame(int showtime, const char *format, ...)
 {
-#ifdef SDL
-    if (silent_hud) return;
-#endif
    va_list ap;
    va_start(ap,format);
    vsprintf(MsgList[mbase].message,format,ap);
    va_end(ap);
 
    MsgList[mbase].messagetime = showtime;
+   MsgList[mbase].color = -1;
 
    mbase++;
    if(mbase>=MSG_LIST_SIZE) mbase=0;
 }
 
+void print_ingame_color(int color, int showtime, const char *format, ...) {
+    char *s;
+   va_list ap;
+   va_start(ap,format);
+   vsprintf(MsgList[mbase].message,format,ap);
+   va_end(ap);
+   while ((s = strchr(MsgList[mbase].message,10))) {
+       *s = 0;
+       if (*MsgList[mbase].message) print_ingame_color(color,showtime,MsgList[mbase].message);
+       memmove(MsgList[mbase].message,s+1,strlen(s+1)+1);
+   }
+
+   MsgList[mbase].messagetime = showtime;
+   MsgList[mbase].color = color;
+
+   mbase++;
+   if(mbase>=MSG_LIST_SIZE) mbase=0;
+}
 // clear_ingame_message_list():
 // Clear the ingame message list
 
@@ -1932,7 +1957,7 @@ static void render_overlay_interface() {
     ImGui::SetNextWindowPos(viewport->WorkPos);
     ImGui::SetNextWindowSize(viewport->WorkSize);
 
-    if (ImGui::Begin("Example: Fullscreen window", NULL, flags)) {
+    if (ImGui::Begin("Fullscreen window", NULL, flags)) {
 	ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255,255,255,255));
        for(int tb=0;tb<MSG_LIST_SIZE;tb++){
 
@@ -1945,14 +1970,39 @@ static void render_overlay_interface() {
 
 	       MsgList[ta].messagetime -= 1;
 
-	       ImGui::SetCursorPos(ImVec2(0,WindowHeight-DY-20-20*(((MSG_LIST_SIZE-1)-tb))));
-	       ImGui::Text(MsgList[ta].message);
+	       int size = (WindowHeight-DY)/25;
+	       ImGui::SetCursorPos(ImVec2(0,WindowHeight-DY-size-size*(((MSG_LIST_SIZE-1)-tb))));
+	       ImGui::PushFont(NULL,size-6); // Not sure about the font-6, it works for font size 14 -> height of 20, but I doubt it will work all the time
+	       printf("render %d,%d,%s\n",0,WindowHeight-DY-size-size*(((MSG_LIST_SIZE-1)-tb)),MsgList[ta].message);
+	       switch(MsgList[ta].color) {
+	       case 1: ImGui::TextColored(ImVec4(0.43f, 0.43f, 0.43f, 1.0f), MsgList[ta].message); break;
+	       case 2: ImGui::TextColored(ImVec4(0.57f, 0.57f, 0.57f, 1.0f), MsgList[ta].message); break;
+	       case 3: ImGui::TextColored(ImVec4(0.43f, 0.14f, 0.00f, 1.0f), MsgList[ta].message); break;
+	       case 4: ImGui::TextColored(ImVec4(0.00f, 0.86f, 0.86f, 1.0f), MsgList[ta].message); break;
+	       case 5: ImGui::TextColored(ImVec4(0.57f, 0.29f, 0.00f, 1.0f), MsgList[ta].message); break;
+	       case 6: ImGui::TextColored(ImVec4(0.00f, 0.57f, 0.00f, 1.0f), MsgList[ta].message); break;
+	       case 7: ImGui::TextColored(ImVec4(0.00f, 0.86f, 0.00f, 1.0f), MsgList[ta].message); break;
+	       case 8: ImGui::TextColored(ImVec4(1.00f, 0.00f, 0.00f, 1.0f), MsgList[ta].message); break;
+	       case 9: ImGui::TextColored(ImVec4(1.00f, 0.71f, 0.00f, 1.0f), MsgList[ta].message); break;
+	       case 10: ImGui::TextColored(ImVec4(0.86f, 0.57f, 0.43f, 1.0f), MsgList[ta].message); break;
+	       case 11: ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), MsgList[ta].message); break;
+	       case 12: ImGui::TextColored(ImVec4(0.29f, 0.29f, 0.29f, 1.0f), MsgList[ta].message); break;
+	       case 13: ImGui::TextColored(ImVec4(0.71f, 0.71f, 0.71f, 1.0f), MsgList[ta].message); break;
+	       case 14: ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f), MsgList[ta].message); break;
+	       case 15: ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), MsgList[ta].message); break;
+	       default:
+		       ImGui::Text(MsgList[ta].message);
+		       break;
+	       }
+	       ImGui::PopFont();
 	   }
        }
        ImGui::PopStyleColor();
        ImGui::End();
     }
 }
+
+imgui_addons::ImGuiFileBrowser file_dialog; // As a class member or globally
 
 void post_render() {
     static bool was_active;

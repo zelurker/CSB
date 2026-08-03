@@ -275,5 +275,6 @@ public:
 
 extern KEYXLATE keyxlate;
 void print_ingame(int showtime, const char *format, ...);
+void print_ingame_color(int color, int showtime, const char *format, ...);
 
 #endif // UI_H
