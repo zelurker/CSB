@@ -59,6 +59,7 @@ enum COLOR
   COLOR_GREEN  =  7, // 60
   COLOR_RED  =  8,  // 700
   COLOR_ORANGE = 9, // orange 750
+  COLOR_REDISH = 10, // 643, not sure what it looks like!
   COLOR_YELLOW = 11, // 770
   COLOR_DARK_GRAY = 12, // (222)
   COLOR_LGRAY = 13, // text on char screen (health, stamina, mana...) (555)
@@ -2582,6 +2583,7 @@ struct CHARDESC // character info???
   i16 timerIndex;      //46;
   i16 charFlags; // ORed with 0x280
                  // 0x8000 while selecting attack option
+		 // Apparently 0x10 would be sex: 1 male, 0 female
   i16 ouches;    //50;// mask of damaged body parts.
 private:
   i16 m_wHP;         //52
