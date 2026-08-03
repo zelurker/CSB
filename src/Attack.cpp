@@ -1424,7 +1424,10 @@ i32 WarCryEtc(ATTACKPARAMETERS *pParam,
   switch (pParam->attackType)
   {
   case atk_WARCRY:
-      LIN_PlayDirect("warcry.mp3",-1,-1);
+      if (!(d.hero[pParam->charIdx].charFlags & 16)) // female
+	  LIN_PlayDirect("warcryf.mp3",-1,-1);
+      else
+	  LIN_PlayDirect("warcry.mp3",-1,-1);
       break;
   case atk_BLOWHORN:
       LIN_PlayDirect("horn.mp3",-1,-1);
