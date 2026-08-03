@@ -3151,7 +3151,7 @@ static void EX_AMPERSAND(EXECUTIONPACKET& exPkt, int cmdOffset)
                  (ui16)0x8002,
                  999);
       //ExpandedText[0] = 10;
-      PrintWithSubstitution(ExpandedText,color, false);
+      PrintWithSubstitution(ExpandedText,color, true);
     };
     break;
   case STKOP_DiscardText:

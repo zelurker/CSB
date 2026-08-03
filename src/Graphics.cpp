@@ -301,6 +301,7 @@ void TextOut_OneLine(ui8 *dest,
                      i32 maxLineLength,
                      bool translate)
 {
+#if 1
   dReg D2, D3, D4, D5, D6, D7;
   i32 saveD2;
   const char *A0;
@@ -376,6 +377,7 @@ tag0016a0:
 
 
 
+#endif
 }
 
 
@@ -1615,7 +1617,7 @@ void PrintWithSubstitution(const char *txt, ui32 color, bool translate)
   outbuf.addch(0);
   if (outbuf.buf()[1] != 0)
   {
-    QuePrintLines((i16)color, outbuf.buf(), false);
+    QuePrintLines((i16)color, outbuf.buf(), translate);
   };
 }
 
