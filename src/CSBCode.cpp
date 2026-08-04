@@ -1678,18 +1678,19 @@ void SCROLLING_TEXT::Printf(i32 color, const char* text, i32 printLinesCount)
 // A few colors : 15 is white, 14 dark blue, 13 grey, 12 is dark grey, 11 is yellow!
 void QuePrintLines(i32 color, const char *text, bool translate)
 {
-    printf("quePrintLines %d %s\n",color,text);
-    print_ingame_color(color,15*60,translate ? TranslateLanguage(text) : text);
-#if 0
-  if (translate)
-  {
-    printQueue.Queue(color,1,TranslateLanguage(text)); //That was easy!
-  }
-  else
-  {
-    printQueue.Queue(color,1,text); //That was easy!
-  };
-#endif
+    if (experimental_overlay) {
+	printf("quePrintLines %d %s\n",color,text);
+	print_ingame_color(color,15*60,translate ? TranslateLanguage(text) : text);
+	return;
+    }
+    if (translate)
+    {
+	printQueue.Queue(color,1,TranslateLanguage(text)); //That was easy!
+    }
+    else
+    {
+	printQueue.Queue(color,1,text); //That was easy!
+    }
 }
 
 int TextWidth(void)

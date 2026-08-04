@@ -44,8 +44,6 @@ static struct MESSAGE MsgList[MSG_LIST_SIZE];
 #define APPVERSION  "15.7"
 #define APPVERMINOR "v0" /* linux-only update*/
 
-//extern gboolean noDirtyRect;
-//extern SDL_Rect DirtyRect;
 SDL_sem *sem;
 
 static bool cursorIsShowing;
@@ -1762,7 +1760,7 @@ static int get_def(int chIdx,int mask = 8) {
 
 extern bool skipToSavenPlay,skipReady;
 // The only test so far directly on nostaliga_mode : recharging ability of vi altars in Mouse.cpp
-bool monsters_vulnerable_on_attack = true,nostalgia_mode = false,filter_dsa_door_sound;
+bool monsters_vulnerable_on_attack = true,nostalgia_mode = false,filter_dsa_door_sound,experimental_overlay;
 extern char *PlayfileName; // csbui.cpp
 
 int want_popup;
@@ -1855,6 +1853,7 @@ static void read_conf() {
     strcpy(graphicName,csb_get_config_string("settings","graphicName",(char*)"graphics.dat"));
     launcher_power = csb_get_config_int("settings","launcher_power",1);
     filter_dsa_door_sound = csb_get_config_int("settings","filter_dsa_door_sound",0);
+    experimental_overlay = csb_get_config_int("settings","experimental_overlay",0);
 
     st_X = 320.0 / WindowWidth;
     st_Y = 200.0 / (WindowHeight - 20);
@@ -1882,6 +1881,7 @@ static void save_conf() {
     csb_set_config_string("settings","graphicName",graphicName);
     csb_set_config_int("settings","launcher_power",launcher_power);
     csb_set_config_int("settings","filter_dsa_door_sound",filter_dsa_door_sound);
+    csb_set_config_int("settings","experimental_overlay",experimental_overlay);
     keyxlate.write_conf();
     csb_pop_config_state();
 }
@@ -2113,6 +2113,7 @@ void post_render() {
 		    && !simpleEncipher);
 	    if (ImGui::MenuItem(_("Non-CSB Items"), NULL,false,enabled)) ItemsRemaining(1);
 	    ImGui::MenuItem(_("DM Rules"), NULL,&DM_rules);
+	    ImGui::MenuItem(_("Experimental text overlay"),NULL, &experimental_overlay);
 	    ImGui::MenuItem(_("Filter DSA door sounds (for Conflux!)"),NULL, &filter_dsa_door_sound);
 	    if (ImGui::MenuItem(_("Extended character info..."),NULL,false,d.NumCharacter > 0))
 		open_char_info = true;
