@@ -31,7 +31,6 @@ char *opened_file;
 typedef struct MESSAGE
 {
     int color;
-   ui32  messagetime;		// time before message expires
    char message[256];		// message string
 } MESSAGE;
 
@@ -1637,11 +1636,11 @@ int main(int argc, char* argv[])
 	    post_render();
 	    drawn = 0;
 	}
-    } else {
+/*    } else {
 	for(int tb=0;tb<MSG_LIST_SIZE;tb++){
 	    if (MsgList[tb].messagetime>0)
 		MsgList[tb].messagetime--;
-	}
+	} */
     }
 
   } /* Eof Lord Message Loop */
@@ -1894,33 +1893,36 @@ static int mbase;		// Which message is top of the list
 // print_ingame():
 // Add Message to Ingame Message List, using a printf() style format string.
 
-void print_ingame(int showtime, const char *format, ...)
+void print_ingame(const char *format, ...)
 {
    va_list ap;
    va_start(ap,format);
    vsprintf(MsgList[mbase].message,format,ap);
    va_end(ap);
 
-   MsgList[mbase].messagetime = showtime;
    MsgList[mbase].color = -1;
 
    mbase++;
    if(mbase>=MSG_LIST_SIZE) mbase=0;
 }
 
-void print_ingame_color(int color, int showtime, const char *format, ...) {
-    char *s;
+static bool autoscroll = false;
+
+void print_ingame_color(int color, const char *format, ...) {
    va_list ap;
    va_start(ap,format);
-   vsprintf(MsgList[mbase].message,format,ap);
+   autoscroll = true;
+   int prec = mbase-1;
+   if (prec < 0) prec = MSG_LIST_SIZE-1;
+   char *s = MsgList[prec].message;
+   if (*format != 10 && *s && s[strlen(s)-1] != 10) { // append to previous string
+       vsprintf(&MsgList[prec].message[strlen(MsgList[prec].message)],format,ap);
+       va_end(ap);
+       return;
+   } else
+       vsprintf(MsgList[mbase].message,format,ap);
    va_end(ap);
-   while ((s = strchr(MsgList[mbase].message,10))) {
-       *s = 0;
-       if (*MsgList[mbase].message) print_ingame_color(color,showtime,MsgList[mbase].message);
-       memmove(MsgList[mbase].message,s+1,strlen(s+1)+1);
-   }
 
-   MsgList[mbase].messagetime = showtime;
    MsgList[mbase].color = color;
 
    mbase++;
@@ -1935,7 +1937,6 @@ void clear_ingame_message_list(void)
 
    mbase = 0;
    for(ta = 0; ta < MSG_LIST_SIZE; ta ++){
-      MsgList[ta].messagetime = 0;
       sprintf(MsgList[ta].message," ");
    }
 }
@@ -1943,6 +1944,7 @@ void clear_ingame_message_list(void)
 static void render_overlay_interface() {
     // Renders a text overlay interface on top of the imgui screen
     // Not certain it's the fastest way to do this thing, but imgui is really efficient, so let's try that...
+#if 0
     bool active = false;
     for(int tb=0;tb<MSG_LIST_SIZE;tb++){
 	if (MsgList[tb].messagetime>0) {
@@ -1951,13 +1953,19 @@ static void render_overlay_interface() {
 	}
     }
     if (!active) return; // We try to avoid to create the fullscreen window if useless... !
+#endif
 
-    ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBackground;
+    ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBackground;
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
-    ImGui::SetNextWindowPos(viewport->WorkPos);
-    ImGui::SetNextWindowSize(viewport->WorkSize);
+    int size = (WindowHeight-DY)/25*4;
+    ImGui::SetNextWindowPos({viewport->WorkPos.x, (float)(WindowHeight-size+2)});
+    ImGui::SetNextWindowSize({viewport->WorkSize.x,(float)size-2});
 
     if (ImGui::Begin("Fullscreen window", NULL, flags)) {
+	if (ImGui::IsWindowHovered()) {
+	    SDL_ShowCursor(SDL_ENABLE);
+	    imgui_active = true;
+	}
 	ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255,255,255,255));
        for(int tb=0;tb<MSG_LIST_SIZE;tb++){
 
@@ -1966,38 +1974,51 @@ static void render_overlay_interface() {
 	   if(ta>=MSG_LIST_SIZE)
 	       ta-=MSG_LIST_SIZE;
 
-	   if(MsgList[ta].messagetime>0){
+	   if(*MsgList[ta].message && *MsgList[ta].message!=32){
 
-	       MsgList[ta].messagetime -= 1;
+	       // MsgList[ta].messagetime -= 1;
 
 	       int size = (WindowHeight-DY)/25;
-	       ImGui::SetCursorPos(ImVec2(0,WindowHeight-DY-size-size*(((MSG_LIST_SIZE-1)-tb))));
+	       // ImGui::SetCursorPos(ImVec2(0,WindowHeight-DY-size-size*(((MSG_LIST_SIZE-1)-tb))));
 	       ImGui::PushFont(NULL,size-6); // Not sure about the font-6, it works for font size 14 -> height of 20, but I doubt it will work all the time
-	       printf("render %d,%d,%s\n",0,WindowHeight-DY-size-size*(((MSG_LIST_SIZE-1)-tb)),MsgList[ta].message);
+	       // printf("render %d,%s\n",MsgList[ta].color,MsgList[ta].message);
+	       ImGui::PushTextWrapPos();
+	       char *s = MsgList[ta].message;
+	       char old = s[strlen(s)-1];
+	       if (old == 10) s[strlen(s)-1] = 0;
 	       switch(MsgList[ta].color) {
-	       case 1: ImGui::TextColored(ImVec4(0.43f, 0.43f, 0.43f, 1.0f), MsgList[ta].message); break;
-	       case 2: ImGui::TextColored(ImVec4(0.57f, 0.57f, 0.57f, 1.0f), MsgList[ta].message); break;
-	       case 3: ImGui::TextColored(ImVec4(0.43f, 0.14f, 0.00f, 1.0f), MsgList[ta].message); break;
-	       case 4: ImGui::TextColored(ImVec4(0.00f, 0.86f, 0.86f, 1.0f), MsgList[ta].message); break;
-	       case 5: ImGui::TextColored(ImVec4(0.57f, 0.29f, 0.00f, 1.0f), MsgList[ta].message); break;
-	       case 6: ImGui::TextColored(ImVec4(0.00f, 0.57f, 0.00f, 1.0f), MsgList[ta].message); break;
-	       case 7: ImGui::TextColored(ImVec4(0.00f, 0.86f, 0.00f, 1.0f), MsgList[ta].message); break;
-	       case 8: ImGui::TextColored(ImVec4(1.00f, 0.00f, 0.00f, 1.0f), MsgList[ta].message); break;
-	       case 9: ImGui::TextColored(ImVec4(1.00f, 0.71f, 0.00f, 1.0f), MsgList[ta].message); break;
-	       case 10: ImGui::TextColored(ImVec4(0.86f, 0.57f, 0.43f, 1.0f), MsgList[ta].message); break;
-	       case 11: ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), MsgList[ta].message); break;
-	       case 12: ImGui::TextColored(ImVec4(0.29f, 0.29f, 0.29f, 1.0f), MsgList[ta].message); break;
-	       case 13: ImGui::TextColored(ImVec4(0.71f, 0.71f, 0.71f, 1.0f), MsgList[ta].message); break;
-	       case 14: ImGui::TextColored(ImVec4(0.0f, 0.0f, 1.0f, 1.0f), MsgList[ta].message); break;
-	       case 15: ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), MsgList[ta].message); break;
+	       case 1: ImGui::TextColored(ImVec4(0.43f, 0.43f, 0.43f, 1.0f), s); break;
+	       case 2: ImGui::TextColored(ImVec4(0.57f, 0.57f, 0.57f, 1.0f), s); break;
+	       case 3: ImGui::TextColored(ImVec4(0.43f, 0.14f, 0.00f, 1.0f), s); break;
+	       case 4: ImGui::TextColored(ImVec4(0.00f, 0.86f, 0.86f, 1.0f), s); break;
+	       case 5: ImGui::TextColored(ImVec4(0.57f, 0.29f, 0.00f, 1.0f), s); break;
+	       case 6: ImGui::TextColored(ImVec4(0.00f, 0.57f, 0.00f, 1.0f), s); break;
+	       case 7: ImGui::TextColored(ImVec4(0.00f, 0.86f, 0.00f, 1.0f), s); break;
+	       case 8: ImGui::TextColored(ImVec4(1.00f, 0.00f, 0.00f, 1.0f), s); break;
+	       case 9: ImGui::TextColored(ImVec4(1.00f, 0.71f, 0.00f, 1.0f), s); break;
+	       case 10: ImGui::TextColored(ImVec4(0.86f, 0.57f, 0.43f, 1.0f), s); break;
+	       case 11: ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), s); break;
+	       case 12: ImGui::TextColored(ImVec4(0.29f, 0.29f, 0.29f, 1.0f), s); break;
+	       case 13: ImGui::TextColored(ImVec4(0.71f, 0.71f, 0.71f, 1.0f), s); break;
+	       case 14: ImGui::TextColored(ImVec4(0.2f, 0.2f, 1.0f, 1.0f), s); break;
+	       case 15: ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), s); break;
 	       default:
-		       ImGui::Text(MsgList[ta].message);
+		       // ImGui::Text(s);
+		       // printf("overlay: %s\n",s);
+		       ImGui::TextWrapped(s);
 		       break;
 	       }
+	       s[strlen(s)-1] = old;
+	       ImGui::PopTextWrapPos();
 	       ImGui::PopFont();
 	   }
        }
        ImGui::PopStyleColor();
+       if (autoscroll && !ImGui::IsWindowHovered()) {
+	   printf("autoscroll %g\n",ImGui::GetScrollMaxY());
+	   ImGui::SetScrollHereY(1.0f);
+	   autoscroll = false;
+       }
        ImGui::End();
     }
 }
@@ -2451,11 +2472,11 @@ void post_render() {
 	ImGui::EndPopup();
     }
 
+    render_overlay_interface();
+
     if (!was_active && !cursorIsShowing && !fb_shown && !imgui_active && !fb2_shown && !fb3_shown) {
 	SDL_ShowCursor(SDL_DISABLE);
     }
-
-    render_overlay_interface();
 
     // Rendering
     ImGui::Render();

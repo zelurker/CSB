@@ -580,7 +580,7 @@ i32 DeterminePhysicalAttackDamage(
         fprintf(GETFILE(TraceFile),"%sAttack failed.  Quickness too small. Luck(1/4) failed.  TAG16476(75-(P7=%d) returned false.  Return 0\n",traceID, P7);
       }
       if (!nostalgia_mode)
-	  print_ingame(300,"Missed. Too slow: %d (required:%d)",D0W,D1W);
+	  print_ingame("Missed. Too slow: %d (required:%d)",D0W,D1W);
       //AdjustStamina(pParam->charIdx, StaminaDec=STRandomBool() + 2);
       pParam->attdep.physicalAttack.staminaAdjust = 2 + STRandomBool();
       PhysicalAttackFilter(pParam, pFilter, traceID);
@@ -651,7 +651,7 @@ i32 DeterminePhysicalAttackDamage(
         {
           fprintf(GETFILE(TraceFile),"%sDiamond Edge so subtract 25%% from D4W --> %d\n",traceID,D4W);
         }
-	print_ingame(300,"Diamond Edge so subtract 25%% from defense --> %d\n",D4W);
+	print_ingame("Diamond Edge so subtract 25%% from defense --> %d\n",D4W);
       }
       else
       {
@@ -662,7 +662,7 @@ i32 DeterminePhysicalAttackDamage(
           {
             fprintf(GETFILE(TraceFile),"%sExecutioner so subtract 12.5%% from D4W --> %d\n",traceID,D4W);
           }
-	  print_ingame(300,"Executioner so subtract 12.5%% from defense --> %d\n",D4W);
+	  print_ingame("Executioner so subtract 12.5%% from defense --> %d\n",D4W);
         }
       }
     // D4 is perhaps like the monster's Armor effectiveness???
@@ -707,7 +707,7 @@ i32 DeterminePhysicalAttackDamage(
           fprintf(GETFILE(TraceFile),"%sAttack failed because ",traceID);
           fprintf(GETFILE(TraceFile)," we were not Lucky (D7W==0)\n");
         };
-	print_ingame(300,"attack failed because of bad luck!");
+	print_ingame("attack failed because of bad luck!");
         //AdjustStamina(pParam->charIdx, StaminaDec=STRandomBool() + 2);
         pParam->attdep.physicalAttack.staminaAdjust = 2 + STRandomBool();
         PhysicalAttackFilter(pParam, pFilter, traceID);
@@ -819,7 +819,7 @@ i32 DeterminePhysicalAttackDamage(
     }
     if (    (objNI_attackWeapon == objNI_VorpalBlade)
 	    && !pmtDesc->nonMaterial() )
-	print_ingame(300,"divide by 2 because vorpal blade against material being");
+	print_ingame("divide by 2 because vorpal blade against material being");
 
     if (   (objNI_attackWeapon == objNI_VorpalBlade  )
         && (!pmtDesc->nonMaterial()  )
@@ -829,7 +829,7 @@ i32 DeterminePhysicalAttackDamage(
       {
         fprintf(GETFILE(TraceFile),"%sAttack failed because Vorpal, i26 word 2 bit 6=0, and D7W=0\n",traceID);
       }
-      print_ingame(300,"Attack failed because Vorpal");
+      print_ingame("Attack failed because Vorpal");
       //AdjustStamina(pParam->charIdx, StaminaDec=STRandomBool() + 2);
       pParam->attdep.physicalAttack.staminaAdjust = 2 + STRandomBool();
       PhysicalAttackFilter(pParam, pFilter, traceID);
