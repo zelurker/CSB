@@ -139,14 +139,17 @@ void ReadTranslationFile(void)
   handle = OPEN(path, "r");
   if (handle < 0) return;
   lineNum = 0;
+  // These translation files should change their format to have only 1 language / file
+  // it would allow to pass the whole file to google translate to get another language
   while (GETS(buf.buf, buf.size-1, (i16)handle) != NULL)
   {
     int i = 0, j;
     lineNum++;
     len = (i32)strlen(buf.buf);
     if (len == 0) continue;
+    if (buf.buf[0] == -17 && buf.buf[1] == -69 && buf.buf[2] == -65) memmove(&buf.buf[0],&buf.buf[3],strlen(&buf.buf[3])+1); // utf8 mark, beginning of the file
     if (  (buf.buf[0] == '/') && (buf.buf[1] == '/') ) continue;
-    if ( buf.buf[0] == ';') continue;
+    if ( buf.buf[0] == ';' || buf.buf[0] == '#') continue;
     dquote[3] = -1;
     numNonblank = 0;
     for (j=0; j<4; j++) // Find 4 double-quotes
