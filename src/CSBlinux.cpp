@@ -1963,7 +1963,9 @@ static void render_overlay_interface() {
     ImGui::SetNextWindowSize({viewport->WorkSize.x,(float)size-2});
 
     if (ImGui::Begin("Fullscreen window", NULL, flags)) {
-	if (ImGui::IsWindowHovered()) {
+	if (ImGui::IsWindowFocused() || ImGui::IsWindowHovered()) {
+	    // The Focused() part is to keep this active while moving the slider (scrollbar).
+	    // The drawback : focused becomes false only when clicking the game area. It's not too bad, better than loosing completely the mouse while moving the scrollbar
 	    SDL_ShowCursor(SDL_ENABLE);
 	    imgui_active = true;
 	}
@@ -2015,7 +2017,7 @@ static void render_overlay_interface() {
 	   }
        }
        ImGui::PopStyleColor();
-       if (autoscroll && !ImGui::IsWindowHovered()) {
+       if (autoscroll && !ImGui::IsWindowFocused()) {
 	   printf("autoscroll %g\n",ImGui::GetScrollMaxY());
 	   ImGui::SetScrollHereY(1.0f);
 	   autoscroll = false;
