@@ -1783,14 +1783,18 @@ static void stop_capture(int button) {
     while (mykeys[n].desc) {
 	if (mykeys[n].active1) {
 	    mykeys[n].active1 = false;
-	    if (button == SDL_BUTTON_RIGHT)
+	    if (button == SDL_BUTTON_RIGHT) {
 		mykeys[n].key1 = 0;
+		keyxlate.setkey(0, mykeys[n].key, TYPESCAN, 0);
+	    }
 	    return;
 	}
 	if (mykeys[n].active2) {
 	    mykeys[n].active2 = false;
-	    if (button == SDL_BUTTON_RIGHT)
+	    if (button == SDL_BUTTON_RIGHT) {
 		mykeys[n].key2 = 0;
+		keyxlate.setkey(0, mykeys[n].key, TYPESCAN, 1);
+	    }
 	    return;
 	}
 	n++;
@@ -1799,8 +1803,10 @@ static void stop_capture(int button) {
     while (mkeys[n].desc) {
 	if (mkeys[n].active1) {
 	    mkeys[n].active1 = false;
-	    if (button == SDL_BUTTON_RIGHT)
+	    if (button == SDL_BUTTON_RIGHT) {
 		mkeys[n].key1 = 0;
+		keyxlate.setkey(0, mykeys[n].key, TYPEMSCANL, 0);
+	    }
 	    return;
 	}
 	n++;
