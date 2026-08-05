@@ -2220,6 +2220,7 @@ RESTARTABLE _ProcessTimersViewportAndSound(void)
 //           TAG01fefc
 extern void Process_SDL_WINDOWEVENT(void); // CSBlinux
 extern void cbAppDestroy(void); // also
+extern void post_render();
 void my_Delay(int ms) {
     SDL_Event ev;
     for (int t=0; t<ms; t+=100) {
@@ -2233,6 +2234,7 @@ void my_Delay(int ms) {
 				      break;
 	    }
 	}
+	post_render();
     }
 }
 
