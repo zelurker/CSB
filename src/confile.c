@@ -29,7 +29,7 @@ Hopefully this file is portable without major problems.
 
 */
 
-#ifndef true
+#ifndef bool
 #define bool  unsigned char
 #define false 0
 #define true  1
