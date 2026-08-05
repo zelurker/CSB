@@ -29,6 +29,12 @@ Hopefully this file is portable without major problems.
 
 */
 
+#ifndef true
+#define bool  unsigned char
+#define false 0
+#define true  1
+#endif
+
 typedef struct CONFIG_ENTRY
 {
    char *name;			    /* variable name (NULL if comment) */
