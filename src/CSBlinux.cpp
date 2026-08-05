@@ -1954,6 +1954,7 @@ static void render_overlay_interface() {
     }
     if (!active) return; // We try to avoid to create the fullscreen window if useless... !
 #endif
+    if (chaosDisplayed || !d.NumGraphic || !d.PrimaryButtonList) return;
 
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBackground;
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -2472,7 +2473,8 @@ void post_render() {
 	ImGui::EndPopup();
     }
 
-    render_overlay_interface();
+    if (experimental_overlay)
+	render_overlay_interface();
 
     if (!was_active && !cursorIsShowing && !fb_shown && !imgui_active && !fb2_shown && !fb3_shown) {
 	SDL_ShowCursor(SDL_DISABLE);
