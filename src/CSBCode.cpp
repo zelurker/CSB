@@ -1710,6 +1710,10 @@ int TextWidth(void)
 //   TAG001aa8
 void PrintLines(const i32 color, const char *Text)
 {//(void)
+    if (experimental_overlay) {
+	print_ingame_color(color,Text);
+	return;
+    }
   i32 lastPrintCol;
   dReg D0, D6;
   i8  LOCAL_56[54];
