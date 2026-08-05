@@ -402,136 +402,7 @@ EditDialog::~EditDialog(void)
 {
 }
 
-
-static char *initialEditText;
 char *finalEditText= NULL;
-// Mesage handler for EditDialog
-
-#ifdef _MSVC_INTEL //005
-LRESULT CALLBACK EditTextCallback(
-                       HWND hDlg,
-                       UINT message,
-                       WPARAM wParam,
-                       LPARAM /*lParam*/)
-{
-  i32 len;
-	switch (message)
-	{
-		case WM_INITDIALOG:
-    {
-      if (initialEditText == NULL)
-      initialEditText = "No Game Information available";
-      SetDlgItemTextA(hDlg, IDC_GameInformationEdit, initialEditText);
-
-      if (annotationPlaced)
-      {
-        SetWindowPlacement(hDlg, &annotationPlacement);
-      };
-
-
-//BOOL SetWindowPos(
-//  HWND hWnd,             // handle to window
-//  HWND hWndInsertAfter,  // placement-order handle
-//  int X,                 // horizontal position
-//  int Y,                 // vertical position
-//  int cx,                // width
-//  int cy,                // height
-//  UINT uFlags            // window-positioning flags
-//);
-
-
-
-      };
-		  return TRUE;
-
-		case WM_COMMAND:
-			if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
-			{
-        HWND hEdit = GetDlgItem(hDlg, IDC_GameInformationEdit);
-        len = GetWindowTextLength(hEdit);
-        if (finalEditText == NULL)
-        {
-          finalEditText = (char *)UI_malloc(len+1, MALLOC011);
-        };
-        GetWindowTextA(hEdit, finalEditText, len+1);
-				EndDialog(hDlg, LOWORD(wParam));
-				return TRUE;
-			}
-			return FALSE;
-    case WM_SETFONT:
-    case WM_ACTIVATE:
-    case WM_WINDOWPOSCHANGING:
-    case WM_WINDOWPOSCHANGED:
-    case WM_NCACTIVATE:
-    case WM_USER:
-    case 0x0127:
-    case 0x0128:
-    case WM_SHOWWINDOW:
-    case WM_NCPAINT:
-    case WM_GETTEXT:
-    case WM_ERASEBKGND:
-    case WM_CTLCOLORDLG:
-    case WM_CTLCOLORBTN:
-    case WM_CTLCOLOREDIT:
-    case WM_PAINT:
-    case WM_SETCURSOR:
-    case WM_NCHITTEST:
-    case WM_MOUSEFIRST:
-    case WM_MOUSEACTIVATE:
-    case WM_NCMOUSEMOVE:
-    case WM_SETFOCUS:
-    case WM_KILLFOCUS:
-    case WM_NCDESTROY:
-    case WM_NCLBUTTONDOWN:
-    case WM_SYSCOMMAND:
-    case WM_CAPTURECHANGED:
-    case WM_GETMINMAXINFO:
-    case WM_ENTERSIZEMOVE:
-    case WM_MOVING:
-    case WM_MOVE:
-    case WM_EXITSIZEMOVE:
-    case WM_TIMECHANGE:
-    case WM_ACTIVATEAPP:
-    case WM_ENTERMENULOOP:
-      return FALSE;
-    case WM_DESTROY:
-      {
-        if (GetWindowPlacement(
-                hDlg,               // handle to window
-                &annotationPlacement)) // address of structure for position data
-        {
-          annotationPlaced = true;
-        };
-      };
-
-
-      return FALSE;
-    default:
-      return FALSE;
-	};
-}
-
-
-i32 EditDialog::DoModal(void)
-{
-  //i32 result;
-  INT_PTR result;
-  bool saveCursorShowing;
-  initialEditText = m_initialText;
-  saveCursorShowing = cursorIsShowing;
-  if (!cursorIsShowing) ShowCursor(true);
-  i32 mask = UI_DisableAllMessages();
-  result = DialogBox(hInst, (LPCTSTR)IDD_GameInformation, hWnd, (DLGPROC)EditTextCallback);
-  if (!saveCursorShowing) ShowCursor(false);
-  UI_EnableMessages(mask);
-  m_finalText = finalEditText;
-  //if (finalEditText != NULL) UI_free(finalEditText);
-  finalEditText = NULL;
-  initialEditText = NULL;
-  //return result;
-  return (i32)result;
-}
-#endif //005
 
 // ROQUEN: massive temp hack
 #ifndef _MSC_VER //006
@@ -1124,7 +995,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
             };
           }
           else
-          if ((key = keyxlate.translate(msg->p1, TYPEMSCANL))!= 0)
+          if ((key = keyxlate.translate(msg->p2, TYPEMSCANL))!= 0)
           {
             //printf("CSBUI->TYPEMSCANL\n");
             latestScanType = TYPEMSCANL;
@@ -1133,7 +1004,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
             OnMouseSwitchAction(0);
           }
           else
-          if ((key = keyxlate.translate(msg->p1, TYPEMSCANR))!= 0)
+          if ((key = keyxlate.translate(msg->p2, TYPEMSCANR))!= 0)
           {
             latestScanType = TYPEMSCANR;
             //printf("CSBUI->TYPEMSCANR\n");
@@ -1172,8 +1043,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
 
         if (virtualFullscreen)
         {
-          i32 x,y,size;
-          size = screenSize;
+          i32 x,y;
           TranslateFullscreen(msg->p1,msg->p2,x,y);
           EnqueMouseClick(x, y, 1);
           TAG001afe(x, y, 1);
@@ -1193,8 +1063,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
         OnMouseSwitchAction(0x1);
         if (virtualFullscreen)
         {
-          i32 x, y, size;
-          size = screenSize;
+          i32 x, y;
           TranslateFullscreen(msg->p1,msg->p2,x,y);
           EnqueMouseClick(x, y, 1);
           TAG001afe(x, y, 1); //[Erik]: Is this correct?
