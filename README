@@ -13,4 +13,9 @@ dungeon master).
 https://www.dungeon-master.com/forum/viewforum.php?f=46&sid=8a3fff47bdddd3b2888d5b4919bd22d5
 
 You should also get the new sounds from the binary packages in the forum
-thread, they are not included in the git repository.
+thread, they are not included in the git repository. Same thing for the font,
+the default font is Vera.ttf which is freely available from the web, and is
+included only in the binary packages. While you are at it, also grab lsb.bmp
+which is used for the application icon for desktop environments which know how
+to handle this. All these files are not mandatory, the program can run without
+them, but it's better with them.
