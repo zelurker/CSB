@@ -1850,7 +1850,6 @@ static void read_conf() {
     winy = csb_get_config_int("settings","winy",200*4);
     gameSpeed = (SPEEDS)csb_get_config_int("settings","gameSpeed",4); // 4 seems to be SPEED_NORMAL
     show_coords = csb_get_config_int("settings","show_coords",0);
-    projectile_dmg_divider = csb_get_config_int("settings","projectile_dmg_divider",16);
     monsters_vulnerable_on_attack = csb_get_config_int("settings","monsters_vulnerable_on_attack",0);
     nostalgia_mode = csb_get_config_int("settings","nostalgia_mode",0);
     strcpy(dungeonName, csb_get_config_string("settings","dungeonName",(char*)"dungeon.dat")); // dungeonName points to dungeonname which is char[FILENAME_MAX]
@@ -1879,7 +1878,6 @@ static void save_conf() {
     csb_set_config_int("settings","winy",winy);
     csb_set_config_int("settings","gameSpeed",gameSpeed);
     csb_set_config_int("settings","show_coords",show_coords);
-    csb_set_config_int("settings","projectile_dmg_divider",projectile_dmg_divider);
     csb_set_config_int("settings","monsters_vulnerable_on_attack",monsters_vulnerable_on_attack);
     csb_set_config_int("settings","nostalgia_mode",nostalgia_mode);
     csb_set_config_string("settings","dungeonName",dungeonName);
@@ -2154,20 +2152,12 @@ void post_render() {
 		if (ImGui::MenuItem("6", NULL, launcher_power == 6)) { launcher_power = 6; nostalgia_mode = false; }
 		ImGui::EndMenu();
 	    }
-	    if (ImGui::BeginMenu(_("Projectile damage divider"))) {
-		if (ImGui::MenuItem(_("16 (default)"),NULL, projectile_dmg_divider == 16)) projectile_dmg_divider = 16;
-		if (ImGui::MenuItem("8",NULL, projectile_dmg_divider == 8)) { projectile_dmg_divider = 8; nostalgia_mode = false; }
-		if (ImGui::MenuItem("4",NULL, projectile_dmg_divider == 4)) { projectile_dmg_divider = 4; nostalgia_mode = false; }
-		if (ImGui::MenuItem("2",NULL, projectile_dmg_divider == 2)) { projectile_dmg_divider = 2; nostalgia_mode = false; }
-		if (ImGui::MenuItem("1",NULL, projectile_dmg_divider == 1)) { projectile_dmg_divider = 1; nostalgia_mode = false; }
-		ImGui::EndMenu();
-	    }
 	    if (ImGui::MenuItem(_("Monsters vulnerable on attack"),NULL,&monsters_vulnerable_on_attack))
 		if (monsters_vulnerable_on_attack)
 		    nostalgia_mode = false;
 	    if (ImGui::MenuItem(_("Nostalgia Mode"), NULL, &nostalgia_mode)) {
 		monsters_vulnerable_on_attack = false;
-		projectile_dmg_divider = 16;
+		launcher_power = 1;
 	    }
 	    ImGui::EndMenu();
 	} else if (!imgui_active) {
