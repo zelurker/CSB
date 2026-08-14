@@ -19,7 +19,7 @@ public:
   void Clear(void);
   XTABL(void);
   ~XTABL(void);
-  void AddTranslation(const char *s1, int len1, const char *s2, int len2);
+  void AddTranslation(const char *s1, const char *s2, int numLine);
   const char *Translate(const char *text);
   int EscapeCopy(char *dest, const char *src, int len);
 };
@@ -61,6 +61,27 @@ void XTABL::Clear(void)
   };
 }
 
+static char* removeAccented( char* str ) {
+    char *p = str;
+    if (!strncmp(str,"Sant",4))
+	printf("yes\n");
+    while ( (*p)!=0 ) {
+        const char*
+        //   "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ"
+        tr = "AAAAAAECEEEEIIIIDNOOOOOx0UUUUYPsaaaaaaeceeeeiiiiOnooooo/0uuuuypy";
+        unsigned char ch = (*p);
+        if ( ch ==0xc3 ) {
+	    memmove(p, p+1, strlen(p));
+	    ch = *p;
+            (*p) = tr[ ch-0x80 ];
+        }
+        ++p; // http://stackoverflow.com/questions/14094621/
+	     // Actually the code in stackoverflow was bad, it didn't include the memmove, but it gave me a good idea on how to do it...
+	     // the guy who posted that probably didn't test it!
+    }
+    return str;
+}
+
 int XTABL::EscapeCopy(char *dest, const char *src, int len)
 {
   // Change \n to 0x0A
@@ -77,22 +98,23 @@ int XTABL::EscapeCopy(char *dest, const char *src, int len)
           dest[j] = 0x0A;
           i++;
           len--;
-        };
-      };
-    };
-  };
+        }
+      }
+    }
+  }
   return len;
 }
 
-void XTABL::AddTranslation(const char *s1, int len1, const char *s2, int len2)
+void XTABL::AddTranslation(const char *s1, const char *s2, int numLine)
 {
-  char *S1, *S2;
-  S1 = (char *)malloc(len1);
+  char *S1 = strdup(s1);
   if (S1 == NULL) return;
-  S2 = (char *)malloc(len2);
+  char *S2 = strdup(s2);
   if (S2 == NULL) {free(S1); return;};
-  len1 = EscapeCopy(S1, s1, len1);
-  len2 = EscapeCopy(S2, s2, len2);
+  i32 len1 = EscapeCopy(S1, s1, strlen(s1)+1);
+  EscapeCopy(S2, s2, strlen(s2)+1);
+  // The translated text should be uppercase and without accents for now
+  // hopefully it will be fixed one day... !
   int idx = S1[0];
   if (len1 > 1) idx = (idx + S1[1]);
   idx &= 0x1f;
@@ -113,8 +135,13 @@ void XTABL::AddTranslation(const char *s1, int len1, const char *s2, int len2)
   m_language[idx] = (ppCH)newmem;
   m_language[idx][m_numXlate[idx]] = NULL;
   m_numXlate[idx]++;
-  m_english [idx][m_numXlate[idx]-1] = S1;
-  m_language[idx][m_numXlate[idx]-1] = S2;
+  int idx2 = m_numXlate[idx]-1;
+  if ((numLine < 182 || numLine > 212) && (numLine < 415 || numLine > 417)) {
+      removeAccented(S2);
+      SDL_strupr(S2);
+  }
+  m_english [idx][idx2] = S1;
+  m_language[idx][idx2] = S2;
 }
 
 XTABL xlate;
@@ -128,56 +155,55 @@ struct AutoFree
   ~AutoFree(void){free(buf);};
 };
 
+static int myfgets(char *buff, int size, FILE *f) {
+    *buff = 0;
+    fgets(buff,size,f);
+    int len = strlen(buff);
+    while (len > 0 && buff[len-1] < 32 && buff[len-1] > 0)
+	buff[--len] = 0;
+    if (buff[0] == -17 && buff[1] == -69 && buff[2] == -65) { // 3 utf8 mark at beginning of file
+	len -= 2;
+	memmove(&buff[0],&buff[3],len);
+    }
+    return len;
+}
+
 void ReadTranslationFile(void)
 {
-  AutoFree buf;
-  int handle, len, len1, len2, lineNum, numNonblank;
-  int dquote[4];
   xlate.Clear();
   char path[FILENAME_MAX+17];
-  snprintf(path,FILENAME_MAX+17,"%s/Translation.txt",pwd);
-  handle = OPEN(path, "r");
-  if (handle < 0) return;
-  lineNum = 0;
-  // These translation files should change their format to have only 1 language / file
-  // it would allow to pass the whole file to google translate to get another language
-  while (GETS(buf.buf, buf.size-1, (i16)handle) != NULL)
+  char path2[FILENAME_MAX+17];
+  snprintf(path,FILENAME_MAX+17,"%s/locale/orig.po",pwd);
+  snprintf(path2,FILENAME_MAX+17,"%s/locale/fr.po",pwd);
+  FILE *f = fopen(path,"r");
+  FILE *g = fopen(path2,"r");
+  if (!f) {
+      if (g) fclose(g);
+      return;
+  }
+  if (!g) {
+      if (f) fclose(f);
+      return;
+  }
+  char buf[4096];
+  char buf2[4096];
+  int numLine = 0;
+  while (myfgets(buf,4096,f))
   {
-    int i = 0, j;
-    lineNum++;
-    len = (i32)strlen(buf.buf);
-    if (len == 0) continue;
-    if (buf.buf[0] == -17 && buf.buf[1] == -69 && buf.buf[2] == -65) memmove(&buf.buf[0],&buf.buf[3],strlen(&buf.buf[3])+1); // utf8 mark, beginning of the file
-    if (  (buf.buf[0] == '/') && (buf.buf[1] == '/') ) continue;
-    if ( buf.buf[0] == ';' || buf.buf[0] == '#') continue;
-    dquote[3] = -1;
-    numNonblank = 0;
-    for (j=0; j<4; j++) // Find 4 double-quotes
-    {
-      for (; i<len; i++)
-      {
-        if (  (buf.buf[i] != ' ') && (buf.buf[i] != '\n') )numNonblank++;
-        if (buf.buf[i] == '"')
-        {
-          dquote[j] = i++;
-          break;
-        };
-      };
-    };
-    if (numNonblank == 0) continue;
-    if (dquote[3] < 0)
-    {
-      char line[100];
-      sprintf(line,"Translation Error\nLine Number %d", lineNum);
-      UI_MessageBox(line,"Warning",MESSAGE_OK);
-    };
-    buf.buf[dquote[1]] = 0;
-    buf.buf[dquote[3]] = 0;
-    len1 = dquote[1]-dquote[0]; // includes trailing nil;
-    len2 = dquote[3]-dquote[2];
-    xlate.AddTranslation(buf.buf+dquote[0]+1, len1, buf.buf+dquote[2]+1, len2);
+      if (!myfgets(buf2,4096,g)) {
+	  UI_MessageBox("2nd translation file too short","Warning", MESSAGE_OK);
+	  fclose(f);
+	  fclose(g);
+	  return;
+      }
+      numLine++;
+      size_t len = strlen(buf);
+      if (len == 0) continue;
+      if ( buf[0] == '#') continue;
+      xlate.AddTranslation(buf,buf2,numLine);
   };
-  CLOSE(handle);
+  fclose(f);
+  fclose(g);
 }
 
 static char tr_linefeed[256];
@@ -185,6 +211,9 @@ static char tr_linefeed[256];
 const char *XTABL::Translate(const char *text)
 {
   int idx, i;
+  if (text[0] == 0) return text;
+  int len = strlen(text);
+  int space = (text[len-1] == ' ');
   if (text[0] == 10) {
       int pos = 1;
       tr_linefeed[0] = 10;
@@ -199,7 +228,20 @@ const char *XTABL::Translate(const char *text)
   for (i=0; i<m_numXlate[idx]; i++)
   {
     if (strcmp(m_english[idx][i], text) == 0) return m_language[idx][i];
-  };
+    if (space) {
+	// Handle trailing space here because I like to use an editor which deletes trailing spaces at end of lines
+	// It's actually very rarely used, the only occurence I know for now is "WEIGHS " when looking at an item on the eye.
+	char buf[100];
+	strncpy(buf,text,100);
+	buf[len-1] = 0;
+	if (strcmp(m_english[idx][i], buf) == 0) {
+	    static char buf_space[1000];
+	    snprintf(buf_space,1000,"%s ",m_language[idx][i]);
+	    return buf_space;
+	}
+    }
+  }
+  printf("not translated: %s.\n",text);
   return text;
 }
 

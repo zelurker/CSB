@@ -88,7 +88,7 @@ ui32 TImER=0;
 static void save_conf();
 
 void PostQuitMessage( int a ) {
-    if (UI_MessageBox("Save params ?","Quit",MESSAGE_YESNO) == MESSAGE_IDYES) {
+    if (UI_MessageBox(_("Save params ?"),"Quit",MESSAGE_YESNO) == MESSAGE_IDYES) {
 	save_conf();
     }
     SDL_Event event;
@@ -2139,8 +2139,8 @@ void post_render() {
 		    && !simpleEncipher);
 	    if (ImGui::MenuItem(_("Non-CSB Items"), NULL,false,enabled)) ItemsRemaining(1);
 	    ImGui::MenuItem(_("DM Rules"), NULL,&DM_rules);
-	    ImGui::MenuItem(_("Experimental text overlay"),NULL, &experimental_overlay);
-	    ImGui::MenuItem(_("Filter DSA door sounds (for Conflux!)"),NULL, &filter_dsa_door_sound);
+	    ImGui::MenuItem(_("Truetype text replacement"),NULL, &experimental_overlay);
+	    ImGui::MenuItem(_("Filter DSA door sounds (for Conflux/DMCoE!)"),NULL, &filter_dsa_door_sound);
 	    if (ImGui::MenuItem(_("Extended character info..."),NULL,false,d.NumCharacter > 0))
 		open_char_info = true;
 	    if (ImGui::BeginMenu(_("Launchers power"))) {
@@ -2463,9 +2463,9 @@ void post_render() {
 	//static int unused_i = 0;
 	//ImGui::Combo("Combo", &unused_i, "Delete\0Delete harder\0");
 
-	if (ImGui::Button("Yes", ImVec2(120, 0)) || ImGui::IsKeyPressed(ImGuiKey_Enter)) { ImGui::CloseCurrentPopup(); yes_selected = 1; want_popup = 0; }
+	if (ImGui::Button(_("Yes"), ImVec2(120, 0)) || ImGui::IsKeyPressed(ImGuiKey_Enter)) { ImGui::CloseCurrentPopup(); yes_selected = 1; want_popup = 0; }
 	ImGui::SameLine();
-	if (ImGui::Button("No", ImVec2(120, 0)) || ImGui::IsKeyPressed(ImGuiKey_Escape)) { ImGui::CloseCurrentPopup(); want_popup = 0; }
+	if (ImGui::Button(_("No"), ImVec2(120, 0)) || ImGui::IsKeyPressed(ImGuiKey_Escape)) { ImGui::CloseCurrentPopup(); want_popup = 0; }
 	ImGui::EndPopup();
     }
 
