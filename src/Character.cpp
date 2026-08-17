@@ -95,7 +95,7 @@ void DrawText(ui8 *dst,             //8
 
   dReg D7;
   const char* A3;
-  char LOCAL_80[80];
+  static char LOCAL_80[80];
 //;;;;;;;;;;;
   A3 = text;
   D7W = 0;
@@ -1022,6 +1022,14 @@ void DrawLifeBars(i32 chIdx)
 // *********************************************************
 const char* TAG014af6(i32 num, i32 flag,i32 width)
 { // if flag==0 then no leading blanks.
+  // convert num to a string of the given width with leading spaces
+  // This whole thing could be written as:
+  // char format[6];
+  // if (flag) sprintf(format,"\%%d",width);
+  // else sprintf(format,"%d");
+  // sprintf(d.Byte16606,format,num);
+  // return d.Byte16606;
+  // Problem of this function is that it returns always the same string buffer, so a new call erases the buffer of a previous call.
   dReg D0;
   char *result;
   aReg A1;
@@ -1048,33 +1056,36 @@ const char* TAG014af6(i32 num, i32 flag,i32 width)
 //
 // *********************************************************
 //   TAG014b32
-void PrintLifeForce(i32 line, i32 current, i32 max)
+static void PrintLifeForce(char *life,i32 line, i32 current, i32 max)
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 //
+    snprintf(life,8,"%3d/%3d",current,max);
+    life[7] = 0;
   TextToViewport(55,
             line,
             COLOR_LGRAY,  //color
-            TAG014af6(current, 1, 3),
+            life, // TAG014af6(current, 1, 3),
             false);
-  TextToViewport(73, line, COLOR_LGRAY, "/", false);
+/*  TextToViewport(73, line, COLOR_LGRAY, "/", false);
   TextToViewport(79,
             line,
             COLOR_LGRAY,
             TAG014af6(max,1,3),
-            false);
+            false); */
 }
 
 // *********************************************************
 //
 // *********************************************************
 //   TAG014b9e
-void PrintLifeForces(CHARDESC *pChar)
+static void PrintLifeForces(CHARDESC *pChar)
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  PrintLifeForce(116, pChar->HP(), pChar->MaxHP());
-  PrintLifeForce(124,pChar->Stamina()/10, pChar->MaxStamina()/10);
-  PrintLifeForce(132, pChar->Mana(), pChar->MaxMana());
+    static char life[8],stamina[8],mana[8];
+  PrintLifeForce(life,116, pChar->HP(), pChar->MaxHP());
+  PrintLifeForce(stamina,124,pChar->Stamina()/10, pChar->MaxStamina()/10);
+  PrintLifeForce(mana,132, pChar->Mana(), pChar->MaxMana());
 }
 
 // *********************************************************
@@ -1220,7 +1231,6 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
   static dReg D0, D1, D4;
   static bool inventoryOpen;
   static ui16 charFlags;
-  static const char* pcA0;
   static i32 itemNum;
   static CHARDESC *pcA3, *pcA2;
   static i32 maxLoad;
@@ -1428,21 +1438,9 @@ void DrawCharacterState(i32 chIdx) // Character box at top of screen            
       };
 
   // TextToViewport(39, 17, LOCAL_8, &buf[9], false);//LOCAL_8 is text color
-      TextToViewport(104, 132, LOCAL_8, "LOAD", true);//LOCAL_8 is text color
-      D4W = sw(pcA3->load / 10);
-      pcA0 = (char *)TAG014af6(D4W, 1, 3);
-      strcpy(d.Byte12914, pcA0);
-      strcat(d.Byte12914, TranslateLanguage("."));
-      D4W = sw(pcA3->load - 10*D4W);
-      pcA0 = (char *)TAG014af6(D4W, 0, 1);
-      strcat(d.Byte12914, pcA0);
-      strcat(d.Byte12914, TranslateLanguage("/"));
-      D0L = MaxLoad(pcA3);
-      D4W = sw((D0L+5)/10);
-      pcA0 = (char *)TAG014af6(D4W, 1, 3);
-      strcat(d.Byte12914, pcA0);
-      strcat(d.Byte12914, " KG");
-      TextToViewport(140, 132, LOCAL_8, d.Byte12914, false);// "LOAD  actual/max"
+      static char load[30];
+      sprintf(load,"%s %3g/%3g KG",TranslateLanguage("LOAD"),pcA3->load/10.0,MaxLoad(pcA3)/10.0);
+      TextToViewport(104, 132, LOCAL_8, load, false);//LOCAL_8 is text color
                                                      // LOCAL_8 is text color
       charFlags |= CHARFLAG_viewportChanged;
     };
@@ -3269,15 +3267,16 @@ void DisplayScrollText_OneLine(i16 pixelY, char *text)
   i32 length;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   A3 = (aReg)text;
-  for (A2=A3; *A2!=0; A2++)
-  {
-    if ( (*A2 >= 'A') && (*A2 <= 'Z') ) *A2 -= 64;
+  if (!experimental_overlay)
+      for (A2=A3; *A2!=0; A2++)
+      {
+	  if ( (*A2 >= 'A') && (*A2 <= 'Z') ) *A2 -= 64;
 
-    else
-      if (*A2 >= 0x7b) *A2 -= 0x60;
-//
-//
-  };
+	  else
+	      if (*A2 >= 0x7b) *A2 -= 0x60;
+	  //
+	  //
+      };
   length = strlen((char *)A3);
   if (length > MAX_SCROLL_LINE_LENGTH)
                   length = MAX_SCROLL_LINE_LENGTH;
@@ -3300,7 +3299,7 @@ void DisplayScroll(DB7 *pDB7)
 {
   dReg D1, D7;
   aReg A0, A2, A3;
-  char b_260[1000];
+  static char b_260[1000];
   const char *pText;
   i32 i;
   i32 numLinesInScroll = 0;
@@ -3311,8 +3310,29 @@ void DisplayScroll(DB7 *pDB7)
              (ui16)0x8002,
              990);
   pText = TranslateLanguage(b_260);
-  // printf("Scroll to translate :%s.\n",b_260);
   if (pText != b_260) strcpy(b_260, pText);
+  if (!experimental_overlay) {
+      int len = 0;
+      int space = -1;
+      for (size_t n=0; n<strlen(b_260); n++) {
+	  // Dynamically insert \n in the text so that it fits it one scroll... !
+	  // only when the text interface is disabled, I'll have to do that differently for the text interface...
+	  if (b_260[n] == ' ') {
+	      space = n;
+	      len++;
+	  } else if (b_260[n] == 10)
+	      len = 0;
+	  else
+	      len++;
+	  if (len >= MAX_SCROLL_LINE_LENGTH-1) {
+	      if (space >= 0) {
+		  b_260[space] = 10;
+		  len = n-space;
+		  space = -1;
+	      }
+	  }
+      }
+  }
   //Make sure there are TWO zeroes at the end!
   //This fixes the problem when there is only
   //one line of text.
@@ -4509,7 +4529,8 @@ void TAG019036(void)
   dReg D0, D4, D5, D6, D7;
   aReg A0;
   CHARDESC *pcA3;
-  char LOCAL_24[20];
+  static char LOCAL_24[7][20];
+  static char skill[4][20];
   i16  LOCAL_4;
   i16  LOCAL_2;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -4602,10 +4623,10 @@ void TAG019036(void)
     if (D5W == 1) continue;
     if (D5W == 0) die (0x8d49,"Mastery = 0");
     A0 = (aReg)d.Pointer16770[D5W];
-    strcpy(LOCAL_24, TranslateLanguage((char *)A0));// "Novice", "Master", etc
-    strcat(LOCAL_24, " ");
-    strcat(LOCAL_24, TranslateLanguage(d.Pointer16596[D7W]));//"Fighter", etc
-    TextToViewport(108, D6W, COLOR_LGRAY, LOCAL_24, false);
+    strcpy(skill[D7W], TranslateLanguage((char *)A0));// "Novice", "Master", etc
+    strcat(skill[D7W], " ");
+    strcat(skill[D7W], TranslateLanguage(d.Pointer16596[D7W]));//"Fighter", etc
+    TextToViewport(108, D6W, COLOR_LGRAY, skill[D7W], false);
     D6W += 7;
 //
 //
@@ -4633,10 +4654,10 @@ void TAG019036(void)
         LOCAL_2 = COLOR_LGRAY;
       };
     };
-    TextToViewport(174, D6W, LOCAL_2, TAG014af6(D5W, 1, 3), false);//LOCAL_2 is text color.
-    strcpy(LOCAL_24,"/");
-    strcat(LOCAL_24, TAG014af6(LOCAL_4, 1, 3));
-    TextToViewport(192,D6W, COLOR_LGRAY, LOCAL_24, false);
+    TextToViewport(174, D6W, LOCAL_2, TAG014af6(D5W, 1, 3), false);
+    strcpy(LOCAL_24[D7W],"/");
+    strcat(LOCAL_24[D7W], TAG014af6(LOCAL_4, 1, 3));
+    TextToViewport(192,D6W, COLOR_LGRAY, LOCAL_24[D7W], false);
     D6W += 7;
 //
   };

@@ -267,15 +267,16 @@ tag014088:
       if (D4W != 0) continue;
       d.Byte1416[0] = D5B;
       STHideCursor(HC14);
-      TextOut_OneLine(d.LogicalScreenBase,
-                      160,
-                      w_2,
-                      w_4,
-                      13,
-                      12,
-                      (char *)d.Byte1416,
-                      999,
-                      false);
+      if (!experimental_overlay)
+	  TextOut_OneLine(d.LogicalScreenBase,
+		  160,
+		  w_2,
+		  w_4,
+		  13,
+		  12,
+		  (char *)d.Byte1416,
+		  999,
+		  false);
       STShowCursor(HC14);
       A2[D7W++] = D5B;
       A2[D7W] = 0;
@@ -290,15 +291,16 @@ tag014088:
       if (D6W != 1) continue;
       if (D7W <= 0) continue;
       STHideCursor(HC15);
-      TextOut_OneLine(d.LogicalScreenBase,
-                      160,
-                      w_2+6*strlen(_(pChar->title)),
-                      w_4,
-                      13,
-                      12,
-                      (char *)d.Byte1414,
-                      999,
-                      false);
+      if (!experimental_overlay)
+	  TextOut_OneLine(d.LogicalScreenBase,
+		  160,
+		  w_2+6*strlen(_(pChar->title)),
+		  w_4,
+		  13,
+		  12,
+		  (char *)d.Byte1414,
+		  999,
+		  false);
       STShowCursor(HC15);
 tag0142c2:
       D6W = 2;
@@ -314,15 +316,16 @@ tag0142de:
     if (D4W == 0)
     {
       STHideCursor(HC16);
-      TextOut_OneLine(d.LogicalScreenBase,
-                      160,
-                      w_2,
-                      w_4,
-                      13,
-                      12,
-                      (char *)d.Byte1414,
-                      999,
-                      false);
+      if (!experimental_overlay)
+	  TextOut_OneLine(d.LogicalScreenBase,
+		  160,
+		  w_2,
+		  w_4,
+		  13,
+		  12,
+		  (char *)d.Byte1414,
+		  999,
+		  false);
       STShowCursor(HC16);
     };
     if (D7W == 0)

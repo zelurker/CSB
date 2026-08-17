@@ -136,7 +136,7 @@ void XTABL::AddTranslation(const char *s1, const char *s2, int numLine)
   m_language[idx][m_numXlate[idx]] = NULL;
   m_numXlate[idx]++;
   int idx2 = m_numXlate[idx]-1;
-  if ((numLine < 182 || numLine > 212) && (numLine < 415 || numLine > 417)) {
+  if (!experimental_overlay && (numLine < 182 || numLine > 212) && (numLine < 415 || numLine > 417)) {
       removeAccented(S2);
       SDL_strupr(S2);
   }
@@ -255,7 +255,7 @@ void TranslateWallLanguage(unsigned char *text)
 {
   // character encoding -- A=0, B=1,... space=26;  period=27; end of line = 128; end of text=129
   int i;
-  const char *xText;
+  char *xText;
   for (i=0; text[i] != 129; i++)
   {
     if      (text[i] == 128) text[i] = '\n';
@@ -264,7 +264,33 @@ void TranslateWallLanguage(unsigned char *text)
     else                     text[i] = (char)('A' + text[i]);
   };
   text[i] = 0;
-  xText = xlate.Translate((char *)text);
+  xText = (char*)xlate.Translate((char *)text);
+  if (!experimental_overlay) {
+      // Reformat in 18 characters max the string, should have been done a very long time ago
+      // will do differently with the experimental overlay
+      int len=0,space=-1;
+      for (size_t n=0; n<strlen(xText); n++) {
+	  if (xText[n] == ' ') {
+	      space = n;
+	      len++;
+	  } else if (xText[n] == 10)
+	      len = 0;
+	  else
+	      len++;
+	  if (len >= 18) {
+	      if (space > -1) {
+		  xText[space] = 10;
+		  len = n-space;
+		  space = -1;
+	      }
+	  }
+      }
+  }
+  if (experimental_overlay) {
+      strcpy((char*)text,xText);
+      return;
+  }
+
   for(i=0; xText[i] != 0; i++)
   {
     if ( (xText[i] >= 'A')  && (xText[i] <= 'Z') ) text[i] = (char)(xText[i] - 'A');

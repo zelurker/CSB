@@ -290,6 +290,8 @@ void BltOneChar(dReg& D2,
   A3 -= A3inc;
 }
 
+extern ui8 LScreenBase[320][210];
+
 //   TAG00154c
 void TextOut_OneLine(ui8 *dest,
                      i32 destWidth,
@@ -301,7 +303,6 @@ void TextOut_OneLine(ui8 *dest,
                      i32 maxLineLength,
                      bool translate)
 {
-#if 1
   dReg D2, D3, D4, D5, D6, D7;
   i32 saveD2;
   const char *A0;
@@ -311,7 +312,14 @@ void TextOut_OneLine(ui8 *dest,
   if (translate)
   {
     text = TranslateLanguage(text);
-  };
+  }
+  if (experimental_overlay && (dest != &LScreenBase[0][0] || y > 30)) { // top line is not translated
+      if (strlen(text) > 1) { // If it's 1 character, it's probably a spell rune...
+	  print_ingame_xy(x,y,color,text,dest == &LScreenBase[0][0]);
+	  return;
+      }
+  }
+  printf("textout %d,%d,%s isscreen:%d\n",x,y,text,dest==&LScreenBase[0][0] ? 1 : -1);
   A2 = NULL;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   A3  = (aReg)dest;
@@ -373,11 +381,6 @@ tag0016a0:
   A3 = saveA3;
   D3W -= 10;
   goto tag001660;
-
-
-
-
-#endif
 }
 
 
@@ -589,6 +592,8 @@ void TAG0088b2(ui8 *src,
   i32 iA4;
   i32 iA5;
   bool H1Valid;
+  if (src == d.pViewportBMP)
+      viewport_xy(dstPos->w.x1,dstPos->w.y1);
   static ui16 masks[] = {
       0x0000, 0x8000, 0xc000, 0xe000, 0xf000, 0xf800, 0xfc00, 0xfe00,
       0xff00, 0xff80, 0xffc0, 0xffe0, 0xfff0, 0xfff8, 0xfffc, 0xfffe

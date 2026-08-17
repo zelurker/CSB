@@ -871,6 +871,7 @@ RESTARTABLE _DisplayDiskMenu(void)
            0);
     STShowCursor(HCiii);
     WaitForMenuSelect(_6_, 1, 0, 0, 0);
+    clear_xy();
     STHideCursor(HC56);
     TAG0207cc();
     RETURN;
@@ -907,6 +908,7 @@ RESTARTABLE _DisplayDiskMenu(void)
 		  0);
 	  STShowCursor(HC45);
 	  WaitForMenuSelect(_3_, 3, 0, 0, 0);
+	  clear_xy();
 	  STHideCursor(HC57);
       }
     D5W = i16Result;
@@ -1381,6 +1383,7 @@ tag01e4f0:
          0,0,0,0,0,0);
   STShowCursor(HC57);
   WaitForMenuSelect(_4_, 1,0,0,0);
+  clear_xy();
   STHideCursor(HC57);
   D0W = i16Result;
 tag01e52c:
@@ -1691,6 +1694,7 @@ tag01ec12:
          1);
   STShowCursor(HC33);
   WaitForMenuSelect(_7_, 2,1,2,1);
+  clear_xy();
   STHideCursor(HC33);
   ExtendedFeaturesSize = 0;
   D7W = D0W = i16Result;
@@ -2133,6 +2137,7 @@ tag01efee:
          1 );
   STShowCursor(HC33);
   WaitForMenuSelect(_6_, 1,1,0,0);
+  clear_xy();
   STHideCursor(HC33);
   goto tag01ec56;
 tag01f036:

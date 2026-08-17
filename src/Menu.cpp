@@ -264,6 +264,7 @@ RESTARTABLE _DoMenu(
     RESTART(2)
     RESTART(3)
   END_RESTARTMAP
+  clear_xy();
   setscreen(d.LogicalScreenBase,d.LogicalScreenBase,0);
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ExpandGraphic((i8 *)d.compressedGraphic0,

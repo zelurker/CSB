@@ -1012,6 +1012,7 @@ tag000dbe:
     {
       int i;
       pnt A0,A1;
+      viewport_update();
       d.ViewportUpdated = 0;
       if (d.Word11778 != 0)
       {
@@ -3149,7 +3150,7 @@ i16 DrawWallDecoration(i32 graphicOrdinal,
   i32 derivedGraphicIndex;
   aReg A0, A3;
   ui8 *pFinalBitmap;
-  char ExpandedText[1000]; //used to be [70]
+  static char ExpandedText[1000]; //used to be [70], and becomes static for the overlay interface
   //ui8 LOCAL_22[8];
   RectPos LOCAL_22;
   i16 LOCAL_14;
@@ -3258,33 +3259,37 @@ i16 DrawWallDecoration(i32 graphicOrdinal,
         A3 = (aReg)ExpandedText;
         LOCAL_4 = (pnt)GetBasicGraphicAddress(120);
         LOCAL_14 = 0;
-        do
-        {
-          pnt A2;
-          i32 i, lineLength;
-          lineLength = 0;
-          A2 = A3;
-          while ((UI8)(*(A2++)) < 128) lineLength++; //Count characters in this line
-          if (lineLength > 18) lineLength = 18;
-          LOCAL_22.b.x1 = ub(112 - 4*lineLength);
-          LOCAL_22.b.x2 = ub(LOCAL_22.b.x1 + 7);
-          LOCAL_22.b.y2 = ub(*(d.Byte4196+(LOCAL_14++)));
-          LOCAL_22.b.y1 = ub(LOCAL_22.b.y2 - 7);
-          for (i=0; i<lineLength; i++)
-          {
-            TAG0088b2((ui8 *)LOCAL_4,
-                      (ui8 *)d.pViewportBMP,
-                      &LOCAL_22,
-                      8*(UI8)(*(A3++)),
-                      0,
-                      144,
-                      112,
-                      10);
-            LOCAL_22.b.x1+=8;
-            LOCAL_22.b.x2+=8;
-          };
-          A3 = A2 - 1; //Go to terminator at end of line.
-        } while ((UI8)(*(A3++)) != 129);
+	if (experimental_overlay) {
+	    print_ingame_wall(0,0x4a,0x14,0x5a,ExpandedText);
+	} else {
+	    do
+	    {
+		pnt A2;
+		i32 i, lineLength;
+		lineLength = 0;
+		A2 = A3;
+		while ((UI8)(*(A2++)) < 128) lineLength++; //Count characters in this line
+		if (lineLength > 18) lineLength = 18;
+		LOCAL_22.b.x1 = ub(112 - 4*lineLength);
+		LOCAL_22.b.x2 = ub(LOCAL_22.b.x1 + 7);
+		LOCAL_22.b.y2 = ub(*(d.Byte4196+(LOCAL_14++)));
+		LOCAL_22.b.y1 = ub(LOCAL_22.b.y2 - 7);
+		for (i=0; i<lineLength; i++)
+		{
+		    TAG0088b2((ui8 *)LOCAL_4,
+			    (ui8 *)d.pViewportBMP,
+			    &LOCAL_22,
+			    8*(UI8)(*(A3++)),
+			    0,
+			    144,
+			    112,
+			    10);
+		    LOCAL_22.b.x1+=8;
+		    LOCAL_22.b.x2+=8;
+		};
+		A3 = A2 - 1; //Go to terminator at end of line.
+	    } while ((UI8)(*(A3++)) != 129);
+	}
         if (pExtWallRects != NULL) UI_free(pExtWallRects);
         return isAlcove;
       }; //if (LOCAL_10 != 0) End of Drawing text.
@@ -3573,11 +3578,14 @@ i16 DrawWallDecoration(i32 graphicOrdinal,
     numLine = 0;
     do
     {
-      while ((UI8)(*A3) < 128) A3++; //Find End-of-line
-
+	if (experimental_overlay)
+	    while ((UI8)(*A3) > 10) A3++; //Find End-of-line
+	else
+	    while ((UI8)(*A3) < 128) A3++; //Find End-of-line
 
       numLine++; //Count lines
-    } while ((UI8)(*(A3++)) != 129); //Find End-of-text
+    } while ((experimental_overlay && *(A3++) != 0) ||
+	    (!experimental_overlay && (UI8)(*(A3++)) != 129)); //Find End-of-text
 //    if (TimerTraceActive)
 //    {
 //      fprintf(GETFILE(TraceFile),
@@ -7423,6 +7431,8 @@ void ShowHideInventory(i32 chIdx)
   dReg D0, D6;
   CHARDESC *pcA3;
   i32 itemNum;
+  // This Word84 seems to match the viewport inventory coordinates, for reference it's { 0, 231, 0, 160 }
+  clear_xy((RectPos*)&d.Word84);
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (chIdx != 4)
   {
@@ -8907,7 +8917,7 @@ void TAG01b408(i16 P1)
   dReg D0, D1, D5, D6, D7;
   CHARDESC *pcA3;
   i16  LOCAL_12;
-  char LOCAL_2[2];
+  static char LOCAL_2[2];
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   pcA3 = &d.hero[d.MagicCaster];
   if (P1 ==2)
@@ -9644,6 +9654,7 @@ RESTARTABLE _TAG01f5ea(void)
   LOCAL_154[1][2] = 32;
   FadeToPalette(_1_,&d.Palette11914);
   videoMode = VM_PRISONDOOR;
+  clear_xy();
   //
   // Entrance to prison without door.
   ExpandGraphic((i8 *)d.Pointer22956, d.LogicalScreenBase, 0, 0);
@@ -9887,6 +9898,7 @@ RESTARTABLE _SelectSaveGame(const i32 P1, const i32 checkExist, i32 alwaysDate)
          P1);
   STShowCursor(HC52);
   WaitForMenuSelect(_1_, 4,P1,2,1) ;
+  clear_xy();
   STHideCursor(HC51);
   D0W = i16Result;
   switch (D0W)
@@ -10599,6 +10611,7 @@ RESTARTABLE _TAG021028(void)
 	    //if (1 == TAG01d1cc(2,1,0,0)) break;
 	    STShowCursor(HC33);
 	    WaitForMenuSelect(_2_, 2,1,0,0);
+	    clear_xy();
 	    STHideCursor(HC33);
 	}
       if (i16Result == 1) break;
@@ -11634,6 +11647,7 @@ RESTARTABLE _AskWhatToDo(void)
       {
 	  STShowCursor(HC50);
 	  WaitForMenuSelect(_3_, 4,1,0,0);
+	  clear_xy();
 	  STHideCursor(HC53);
 	  GameMode = i16Result-1;
       };

@@ -6041,6 +6041,7 @@ RESTARTABLE _TAG006c7e_xxx(i16 P1, i16 P2, uintptr_t param3, i32, pnt P5)//(i32)
             1);
       STShowCursor(HC53);
       WaitForMenuSelect(_5_,4,1,0,0);
+      clear_xy();
       STHideCursor(HC53);
       switch (i16Result)
       {

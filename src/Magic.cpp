@@ -729,6 +729,7 @@ void SelectMagicCaster(i16 chIdx)
   ui8 *pD4;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //D7W = P1;
+  clear_xy();
   if (chIdx == d.MagicCaster) return;
   if ( (chIdx!=-1) && (d.hero[chIdx].HP()==0) ) return;
   if (d.MagicCaster == -1)

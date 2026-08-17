@@ -1241,6 +1241,25 @@ static TDescKeys mkeys[] = { // Mouse to keyboard inputs...
 /********************** MAIN **********************/
 static void read_conf();
 
+static ImFont* add_font(char *font) {
+  FILE *f = fopen(font,"rb");
+  if (f) {
+      fclose(f);
+      ImFontConfig cfg;
+      cfg.OversampleH = 1;
+      static ImVector<ImWchar> gr;
+      gr.clear();
+      static ImFontGlyphRangesBuilder range;
+      range.Clear();
+      range.AddRanges(io.Fonts->GetGlyphRangesJapanese());
+      range.BuildRanges(&gr);
+      return io.Fonts->AddFontFromFileTTF(font, FONT_SIZE,&cfg,gr.Data);
+  }
+  return NULL;
+}
+
+static ImFont *wall_font;
+
 int main(int argc, char* argv[])
 {
 #ifdef MAEMO_NOKIA_770
@@ -1469,21 +1488,11 @@ int main(int argc, char* argv[])
   ImGui_ImplSDLRenderer2_Init(sdlRenderer);
 
   // Load Fonts
-  char font[FILENAME_MAX+15];
+  char font[FILENAME_MAX+29];
   snprintf(font,FILENAME_MAX+15,"%s/fonts/Vera.ttf",pwd);
-  FILE *f = fopen(font,"rb");
-  if (f) {
-      fclose(f);
-      ImFontConfig cfg;
-      cfg.OversampleH = 1;
-      static ImVector<ImWchar> gr;
-      gr.clear();
-      static ImFontGlyphRangesBuilder range;
-      range.Clear();
-      range.AddRanges(io.Fonts->GetGlyphRangesJapanese());
-      range.BuildRanges(&gr);
-      io.Fonts->AddFontFromFileTTF(font, FONT_SIZE,&cfg,gr.Data);
-  }
+  add_font(font);
+  snprintf(font,FILENAME_MAX+28,"%s/fonts/Gelio_Kleftiko.ttf",pwd);
+  wall_font = add_font(font);
 
   SDL_ShowCursor(SDL_ENABLE);
   cursorIsShowing = true;
@@ -1896,6 +1905,60 @@ static int mbase;		// Which message is top of the list
 
 // print_ingame():
 // Add Message to Ingame Message List, using a printf() style format string.
+typedef struct {
+    int x,y,color,toScreen;
+    const char *text;
+} txy;
+
+#define MAX_XY 40
+
+static txy myxy[MAX_XY];
+typedef struct {
+    int x1,x2,y1,y2;
+    const char *text;
+    int updates;
+} twall;
+static twall mywall;
+
+void print_ingame_wall(int x1, int x2, int y1, int y2, const char *text) {
+    mywall.x1 = x1;
+    mywall.x2 = x2;
+    mywall.y1 = y1;
+    mywall.y2 = y2;
+    mywall.text = text;
+    mywall.updates = 0;
+}
+
+void viewport_update() {
+    if (mywall.text) {
+	mywall.updates++;
+	if (mywall.updates > 1)
+	    mywall.text = NULL;
+    }
+}
+
+int nb_xy;
+int dx,dy;
+
+void print_ingame_xy(int x, int y, int color, const char *text,int tScreen) {
+    if (nb_xy == MAX_XY) {
+	printf("xy overflow\n");
+	exit(1);
+    }
+    for (int n=0; n<nb_xy; n++) {
+	if (myxy[n].x == x && myxy[n].y == y) {
+	    printf("overwriting message %d\n",n);
+	    myxy[n].text = text;
+	    myxy[n].toScreen = tScreen;
+	    return;
+	}
+    }
+    myxy[nb_xy].x = x;
+    myxy[nb_xy].y = y;
+    myxy[nb_xy].color = color;
+    myxy[nb_xy].toScreen = tScreen;
+    myxy[nb_xy++].text = text;
+}
 
 void print_ingame(const char *format, ...)
 {
@@ -1945,6 +2008,31 @@ void clear_ingame_message_list(void)
    }
 }
 
+void viewport_xy(int x, int y) {
+    dx = x;
+    dy = y;
+    printf("viewport %d,%d\n",x,y);
+}
+
+void clear_xy(RectPos *r) {
+    if (r) {
+	for (int n=0; n<nb_xy; n++) {
+	    if (myxy[n].x >= r->w.x1 && myxy[n].x <= r->w.x2 &&
+		    myxy[n].y >= r->w.y1 && myxy[n].y <= r->w.y2) {
+		if (nb_xy > n+1) {
+		    memmove(&myxy[n],&myxy[n+1],sizeof(txy)*(nb_xy-(n+1)));
+		}
+		nb_xy--;
+		n--;
+		continue;
+	    }
+	}
+	return;
+    }
+    nb_xy = 0;
+    viewport_xy(0,0);
+}
+
 static void render_overlay_interface() {
     // Renders a text overlay interface on top of the imgui screen
     // Not certain it's the fastest way to do this thing, but imgui is really efficient, so let's try that...
@@ -1958,13 +2046,14 @@ static void render_overlay_interface() {
     }
     if (!active) return; // We try to avoid to create the fullscreen window if useless... !
 #endif
-    if (chaosDisplayed || !d.NumGraphic || !d.PrimaryButtonList) return;
+    if (!nb_xy && (chaosDisplayed || !d.NumGraphic || !d.PrimaryButtonList)) return;
 
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBackground;
     const ImGuiViewport* viewport = ImGui::GetMainViewport();
     int size = (WindowHeight-DY)/25*4;
     ImGui::SetNextWindowPos({viewport->WorkPos.x, (float)(WindowHeight-size+2)});
     ImGui::SetNextWindowSize({viewport->WorkSize.x,(float)size-2});
+    size = (WindowHeight-DY)/25;
 
     if (ImGui::Begin("Fullscreen window", NULL, flags)) {
 	if (ImGui::IsAnyItemHovered()) {
@@ -1983,7 +2072,6 @@ static void render_overlay_interface() {
 
 	       // MsgList[ta].messagetime -= 1;
 
-	       int size = (WindowHeight-DY)/25;
 	       // ImGui::SetCursorPos(ImVec2(0,WindowHeight-DY-size-size*(((MSG_LIST_SIZE-1)-tb))));
 	       ImGui::PushFont(NULL,size-6); // Not sure about the font-6, it works for font size 14 -> height of 20, but I doubt it will work all the time
 	       // printf("render %d,%s\n",MsgList[ta].color,MsgList[ta].message);
@@ -2026,9 +2114,76 @@ static void render_overlay_interface() {
        }
        ImGui::End();
     }
+
+    if (nb_xy || mywall.text) {
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBackground;
+	ImGui::SetNextWindowPos({viewport->WorkPos.x, viewport->WorkPos.y});
+	ImGui::SetNextWindowSize({viewport->WorkSize.x,viewport->WorkSize.y});
+	int dx0 = dx, dy0 = dy;
+	if (dx0 < 10 && dy0 < 10) { // 10 ?
+	    dx0 = videoSegSrcX[0];
+	    dy0 = videoSegSrcY[0];
+	    printf("dx0 %d,%d\n",dx0,dy0);
+	} else {
+	    printf("dx0 = viewport = %d,%d\n",dx0,dy0);
+	}
+	if (ImGui::Begin("Fullscreen xy window", NULL, flags)) {
+	    float zx = WindowWidth / 320.0; // viewport->WorkSize.x/320.0;
+	    float zy = (WindowHeight-DY)/ 200.0; // viewport->WorkSize.y/200.0;
+	    ImGui::PushFont(NULL,size-6);
+	    for (int n=0; n<nb_xy; n++) {
+		printf("%d:%d,%d,%s size:%d\n",n,myxy[n].x+dx0, myxy[n].y+dy0,myxy[n].text,size);
+		// No idea why there's a vertical alignment problem, 15 is the best approximated fix so far
+		if (myxy[n].toScreen)
+		    ImGui::SetCursorPos(ImVec2((myxy[n].x)*zx,(myxy[n].y-5)*zy));
+		else
+		    ImGui::SetCursorPos(ImVec2((myxy[n].x+dx0)*zx,(myxy[n].y+dy0-5)*zy));
+		switch(myxy[n].color) {
+		case 0: ImGui::TextColored(ImVec4(0.0f, 0.0f, 0.0f, 1.0f), myxy[n].text); break;
+		case 1: ImGui::TextColored(ImVec4(0.43f, 0.43f, 0.43f, 1.0f), myxy[n].text); break;
+		case 2: ImGui::TextColored(ImVec4(0.57f, 0.57f, 0.57f, 1.0f), myxy[n].text); break;
+		case 3: ImGui::TextColored(ImVec4(0.43f, 0.14f, 0.00f, 1.0f), myxy[n].text); break;
+		case 4: ImGui::TextColored(ImVec4(0.00f, 0.86f, 0.86f, 1.0f), myxy[n].text); break;
+		case 5: ImGui::TextColored(ImVec4(0.57f, 0.29f, 0.00f, 1.0f), myxy[n].text); break;
+		case 6: ImGui::TextColored(ImVec4(0.00f, 0.57f, 0.00f, 1.0f), myxy[n].text); break;
+		case 7: ImGui::TextColored(ImVec4(0.00f, 0.86f, 0.00f, 1.0f), myxy[n].text); break;
+		case 8: ImGui::TextColored(ImVec4(1.00f, 0.00f, 0.00f, 1.0f), myxy[n].text); break;
+		case 9: ImGui::TextColored(ImVec4(1.00f, 0.71f, 0.00f, 1.0f), myxy[n].text); break;
+		case 10: ImGui::TextColored(ImVec4(0.86f, 0.57f, 0.43f, 1.0f), myxy[n].text); break;
+		case 11: ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), myxy[n].text); break;
+		case 12: ImGui::TextColored(ImVec4(0.29f, 0.29f, 0.29f, 1.0f), myxy[n].text); break;
+		case 13: ImGui::TextColored(ImVec4(0.71f, 0.71f, 0.71f, 1.0f), myxy[n].text); break;
+		case 14: ImGui::TextColored(ImVec4(0.2f, 0.2f, 1.0f, 1.0f), myxy[n].text); break;
+		case 15: ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), myxy[n].text); break;
+		default:
+			 // ImGui::Text(s);
+			 // printf("overlay: %s\n",s);
+			 ImGui::TextWrapped(myxy[n].text);
+			 break;
+		}
+	    }
+	    ImGui::PopFont();
+
+	    if (mywall.text) {
+		size = 0x4a*zx/4;
+		ImGui::PushFont(wall_font,size-6);
+		ImGui::PushTextWrapPos((mywall.x2+127)*zx);
+		ImGui::SetCursorPos(ImVec2((mywall.x1+50)*zx+1,(mywall.y1+33)*zy-15+1));
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f),mywall.text);
+		ImGui::SetCursorPos(ImVec2((mywall.x1+50)*zx,(mywall.y1+33)*zy-15));
+		ImGui::TextColored(ImVec4(0.43f, 0.43f, 0.43f, 1.0f),mywall.text);
+		ImGui::PopTextWrapPos();
+		ImGui::PopFont();
+	    }
+
+	    ImGui::End();
+	}
+    }
 }
 
 imgui_addons::ImGuiFileBrowser file_dialog; // As a class member or globally
+
+extern void ReadTranslationFile();
 
 void post_render() {
     static bool was_active;
@@ -2139,7 +2294,10 @@ void post_render() {
 		    && !simpleEncipher);
 	    if (ImGui::MenuItem(_("Non-CSB Items"), NULL,false,enabled)) ItemsRemaining(1);
 	    ImGui::MenuItem(_("DM Rules"), NULL,&DM_rules);
-	    ImGui::MenuItem(_("Truetype text replacement"),NULL, &experimental_overlay);
+	    if (ImGui::MenuItem(_("Truetype text replacement"),NULL, &experimental_overlay)) {
+		ReadTranslationFile();
+	    }
+
 	    ImGui::MenuItem(_("Filter DSA door sounds (for Conflux/DMCoE!)"),NULL, &filter_dsa_door_sound);
 	    if (ImGui::MenuItem(_("Extended character info..."),NULL,false,d.NumCharacter > 0))
 		open_char_info = true;
@@ -2207,6 +2365,7 @@ void post_render() {
     if(file_dialog.showFileDialog(_("Load saved game"), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), "csb*"))
     {
 	opened_file = (char*)file_dialog.selected_path.c_str();
+	clear_xy();
 	skipToDungeon = true;
 	skipToResumeGame = true;
 	skipReady = true;
@@ -2225,6 +2384,7 @@ void post_render() {
 	select_dungeon(dungeonName);
 	strcpy(graphicName,"graphics.dat");
 	FILE *f = fopen(graphicName,"rb");
+	clear_xy();
 	if (!f) {
 	    fb4_shown = true;
 	    ImGui::OpenPopup(_("Select graphics.dat..."));
