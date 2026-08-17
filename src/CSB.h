@@ -1,5 +1,7 @@
 // CSB.h : main header file for the CSB application
 //
+#ifndef _CSB_H
+#define _CSB_H
 
 #ifdef __GNUC__
 #define ALIGN4 __attribute__((aligned(4)))
@@ -3748,8 +3750,6 @@ i32  CharacterAtPosition(i32 pos);//TAG01474e
 i16  GetCharacterToDamage(i32, i32, i32);//TAG01479c
 void DrawLifeBars(i32);//TAG014832
 const char*  TAG014af6(i32, i32, i32);
-void PrintLifeForce(i32 line, i32 current, i32 max);//TAG014b32
-void PrintLifeForces(CHARDESC *);//TAG014b9e
 void DisplayBackpackItem(i32 chIdx, i32 itemPos);//TAG014bf4
 //   TAG014de0
 void DrawCharacterState(i32 P1); // box at top, direction, //(void)
@@ -4393,3 +4393,13 @@ struct PARTYMOVEDATA
 };
 
 void CallPartyMoveFilter(PARTYMOVEDATA *pmd);
+
+void print_ingame(const char *format, ...);
+void print_ingame_color(int color, const char *format, ...);
+void print_ingame_xy(int x, int y, int color, const char *text,int tScreen);
+void print_ingame_wall(int x1, int x2, int y1, int y2, const char *text);
+void clear_xy(RectPos *r = NULL);
+void viewport_xy(int x, int y);
+void viewport_update();
+#endif
+

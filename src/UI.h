@@ -274,7 +274,5 @@ public:
 };
 
 extern KEYXLATE keyxlate;
-void print_ingame(const char *format, ...);
-void print_ingame_color(int color, const char *format, ...);
 
 #endif // UI_H
