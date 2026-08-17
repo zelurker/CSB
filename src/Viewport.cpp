@@ -159,6 +159,7 @@ i32 CUSTOMBITMAP::GetPixel4(i32 x, i32 y)
   i32 i;
   ui32 mask, b;
   ui8 *p;
+  if (x >= m_width || y >= m_height) return 0;
   i = (x/16)*m_wordsPerGroup + y*m_wordsPerRow;
   b = 15 - (x & 15);
   p = (ui8 *)(m_pGraphic + i);
@@ -210,6 +211,8 @@ void AffineTransform4(CUSTOMBITMAP *pSrc,
       srcY = pAM->Cyx * col + pAM->Cyy * row + pAM->Cyc + 16;
       srcX = (((srcX % xModulus) + xModulus) % xModulus) / 32;
       srcY = (((srcY % yModulus) + yModulus) % yModulus) / 32;
+      // There is a crash here with asan in TOC 3.3 on GetPixel4. I didn't write this code, there is no comment
+      // so I have no idea where the error is. Simplest solution : I added a return 0 to GetPixel4 when x or y >= dimensions. It works.
       pDst->PutPixel4(col, row, pSrc->GetPixel4(pAM->srcX+srcX, pAM->srcY+srcY));
     };
   };
@@ -2404,6 +2407,7 @@ RectPos *StdRectanglePointers(i32 n)
   //case RECT_StdDoorRectsF0:                  return d.DoorRectsF0;
   case RECT_StdSeeThruWallsRect:             return &d.SeeThruWallsRect;
   case RECT_StdSeeThruWallsRect2:            return (RectPos *)&d.SeeThruWallsRect.b.uByte4;
+  default: break; // no warning
   };
   InterpretError("Unknown Standard Rectangle Pointer\nValue = %d",n);
   return &d.wallRectangles[0];
@@ -3318,6 +3322,7 @@ void ClearHeldObjectName(void)
   i16 save;
   save = d.UseByteCoordinates;
   d.UseByteCoordinates = false;
+  clear_xy(&d.wRectPos624);
   FillRectangle(d.LogicalScreenBase,
                 &d.wRectPos624,
                 0,
@@ -3776,6 +3781,7 @@ void DrawCellF1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData, bool /*skipDrawing
             0x3421);
     */
       break;
+  default: break;
   };
 }
 
@@ -3941,6 +3947,7 @@ void DrawCellF3L1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
             0x3421);
     */
       break;
+  default: break;
   };
 }
 
@@ -4103,6 +4110,7 @@ void DrawCellF3R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
             0x4312);
     */
       break;
+  default: break;
   };
 }
 
@@ -4236,6 +4244,7 @@ void DrawCellF3(i32 /*facing*/,SUMMARIZEROOMDATA *pRoomData)
             0x3421);
     */
       break;
+  default: break;
   };
 }
 
@@ -4429,6 +4438,7 @@ void DrawCellF2L1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
       DrawRoomObjects(pRoomData->rn2,facing,pRoomData->x,pRoomData->y,pRoomData->relativeCellNumber,0x3421);
     */
       break;
+  default: break;
   };
 }
 
@@ -4639,6 +4649,7 @@ void DrawCellF2R1(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
             0x4312);
     */
       break;
+  default: break;
   };
 }
 
@@ -4794,6 +4805,7 @@ void DrawCellF2(i32 /*facing*/, SUMMARIZEROOMDATA *pRoomData)
             0x3421);
     */
       break;
+  default: break;
   };
 }
 
@@ -4962,6 +4974,7 @@ void DrawCellF1L1(i32 /* facing */, SUMMARIZEROOMDATA *pRoomData)
             0x32);
     */
       break;
+  default: break;
   };
 }
 
@@ -5048,6 +5061,7 @@ void DrawCellF0L1(i32 /*facing*/,SUMMARIZEROOMDATA *pRoomData)
       GraphicToViewport(d.StairEdgeGraphic[0], &d.StairEdgeRect[1]);
     */
       break;
+  default: break;
   };
 }
 
@@ -5130,6 +5144,7 @@ void DrawCellF0R1(i32 /* facing*/, SUMMARIZEROOMDATA *pRoomData)
       MirrorGraphicToViewport(d.StairEdgeGraphic[0],&d.StairEdgeRect[0]);
     */
       break;
+  default: break;
   };
 }
 
@@ -5904,46 +5919,6 @@ i32 BACKGROUND_LIB::CreateBackgroundGraphic(ui32 graphicID,
   backgroundGraphics[num].size = graphicSize;
   return num++;
 }
-
-
-static ui32 LeftMask[16] = {
-  0x00000000,
-  0x80008000,
-  0xc000c000,
-  0xe000e000,
-  0xf000f000,
-  0xf800f800,
-  0xfc00fc00,
-  0xfe00fe00,
-  0xff00ff00,
-  0xff80ff80,
-  0xffc0ffc0,
-  0xffe0ffe0,
-  0xfff0fff0,
-  0xfff8fff8,
-  0xfffcfffc,
-  0xfffefffe
-};
-
-static ui32 RightMask[16] = {
-  0xffffffff,
-  0x7fff7fff,
-  0x3fff3fff,
-  0x1fff1fff,
-  0x0fff0fff,
-  0x07ff07ff,
-  0x03ff03ff,
-  0x01ff01ff,
-  0x00ff00ff,
-  0x007f007f,
-  0x003f003f,
-  0x001f001f,
-  0x000f000f,
-  0x00070007,
-  0x00030003,
-  0x00010001,
-};
-
 
 /*
 void ApplyBackground2 (BACKGROUND_MASK *msk,
