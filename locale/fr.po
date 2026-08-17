@@ -159,7 +159,7 @@ le hellion
 l'inquisiteur
 étoile de jet
 clé de topaze
-torse
+torche
 plaque de torse
 clé turquoise
 tunique
@@ -226,7 +226,7 @@ Wu Tse\nFils du Ciel\n
 Fils du Ciel
 Azizi\nJohari\n
 Johari
-Salle des\nchampions
+Salle des champions
 Leif\nLe Vaillant\n
 Le Vaillant
 Elija\nLion de Yaitopya\n
@@ -238,9 +238,10 @@ Iaido\nRuyito Chiburi\n
 Zed\nDuc de Banville\n
 Duc de Banville
 Gando\nThurfoot\n
-Testez votre\nforce
-Nul ne\npassera
+Testez votre force
+Nul ne passera
 Stamm\nLanceur de Lames\n
+Lanceur de Lames
 Linflas\n\n
 Wuuf\nLe Bika\n
 Le Bika
@@ -255,14 +256,14 @@ La Diablesse
 Hawk\nL'Intrépide\n
 L'Intrépide
 Alex\nAnder\n
-YA BRO\ncrée une\npotion de bouclier magique\n
+YA BRO crée une potion de bouclier magique
 Buvez ceci Pour obtenir une défense magique.
 Remettez la gemme en place...
 Ce mur ne dit rien.
 Entrez. Faites un tour.
 Raccourci.
-Pour fermer la fosse\nlaissez un objet précieux au sol.
-Bienvenue\nbraves aventuriers.
+Pour fermer la fosse laissez un objet précieux au sol.
+Bienvenue braves aventuriers.
 Faites demi-tour.
 Invoquez Ful pour une torche magique.
 Cette fontaine accepte un vœu.
@@ -274,61 +275,62 @@ Certaines portes peuvent être ouvertes avec un sort Zo.
 La matrice
 YA créera une potion d'endurance.
 Vous devez payer votre entrée.
-Déploie ton influence\ndéploie ta puissance.
+Déploie ton influence déploie ta puissance.
 Seul le contact du sort approprié libérera la gemme et seul le bâton de feu pourra la posséder.
 Le temps presse.
-Le sort\noh ven\nprojette un nuage de poison.
+Le sort oh ven projette un nuage de poison.
 Frappe et cours
-VI\nAutel de la renaissance
+VI Autel de la renaissance
 BOULE DE FEU\n\nFUL IR.\n\nBOUCLIER ANTI FEU\n\nFUL BRO NETA.
 lumière\nOH IR RA.\n\nTénèbres\nDES IR SAR.
-Préparez-vous à\Nrencontrer votre destin
-Ne laissez pas une\Nporte fermée\N vous arrêter
-Danger\N\Nentrez avec\Nprécaution
+Préparez-vous à rencontrer votre destin
+Ne laissez pas une porte fermée  vous arrêter
+Danger\n\nentrez avec\nprécaution
 Filasses nettoyées
 notes\nparchemins\nformules\nsorts
 Quatre potions\npour améliorer\nvos\ncompétences\n\nFUL BRO KU\nOH BRO ROS\nYA BRO DAIN\nYA BRO NETA
-C'est mon\nprisonnier. laissez\nle\nsouffrir.
+C'est mon prisonnier. laissez le souffrir.
 Le sort\nYA BRO ROS\nlaisse une trace\nd'empreintes\nmagiques.
-Tu\nle\nregarderas.
-Bureaux de trésors\n
-Caverne\nde créatures
+Tu le regarderas.
+Bureaux de trésors
+Caverne de créatures
 Éclair\n\nOH KATH RA.
 le sort\nOH EW RA\nconfère la vision magique.
 potion de bouclier\n\nYA BRO.\n\nAnti magie\n\nYA IR.
 Potion de mana\n\nZO BRO RA\ncrée une potion de mana pure.
 invisibilité\n\nOH EW SAR
-Salle de\nla gemme
+Salle de la gemme
 Réserves
-La\nsalle des\nénigmes
-\nDur comme la roche\nbleu comme le ciel\nbrille dans\nl'oeil d'une femme
-je plie, mais\nj'ai pas de dos
-je suis tout\nje ne suis rien
-Une\ntête et une\nqueue d'or\nmais pas\ncorps
+La salle des énigmes
+Dur comme la roche bleu comme le ciel brille dans l'oeil d'une femme
+je plie, mais j'ai pas de dos
+je suis tout je ne suis rien
+Une tête et une queue d'or mais pas corps
 Choisissez une porte
 le coffre-fort
-Ni le chaos\nni l'ordre ne sont\nvraiment équilibrés
-La tombe du\nroi Milias\nle doré\nqui, même
-dans la mort, a soif de\nlingot.
-la tombe du roi filius\nexplorateur des combinaisons
+Ni le chaos ni l'ordre ne sont vraiment équilibrés
+La tombe du roi Milias le doré qui, même
+dans la mort, a soif de lingot.
+la tombe du roi filius explorateur des combinaisons
 L'équilibre est le bien sommaire
 Montez, on descend...
 Ha ha ha
 Le bâton de feu peut restaurer l'équilibre ou le détruire.
-Si vous voulez\nrester en vie,\nvous feriez mieux\nde vous\nretourner et\ncourir.
-La gemme de pouvoir\nest scellée\ndans la montagne\npar une étrange\nforce magique.
+Si vous voulez rester en vie, vous feriez mieux de vous retourner et courir.
+La gemme de pouvoir est scellée dans la montagne par une étrange force magique.
 Je hais les lâches
 Je n'aime pas être ignoré
 Le tombeau du bâton de feu
 Fournitures diverses
 ZOKATHRA\npourrait créer\nun plasma qui\npourrait brûler\nl'amalgam qui\nenveloppe la\ngemme.
 Chambres du gardien
-Je crainds pour\nles gens du\nmonde si\nla gemme de puissance\nET LE baton\ntombaient dans\nde mauvaises mains
+Je crainds pour les gens du monde si la gemme de puissance et le baton tombaient dans de mauvaises mains
 Grâce à vos actions courageuses, je suis à nouveau entier et l'harmonie est restaurée dans le monde.
 Dans le sens horaire
-Hissssa\nLizar de Makan\n
+Hissssa\nLézard de Makan\n
+Lézard de Makan
 Gothmog\n\n
-J'ai donné\nau baton\nbeaucoup de pouvoir.\npouvoir de faire\net défaire.\npouvoir de briser\net réparer.
+J'ai donné au baton beaucoup de pouvoir. pouvoir de faire et défaire. pouvoir de briser et réparer.
 Le bâton peut contenir un être en parfait alignement avec sa cage de flux.
 NABI\nLe prophète\n
 Une fois emprisonné dans la cage de flux, un être peut être transmuté par le pouvoir du bâton, qui doit toujours être utilisé pour l'équilibre.
@@ -340,10 +342,10 @@ Plus léger qu'une plume
 le sort DES EW\naffaiblit les êtres immatériels
 VI\nAutel de la renaissance.
 Méfiez-vous de mon humour tordu. Le trompeur, le serpent
-Les petits\ndétails peuvent\ncacher de\ngrandes\nrécompenses.
+Les petits détails peuvent cacher de grandes récompenses.
 Zoom !
-Retour rapide.i
-La seule issue\nest une autre\nentrée.
+Retour rapide.
+La seule issue est une autre entrée.
 Éléments de feu
 Éléments de terre
 Éléments d'air
@@ -352,8 +354,8 @@ AUTEL DE VI
 C'est dommage que vous n'ayez pas découvert le véritable secret du bâton de feu. Maintenant que je l'ai, je n'ai plus besoin de vous.
 Vos noms seront inscrits dans la grande salle et souvenus des générations futures que vous avez rendues possibles.
 Salle de lecture\ninterdit d'entrer
-Nouvelles vies\npour de vieux\nos
-Élargissez ma\nvue
+Nouvelles vies pour de vieux os
+Élargissez ma vue
 Les lâches seront pourchats et tués
 Les clés du passage sont cachées profondément.
 # CSBCode.cpp, ShowHideInventory:7491
@@ -415,3 +417,5 @@ pèse
 Oui
 Non
 Enregistrer les paramètres ?
+# CSBCode.cpp, DisplaySleepScreen:6585
+Réveil
