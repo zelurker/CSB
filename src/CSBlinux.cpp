@@ -1491,7 +1491,7 @@ int main(int argc, char* argv[])
   char font[FILENAME_MAX+29];
   snprintf(font,FILENAME_MAX+15,"%s/fonts/Vera.ttf",pwd);
   add_font(font);
-  snprintf(font,FILENAME_MAX+28,"%s/fonts/Gelio_Kleftiko.ttf",pwd);
+  snprintf(font,FILENAME_MAX+28,"%s/fonts/diogenes.ttf",pwd);
   wall_font = add_font(font);
 
   SDL_ShowCursor(SDL_ENABLE);
@@ -2123,8 +2123,8 @@ static void render_overlay_interface() {
 	ImGui::SetNextWindowSize({viewport->WorkSize.x,viewport->WorkSize.y});
 	int dx0 = dx, dy0 = dy;
 	if (dx0 < 10 && dy0 < 10) { // Well Word60 has the initial coordinates for this, and it's 0,3...
-	    dx0 = videoSegSrcX[0];
-	    dy0 = videoSegSrcY[0];
+	    dx0 = 0;
+	    dy0 = 33;
 	    printf("dx0 %d,%d\n",dx0,dy0);
 	} else {
 	    printf("dx0 = viewport = %d,%d\n",dx0,dy0);
@@ -2170,14 +2170,50 @@ static void render_overlay_interface() {
 	    ImGui::PopFont();
 
 	    if (mywall.text) {
-		size = 0x4a*zx/4;
+		size = 0x4a*zx/3.5;
 		ImGui::PushFont(wall_font,size-6);
-		ImGui::PushTextWrapPos((mywall.x2+127)*zx);
-		ImGui::SetCursorPos(ImVec2((mywall.x1+50)*zx+1,(mywall.y1+33)*zy-15+1));
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f),mywall.text);
-		ImGui::SetCursorPos(ImVec2((mywall.x1+50)*zx,(mywall.y1+33)*zy-15));
-		ImGui::TextColored(ImVec4(0.43f, 0.43f, 0.43f, 1.0f),mywall.text);
-		ImGui::PopTextWrapPos();
+		// The wrap support in imgui is crap for now, you can't center horizontaly and verticaly a wrapped text, so here is a workaround...
+		// ImGui::PushTextWrapPos((mywall.x2+127)*zx);
+		char buf[100];
+		strcpy(buf,mywall.text);
+		SDL_strupr(buf);
+
+		int startx = (mywall.x1+45)*zx;
+		int starty = (mywall.y1+33)*zy-15;
+		int maxwidth = (mywall.x2+122)*zx-startx;
+		int maxheight = 70*zy;
+		int line = 0;
+		char *text[10];
+		char *start = buf;
+		ImVec2 wh;
+		char *s;
+		do {
+		    wh = ImGui::CalcTextSize(start);
+		    s = &start[strlen(start)-1];
+		    while (wh[0] > maxwidth) {
+			if (*s == 0) {
+			    *s = ' ';
+			    s--;
+			}
+			while (*s != ' ' && s > start)
+			    s--;
+			*s = 0; // assuming s > buf, which should be the case with any normal text
+			wh = ImGui::CalcTextSize(start);
+		    }
+		    text[line++] = start;
+		    if (*s == 0)
+			start = s+1;
+		} while (*s == 0);
+		starty = starty+(maxheight-line*wh[1])/2;
+		printf("diffy %g\n",(maxheight-line*wh[1])/2);
+		for (int n=0; n<line; n++) {
+		    wh = ImGui::CalcTextSize(text[n]);
+		    ImGui::SetCursorPos(ImVec2(startx+(maxwidth-wh[0])/2+1,starty+1));
+		    ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f),text[n]);
+		    ImGui::SetCursorPos(ImVec2(startx+(maxwidth-wh[0])/2-1,starty-1));
+		    ImGui::TextColored(ImVec4(0.43f, 0.43f, 0.43f, 1.0f),text[n]);
+		    starty += wh[1];
+		}
 		ImGui::PopFont();
 	    }
 
