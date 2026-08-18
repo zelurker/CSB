@@ -10026,6 +10026,8 @@ void TAG0207cc(void)
   }
   else
   {
+      // Assuming it's called when waking up
+      clear_xy((RectPos*)&d.Word84);
     D7W = d.MagicCaster;
     d.MagicCaster = -1;
     SelectMagicCaster(D7W);
@@ -10250,6 +10252,18 @@ void ReadTablesFromGraphicsFile(void)
       printf("Fixed Shoot experience for DM 1.1\n");
   }
   for (i=0; i<25; i++) fixSpell(&d.Spells[i]);
+
+#if 0
+  printf("attack names:\n");
+  i8 *s = d.AttackNames;
+  while (s && *s) {
+      printf("%s\n",s);
+      s = (i8*)strchr((const char*)s+1,0);
+      if (s) s++;
+  }
+  exit(1);
+#endif
+
   ASSERT(d.GraphicDecompressedSizes[0x22f] == 0xc0e,"graphicsize22f");
   ReadAndExpandGraphic(0x8000|0x22f, (ui8 *)d.Byte10340, 0,0);
   bool msgPrinted = false;

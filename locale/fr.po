@@ -463,3 +463,7 @@ Fuse
  a besoin de + d'entrainement avec ce sort de %s
  bredouille un sort sans signification.
  a besoin d'une fiole vide en main pour la potion.
+# SaveGame.cpp, _DisplaySaveMenu
+Prêt à sauver la partie
+# Mouse.cpp, _HandleMouseEvents
+Jeu en pause

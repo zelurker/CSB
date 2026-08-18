@@ -1929,6 +1929,7 @@ RESTARTABLE _HandleMouseEvents(const i32 delta)
     d.ClockRunning = 1;
     gameFrozen = false;
     videoMode = VM_ADVENTURE;
+    clear_xy((RectPos*)&d.Word84);
     TAG0207cc();
     d.PrimaryButtonList = d.Pointer18982;
     d.SecondaryButtonList = d.Pointer18986;
