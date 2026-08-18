@@ -1427,6 +1427,8 @@ void FillRectangle(ui8 *dest,RectPos *dstRect,i32 color,i32 destWidth)
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //A0 = P2;
   ASSERT(verifyRectPos(dstRect),"rectpos");
+  if (dest == d.LogicalScreenBase)
+      clear_xy(dstRect);
   if (d.UseByteCoordinates != 0)
   {
     D0W = dstRect->b.x1;

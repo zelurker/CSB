@@ -99,9 +99,11 @@ void DrawText(ui8 *dst,             //8
 //;;;;;;;;;;;
   A3 = text;
   D7W = 0;
-  while ((LOCAL_80[D7W]=*(A3++)) != 0) D7W++;
+  if (!experimental_overlay) {
+      while ((LOCAL_80[D7W]=*(A3++)) != 0) D7W++;
 
-  while (D7W < len) LOCAL_80[D7W++] = ' ';
+      while (D7W < len) LOCAL_80[D7W++] = ' ';
+  }
 
 
 
@@ -113,7 +115,7 @@ void DrawText(ui8 *dst,             //8
                   y,
                   textColor,
                   backgroundColor,
-                  LOCAL_80,
+                  experimental_overlay ? text : LOCAL_80,
                   999,
                   false);
 }
