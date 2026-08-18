@@ -10612,6 +10612,7 @@ RESTARTABLE _TAG021028(void)
     for (;;)
     {
 	if (skipReady) {
+	    clear_xy();
 	    skipReady = false;
 	    i16Result = 1;
 	} else {
