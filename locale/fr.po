@@ -419,3 +419,47 @@ Non
 Enregistrer les paramètres ?
 # CSBCode.cpp, DisplaySleepScreen:6585
 Réveil
+# Attack Names (extracted from graphics.dat 560, but it's binary and initializes multiple fields, it can't be read directly)
+Bloquer
+Coup de hache
+Souffler corne
+Lancer
+Coup de poing
+Coup de pied
+Cri de guerre
+Descendre
+Geler la vie
+Frapper
+Balancer
+Coup de pointe
+Coup de poignard
+Parer
+Tacle
+Berzerk
+Boule de feu
+Dissiper
+Confusion
+Foudre
+Perturber
+Mêlée
+Invoquer
+Tailler
+Fendrement
+Couper
+Étourdir
+Tirer
+Bouclier anti-sorts
+Bouclier anti-feu
+Cage de flux
+Soigner
+Calmer
+Lumière
+Fenêtre
+Cracher
+Brandir
+Lancer
+Fuse
+# Magic.cpp, SpellErrorMsg
+ a besoin de + d'entrainement avec ce sort de %s
+ bredouille un sort sans signification.
+ a besoin d'une fiole vide en main pour la potion.

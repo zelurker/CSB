@@ -1012,7 +1012,7 @@ SPELL *Incantation2Spell(pnt incantation)
 //   TAG01c90c
 void SpellErrorMsg(CHARDESC *pChar,i16 P2,i16 P3)
 {
-  const char *msg="UNKNOWN SPELL ERROR";
+  static char msg[80];
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (P3 > 3)
   {
@@ -1022,24 +1022,22 @@ void SpellErrorMsg(CHARDESC *pChar,i16 P2,i16 P3)
   QuePrintLines(4, pChar->name, false);
   if (P2 == 0)
   {
-    msg = " NEEDS MORE PRACTICE WITH THIS ";
-    QuePrintLines(4, msg, true);
-    QuePrintLines(4, d.Pointer16596[P3], true);
-    msg = " SPELL.";
+      // Handle this in 1 sentence because of translations: english says wizard spell, but french swaps these last 2 words
+    snprintf(msg,80,_(" NEEDS MORE PRACTICE WITH THIS %s SPELL"),_(d.Pointer16596[P3]));
   }
   else
   {
     if (P2 == 1)
     {
-      msg = " MUMBLES A MEANINGLESS SPELL.";
+      snprintf(msg,80,_(" MUMBLES A MEANINGLESS SPELL."));
     }
     else
     {
       if (P2 == 10)
-    msg = " NEEDS AN EMPTY FLASK IN HAND FOR POTION.";
+	  snprintf(msg,80, _(" NEEDS AN EMPTY FLASK IN HAND FOR POTION."));
     };
   };
-  QuePrintLines(4, msg, true);
+  QuePrintLines(4, msg, false);
 }
 //       TAG01c9b2
 DB8 *GetFlaskInHand(CHARDESC *pChar,RN *pObject)
