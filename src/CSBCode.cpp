@@ -8591,15 +8591,18 @@ void DisplaySleepScreen(void)
 {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   Flood(d.pViewportBMP, 0, 1904);
-  TextOut_OneLine(d.pViewportBMP,
-                  112,
-                  93,
-                  65,
-                  4,
-                  0,
-                  TranslateLanguage("WAKE UP"),
-                  999,
-                  false);
+  if (experimental_overlay)
+      print_ingame_xy(115,64,COLOR_CYAN,_("WAKE UP"),false,true);
+  else
+      TextOut_OneLine(d.pViewportBMP,
+	      112,
+	      93,
+	      65,
+	      COLOR_CYAN,
+	      0,
+	      TranslateLanguage("WAKE UP"),
+	      999,
+	      false);
 }
 
 // *********************************************************

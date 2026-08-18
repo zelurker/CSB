@@ -1902,15 +1902,18 @@ RESTARTABLE _HandleMouseEvents(const i32 delta)
     videoMode = VM_FROZEN;
     TAG02076e();
     Flood(d.pViewportBMP, 0, 1904); // Flood with color 0
-    TextOut_OneLine(d.pViewportBMP,
-                    112,
-                    81,
-                    69,
-                    4,
-                    0,
-                    "GAME FROZEN",
-                    999,
-                    true);
+    if (experimental_overlay) {
+	print_ingame_xy(115,69,COLOR_CYAN,_("GAME FROZEN"),false,true);
+    } else
+	TextOut_OneLine(d.pViewportBMP,
+		112,
+		81,
+		69,
+		COLOR_CYAN,
+		0,
+		"GAME FROZEN",
+		999,
+		true);
     MarkViewportUpdated(2);
     d.Pointer18982 = d.PrimaryButtonList;
     d.Pointer18986 = d.SecondaryButtonList;
