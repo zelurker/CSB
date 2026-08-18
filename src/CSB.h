@@ -3131,6 +3131,7 @@ i16  UNLINK(char *name);
 pnt  GETDTA(void);
 void SETDTA(pnt);
 i32  LSEEK(i32 offset, i32 file, i32 origin);
+long TELL(i16 file);
 i32  RENAME(i32 trash, const char *name1, const char *name2);
 void PRINTLINE(const char *message);//(void)
 void setpalette(PALETTE *palette);

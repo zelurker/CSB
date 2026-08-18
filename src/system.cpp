@@ -292,6 +292,12 @@ i32  LSEEK(i32 offset,i32 file,i32 origin)
   return ftell(GETFILE((ui16)file));
 }
 
+long TELL(i16 file)
+{
+  if (GETFILE((ui16)file) == NULL) return 0;
+  return ftell(GETFILE((ui16)file));
+}
+
 char *GETS(char *buf, i32 max, i16 file)
 {
   if (GETFILE((ui16)file) == NULL) return NULL;
