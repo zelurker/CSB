@@ -1907,6 +1907,7 @@ static int mbase;		// Which message is top of the list
 // Add Message to Ingame Message List, using a printf() style format string.
 typedef struct {
     int x,y,color,toScreen;
+    bool centered;
     const char *text;
 } txy;
 
@@ -1940,7 +1941,7 @@ void viewport_update() {
 int nb_xy;
 int dx,dy;
 
-void print_ingame_xy(int x, int y, int color, const char *text,int tScreen) {
+void print_ingame_xy(int x, int y, int color, const char *text,int tScreen, bool centered) {
     if (nb_xy == MAX_XY) {
 	printf("xy overflow\n");
 	exit(1);
@@ -1957,6 +1958,7 @@ void print_ingame_xy(int x, int y, int color, const char *text,int tScreen) {
     myxy[nb_xy].y = y;
     myxy[nb_xy].color = color;
     myxy[nb_xy].toScreen = tScreen;
+    myxy[nb_xy].centered = centered;
     myxy[nb_xy++].text = text;
 }
 
@@ -2120,7 +2122,7 @@ static void render_overlay_interface() {
 	ImGui::SetNextWindowPos({viewport->WorkPos.x, viewport->WorkPos.y});
 	ImGui::SetNextWindowSize({viewport->WorkSize.x,viewport->WorkSize.y});
 	int dx0 = dx, dy0 = dy;
-	if (dx0 < 10 && dy0 < 10) { // 10 ?
+	if (dx0 < 10 && dy0 < 10) { // Well Word60 has the initial coordinates for this, and it's 0,3...
 	    dx0 = videoSegSrcX[0];
 	    dy0 = videoSegSrcY[0];
 	    printf("dx0 %d,%d\n",dx0,dy0);
@@ -2134,10 +2136,13 @@ static void render_overlay_interface() {
 	    for (int n=0; n<nb_xy; n++) {
 		printf("%d:%d,%d,%s size:%d\n",n,myxy[n].x+dx0, myxy[n].y+dy0,myxy[n].text,size);
 		// No idea why there's a vertical alignment problem, 15 is the best approximated fix so far
+		ImVec2 size;
+		if (myxy[n].centered) // on x only for now because that's what the game does
+		    size = ImGui::CalcTextSize(myxy[n].text);
 		if (myxy[n].toScreen)
-		    ImGui::SetCursorPos(ImVec2((myxy[n].x)*zx,(myxy[n].y-5)*zy));
+		    ImGui::SetCursorPos(ImVec2((myxy[n].x)*zx - (myxy[n].centered ? size[0]/2 : 0),(myxy[n].y-5)*zy));
 		else
-		    ImGui::SetCursorPos(ImVec2((myxy[n].x+dx0)*zx,(myxy[n].y+dy0-5)*zy));
+		    ImGui::SetCursorPos(ImVec2((myxy[n].x+dx0)*zx - (myxy[n].centered ? size[0]/2 : 0),(myxy[n].y+dy0-5)*zy));
 		switch(myxy[n].color) {
 		case 0: ImGui::TextColored(ImVec4(0.0f, 0.0f, 0.0f, 1.0f), myxy[n].text); break;
 		case 1: ImGui::TextColored(ImVec4(0.43f, 0.43f, 0.43f, 1.0f), myxy[n].text); break;

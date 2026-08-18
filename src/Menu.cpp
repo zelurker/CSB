@@ -189,6 +189,8 @@ RESTARTABLE _WaitForMenuSelect(
   RETURN_i16(d.Word11764);
 }
 
+extern ui8 LScreenBase[320][210];
+
 //   TAG01d5aa
 void CenteredText(ui8 *dest, const char *text, i16 x, i16 y)
 {
@@ -197,16 +199,20 @@ void CenteredText(ui8 *dest, const char *text, i16 x, i16 y)
   if (text == NULL) return;
   text = TranslateLanguage(text);
   D0W = strlen(text);
-  x = sw(x - D0W*3);
-  TextOut_OneLine(dest,
-                  112,
-                  x,
-                  y,
-                  9,
-                  5,
-                  text,
-                  999,
-                  false);
+  if (experimental_overlay) {
+      print_ingame_xy(x,y,COLOR_ORANGE,text,dest == &LScreenBase[0][0],true);
+  } else {
+      x = sw(x - D0W*3);
+      TextOut_OneLine(dest,
+	      112,
+	      x,
+	      y,
+	      COLOR_ORANGE,
+	      5,
+	      text,
+	      999,
+	      false);
+  }
 }
 
 //  TAG01d5ee
@@ -358,97 +364,121 @@ RESTARTABLE _DoMenu(
     if (D0W != 0)
     {
       D5W = 21;
-      D0W = strlen(LOCAL_50);
-      D1L = 3*D0W;
-      D6W = sw(113 - D1W);
-      TextOut_OneLine(d.pViewportBMP,
-                      112,
-                      D6W,
-                      D5W,
-                      11,
-                      5,
-                      LOCAL_50,
-                      999,
-                      false);
+      if (experimental_overlay) {
+	  print_ingame_xy(113,21,COLOR_YELLOW,LOCAL_50,false,true);
+      } else {
+	  D0W = strlen(LOCAL_50);
+	  D1L = 3*D0W;
+	  D6W = sw(113 - D1W);
+	  TextOut_OneLine(d.pViewportBMP,
+		  112,
+		  D6W,
+		  D5W,
+		  COLOR_YELLOW,
+		  5,
+		  LOCAL_50,
+		  999,
+		  false);
+      }
       D5W += 8;
-      D0W = strlen(LOCAL_100);
-      D1W = sw(3*D0W);
-      D6W = sw(113 - D1W);
-      TextOut_OneLine(d.pViewportBMP,
-                      112,
-                      D6W,
-                      D5W,
-                      11,
-                      5,
-                      LOCAL_100,
-                      999,
-                      false);
+      if (experimental_overlay) {
+	  print_ingame_xy(113,D5W,COLOR_YELLOW,LOCAL_100,false,true);
+      } else {
+	  D0W = strlen(LOCAL_100);
+	  D1W = sw(3*D0W);
+	  D6W = sw(113 - D1W);
+	  TextOut_OneLine(d.pViewportBMP,
+		  112,
+		  D6W,
+		  D5W,
+		  COLOR_YELLOW,
+		  5,
+		  LOCAL_100,
+		  999,
+		  false);
+      }
       D5W += 8;
     }
     else
     {
-      D0W = strlen(TranslateLanguage(title1));
-      D1W = sw(D0W * 3);
-      D6W = sw(113 - D1W);
-      TextOut_OneLine(d.pViewportBMP,
-                      112,
-                      D6W,
-                      D5W,
-                      11,
-                      5,
-                      TranslateLanguage(title1),
-                      999,
-                      false);
+      if (experimental_overlay) {
+	  print_ingame_xy(113,D5W,COLOR_YELLOW,_(title1),false,true);
+      } else {
+	  D0W = strlen(TranslateLanguage(title1));
+	  D1W = sw(D0W * 3);
+	  D6W = sw(113 - D1W);
+	  TextOut_OneLine(d.pViewportBMP,
+		  112,
+		  D6W,
+		  D5W,
+		  COLOR_YELLOW,
+		  5,
+		  TranslateLanguage(title1),
+		  999,
+		  false);
+      }
       D5W += 8;
-    };
-  };
+    }
+  }
   if (title2 != NULL)
   {
     D0W = SplitLongLine(TranslateLanguage(title2), LOCAL_50, LOCAL_100);
     if (D0W != 0)
     {
-      D0W = strlen(LOCAL_50);
-      D1W = sw(D0W*3);
-      D6W = sw(113 - D1W);
-      TextOut_OneLine(d.pViewportBMP,
-                      112,
-                      D6W,
-                      D5W,
-                      9,
-                      5,
-                      LOCAL_50,
-                      999,
-                      false);
+      if (experimental_overlay) {
+	  print_ingame_xy(113,D5W,COLOR_ORANGE,LOCAL_50,false,true);
+      } else {
+	  D0W = strlen(LOCAL_50);
+	  D1W = sw(D0W*3);
+	  D6W = sw(113 - D1W);
+	  TextOut_OneLine(d.pViewportBMP,
+		  112,
+		  D6W,
+		  D5W,
+		  COLOR_ORANGE,
+		  5,
+		  LOCAL_50,
+		  999,
+		  false);
+      }
       D5W += 8;
-      D0W = strlen(LOCAL_100);
-      D1W = sw(3 * D0W);
-      D6W = sw(113 - D1W);
-      TextOut_OneLine(d.pViewportBMP,
-                      112,
-                      D6W,
-                      D5W,
-                      9,
-                      5,
-                      LOCAL_100,
-                      999,
-                      false);
+      if (experimental_overlay) {
+	  print_ingame_xy(113,D5W,COLOR_ORANGE,LOCAL_100,false,true);
+      } else {
+	  D0W = strlen(LOCAL_100);
+	  D1W = sw(3 * D0W);
+	  D6W = sw(113 - D1W);
+	  TextOut_OneLine(d.pViewportBMP,
+		  112,
+		  D6W,
+		  D5W,
+		  COLOR_ORANGE,
+		  5,
+		  LOCAL_100,
+		  999,
+		  false);
+      }
     }
     else
     {
-      D0W = strlen(title2);
-      D1W = sw(D0W * 3);
-      D6W = sw(113 - D1W);
-      TextOut_OneLine(d.pViewportBMP,
-                      112,
-                      D6W,
-                      D5W,
-                      9,
-                      5,
-                      TranslateLanguage(title2),
-                      999,
-                      false);
-    };
-  };
+      if (experimental_overlay) {
+	  print_ingame_xy(113,D5W,COLOR_ORANGE,_(title2),false,true);
+      } else {
+	  D0W = strlen(title2);
+	  D1W = sw(D0W * 3);
+	  D6W = sw(113 - D1W);
+	  TextOut_OneLine(d.pViewportBMP,
+		  112,
+		  D6W,
+		  D5W,
+		  COLOR_ORANGE,
+		  5,
+		  TranslateLanguage(title2),
+		  999,
+		  false);
+      }
+    }
+  }
   if (I1 != 0)
   {
     rectpos.w.y1 = 33;

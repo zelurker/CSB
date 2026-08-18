@@ -4397,7 +4397,7 @@ void CallPartyMoveFilter(PARTYMOVEDATA *pmd);
 
 void print_ingame(const char *format, ...);
 void print_ingame_color(int color, const char *format, ...);
-void print_ingame_xy(int x, int y, int color, const char *text,int tScreen);
+void print_ingame_xy(int x, int y, int color, const char *text,int tScreen, bool centered = false);
 void print_ingame_wall(int x1, int x2, int y1, int y2, const char *text);
 void clear_xy(RectPos *r = NULL);
 void viewport_xy(int x, int y);
