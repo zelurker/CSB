@@ -287,7 +287,8 @@ void TranslateWallLanguage(unsigned char *text)
       }
   }
   if (experimental_overlay) {
-      strcpy((char*)text,xText);
+      if ((char*)text != xText)
+	  strcpy((char*)text,xText);
       return;
   }
 
