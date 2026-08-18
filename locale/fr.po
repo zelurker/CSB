@@ -401,7 +401,7 @@ Formater le disque quand même ?
 Aucun disque n'est présent dans ~ !
 Charger une partie sauvegardée
 Sauvegarder et jouer
-Sauvegarder et quitter
+Sauve / quitte
 Formater la disquette
 Annuler
 # _TAG021028:10592
