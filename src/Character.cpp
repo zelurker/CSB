@@ -4533,24 +4533,16 @@ void TAG019036(void)
   dReg D0, D4, D5, D6, D7;
   aReg A0;
   CHARDESC *pcA3;
-  static char LOCAL_24[7][20];
+  static char stat[7][20];
   static char skill[4][20];
-  i16  LOCAL_4;
-  i16  LOCAL_2;
+  i16  max_stat;
+  i16  color;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   if (TimerTraceActive)
   {
     fprintf(GETFILE(TraceFile),"%06x TAG019036 calling Repack Chest\n",d.Time);
   };
   RepackChest();
-
-
-
-
-
-
-
-
 
   {
     ui32 key;
@@ -4603,18 +4595,11 @@ void TAG019036(void)
             // The DSA can modify the phraseMask and the contents of descriptivePhrases[]
             LoadLevel(currentLevel);
             continue;
-          };
-        };
-      };
-    };
-  };
-
-
-
-
-
-
-
+          }
+        }
+      }
+    }
+  }
 
   D4W = sw(d.SelectedCharacterOrdinal-1);
   pcA3 = &d.hero[D4W];
@@ -4627,14 +4612,10 @@ void TAG019036(void)
     if (D5W == 1) continue;
     if (D5W == 0) die (0x8d49,"Mastery = 0");
     A0 = (aReg)d.Pointer16770[D5W];
-    strcpy(skill[D7W], TranslateLanguage((char *)A0));// "Novice", "Master", etc
-    strcat(skill[D7W], " ");
-    strcat(skill[D7W], TranslateLanguage(d.Pointer16596[D7W]));//"Fighter", etc
+    sprintf(skill[D7W],"%s %s",_((char *)A0),_(d.Pointer16596[D7W])); // Novice..Master followed by class (Fighter,...)
     TextToViewport(108, D6W, COLOR_LGRAY, skill[D7W], false);
     D6W += 7;
-//
-//
-  };
+  }
   D6W = 86;
   for (D7W=1; D7W<=6; D7W++)
   {
@@ -4642,29 +4623,27 @@ void TAG019036(void)
     TextToViewport(108, D6W, COLOR_LGRAY, (char *)A0, true);
     D5W = pcA3->Attributes[D7W].Current();
     D0W = pcA3->Attributes[D7W].Maximum();
-    LOCAL_4 = D0W;
-    if (D5W < LOCAL_4)
+    max_stat = D0W;
+    if (D5W < max_stat)
     {
-      LOCAL_2 = COLOR_RED;
+      color = COLOR_RED;
     }
     else
     {
-      if (D5W > LOCAL_4)
+      if (D5W > max_stat)
       {
-        LOCAL_2 = COLOR_GREEN;
+        color = COLOR_GREEN;
       }
       else
       {
-        LOCAL_2 = COLOR_LGRAY;
-      };
-    };
-    TextToViewport(174, D6W, LOCAL_2, TAG014af6(D5W, 1, 3), false);
-    strcpy(LOCAL_24[D7W],"/");
-    strcat(LOCAL_24[D7W], TAG014af6(LOCAL_4, 1, 3));
-    TextToViewport(192,D6W, COLOR_LGRAY, LOCAL_24[D7W], false);
+        color = COLOR_LGRAY;
+      }
+    }
+    sprintf(stat[D7W],"%3d/%3d",D5W,max_stat);
+    TextToViewport(174, D6W, color, stat[D7W], false);
     D6W += 7;
 //
-  };
+  }
 }
 
 // *********************************************************
