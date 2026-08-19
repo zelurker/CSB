@@ -3141,51 +3141,69 @@ void RepackChest(void) //Put displayed items back into chest.
 // *********************************************************
 //   TAG017e2a
 void PrintItemDesc(const char* text, i32 color)
-{ //Initialize if first character == 12
+{
+    // Print a line of text, updating its internal cursor position (d.TextOutX,d.TextOutY)
   dReg D0, D7;
   aReg A2, A3;
-  i8  b_128[128];
+#define MAX_LINES 10
+  static char lines[MAX_LINES][80];
   A2=NULL;
   //D4W = D5W = D6W = 0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   //D0W = text[0];
-  if (*text == 12)
+  if (*text == 12) // init
   {
     text++;
     d.TextOutX = 108;
     d.TextOutY = 59;
-  };
+  }
   if (*text == 0) return;
-  strcpy((char *)b_128, text);
-  A3 = b_128;
-  for (D7W = 0; *A3 != 0; )
-  {
-    D0W = strlen((char *)A3);
-    if (D0W > 18)
-    {
-      A2 = A3 + 17;
-      while ((A2 > A3+2) && (*A2 != ' ')) A2--;
-      if (A2 == A3+2) A2 = A3+17;
-
-      *A2 = 0;
-      D7W = 1;
-    };
-    TextToViewport(d.TextOutX,
+  int n = (d.TextOutY-59)/7;
+  if (n >= MAX_LINES) {
+      printf("PrintItemDesc: lines overflow\n");
+      exit(1);
+  }
+  char *s = (char*)&lines[n];
+  strncpy(s, text,80);
+  if (experimental_overlay) {
+      // All on 1 line, ignore the length
+      TextToViewport(d.TextOutX,
                    d.TextOutY,
                    color,
-                   (char *)A3,
+                   s,
                    false);
-    d.TextOutY += 7;
-    if (D7W != 0)
-    {
-      D7W = 0;
-      A3 = A2 + 1;
-    }
-    else
-    {
-      *A3 = 0;
-    };
-  };
+      d.TextOutY += 7;
+  } else {
+      A3 = (aReg)s;
+      for (D7W = 0; *A3 != 0; )
+      {
+	  D0W = strlen((char *)A3);
+	  if (D0W > 18)
+	  {
+	      A2 = A3 + 17;
+	      while ((A2 > A3+2) && (*A2 != ' ')) A2--;
+	      if (A2 == A3+2) A2 = A3+17;
+
+	      *A2 = 0;
+	      D7W = 1;
+	  };
+	  TextToViewport(d.TextOutX,
+		  d.TextOutY,
+		  color,
+		  (char *)A3,
+		  false);
+	  d.TextOutY += 7;
+	  if (D7W != 0)
+	  {
+	      D7W = 0;
+	      A3 = A2 + 1;
+	  }
+	  else
+	  {
+	      *A3 = 0;
+	  }
+      }
+  }
 }
 
 // *********************************************************
@@ -3453,6 +3471,7 @@ void DescribeObject(RN object,i16 P2)
   CLOTHINGDESC *clA2;
   WEAPONDESC *clW;
   char buf[40];
+  static char itemName[30];
   descriptionMask = 0x0ff0;
   D4W = 0x0ff0;
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -3595,7 +3614,12 @@ void DescribeObject(RN object,i16 P2)
             && (objNID6 != objNI_EmptyFlask)
             && (DetermineMastery(d.SelectedCharacterOrdinal-1, 2) > 1) )
         {
-          descriptiveText[0] = sb(95 + dbA2->CastToDB8()->strength()/40);
+	    // This prefix shows the potion strength with 1 obscure rune in the base game
+	    // the rune is lost if using the truetype interface, so it's replaced by a number from 0 to 9
+	    if (experimental_overlay)
+		descriptiveText[0] = sb(0x30 + dbA2->CastToDB8()->strength()/40);
+	    else
+		descriptiveText[0] = sb(95 + dbA2->CastToDB8()->strength()/40);
           descriptiveText[1] = ' ';
           descriptiveText[2] = 0;
           strcat(descriptiveText, TranslateLanguage(d.ObjectNames[objNID6]));
@@ -3606,7 +3630,8 @@ void DescribeObject(RN object,i16 P2)
           A3 = d.ObjectNames[objNID6];
         };
       };
-      TextToViewport(134, 68, COLOR_LGRAY, A3, finalTranslate);
+      strncpy(itemName,A3,30);
+      TextToViewport(134, 68, COLOR_LGRAY, itemName, finalTranslate);
       DrawSmallIcon(objNID6, 111, 59);
       descriptivePhrases[2] = "CONSUMABLE";
       descriptivePhrases[3] = "POISONED";
@@ -3638,23 +3663,23 @@ void DescribeObject(RN object,i16 P2)
 	  };
 	  D0W = DB5A0->weaponType();
 	  clW = &d.weapons[D0W];
-	  sprintf(buf,"DAMAGE %d",clW->damage);
+	  sprintf(buf,"%s %d",_("DAMAGE"),clW->damage);
 	  PrintItemDesc(buf);
 	  // if (clW->attribute & 0xff) {
 	  // attribute & 0xff shows when it's a projectile weapon but the distance / shoot damage is also interesting for ammo, so it's probably better to display it always
-	  sprintf(buf,"DISTANCE %d",clW->distance);
+	  sprintf(buf,"%s %d",_("DISTANCE"),clW->distance);
 	  PrintItemDesc(buf);
 	  if (clW->uByte1)
-	      sprintf(buf,"SHOOT DAMAGE %d",clW->uByte1);
+	      sprintf(buf,"%s %d",_("SHOOT DAMAGE"),clW->uByte1);
 	  PrintItemDesc(buf);
 	  if (DB5A0->charges() && (objNID6 < objNI_Torch_a || objNID6 > objNI_Torch_d)) {
 	      char buf[20];
-	      sprintf(buf,"CHARGES %d",DB5A0->charges());
+	      sprintf(buf,"%s %d",_("CHARGES"),DB5A0->charges());
 	      PrintItemDesc(buf);
 	  }
 	  // }
 	  if (DB5A0->poisoned())
-	      PrintItemDesc("POISONED");
+	      PrintItemDesc(_("POISONED"));
 	  break;
 
       case dbCLOTHING:
@@ -3667,9 +3692,9 @@ void DescribeObject(RN object,i16 P2)
 	  D0W = sw(DB6A0->clothingType());
 	  ASSERT(D0W <58,"D0 > 58");
 	  clA2 = &d.ClothingDesc[D0W];
-	  sprintf(buf,"DEFENSE %d",clA2->Defense());
+	  sprintf(buf,"%s %d",_("DEFENSE"),clA2->Defense());
 	  PrintItemDesc(buf);
-	  sprintf(buf,"PIERCE RES %d",clA2->pierceResistance() & 0x7f);
+	  sprintf(buf,"%s %d",_("PIERCE RES"),clA2->pierceResistance() & 0x7f);
 	  PrintItemDesc(buf);
 	  break;
       case dbPOTION:
@@ -3749,7 +3774,7 @@ void DescribeObject(RN object,i16 P2)
       D7W = sw(GetObjectWeight(object));
       A0 = TAG014af6((UI16)(D7W)/10, 0, 3);
       strcat(descriptiveText, A0);
-      strcat(descriptiveText, TranslateLanguage("."));
+      strcat(descriptiveText, ".");
       D7W = sw((D7W&0xffff)%10);
       A0 = TAG014af6(D7W, 0, 1);
       strcat(descriptiveText, A0);
