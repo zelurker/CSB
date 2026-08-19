@@ -413,6 +413,37 @@ Choisir le fichier du jeu
 Charge
 # DescribeObject:3724
 pèse
+(épuisée)
+dommage
+distance
+dommage de tir
+charges
+empoisonné
+defense
+Rés perce
+potion de vigueur
+potion de magie
+potion de santé
+potion de force
+potion de dextérité
+potion de sagesse
+potion de vitalité
+potion anti poison
+potion bouclier
+potion de poison
+accroît influence et magie
+accroît la compétence de soin
+accroît la compétence de défense
+accroît la compétence de magicien
+augmente l'anti-magie
+(vide)
+(presque vide)
+(presque pleine)
+(pleine)
+direction du groupe
+consommable
+cassé
+maudit
 # CSBlinux.cpp, post_render:2466 (numéros de lignes utilisées dans le code)
 Oui
 Non
