@@ -431,8 +431,8 @@ Descendre
 Geler la vie
 Frapper
 Balancer
-Coup de pointe
-Coup de poignard
+Plonger
+Poignarder
 Parer
 Tacle
 Berzerk
@@ -444,7 +444,7 @@ Perturber
 Mêlée
 Invoquer
 Tailler
-Fendrement
+Fendre
 Couper
 Étourdir
 Tirer
