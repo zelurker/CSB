@@ -6,6 +6,9 @@ but they have been merged into this git quite some time ago already.
 
 You can compile a windows version either 32 or 64 bits from this source, or a linux version. Just
 select the right target at the top of the makefile. For now the only thing required is sdl2.
+Since I crosscompile the windows binary, the makefile uses a prefix for pkg-config, which doesn't
+exist in mingw apprently, so you might need to using pkg-config without prefix if using a native
+mingw environment.
 
 You'll find a summary of the changes in this forum thread : (along with links to
 the binary version, containing dungeon.dat and graphics.dat for the original
@@ -18,7 +21,9 @@ the default font is Vera.ttf which is freely available from the web, and is
 included only in the binary packages. While you are at it, also grab lsb.bmp
 which is used for the application icon for desktop environments which know how
 to handle this. All these files are not mandatory, the program can run without
-them, but it's better with them.
+them, but it's better with them. In the most recent version I also added 2 more
+fonts for the truetype interface, diogenes.ttf and OldeEnglish.ttf, both can be
+found on dafont.
 
 Some interesting links about dungeon master:
 Dungeon Master Encyclopaedia: http://dmweb.free.fr/
