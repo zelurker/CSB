@@ -487,7 +487,7 @@ void BLT3(ui8  *src,     // Raw 8-bit pixels
 //#define ad(x,y) add [edi+2*x+y*320*2*4],ax
 
 //void BLT4(unsigned char *src, i16 *dst, i32 num)
-/*
+#if 0
 void BLT4(unsigned char *src,
           i16 *dst,
           i32 num,
@@ -532,7 +532,8 @@ next:
     loop next
   };
 }
-*/
+#endif
+
 void BLT4(ui8  *src,     // Raw 8-bit pixels
           ui16 *dst,     // Destination if 16-bit result pixels
           i32  num,      // Width
@@ -1466,7 +1467,6 @@ ui8 prevScreen[32000];
 
 bool pc1, pc2;
 void display (void){
-  static i32 numDisplay = 0;
   static bool initialized = false;
   int areaChangedCount;
   screenAlreadyUnpacked = false;
@@ -1488,7 +1488,6 @@ void display (void){
     };
   };
 #endif
-  numDisplay++;
   if ((VBLMultiplier!=1) && ((d.Time&0xf)!=0) && (VBLMultiplier!=99)) return;
   if (d.DynamicPaletteSwitching)
   {

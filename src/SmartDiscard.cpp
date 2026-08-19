@@ -151,7 +151,7 @@ public:
 };
 
 void SDOBJLIST::AddObjectDecr(SDOBJ *pSDobj)
-{ // 
+{ //
 //  float priority, parentPriority;
   i32 index, parent;
   if (m_numEntry >= SDListSize) return; //ignore it.
@@ -171,7 +171,7 @@ void SDOBJLIST::AddObjectDecr(SDOBJ *pSDobj)
 }
 
 void SDOBJLIST::AddObjectIncr(SDOBJ *pSDobj)
-{ // 
+{ //
 //  float priority, parentPriority;
   i32 index, parent;
   if (m_numEntry >= SDListSize)
@@ -361,12 +361,12 @@ CELLFLAG *GetCellFlagsAddress(i32 level, i32 x, i32 y)
 {
   return &d.pppdPointer10450[level][x][y];
 }
-  
+
 CELLFLAG *GetCellFlagsAddress(const LOCATIONREL& locr)
 {
   return &d.pppdPointer10450[locr.l][locr.x][locr.y];
 }
-  
+
 
 RN FindFirstObject(i32 level, i32 x, i32 y)
 {
@@ -387,7 +387,7 @@ RN FindFirstObject(i32 level, i32 x, i32 y)
   {
     if ((pCF[i] & 16) != 0) index++;
   };
-  return d.objectList[index];  
+  return d.objectList[index];
 }
 
 SRCHPKT *SearchForObject(RN objID)
@@ -471,8 +471,8 @@ int ScanOneCell(SDOBJLIST *pSDObjList)
   {
     result++;
     // Why is this test here?  If a non-disabled actuator is
-    // in the list then we ignore the rest of the list.  What is 
-    // about????  
+    // in the list then we ignore the rest of the list.  What is
+    // about????
     // Perhaps we don't want to remove an object that is currently
     // keeping some sort of actuator active?  I suppost that sounds
     // reasonable.  How can we get around this problem.  I have a
@@ -486,7 +486,7 @@ int ScanOneCell(SDOBJLIST *pSDObjList)
     // Well, we have to try something.  I will ignore actuators
     // that clearly require no triggering (AND gates, DSA, and such)
     // and I will keep track of the kinds of objects we have encountered
-    // so that we are forced to leave only one of each type on the 
+    // so that we are forced to leave only one of each type on the
     // actuator.
     if (!isTriggered && (obj.dbType() == dbACTUATOR))
     {
@@ -502,7 +502,7 @@ int ScanOneCell(SDOBJLIST *pSDObjList)
       case 6:
       case 7:
       case 8:
-      case 9: 
+      case 9:
       case 16:  // Swap Object
               isTriggered = true;
               break;  // Wall switch / PressurePad
@@ -522,7 +522,7 @@ int ScanOneCell(SDOBJLIST *pSDObjList)
     else
     {
       priority = abs(currentX-d.partyX) + abs(currentY-d.partyY);
-    };      
+    };
     switch (currentDBNum)
     {
     case dbCLOTHING:
@@ -553,10 +553,10 @@ int ScanOneCell(SDOBJLIST *pSDObjList)
       };
       pSDObjList->AddObjectIncr(&sdobj);
       break;
-    
-    
-    
-    
+
+
+
+
     case dbWEAPON:
       pWeaponDB = GetRecordAddressDB5(obj);
       if (m_trace!=NULL)
@@ -674,7 +674,7 @@ static void DiscardObject(void)
 //  priority = ComputePriority(&sdobj);
 //  if (   (priority < 0)
 //      || (priority < objlist.TopPriority()))
-      
+
 //  {
 //    discardFailure++;
 //    objlist.AddObject(&sdobj);
@@ -683,7 +683,7 @@ static void DiscardObject(void)
 //  };
 
 
-  
+
   sdobj.Get(&currentLevel, &currentX, &currentY, &discardObj);
 /*  for (obj = FindFirstObject(level, x, y);
        obj != RNeof;
@@ -728,7 +728,7 @@ static void DiscardObject(void)
   totalCount--;
   return;
 
-  
+
 }
 
 void SmartDiscard(bool Initialize)
@@ -737,7 +737,9 @@ void SmartDiscard(bool Initialize)
   i32 repeat;
   DBTYPE newType;
   DBCOMMON *pCommon;
+#ifdef _DEBUG
   i32 objIndex;
+#endif
   if (m_trace!=NULL)
   {
     fprintf(GETFILE(TraceFile),"SmartDiscard ");
@@ -754,7 +756,7 @@ void SmartDiscard(bool Initialize)
   };
   switch (currentMode)
   {
-  case ModeNotActive: 
+  case ModeNotActive:
     if (m_trace!=NULL) fprintf(m_trace,"not active\n");
     if (TimerTraceActive)
     {
@@ -803,7 +805,6 @@ void SmartDiscard(bool Initialize)
     };
     for (repeat=0; repeat<50; repeat++)
     {
-      bool important;
       if (currentIndex >= db.NumEntry(currentDBNum))
       { // We have finished counting
         int max;
@@ -831,28 +832,31 @@ void SmartDiscard(bool Initialize)
       {
       case dbMISC:
         {
+#ifdef _DEBUG
           DB10 *pDB10;
           pDB10 = pCommon->CastToDB10();
           objIndex = pDB10->miscType() + 127;
-          important = pDB10->important();
+#endif
           if (m_trace!=NULL)fprintf(m_trace,"count MISC ");
         };
         break;
       case dbWEAPON:
         {
+#ifdef _DEBUG
           DB5 *pDB5;
           pDB5 = pCommon->CastToDB5();
           objIndex = pDB5->weaponType() + 23;
-          important = pDB5->important();
+#endif
           if (m_trace!=NULL)fprintf(m_trace,"count WEAPON ");
         };
         break;
       case dbCLOTHING:
         {
+#ifdef _DEBUG
           DB6 *pDB6;
           pDB6 = pCommon->CastToDB6();
           objIndex = pDB6->clothingType() + 69;
-          important = pDB6->important();
+#endif
           if (m_trace!=NULL)fprintf(m_trace,"count CLOTHING ");
         };
         break;
@@ -912,7 +916,7 @@ struct INTERIMTABLE
 };
 
 /*
-INTERIMTABLE interimTable[] = 
+INTERIMTABLE interimTable[] =
 {
   {"DRAGON STEAK" , 0xaf},
   {"BOULDER"      , 0x80},
@@ -933,7 +937,7 @@ INTERIMTABLE interimTable[] =
 void BuildSmartDiscardTable(void)
 {
   //Back in the ole days there was a limit of 1020 items
-  //in a database and it was critical to discard the 
+  //in a database and it was critical to discard the
   //proper ones when space was needed.  Now we have a limit
   //of a total of 65000 objects and we will try to get by
   //without discarding any of them for now.
@@ -995,7 +999,7 @@ void BuildSmartDiscardTable(void)
 }
 */
 
-void SmartDiscardTrace(FILE *f) 
+void SmartDiscardTrace(FILE *f)
 {
   m_trace = f;
 }
