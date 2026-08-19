@@ -136,7 +136,7 @@ void XTABL::AddTranslation(const char *s1, const char *s2, int numLine)
   m_language[idx][m_numXlate[idx]] = NULL;
   m_numXlate[idx]++;
   int idx2 = m_numXlate[idx]-1;
-  if (!experimental_overlay && (numLine < 182 || numLine > 212) && (numLine < 415 || numLine > 417)) {
+  if (!experimental_overlay && (numLine < 182 || numLine > 213) && (numLine < 447 || numLine > 449)) {
       removeAccented(S2);
       SDL_strupr(S2);
   }
@@ -168,13 +168,16 @@ static int myfgets(char *buff, int size, FILE *f) {
     return len;
 }
 
-void ReadTranslationFile(void)
+void ReadTranslationFile(char *tr)
 {
   xlate.Clear();
+  if (!tr || !tr[0]) return;
+  if (tr != translation)
+      strcpy(translation,tr);
   char path[FILENAME_MAX+17];
   char path2[FILENAME_MAX+17];
   snprintf(path,FILENAME_MAX+17,"%s/locale/orig.po",pwd);
-  snprintf(path2,FILENAME_MAX+17,"%s/locale/fr.po",pwd);
+  snprintf(path2,FILENAME_MAX+17,"%s/locale/%s",pwd,tr);
   FILE *f = fopen(path,"r");
   FILE *g = fopen(path2,"r");
   if (!f) {

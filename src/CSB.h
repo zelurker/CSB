@@ -37,6 +37,7 @@ extern char szCSBVersion[MAX_LOADSTRING];
 //#define TEMP_BITMAP_SIZE 10880
 void AllocateTempBitmap(int size);
 extern unsigned char *tempBitmap;
+extern char translation[10];
 extern int tempBitmapSize;
 
 

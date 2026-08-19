@@ -23,6 +23,7 @@ bool imgui_active = false;
 static bool capturing_key;
 static int captured_key;
 char *opened_file;
+char translation[10];
 
 /**[Message List Stuff]*************************************/
 
@@ -1869,6 +1870,8 @@ static void read_conf() {
     launcher_power = csb_get_config_int("settings","launcher_power",1);
     filter_dsa_door_sound = csb_get_config_int("settings","filter_dsa_door_sound",0);
     experimental_overlay = csb_get_config_int("settings","experimental_overlay",0);
+    strncpy(translation, csb_get_config_string("settings","translation",(char*)""),10);
+    translation[9] = 0;
 
     st_X = 320.0 / WindowWidth;
     st_Y = 200.0 / (WindowHeight - 20);
@@ -1896,6 +1899,7 @@ static void save_conf() {
     csb_set_config_int("settings","launcher_power",launcher_power);
     csb_set_config_int("settings","filter_dsa_door_sound",filter_dsa_door_sound);
     csb_set_config_int("settings","experimental_overlay",experimental_overlay);
+    csb_set_config_string("settings","translation",translation);
     keyxlate.write_conf();
     csb_pop_config_state();
 }
@@ -2282,7 +2286,7 @@ static void render_overlay_interface() {
 
 imgui_addons::ImGuiFileBrowser file_dialog; // As a class member or globally
 
-extern void ReadTranslationFile();
+extern void ReadTranslationFile(char*);
 
 void post_render() {
     static bool was_active;
@@ -2368,6 +2372,12 @@ void post_render() {
 	{
 	    imgui_active = true;
 	    was_active = true;
+	    if (ImGui::BeginMenu(_("Translation..."))) {
+		if (ImGui::MenuItem(_("Original texts"), NULL, false)) { ReadTranslationFile((char*)""); clear_xy(); mywall.text = NULL; scroll.text = NULL; }
+		if (ImGui::MenuItem(_("English"), NULL, false)) { ReadTranslationFile((char*)"en.po"); clear_xy(); mywall.text = NULL; scroll.text = NULL; }
+		if (ImGui::MenuItem(_("French"), NULL, false)) { ReadTranslationFile((char*)"fr.po"); clear_xy(); mywall.text = NULL; scroll.text = NULL; }
+		ImGui::EndMenu();
+	    }
 	    if (ImGui::MenuItem(_("Keyboard shortcuts"), NULL, false)) {
 		int n = 0;
 		while (mykeys[n].desc) {
@@ -2397,7 +2407,7 @@ void post_render() {
 		clear_xy();
 		scroll.text = NULL;
 		mywall.text = NULL;
-		ReadTranslationFile();
+		ReadTranslationFile(translation);
 	    }
 
 	    ImGui::MenuItem(_("Filter DSA door sounds (for Conflux/DMCoE!)"),NULL, &filter_dsa_door_sound);

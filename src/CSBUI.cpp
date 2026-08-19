@@ -39,7 +39,7 @@ extern i32 dsaFilterLeaveCount;
 
 
 void DSAInstrumentation_Dump();
-void ReadTranslationFile(void);
+void ReadTranslationFile(char*);
 void RecordFile_Record(const char *line);
 
 struct MEM_BLOCKHEADER
@@ -752,7 +752,7 @@ i32 CSBUI(CSB_UI_MESSAGE *msg)
                            //1=dungeon
                            //2=utility
                            //3=hint
-        ReadTranslationFile();
+        ReadTranslationFile(translation);
         DispatchCSB(st_AskWhatToDo);
         break;
     case UIM_SETOPTION:
