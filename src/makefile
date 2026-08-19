@@ -37,6 +37,8 @@ ifeq ($(target),i686-w64-mingw32)
 	WIN=1
 endif
 ifdef WIN # windows version
+	# if using a native windows and not cross compiliing then you MUST replace
+	# $(target)-pkg-config by pkg-config in the lines below
 	options =  -O2 -D _LINUX -D RGB655 -D SDL20 -c -DMINGW
   gincludes = -Isdl_sound -Iimgui -Ifnmatch \
                $(shell $(target)-pkg-config --cflags sdl2)
