@@ -17,7 +17,7 @@ typedef pnt aReg;
 
 struct STRUCT148
 {
-  ui8  *((*malloc)(i32 size));                 //0  //148
+  ui8  *(*malloc)(i32 size);                 //0  //148
   void  (*free)(ui8 *address);                  //4  //144
   void  (*seek)(i32 handle, i32 address);      //8  //140
   void  (*read)(i32 handle, i32 size, ui8 *buf);//12 //138
@@ -210,14 +210,12 @@ static char *TAG0004fe(char *dest, const char *src)
 // *********************************************************
 void TAG00053a(i16, i32)
 {
-  i16 w_160;
   STRUCT148 s_148;
   i8   b_108[13];
   i8  *p_8;
   i16  w_4;
   i16  w_2;
   s_148.p_36 = NULL;
-  w_160 = 0;
   TAG0004fe((char *)b_108, "FTLCODE");
   //TAG0004fe(b_108, "CHAOS.FTL");
 
@@ -272,7 +270,6 @@ void TAG00053a(i16, i32)
     {
       FreeMemory((ui8 *)s_148.p_36);
     };
-    w_160++;
   };
   for (;;) {};
 }
@@ -351,7 +348,9 @@ i16 LoadProgram(STRUCT148 *s148)
   i32  Segment17;//22
   i32  Segment16;//18
   i32  i_14;
+#ifdef whilei10
   i32  i_10;
+#endif
   i32  i_6;
   i16  w_2;
   pSegDesc = NULL;
@@ -555,7 +554,9 @@ i16 LoadProgram(STRUCT148 *s148)
       if (D7W != 0) break;
     };
     i_6 = LE32(longGear(p_42 + 2));
+#ifdef whilei10
     i_10 = LE32(longGear(p_42 + 6));
+#endif
     p_42 += 10;
     while (i_6 > 0)
     {
