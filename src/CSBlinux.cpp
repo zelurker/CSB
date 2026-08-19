@@ -1258,7 +1258,7 @@ static ImFont* add_font(char *font) {
   return NULL;
 }
 
-static ImFont *wall_font;
+static ImFont *wall_font,*scroll_font;
 
 int main(int argc, char* argv[])
 {
@@ -1493,6 +1493,8 @@ int main(int argc, char* argv[])
   add_font(font);
   snprintf(font,FILENAME_MAX+28,"%s/fonts/diogenes.ttf",pwd);
   wall_font = add_font(font);
+  snprintf(font,FILENAME_MAX+28,"%s/fonts/OldeEnglish.ttf",pwd);
+  scroll_font = add_font(font);
 
   SDL_ShowCursor(SDL_ENABLE);
   cursorIsShowing = true;
@@ -1919,6 +1921,13 @@ typedef struct {
     const char *text;
     int updates;
 } twall;
+
+typedef struct {
+    RectPos *r;
+    char *text;
+} tscroll;
+
+static tscroll scroll;
 static twall mywall;
 
 void print_ingame_wall(int x1, int x2, int y1, int y2, const char *text) {
@@ -2035,6 +2044,15 @@ void clear_xy(RectPos *r) {
     viewport_xy(0,0);
 }
 
+void print_ingame_scroll(RectPos *r,char *text) {
+    scroll.r = r;
+    scroll.text = text;
+}
+
+void end_scroll() {
+    scroll.text = NULL;
+}
+
 static void render_overlay_interface() {
     // Renders a text overlay interface on top of the imgui screen
     // Not certain it's the fastest way to do this thing, but imgui is really efficient, so let's try that...
@@ -2134,7 +2152,6 @@ static void render_overlay_interface() {
 	    float zy = (WindowHeight-DY)/ 200.0; // viewport->WorkSize.y/200.0;
 	    ImGui::PushFont(NULL,size-6);
 	    for (int n=0; n<nb_xy; n++) {
-		printf("%d:%d,%d,%s size:%d\n",n,myxy[n].x+dx0, myxy[n].y+dy0,myxy[n].text,size);
 		// No idea why there's a vertical alignment problem, 15 is the best approximated fix so far
 		ImVec2 size;
 		if (myxy[n].centered) // on x only for now because that's what the game does
@@ -2205,13 +2222,54 @@ static void render_overlay_interface() {
 			start = s+1;
 		} while (*s == 0);
 		starty = starty+(maxheight-line*wh[1])/2;
-		printf("diffy %g\n",(maxheight-line*wh[1])/2);
 		for (int n=0; n<line; n++) {
 		    wh = ImGui::CalcTextSize(text[n]);
 		    ImGui::SetCursorPos(ImVec2(startx+(maxwidth-wh[0])/2+1,starty+1));
 		    ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f),text[n]);
 		    ImGui::SetCursorPos(ImVec2(startx+(maxwidth-wh[0])/2-1,starty-1));
 		    ImGui::TextColored(ImVec4(0.43f, 0.43f, 0.43f, 1.0f),text[n]);
+		    starty += wh[1];
+		}
+		ImGui::PopFont();
+	    }
+
+	    if (scroll.text) {
+		// Scrolls work almost the same way as wall texts, so re-use the centering code just a few lines up...
+		char buf[100];
+		strcpy(buf,scroll.text);
+
+		int startx = (scroll.r->w.x1+35)*zx;
+		int starty = (scroll.r->w.y1+35)*zy+33;
+		int maxwidth = (scroll.r->w.x2-20)*zx-startx;
+		int maxheight = (scroll.r->w.y2+10)*zy+33-starty;
+		ImGui::PushFont(scroll_font,maxheight/MAX_LINES_IN_SCROLL*2);
+		int line = 0;
+		char *text[10];
+		char *start = buf;
+		ImVec2 wh;
+		char *s;
+		do {
+		    wh = ImGui::CalcTextSize(start);
+		    s = &start[strlen(start)-1];
+		    while (wh[0] > maxwidth) {
+			if (*s == 0) {
+			    *s = ' ';
+			    s--;
+			}
+			while (*s != ' ' && s > start)
+			    s--;
+			*s = 0; // assuming s > buf, which should be the case with any normal text
+			wh = ImGui::CalcTextSize(start);
+		    }
+		    text[line++] = start;
+		    if (*s == 0)
+			start = s+1;
+		} while (*s == 0);
+		starty = starty+(maxheight-line*wh[1])/2;
+		for (int n=0; n<line; n++) {
+		    wh = ImGui::CalcTextSize(text[n]);
+		    ImGui::SetCursorPos(ImVec2(startx+(maxwidth-wh[0])/2,starty));
+		    ImGui::TextColored(ImVec4(0.0f, 0.0f, 0.0f, 1.0f),text[n]);
 		    starty += wh[1];
 		}
 		ImGui::PopFont();
@@ -2336,6 +2394,9 @@ void post_render() {
 	    if (ImGui::MenuItem(_("Non-CSB Items"), NULL,false,enabled)) ItemsRemaining(1);
 	    ImGui::MenuItem(_("DM Rules"), NULL,&DM_rules);
 	    if (ImGui::MenuItem(_("Truetype text replacement"),NULL, &experimental_overlay)) {
+		clear_xy();
+		scroll.text = NULL;
+		mywall.text = NULL;
 		ReadTranslationFile();
 	    }
 

@@ -7400,6 +7400,7 @@ void QuitPressingMouth(void)
 void QuitPressingEye(void)
 {//(void)
   RN objD7;
+  end_scroll();
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   DrawSmallIcon(objNI_Special_d, 12, 13);//Eye back to normal.
   ASSERT(RememberToPutObjectInHand == -1,"objInHand");

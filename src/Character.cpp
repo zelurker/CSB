@@ -3340,7 +3340,7 @@ void DisplayScroll(DB7 *pDB7)
   //one line of text.
   for (i=0; b_260[i]!=0; i++);
   b_260[i+1] = 0;
-  for (A2 = (aReg)b_260; (*A2 != 0) && (*A2 != 10); A2++) {};
+  for (A2 = (aReg)b_260; (*A2 != 0) && (*A2 != 10); A2++);
 //
 
   *A2 = 0;
@@ -3348,6 +3348,11 @@ void DisplayScroll(DB7 *pDB7)
                &d.wRectPos926,
                72,
                8);
+  if (experimental_overlay) {
+      print_ingame_scroll(&d.wRectPos926,b_260);
+      return;
+  }
+
   numLinesInScroll = 1;
   A2++;
   for (A3=A2; *A3!=0; A3++) if (*A3 == 10) numLinesInScroll++;
@@ -3374,10 +3379,7 @@ void DisplayScroll(DB7 *pDB7)
   if (numLinesInScroll == 0) return;
   for (A3=A2; *A3!=0; A3=A2)
   {
-    for (D7W+=7; (*A2!=0)&&(*A2!=10); A2++)
-    {
-//
-    };
+    for (D7W+=7; (*A2!=0)&&(*A2!=10); A2++);
     if (*A2 == 0)
     {
       *(A2+1) = 0;
