@@ -489,6 +489,7 @@ Cracher
 Brandir
 Lancer
 Fuse
+Piquer
 # Magic.cpp, SpellErrorMsg
  a besoin de + d'entrainement avec ce sort de %s
  bredouille un sort sans signification.

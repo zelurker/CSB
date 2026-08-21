@@ -489,6 +489,7 @@ spit
 brandish
 throw
 fuse
+stab
 # Magic.cpp, SpellErrorMsg
  needs more practice with this %S spell
  mumbles a meaningless spell.
