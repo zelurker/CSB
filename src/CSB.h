@@ -216,6 +216,7 @@ public:
 
 extern SKIN_CACHE skinCache;
 extern bool drawAsSize4Monsters;
+extern bool list_commands;
 extern bool invisibleMonsters;
 
 

@@ -443,6 +443,8 @@ i32 UI_MessageBox(const char *msg, const char *title, i32 flags ) {
 #include <signal.h>
 #include <fcntl.h>
 
+bool list_commands;
+
 void UI_Initialize_sounds(void)
 {
   Mix_OpenAudio();
@@ -738,6 +740,8 @@ bool UI_ProcessOption(char **argv, int &argc)
 			state=enum_ignore; screenSize=3;
 			WindowHeight=600;
 			WindowWidth=960;
+		    } else if (!strcmp("--listcommands",key)) {
+			list_commands = true;
 		    }else if(!strcmp("--large",key) ) {
 			state=enum_ignore; screenSize=2;
 			WindowHeight=400;
@@ -763,6 +767,7 @@ bool UI_ProcessOption(char **argv, int &argc)
 		    }else if(!strcmp("--help",key) || !strcmp("-help",key) || !strcmp("-h",key) || !strcmp("help",key) ) {
 			printf("Help message:\n"
 			"  Possible arguements are:\n"
+			" --listcommands: list weapons commands from current graphics.dat\n"
 //			"  --gamsav\n"
 //				"\tUsage: --gamsav modules/chaos\\ strikes\\ back-atari/\n"
 //				"\tThe directory where any saved game files are\n"
